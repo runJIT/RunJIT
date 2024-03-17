@@ -1,0 +1,10 @@
+table:
+  Command to delete an existing Table
+
+Usage:
+  runjit database delete table [options]
+
+Options:
+  -tn, --table-name <TableName> (REQUIRED)    The name of the table which should be deleted
+  -dbs, --db-secret <dbSecret> (REQUIRED)     The aws secret name which contains the connection infos
+

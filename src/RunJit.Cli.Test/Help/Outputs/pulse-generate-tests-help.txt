@@ -1,0 +1,12 @@
+tests:
+  The command to generate tests
+
+Usage:
+  runjit generate tests [options]
+
+Options:
+  -ff, --from-file <fromFile>          The source code file for which the tests should be generated. Hint we will support only controllers at beginning
+  -tp, --test-project <testProject>    The target test project in which the test should be generated
+  -s, --solution <solution>            File path to your backend solution where your api is implemented. Sample: D:\Projects\ClientGen\ClientGen.sln
+  -fc, --from-project <fromClient>     Generate test for a generated client project
+

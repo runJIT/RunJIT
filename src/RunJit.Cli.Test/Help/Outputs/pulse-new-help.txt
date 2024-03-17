@@ -1,0 +1,14 @@
+new:
+  The command to create a new solution, project, lambda and many more
+
+Usage:
+  runjit new [command]
+
+Commands:
+  lambda                  Command to create a new aws lambda
+  module                  The command to create a new runjit module
+  rest-endpoint           The command to create a new rest controller
+  simple-rest-endpoint    The command to create a new simple rest controller
+  webapi                  The command to create a new runjit web api solution
+  simple-webapi           The command to create a simple web api solution
+

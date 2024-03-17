@@ -1,0 +1,68 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "codecommitEuCentralPulseCodeRules", "codecommitEuCentralPulseCodeRules", "{516FDCDF-2AE3-4201-B61F-8662F3E79D86}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunJit.Cli", "src\RunJit.Cli\RunJit.Cli.csproj", "{996890C0-9208-4E9E-A8D2-3174E42E5BAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunJit.Cli.Test", "src\RunJit.Cli.Test\RunJit.Cli.Test.csproj", "{1E713EA7-3045-4E6B-8E82-30B6BB90995E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunJit.Cli.CodeRules", "src\RunJit.Cli.CodeRules\RunJit.Cli.CodeRules.csproj", "{D52C1514-E9FB-4053-9094-B9DF7352D99C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Readme", "Readme", "{2AE873C9-6A53-43CF-BB7F-1D7A040600B5}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CICD", "CICD", "{8088F1FC-DC36-47BF-A093-4AE24B2C97EB}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docu", "Docu", "{0481985F-275D-44BA-B6EC-267161308F7A}"
+	ProjectSection(SolutionItems) = preProject
+		ToDo.md = ToDo.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resharper", "Resharper", "{1137326F-056F-4633-B700-68D65691C16F}"
+	ProjectSection(SolutionItems) = preProject
+		RunJit.Cli.sln.DotSettings = RunJit.Cli.sln.DotSettings
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{6AC9F702-2192-4706-8086-39F0BDE6C9E3}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.Config = NuGet.Config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{996890C0-9208-4E9E-A8D2-3174E42E5BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{996890C0-9208-4E9E-A8D2-3174E42E5BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{996890C0-9208-4E9E-A8D2-3174E42E5BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{996890C0-9208-4E9E-A8D2-3174E42E5BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E713EA7-3045-4E6B-8E82-30B6BB90995E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E713EA7-3045-4E6B-8E82-30B6BB90995E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E713EA7-3045-4E6B-8E82-30B6BB90995E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E713EA7-3045-4E6B-8E82-30B6BB90995E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D52C1514-E9FB-4053-9094-B9DF7352D99C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D52C1514-E9FB-4053-9094-B9DF7352D99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D52C1514-E9FB-4053-9094-B9DF7352D99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D52C1514-E9FB-4053-9094-B9DF7352D99C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A292190-30DD-4325-883B-603B9EAE175B}
+	EndGlobalSection
+EndGlobal

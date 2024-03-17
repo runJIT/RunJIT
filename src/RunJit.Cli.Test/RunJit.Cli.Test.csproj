@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AspNetCore.Simple.MsTest.Sdk" Version="2.0.1" />
+        <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.0" />
+        <PackageReference Include="Irony" Version="1.5.1" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="3.2.2" />
+        <PackageReference Include="MSTest.TestFramework" Version="3.2.2" />
+        <PackageReference Include="coverlet.collector" Version="6.0.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="NSubstitute" Version="5.1.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\RunJit.Cli\RunJit.Cli.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="**\*.txt" />
+        <EmbeddedResource Include="**\*.rps" />
+        <EmbeddedResource Include="**\*.json" />
+    </ItemGroup>
+</Project>

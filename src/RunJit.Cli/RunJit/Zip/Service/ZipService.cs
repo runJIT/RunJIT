@@ -1,0 +1,51 @@
+﻿using System.IO.Compression;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.ErrorHandling;
+
+namespace RunJit.Cli.RunJit.Zip
+{
+    public static class AddZipServiceExtension
+    {
+        public static void AddZipService(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<IZipService, ZipService>();
+        }
+    }
+
+    internal interface IZipService
+    {
+        Task ZipAsync(ZipParameters parameters);
+    }
+
+    internal class ZipService(IConsoleService consoleService) : IZipService
+    {
+        public Task ZipAsync(ZipParameters parameters)
+        {
+            if (parameters.ZipFile.IsNull())
+            {
+                return Task.CompletedTask;
+            }
+
+            if (parameters.ZipFile.Directory.IsNull() || parameters.ZipFile.Directory.NotExists())
+            {
+                parameters.ZipFile.Directory!.Create();
+            }
+
+            try
+            {
+                ZipFile.CreateFromDirectory(parameters.Directory.FullName, parameters.ZipFile.FullName);
+            }
+            catch (Exception e)
+            {
+                throw new RunJitException($"Could not create zip file: {parameters.ZipFile.FullName}.{Environment.NewLine}{e.Message}");
+            }
+
+            consoleService.WriteSuccess("Zip-File successfully created.");
+            consoleService.WriteSuccess(parameters.ZipFile.FullName);
+            return Task.CompletedTask;
+        }
+    }
+
+    internal record ZipParameters(DirectoryInfo Directory, FileInfo ZipFile);
+}

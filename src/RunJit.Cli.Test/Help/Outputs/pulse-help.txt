@@ -1,0 +1,19 @@
+runjit:
+  Run 'dotnet [command] --help' in order to get specific information.
+
+Usage:
+  runjit [options] [command]
+
+Options:
+  -v, --version    Display version information
+
+Commands:
+  database           The command to interact on database level, project, lambda and many more
+  generate           The command to generate something like a client, tests or any other cool things
+  new                The command to create a new solution, project, lambda and many more
+  nuget              Nuget command to manage nuget packages inside Pulse AWS environment
+  encrypt <value>    The command encrypt some sepcial strings :)
+  decrypt <value>    The command to decrypt some sepcial strings :)
+  zip <directory>    The command to zip a folder into a zip file
+  update             Update the ultimate RunJit.Cli
+

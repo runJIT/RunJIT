@@ -1,0 +1,9 @@
+new:
+  The command to create a new solution, project, lambda and many more
+
+Usage:
+  runjit database new [command]
+
+Commands:
+  table    Command to create a new Table
+

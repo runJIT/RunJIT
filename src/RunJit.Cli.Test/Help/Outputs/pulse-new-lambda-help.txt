@@ -1,0 +1,12 @@
+lambda:
+  Command to create a new aws lambda
+
+Usage:
+  runjit new lambda [options]
+
+Options:
+  -ts, --solution <solution> (REQUIRED)             Target solution
+  -mn, --module-name <moduleName> (REQUIRED)        The name of your backend module (i.e. "Core", "Survey", ...)
+  -fn, --function-name <functionName> (REQUIRED)    The name of the function, that will be invoked
+  -ln, --lambda-name <lambdaName> (REQUIRED)        The deployment name of the lambda
+

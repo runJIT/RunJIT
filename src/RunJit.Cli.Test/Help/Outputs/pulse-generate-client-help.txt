@@ -1,0 +1,11 @@
+client:
+  The command to generate a new .net client into a .net web api project
+
+Usage:
+  runjit generate client [options]
+
+Options:
+  -uv, --use-visualstudio      Opens visual studio after generating the new dotnet tool. Only for Windows user !
+  -s, --solution <solution>    File path to your backend solution where your api is implemented. Sample: D:\Projects\ClientGen\ClientGen.sln
+  -b, --build                  Builds the target solution before creating the client
+

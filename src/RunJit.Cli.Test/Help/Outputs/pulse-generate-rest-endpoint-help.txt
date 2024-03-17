@@ -1,0 +1,15 @@
+rest-endpoint:
+  The command to create a new runjit web api solution
+
+Usage:
+  runjit generate rest-endpoint [options]
+
+Options:
+  -s, --solution <solution> (REQUIRED)        The target solution file in which the new rest controller should be integrated
+  -tn, --table-name <tableName>               The name of the database table
+  -sql, --from-sql <fromSql>                  The sql statement or sql script file
+  -dbs, --db-secret <dbSecret> (REQUIRED)     The aws secret name which contains the connection infos
+  -mn, --model-name <modelName> (REQUIRED)    The name of the resource 
+  -wc, --with-caching                         Create endpoints with caching
+  -id, --idName <idName>                      The column name which should be used for the Id use for the Api
+

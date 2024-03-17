@@ -1,0 +1,10 @@
+database:
+  The command to interact on database level, project, lambda and many more
+
+Usage:
+  runjit database [command]
+
+Commands:
+  new       The command to create a new solution, project, lambda and many more
+  delete    The delete action on the database level e.g to delete a table
+

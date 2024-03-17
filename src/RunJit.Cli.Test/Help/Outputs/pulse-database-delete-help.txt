@@ -1,0 +1,9 @@
+delete:
+  The delete action on the database level e.g to delete a table
+
+Usage:
+  runjit database delete [command]
+
+Commands:
+  table    Command to delete an existing Table
+

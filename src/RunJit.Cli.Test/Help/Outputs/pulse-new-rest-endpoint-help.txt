@@ -1,0 +1,12 @@
+rest-endpoint:
+  The command to create a new rest controller
+
+Usage:
+  runjit new rest-endpoint [options]
+
+Options:
+  -s, --solution <solution> (REQUIRED)              The target solution file in which the new rest controller should be integrated
+  -rn, --resource-Name <resourceName> (REQUIRED)    The name of the resource for your controller like User, Resource, Project, Translation
+  -wc, --with-caching                               Create endpoints with caching
+  -cs, --custom-resource <customResource>           A json file which represents the class or record for your resource
+

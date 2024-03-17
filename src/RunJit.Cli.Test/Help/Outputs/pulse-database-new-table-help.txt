@@ -1,0 +1,11 @@
+table:
+  Command to create a new Table
+
+Usage:
+  runjit database new table [options]
+
+Options:
+  -tn, --table-name <tableName> (REQUIRED)            The name of the table which should be created
+  -dbs, --db-secret <dbSecret> (REQUIRED)             The aws secret name which contains the connection infos
+  -saj, --schema-as-json <schemaAsJson> (REQUIRED)    Provide the table schema as json array of SimpleColumns
+

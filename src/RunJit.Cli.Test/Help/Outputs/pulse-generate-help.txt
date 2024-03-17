@@ -1,0 +1,15 @@
+generate:
+  The command to generate something like a client, tests or any other cool things
+
+Usage:
+  runjit generate [command]
+
+Commands:
+  action-controller         The command to create a new runjit web api solution
+  client                    The command to generate a new .net client into a .net web api project
+  tests                     The command to generate tests
+  rest-endpoint             The command to create a new runjit web api solution
+  rest-endpoint-new         The command to create a new runjit web api solution
+  module-rest-endpoint      The command to create a new runjit web api solution
+  module-action-endpoint    The command to create a new runjit web api solution
+

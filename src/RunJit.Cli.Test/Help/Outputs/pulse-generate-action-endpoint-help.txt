@@ -1,0 +1,14 @@
+action-controller:
+  The command to create a new runjit web api solution
+
+Usage:
+  runjit generate action-controller [options]
+
+Options:
+  -s, --solution <solution> (REQUIRED)          The target solution file in which the new rest controller should be integrated
+  -sql, --from-sql <fromSql>                    The sql statement or sql script file
+  -dbs, --db-secret <dbSecret> (REQUIRED)       The aws secret name which contains the connection infos
+  -an, --action-name <actionName> (REQUIRED)    The action name which is used for the POST. Sample: 'build-dashboard', 'login', 'send-email'
+  -mn, --model-name <modelName> (REQUIRED)      The name of the data model. Sample. 'DashboardData', 'Dashboard', 'ResponseRates'
+  -wc, --with-caching                           Create endpoints with caching
+

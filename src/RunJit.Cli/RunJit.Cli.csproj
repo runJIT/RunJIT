@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <Authors>Rene Peuser;Philip Pregler</Authors>
+        <Description>The ultimate productivity tool for developers. Our motto is, write code thats write code for you. This tool will help you to automate all your daily business. From maintaining your backends, updating code rules, update .Net, create web apis, backends and many more.</Description>
+        <Copyright>Copyright 2024 (c). All rights reserved.</Copyright>
+        <PackageLicenseFile>license.txt</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/runJIT/RunJIT</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/runJIT/RunJIT</RepositoryUrl>
+        <PackageReleaseNotes>
+            The ultimate RunJit.Cli to increase your productivity :)
+            Prerequisites
+            - .NET8 SDK or higher
+        </PackageReleaseNotes>
+        <PackageTags>RunJit.Cli;Cli;DotNetTool;NetTool;C#;DotNet;.Net;.NetTool;GenJit;CodeJit;RanJit;</PackageTags>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>runjit</ToolCommandName>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <CustomTasksEnabled>True</CustomTasksEnabled>
+        <PackageIcon>nuget-package-icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\..\assets\nuget-package-icon.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\license.txt">
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="DotNetTool.Service" Version="0.3.0" />
+        <PackageReference Include="Extensions.Pack" Version="5.0.0" />
+        <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+        <PackageReference Include="NuGet.Versioning" Version="6.9.1" />
+        <PackageReference Include="Solution.Parser" Version="2.0.4" />
+        <PackageReference Include="System.CommandLine" Version="0.3.0-alpha.20054.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Services\.Net\IDotNet.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="**\*.json" />
+        <EmbeddedResource Include="**\*.rps" />
+        <EmbeddedResource Include="**\*.template" />
+        <EmbeddedResource Include="**\*.yml" />
+        <EmbeddedResource Include="**\*.xml" />
+        <EmbeddedResource Include="**\*.txt" />
+        <EmbeddedResource Include="**\*.DotSettings" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Remove="Logo\Logo.txt" />
+    </ItemGroup>
+</Project>

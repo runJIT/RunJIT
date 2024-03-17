@@ -1,0 +1,302 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using AspNetCore.Simple.Sdk.ErrorHandling;
+using AspNetCore.Simple.Sdk.Startups;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using $solutionName$;
+using $solutionName$.Test;
+using Solution.Parser.Solution;
+using IApiVersionProvider = AspNetCore.Simple.Sdk.ApiVersioning.IApiVersionProvider;
+
+namespace $solutionName$.Tests
+{
+    [TestClass]
+    [TestCategory("SwaggerInitializer")]
+    public class SwaggerInitTest : MsTestBase
+    {
+        [TestMethod]
+        public async Task CreateSwaggerStructure()
+        {
+            var solutionFileInfo = new SolutionFileName("$solutionName$.sln").FindSolutionFileReverseFrom(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory));
+            Assert.IsNotNull(solutionFileInfo, "Could not find the solution file");
+
+            var parsedSolution = solutionFileInfo.Parse();
+
+            var webApiProject = parsedSolution.ProductiveProjects.Where(p => p.Document.ToString().Contains("Sdk=\"Microsoft.NET.Sdk.Web\"")).ToImmutableList();
+            Assert.IsTrue(webApiProject.Count == 1, "We detect no or more than 1 web api project");
+
+            var targetTestProject = parsedSolution.UnitTestProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion.Contains($"{webApiProject[0].ProjectFileInfo.FileNameWithoutExtenion}.Test"));
+            Assert.IsNotNull(targetTestProject, "Could not find the expected test project");
+
+
+            var apiVersionProvider = ServiceProvider.GetRequiredService<IApiVersionProvider>();
+            var basePath = ServiceProvider.GetRequiredService<BasePath>();
+            var apiVersions = apiVersionProvider.GetAllApiVersions(typeof(Startup).Assembly).ToImmutableList();
+
+            var apiVersionInfos = await FetchAllSwaggerDocuments(Client, apiVersions, basePath).ToListAsync(CancellationToken.None).ConfigureAwait(false);
+
+            var testFolder = targetTestProject.ProjectFileInfo.Value.Directory;
+            foreach (var apiVersionInfo in apiVersionInfos)
+            {
+
+                var targetPath = Path.Combine(testFolder!.FullName, "Swagger", apiVersionInfo.Version, "swagger.json");
+                var targetFile = new FileInfo(targetPath);
+                if (targetFile.Directory!.NotExists())
+                {
+                    targetFile.Directory!.Create();
+                }
+
+                await File.WriteAllTextAsync(targetFile.FullName, apiVersionInfo.FileContent).ConfigureAwait(false);
+            }
+
+
+            // add swagger tests
+            var targetTestFilePath = Path.Combine(testFolder!.FullName, "Swagger", "SwaggerTest.cs");
+            await File.WriteAllTextAsync(targetTestFilePath, SwaggerTestClass).ConfigureAwait(false);
+
+            Assert.IsTrue(true);
+
+            static async IAsyncEnumerable<(string Version, string FileContent)> FetchAllSwaggerDocuments(HttpClient httpClient, IImmutableList<Microsoft.AspNetCore.Mvc.ApiVersion> apiVersions, BasePath basePath)
+            {
+                foreach (var apiVersion in apiVersions)
+                {
+                    var realBasePath = basePath.Value.HasValue ? $"{basePath.Value.Value}/" : string.Empty;
+                    var swaggerResponse = await httpClient.GetAsync($"{realBasePath}swagger/v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}/swagger.json", CancellationToken.None).ConfigureAwait(false);
+                    if (swaggerResponse.IsSuccessStatusCode.IsFalse())
+                    {
+                        throw new ProblemDetailsException("Fetching swagger json was not successful, please check console error output for existing errors");
+                    }
+
+                    var swaggerJson = await swaggerResponse.Content.ReadAsStringAsync(CancellationToken.None).ConfigureAwait(false);
+
+                    yield return ($"V{apiVersion.MajorVersion}", swaggerJson);
+                }
+            }
+        }
+
+
+        private const string SwaggerTestClass = """
+                                                using System;
+                                                using System.Collections.Generic;
+                                                using System.Collections.Immutable;
+                                                using System.IO;
+                                                using System.Linq;
+                                                using System.Text.RegularExpressions;
+                                                using System.Threading.Tasks;
+                                                using Argument.Check;
+                                                using AspNetCore.Simple.Sdk.ApiVersioning;
+                                                using AspNetCore.Simple.Sdk.Extensions;
+                                                using AspNetCore.Simple.Sdk.Mediator;
+                                                using AspNetCore.Simple.Sdk.Startups;
+                                                using AspNetCore.Simple.Sdk.Swagger;
+                                                using ConsoleTables;
+                                                using Extensions.Pack;
+                                                using JsonDiffPatch;
+                                                using Microsoft.Extensions.DependencyInjection;
+                                                using Microsoft.OpenApi.Models;
+                                                using Microsoft.VisualStudio.TestTools.UnitTesting;
+                                                using Newtonsoft.Json.Linq;
+                                                using Solution.Parser.AspNet;
+                                                using Solution.Parser.CSharp;
+                                                using Solution.Parser.Solution;
+
+                                                namespace $solutionName$.Test.Swagger
+                                                {
+                                                    [TestClass]
+                                                    [TestCategory("Swagger")]
+                                                    public partial class SwaggerTest : MsTestBase
+                                                    {
+                                                        private static IImmutableList<ControllerInfo> _controllers = ImmutableList<ControllerInfo>.Empty;
+                                                        private static IImmutableList<OpenApiDocument> _openApiDocuments = ImmutableList<OpenApiDocument>.Empty;
+                                                        private static SwaggerInfos _swaggerSettings = null!;
+                                                
+                                                        [ClassInitialize]
+                                                        public static async Task ClassInitAsync(TestContext _)
+                                                        {
+                                                            var solutionFileInfo = new SolutionFileName("$solutionName$.sln").FindSolutionFileReverseFrom(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory));
+                                                            Throw.IfNull(solutionFileInfo);
+                                                
+                                                            var solution = solutionFileInfo.Parse();
+                                                
+                                                
+                                                            var allSyntaxTrees = solution.ProductiveProjects.Where(p => p.ProjectFileInfo.FileNameWithoutExtenion == "$webApiProject$")
+                                                                                         .SelectMany(p => p.CSharpFileInfos)
+                                                                                         .Select(c => c.Parse())
+                                                                                         .ToImmutableList();
+                                                
+                                                            var controllerParser = ServiceProvider.GetRequiredService<IControllerParser>();
+                                                            var apiTypeLoader = ServiceProvider.GetRequiredService<IApiTypeLoader>();
+                                                
+                                                            var types = apiTypeLoader.GetAllTypesFrom(solution, new DirectoryInfo(Environment.CurrentDirectory));
+                                                
+                                                            _controllers = controllerParser.ExtractFrom(allSyntaxTrees, types);
+                                                
+                                                            _openApiDocuments = await Mediator.SendAsync(new GetAllSwaggerVersionDocuments(typeof(Startup), Client)).ConfigureAwait(false);
+                                                
+                                                            _swaggerSettings = ServiceProvider.GetOrThrowMissingException<SwaggerInfos>();
+                                                        }
+                                                
+                                                        [TestMethod]
+                                                        public void Swagger_Documents_Have_To_Contains_All_Implemented_Api_Endpoints_And_Routes()
+                                                        {
+                                                            var regex = SwaggerVersionRegex();
+                                                
+                                                            var missingPaths = CollectMissingPath().ToList();
+                                                            var errorInfos = missingPaths.Select(m => new
+                                                            {
+                                                                Controller = m.controllerInfo.Name,
+                                                                Version = m.controllerInfo.Version.Original,
+                                                                Method = m.method.Name,
+                                                                Path = m.withoutQueryParameters
+                                                            });
+                                                
+                                                            Assert.IsTrue(missingPaths.IsEmpty(), $"Swagger missing API routes detected{Environment.NewLine}{ConsoleTable.From(errorInfos)}");
+                                                
+                                                
+                                                            IEnumerable<(ControllerInfo controllerInfo, MethodInfos method, string withoutQueryParameters)> CollectMissingPath()
+                                                            {
+                                                                // 1. Iterate over all controllers
+                                                                foreach (var controllerInfo in _controllers)
+                                                                {
+                                                                    // 2. Find the matching OpenApiDocument for the controller version
+                                                                    var openApiDocument = _openApiDocuments.First(doc => doc.Info.Version.ToApiVersion() == controllerInfo.Version.Original.ToApiVersion());
+                                                
+                                                                    // 3. Iterate over all methods of the controller
+                                                                    foreach (var method in controllerInfo.Methods)
+                                                                    {
+                                                                        // Exception if we find a missing path in swagger and IgnoreApi = true then we can ignore this path
+                                                                        // We check it first here not above to can check the good/bad situation in the unit test
+                                                                        var methodIgnoreAttribute = method.Attributes.Any(a => a.SyntaxTree.Contains("IgnoreApi = true"));
+                                                                        if (methodIgnoreAttribute)
+                                                                        {
+                                                                            continue;
+                                                                        }
+                                                
+                                                                        // 4. Iterate over all relative urls of the method
+                                                                        foreach (var relativeUrl in method.RelativeUrls)
+                                                                        {
+                                                                            // 4.1. Replace the version in the relative url with the version of the swagger document
+                                                                            var match = regex.Match(relativeUrl);
+                                                                            var pathLikeInSwagger = match.Success ? relativeUrl.Replace(match.Value, $"/v{openApiDocument.Info.Version}/") : relativeUrl;
+                                                                            var withoutQueryParameters = pathLikeInSwagger.Split('?').First();
+                                                
+                                                                            // 4.2 Check if version path only is set
+                                                                            if (_swaggerSettings.IncludeOnlyVersionedPaths)
+                                                                            {
+                                                                                // If the swagger settings are set to only include versioned paths, we have to check if the method is versioned
+                                                                                if (relativeUrl.DoesNotContain($"v{openApiDocument.Info.Version}"))
+                                                                                {
+                                                                                    continue;
+                                                                                }
+                                                                            }
+                                                
+                                                                            // 4.3 Now for each method we have to found the explicit swagger path
+                                                                            if (openApiDocument.Paths.ContainsKey(withoutQueryParameters).IsFalse())
+                                                                            {
+                                                                                // Exception if we find a missing path in swagger and IgnoreApi = true then we can ignore this path
+                                                                                // We check it first here not above to can check the good/bad situation in the unit test
+                                                                                var ignoreApiFlag = controllerInfo.Attributes.Any(a => a.SyntaxTree.Contains("IgnoreApi = true"));
+                                                                                if (ignoreApiFlag)
+                                                                                {
+                                                                                    continue;
+                                                                                }
+                                                
+                                                                                yield return (controllerInfo, method, withoutQueryParameters);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                
+                                                        [TestMethod]
+                                                        public void Swagger_Documents_Should_Not_Have_Routes_Which_Was_Not_Implemented()
+                                                        {
+                                                            var versionRegex = SwaggerVersionRegex();
+                                                
+                                                            var missingPaths = CollectMissingPath().ToList();
+                                                            var errorInfos = missingPaths.Select(doc => new
+                                                            {
+                                                                OpenApiDocument = doc.openApiDocument.Info.Version,
+                                                                Url = doc.Key
+                                                            });
+                                                
+                                                            Assert.IsTrue(missingPaths.IsEmpty(), $"Swagger declares routes which are not implemented. Reasons could be missing ControllerBase base class notations and more check your controller implementation. '{Environment.NewLine}{ConsoleTable.From(errorInfos)}");
+                                                
+                                                
+                                                            IEnumerable<(OpenApiDocument openApiDocument, string Key)> CollectMissingPath()
+                                                            {
+                                                                // 1. Iterate over all swagger documents
+                                                                foreach (var openApiDocument in _openApiDocuments)
+                                                                {
+                                                                    // 2. Find all controllers for the swagger version (document = version)
+                                                                    var controllersForVersion = _controllers.Where(c => c.Version.Original.ToApiVersion() == openApiDocument.Info.Version.ToApiVersion());
+                                                
+                                                                    // 3. Get all available paths from all controllers and methods
+                                                                    //    And prepare it the like the swagger notation
+                                                                    var allPathsLikeInSwagger = controllersForVersion.SelectMany(c => c.Methods).SelectMany(m => m.RelativeUrls).Select(url =>
+                                                                    {
+                                                                        var match = versionRegex.Match(url);
+                                                                        var pathLikeInSwagger = match.Success ? url.Replace(match.Value, $"/v{openApiDocument.Info.Version}/") : url;
+                                                                        var withoutQueryParameters = pathLikeInSwagger.Split('?').First();
+                                                
+                                                                        return withoutQueryParameters;
+                                                                    }).ToImmutableList();
+                                                
+                                                
+                                                                    // 4. Iterate over all swagger paths and check if the path is available in the controller and method implementation
+                                                                    foreach (var openApiPath in openApiDocument.Paths)
+                                                                    {
+                                                                        if (allPathsLikeInSwagger.Contains(openApiPath.Key).IsFalse())
+                                                                        {
+                                                                            yield return (openApiDocument, openApiPath.Key);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                
+                                                        [TestMethod]
+                                                        public async Task Swagger_Should_Not_Be_Changed_Breaking()
+                                                        {
+                                                            var apiVersionProvider = new ApiVersionProvider();
+                                                            var apiVersions = apiVersionProvider.GetAllApiVersions(typeof(Startup).Assembly).ToImmutableList();
+                                                            var basePath = ServiceProvider.GetOrThrowMissingException<BasePath>();
+                                                
+                                                            foreach (var apiVersion in apiVersions)
+                                                            {
+                                                                var swaggerResponse = await Client.GetAsync($"{basePath.Value}/swagger/v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}/swagger.json").ConfigureAwait(false);
+                                                                var swaggerJsonAsString = await swaggerResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                                
+                                                                Assert.IsTrue(swaggerResponse.IsSuccessStatusCode, "Fetching swagger json was not successful, please check console error output for existing errors");
+                                                
+                                                                var currentResult = JToken.Parse(swaggerJsonAsString);
+                                                                var swaggerFileName = $"Swagger.V{apiVersion.MajorVersion}.swagger.json";
+                                                                var lastSwaggerJson = EmbeddedFile.GetFileContentFrom(swaggerFileName);
+                                                                var expectedResult = JToken.Parse(lastSwaggerJson);
+                                                
+                                                                // ToDo: currently evaluating another differ
+                                                                var diff = new JsonDiffer().Diff(currentResult, expectedResult, true);
+                                                
+                                                                var detectedChanges = diff.Operations.Where(operation => operation is AddOperation or RemoveOperation).Select(diff => new { Changes = diff.Path }).ToImmutableList();
+                                                
+                                                                var errorOutput = ConsoleTable.From(detectedChanges).ToString();
+                                                                Assert.IsTrue(detectedChanges.IsEmpty(), $"{Environment.NewLine}{Environment.NewLine}Differences detected please check if those changes are breaking changes.{Environment.NewLine}If not just update your expected result json: {swaggerFileName}{Environment.NewLine}{Environment.NewLine}{errorOutput}");
+                                                            }
+                                                        }
+                                                
+                                                        [GeneratedRegex("^v[0-9].[0-9]\\/")]
+                                                        private static partial Regex SwaggerVersionRegex();
+                                                    }
+                                                }
+                                                """;
+    }
+}

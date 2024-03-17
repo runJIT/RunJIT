@@ -1,0 +1,43 @@
+RunJit License Agreement
+
+This License Agreement ("Agreement") is made between (Rene Peuser, Philip Pregler) ("Licensor") and the end user ("Licensee") of the RunJit software package ("Software") distributed via NuGet.
+
+1. Grant of License
+
+Subject to the terms of this Agreement, the Licensor hereby grants the Licensee a non-exclusive, non-transferable, limited license to use the Software for the purposes of testing and evaluation ("Test Pilot Program") if the Licensee is a designated test pilot customer, or otherwise for commercial use subject to the payment of applicable license fees.
+
+2. Test Pilot Program
+
+(a) Eligibility: Participation in the Test Pilot Program is by invitation only and is limited to customers explicitly recognized by the Licensor as "test pilot customers."
+
+(b) Usage Rights: Test pilot customers are granted the right to use the Software for internal testing and evaluation purposes without charge.
+
+(c) Duration: The Test Pilot Program will last for [Specify Duration], after which test pilot customers must either cease use of the Software or purchase a commercial license for continued use.
+
+3. Commercial License
+
+All users not participating in the Test Pilot Program are required to purchase a commercial license for any use of the Software beyond evaluation purposes. Information on licensing fees and terms is available upon request from the Licensor.
+
+4. Restrictions
+
+Licensee shall not (a) modify, translate, reverse engineer, decompile, disassemble, or create derivative works based on the Software; (b) circumvent any technology used by Licensor to protect the Software; or (c) rent, lease, lend, or sublicense the Software without Licensor’s prior written consent.
+
+5. Intellectual Property
+
+The Software is the property of the Licensor and is protected by copyright and other intellectual property laws. The Licensee is granted only the rights expressly stated in this Agreement, and no other rights are granted, either express or implied.
+
+6. Termination
+
+This Agreement is effective until terminated. It will terminate immediately without notice from the Licensor if the Licensee fails to comply with any provision of this Agreement. Upon termination, the Licensee must destroy all copies of the Software.
+
+7. Disclaimer of Warranty
+
+The Software is provided "AS IS," without warranty of any kind. The entire risk as to the quality and performance of the Software is with the Licensee.
+
+8. Limitation of Liability
+
+In no event will the Licensor be liable for any damages, including any lost profits, lost savings, or other incidental or consequential damages arising out of the use or inability to use the Software.
+
+9. General
+
+This Agreement constitutes the entire agreement between the parties with respect to the use of the Software and supersedes all prior or contemporaneous understandings regarding such subject matter.
