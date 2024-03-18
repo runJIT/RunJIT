@@ -24,7 +24,7 @@ namespace RunJit.Cli.Test.SystemTest
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
 
             // 3. Update to .Net 8
-            await Mediator.SendAsync(new UpdateBackendSwaggerTestsForGitRepos(solutionFile.FullName, WebApiFolder.FullName)).ConfigureAwait(false);
+            await Mediator.SendAsync(new UpdateBackendSwaggerTestsForSolution(solutionFile.FullName)).ConfigureAwait(false);
         }
     }
 
