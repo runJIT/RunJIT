@@ -1,11 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Immutable;
 using Extensions.Pack;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace RunJit.Cli.CodeRules
 {
-
     [TestCategory("Coding-Rules")]
     [TestCategory("AsyncMethods")]
     [TestClass]

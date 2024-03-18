@@ -12,7 +12,7 @@ namespace RunJit.Cli.CodeRules
         private static ImmutableList<(Class Class, Class? Registration, CSharpSyntaxTree syntaxTree)> _services = ImmutableList<(Class Class, Class? Registration, CSharpSyntaxTree syntaxTree)>.Empty;
 
         [ClassInitialize]
-        internal static void ClassInit(TestContext _)
+        public static void ClassInit(TestContext _)
         {
 
             _services = FindServices().ToImmutableList();

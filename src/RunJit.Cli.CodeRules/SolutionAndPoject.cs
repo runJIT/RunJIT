@@ -1,4 +1,4 @@
-namespace RunJit.Cli.CodeRules
+﻿namespace RunJit.Cli.CodeRules
 {
     [Ignore]
     [TestCategory("Coding-Rules")]
