@@ -5,6 +5,7 @@ using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
 using RunJit.Cli.RunJit.Update.Backend.Net;
+using RunJit.Cli.Services;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Update.Backend.SwaggerTests
@@ -18,6 +19,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.SwaggerTests
             services.AddDotNet();
             services.AddDotNetService();
             // services.AddUpdateSwaggerTestsPackageService();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<IUpdateSwaggerTestsStrategy, UpdateLocalSolutionFile>();
         }
@@ -25,7 +27,8 @@ namespace RunJit.Cli.RunJit.Update.Backend.SwaggerTests
 
     internal class UpdateLocalSolutionFile(IConsoleService consoleService,
                                            IDotNet dotNet,
-                                           EmbeddedFileService embeddedFileService) : IUpdateSwaggerTestsStrategy
+                                           EmbeddedFileService embeddedFileService,
+                                           FindSolutionFile findSolutionFile) : IUpdateSwaggerTestsStrategy
     {
         public bool CanHandle(UpdateSwaggerTestsParameters parameters)
         {
@@ -42,7 +45,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.SwaggerTests
 
             // 5. Check if solution file is the file or directory
                 //    if it is null or whitespace we check current directory 
-                var solutionFile = FindSolutionFile(Environment.CurrentDirectory);
+                var solutionFile = findSolutionFile.Find(Environment.CurrentDirectory);
 
                 // 6. Build the solution first
                 await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
@@ -103,35 +106,6 @@ namespace RunJit.Cli.RunJit.Update.Backend.SwaggerTests
                 File.Delete(targetPath);
 
             consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest swagger tests");
-        }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            if (solutionFile == "." || solutionFile.IsNullOrWhiteSpace())
-            {
-                var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-                var file = currentDirectory.EnumerateFiles("*.sln").FirstOrDefault();
-                if (file.IsNull())
-                {
-                    throw new RunJitException($"No solution file exists in current directory: {currentDirectory.FullName}");
-                }
-                
-                consoleService.WriteSuccess($"Detected solution file: {file.FullName}");
-                return file;
-            }
-
-            if (File.Exists(solutionFile))
-            {
-                if (solutionFile.EndsWith(".sln"))
-                {
-                    consoleService.WriteSuccess($"Detected solution file: {solutionFile}");
-                    return new FileInfo(solutionFile);
-                }
-
-                throw new RunJitException($"Solution file {solutionFile} is not a solution file. It must ends with .sln");
-            }
-
-            throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
         }
     }
 }

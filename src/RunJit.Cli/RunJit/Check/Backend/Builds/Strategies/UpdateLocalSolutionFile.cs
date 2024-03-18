@@ -6,6 +6,7 @@ using RunJit.Cli.Git;
 using RunJit.Cli.Net;
 using RunJit.Cli.RunJit.Fix.EmbededResources;
 using RunJit.Cli.RunJit.Update.Backend.Net;
+using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
 using Solution.Parser.Solution;
 
@@ -22,6 +23,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
             // services.AddCheckBackendBuildsPackageService();
             services.AddFindServiceImplementations();
             services.AddServiceRegistrationFixture();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<ICheckBackendBuildsStrategy, UpdateLocalSolutionFile>();
         }
@@ -29,7 +31,8 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
 
     internal class UpdateLocalSolutionFile(IConsoleService consoleService,
                                            FindServiceImplementations findServiceImplementations,
-                                           ServiceRegistrationFixture serviceRegistrationFixture) : ICheckBackendBuildsStrategy
+                                           ServiceRegistrationFixture serviceRegistrationFixture,
+                                           FindSolutionFile findSolutionFile) : ICheckBackendBuildsStrategy
     {
         public bool CanHandle(CheckBackendBuildsParameters parameters)
         {
@@ -46,7 +49,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
 
             // 1. Check if solution file is the file or directory
             //    if it is null or whitespace we check current directory
-            var solutionFileInfo = FindSolutionFile(parameters.SolutionFile);
+            var solutionFileInfo = findSolutionFile.Find(parameters.SolutionFile);
 
             var solutionFile = new SolutionFileInfo(solutionFileInfo.FullName).Parse();
             var productiveCodeSyntaxTreesToAnaylze = solutionFile.ProductiveProjects.SelectMany(p => p.CSharpFileInfos)
@@ -59,35 +62,6 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
             await serviceRegistrationFixture.FixAllAsync(serviceRegistrationInfos, productiveCodeSyntaxTreesToAnaylze).ConfigureAwait(false);
 
             consoleService.WriteSuccess($"Service registrations in: {solutionFileInfo.FullName} successfully fixed");
-        }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            if (solutionFile == "." || solutionFile.IsNullOrWhiteSpace())
-            {
-                var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-                var file = currentDirectory.EnumerateFiles("*.sln").FirstOrDefault();
-                if (file.IsNull())
-                {
-                    throw new RunJitException($"No solution file exists in current directory: {currentDirectory.FullName}");
-                }
-
-                consoleService.WriteSuccess($"Detected solution file: {file.FullName}");
-                return file;
-            }
-
-            if (File.Exists(solutionFile))
-            {
-                if (solutionFile.EndsWith(".sln"))
-                {
-                    consoleService.WriteSuccess($"Detected solution file: {solutionFile}");
-                    return new FileInfo(solutionFile);
-                }
-
-                throw new RunJitException($"Solution file {solutionFile} is not a solution file. It must ends with .sln");
-            }
-
-            throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
         }
     }
 

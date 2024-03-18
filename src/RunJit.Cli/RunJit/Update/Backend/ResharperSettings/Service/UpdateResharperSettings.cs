@@ -13,6 +13,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.ResharperSettings
             services.AddUpdateResharperSettingsParameters();
 
             services.AddCloneReposAndUpdateAll();
+            services.AddUpdateLocalSolutionFile();
 
             services.AddSingletonIfNotExists<IUpdateResharperSettings, UpdateResharperSettings>();
         }

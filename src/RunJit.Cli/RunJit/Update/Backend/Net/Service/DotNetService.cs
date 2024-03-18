@@ -2,6 +2,7 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
+using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.Backend.Net
 {
@@ -11,6 +12,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.Net
         {
             services.AddConsoleService();
             services.AddDotNetParameters();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<IDotNetService, DotNetService>();
         }
@@ -21,7 +23,8 @@ namespace RunJit.Cli.RunJit.Update.Backend.Net
         Task HandleAsync(DotNetParameters parameters);
     }
 
-    internal class DotNetService(IConsoleService consoleService) : IDotNetService
+    internal class DotNetService(IConsoleService consoleService,
+                                 FindSolutionFile findSolutionFile) : IDotNetService
     {
         private readonly Regex _versionReplaceRegex  = new(@"(\d+\.\d-+)", RegexOptions.Compiled);
         readonly Regex _netVersionReplaceRegex  = new(@"net\d+\.\d+", RegexOptions.Compiled);
@@ -32,7 +35,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.Net
 
             // 1. Check if solution file is the file or directory
             //    if it is null or whitespace we check current directory
-            var solutionFile = FindSolutionFile(parameters.SolutionFile);
+            var solutionFile = findSolutionFile.Find(parameters.SolutionFile);
             
             
             // 2. Update docker file if exists
@@ -65,32 +68,6 @@ namespace RunJit.Cli.RunJit.Update.Backend.Net
             }
             
             consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully migrated to .Net version: {parameters.Version}");
-        }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            if (solutionFile == "." || solutionFile.IsNullOrWhiteSpace())
-            {
-                 var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-                 var file = currentDirectory.EnumerateFiles("*.sln").FirstOrDefault();
-                 if (file.IsNull())
-                 {
-                     throw new RunJitException($"No solution file exists in current directory: {currentDirectory.FullName}");
-                 }
-                 return file;
-            }
-
-            if (File.Exists(solutionFile))
-            {
-                if (solutionFile.EndsWith(".sln"))
-                {
-                    return new FileInfo(solutionFile);
-                }
-
-                throw new RunJitException($"Solution file {solutionFile} is not a solution file. It must ends with .sln");
-            }
-            
-            throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
         }
     }
 }

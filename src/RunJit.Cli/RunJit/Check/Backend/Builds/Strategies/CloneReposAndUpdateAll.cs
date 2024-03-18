@@ -6,6 +6,7 @@ using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
 using RunJit.Cli.RunJit.Fix.EmbededResources;
+using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Check.Backend.Builds
 {
@@ -17,6 +18,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
             services.AddGitService();
             services.AddDotNet();
             services.AddAwsCodeCommit();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<ICheckBackendBuildsStrategy, CloneReposAndUpdateAll>();
         }
@@ -25,7 +27,8 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
     internal class CloneReposAndUpdateAll(IConsoleService consoleService,
                                           IGitService git,
                                           IDotNet dotNet,
-                                          IAwsCodeCommit awsCodeCommit) : ICheckBackendBuildsStrategy
+                                          IAwsCodeCommit awsCodeCommit,
+                                          FindSolutionFile findSolutionFile) : ICheckBackendBuildsStrategy
     {
         public bool CanHandle(CheckBackendBuildsParameters parameters)
         {
@@ -79,7 +82,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
 
                 // 5. Check if solution file is the file or directory
                 //    if it is null or whitespace we check current directory 
-                var solutionFile = FindSolutionFile(Environment.CurrentDirectory);
+                var solutionFile = findSolutionFile.Find(Environment.CurrentDirectory);
 
                 // 6. Build the solution first
                 var tryBuildResult = await dotNet.TryBuildAsync(solutionFile).ConfigureAwait(false);
@@ -108,19 +111,5 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
                 consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully checked and was buildable");
             }
         }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            var directoryInfo = new DirectoryInfo(solutionFile);
-            var solutionFileFileInfo = directoryInfo.EnumerateFiles("*.sln", SearchOption.AllDirectories).FirstOrDefault();
-            if (solutionFileFileInfo.IsNull())
-            {
-                throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
-            }
-
-            consoleService.WriteSuccess($"Detected solution file: {solutionFile}");
-            return solutionFileFileInfo;
-        }
     }
-
 }

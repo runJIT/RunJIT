@@ -11,6 +11,7 @@ namespace RunJit.Cli.RunJit.Rename.Backend
         {
             services.AddConsoleService();
             services.AddBackendParameters();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<IBackendService, BackendService>();
         }
@@ -22,13 +23,14 @@ namespace RunJit.Cli.RunJit.Rename.Backend
     }
 
     internal class BackendService(IConsoleService consoleService,
-                                  IRenameFilesAndFolders renameFilesAndFolders) : IBackendService
+                                  IRenameFilesAndFolders renameFilesAndFolders,
+                                  FindSolutionFile findSolutionFile) : IBackendService
     {
         public Task HandleAsync(BackendParameters parameters)
         {
             // 1. Check if solution file is the file or directory
             //    if it is null or whitespace we check current directory
-            var solutionFile = FindSolutionFile(parameters.FileOrFolder);
+            var solutionFile = findSolutionFile.Find(parameters.FileOrFolder);
             var currentDirectory = solutionFile.Directory!;
 
             // 2. Kill all debug and obj folders first
@@ -69,32 +71,6 @@ namespace RunJit.Cli.RunJit.Rename.Backend
             consoleService.WriteSuccess(newSolutionFile.FullName);
 
             return Task.CompletedTask;
-        }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            if (solutionFile == "." || solutionFile.IsNullOrWhiteSpace())
-            {
-                var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-                var file = currentDirectory.EnumerateFiles("*.sln").FirstOrDefault();
-                if (file.IsNull())
-                {
-                    throw new RunJitException($"No solution file exists in current directory: {currentDirectory.FullName}");
-                }
-                return file;
-            }
-
-            if (File.Exists(solutionFile))
-            {
-                if (solutionFile.EndsWith(".sln"))
-                {
-                    return new FileInfo(solutionFile);
-                }
-
-                throw new RunJitException($"Solution file {solutionFile} is not a solution file. It must ends with .sln");
-            }
-
-            throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
         }
     }
 }

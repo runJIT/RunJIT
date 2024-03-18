@@ -22,6 +22,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
             services.AddAwsCodeCommit();
             services.AddUpdateNugetPackageService();
             services.AddRenameFilesAndFolders();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<IUpdateCodeRulesStrategy, UpdateLocalSolutionFile>();
         }
@@ -32,7 +33,8 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
                                            //IAwsCodeCommit awsCodeCommit,
                                            IDotNet dotNet,
                                            IUpdateNugetPackageService updateNugetPackageService,
-                                           IRenameFilesAndFolders renameFilesAndFolders) : IUpdateCodeRulesStrategy
+                                           IRenameFilesAndFolders renameFilesAndFolders,
+                                           FindSolutionFile findSolutionFile) : IUpdateCodeRulesStrategy
     {
         public bool CanHandle(UpdateCodeRulesParameters parameters)
         {
@@ -53,7 +55,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
 
             // 5. Check if solution file is the file or directory
             //    if it is null or whitespace we check current directory 
-            var solutionFile = FindSolutionFile(parameters.SolutionFile);
+            var solutionFile = findSolutionFile.Find(parameters.SolutionFile);
             
             var branchName = "quality/update-coderules";
             
@@ -107,7 +109,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
 
             // 5. Check if solution file is the file or directory
             //    if it is null or whitespace we check current directory 
-            var codeRuleSolution = FindSolutionFile(tempFolder.FullName);
+            var codeRuleSolution = findSolutionFile.Find(tempFolder.FullName);
 
             // 6. Build the solution first
             await dotNet.BuildAsync(codeRuleSolution).ConfigureAwait(false);
@@ -168,7 +170,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
 
             // await updateCodeRulesPackageService.UpdateCodeRulesPackageAsync(outdatedCodeRulesResponse).ConfigureAwait(false);
 
-            if (gitFolder.IsNotNull())
+            if (existingGitFolder.IsNotNull())
             {
                 // 9.Add changes to git
                 await git.AddAsync().ConfigureAwait(false);
@@ -186,36 +188,6 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
             }
             
             consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest code rules");
-        }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            if (solutionFile == "." || solutionFile.IsNullOrWhiteSpace() || solutionFile.EndsWith(".sln").IsFalse())
-            {
-                var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-                var file = currentDirectory.EnumerateFiles("*.sln", SearchOption.AllDirectories).FirstOrDefault();
-                if (file.IsNull())
-                {
-                    throw new RunJitException($"No solution file exists in current directory: {currentDirectory.FullName}");
-                }
-
-                consoleService.WriteSuccess($"Detected solution file: {file.FullName}");
-                return file;
-            }
-
-            if (File.Exists(solutionFile))
-            {
-                if (solutionFile.EndsWith(".sln"))
-                {
-                    consoleService.WriteSuccess($"Detected solution file: {solutionFile}");
-                    return new FileInfo(solutionFile);
-                }
-
-                throw new RunJitException($"Solution file {solutionFile} is not a solution file. It must ends with .sln");
-            }
-
-
-            throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
         }
     }
 }

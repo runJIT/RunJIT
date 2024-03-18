@@ -6,6 +6,7 @@ using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
 using RunJit.Cli.RunJit.Update.Backend.Net;
+using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.Backend.Nuget
 {
@@ -18,6 +19,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.Nuget
             services.AddDotNet();
             services.AddDotNetService();
             services.AddUpdateNugetPackageService();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<IUpdateNugetStrategy, UpdateLocalSolutionFile>();
         }
@@ -27,7 +29,8 @@ namespace RunJit.Cli.RunJit.Update.Backend.Nuget
                                            IGitService git,
                                            IAwsCodeCommit awsCodeCommit,
                                            IDotNet dotNet,
-                                           IUpdateNugetPackageService updateNugetPackageService) : IUpdateNugetStrategy
+                                           IUpdateNugetPackageService updateNugetPackageService,
+                                           FindSolutionFile findSolutionFile) : IUpdateNugetStrategy
     {
         public bool CanHandle(UpdateNugetParameters parameters)
         {
@@ -44,7 +47,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.Nuget
 
             // 1. Check if solution file is the file or directory
             //    if it is null or whitespace we check current directory
-            var solutionFile = FindSolutionFile(parameters.SolutionFile);
+            var solutionFile = findSolutionFile.Find(parameters.SolutionFile);
 
             // 2. Set current directory to solution file directory - cause of git commands and more
             Environment.CurrentDirectory = solutionFile.Directory!.FullName;
@@ -93,35 +96,6 @@ namespace RunJit.Cli.RunJit.Update.Backend.Nuget
             }
             
             consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest nuget packages");
-        }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            if (solutionFile == "." || solutionFile.IsNullOrWhiteSpace())
-            {
-                var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-                var file = currentDirectory.EnumerateFiles("*.sln").FirstOrDefault();
-                if (file.IsNull())
-                {
-                    throw new RunJitException($"No solution file exists in current directory: {currentDirectory.FullName}");
-                }
-
-                consoleService.WriteSuccess($"Detected solution file: {file.FullName}");
-                return file;
-            }
-
-            if (File.Exists(solutionFile))
-            {
-                if (solutionFile.EndsWith(".sln"))
-                {
-                    consoleService.WriteSuccess($"Detected solution file: {solutionFile}");
-                    return new FileInfo(solutionFile);
-                }
-
-                throw new RunJitException($"Solution file {solutionFile} is not a solution file. It must ends with .sln");
-            }
-
-            throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
         }
     }
 }

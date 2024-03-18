@@ -5,6 +5,7 @@ using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
 using RunJit.Cli.RunJit.Update.Backend.Net;
+using RunJit.Cli.Services;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Fix.EmbededResources
@@ -18,12 +19,13 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
             services.AddDotNet();
             services.AddDotNetService();
             // services.AddFixEmbeddedResourcesPackageService();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<IFixEmbeddedResourcesStrategy, UpdateLocalSolutionFile>();
         }
     }
 
-    internal class UpdateLocalSolutionFile(IConsoleService consoleService) : IFixEmbeddedResourcesStrategy
+    internal class UpdateLocalSolutionFile(FindSolutionFile findSolutionFile) : IFixEmbeddedResourcesStrategy
     {
         public bool CanHandle(FixEmbeddedResourcesParameters parameters)
         {
@@ -42,7 +44,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
             //    if it is null or whitespace we check current directory
             // 5. Check if solution file is the file or directory
             //    if it is null or whitespace we check current directory 
-            var solutionFile = FindSolutionFile(parameters.SolutionFile);
+            var solutionFile = findSolutionFile.Find(parameters.SolutionFile);
 
             var parsedSolutionFile = new SolutionFileInfo(solutionFile.FullName).Parse();
             var allCsprojFiles = parsedSolutionFile.Projects;
@@ -123,35 +125,6 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
             }
 
             return Task.CompletedTask;
-        }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            if (solutionFile == "." || solutionFile.IsNullOrWhiteSpace())
-            {
-                var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-                var file = currentDirectory.EnumerateFiles("*.sln").FirstOrDefault();
-                if (file.IsNull())
-                {
-                    throw new RunJitException($"No solution file exists in current directory: {currentDirectory.FullName}");
-                }
-
-                consoleService.WriteSuccess($"Detected solution file: {file.FullName}");
-                return file;
-            }
-
-            if (File.Exists(solutionFile))
-            {
-                if (solutionFile.EndsWith(".sln"))
-                {
-                    consoleService.WriteSuccess($"Detected solution file: {solutionFile}");
-                    return new FileInfo(solutionFile);
-                }
-
-                throw new RunJitException($"Solution file {solutionFile} is not a solution file. It must ends with .sln");
-            }
-
-            throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
         }
     }
 }

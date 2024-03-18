@@ -18,6 +18,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
             services.AddGitService();
             services.AddDotNet();
             services.AddAwsCodeCommit();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<IUpdateCodeRulesStrategy, CloneReposAndUpdateAll>();
         }
@@ -28,7 +29,8 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
                                           IDotNet dotNet,
                                           IAwsCodeCommit awsCodeCommit,
                                           IRenameFilesAndFolders renameFilesAndFolders,
-                                          IUpdateNugetPackageService updateNugetPackageService) : IUpdateCodeRulesStrategy
+                                          IUpdateNugetPackageService updateNugetPackageService,
+                                          FindSolutionFile findSolutionFile) : IUpdateCodeRulesStrategy
     {
         public bool CanHandle(UpdateCodeRulesParameters parameters)
         {
@@ -84,7 +86,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
 
                 // 5. Check if solution file is the file or directory
                 //    if it is null or whitespace we check current directory 
-                var solutionFile = FindSolutionFile(Environment.CurrentDirectory);
+                var solutionFile = findSolutionFile.Find(Environment.CurrentDirectory);
                 var solutionNameNormalized = solutionFile.NameWithoutExtension().Split('.').Select(part => part.FirstCharToUpper()).Flatten(".");
 
                 // 6. Build the solution first
@@ -121,7 +123,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
 
                 // 5. Check if solution file is the file or directory
                 //    if it is null or whitespace we check current directory 
-                var codeRuleSolution = FindSolutionFile(tempFolder.FullName);
+                var codeRuleSolution = findSolutionFile.Find(tempFolder.FullName);
 
                 // 6. Build the solution first
                 await dotNet.BuildAsync(codeRuleSolution).ConfigureAwait(false);
@@ -200,19 +202,5 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
                 consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest coderules packages");
             }
         }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            var directoryInfo = new DirectoryInfo(solutionFile);
-            var solutionFileFileInfo = directoryInfo.EnumerateFiles("*.sln", SearchOption.AllDirectories).FirstOrDefault();
-            if (solutionFileFileInfo.IsNull())
-            {
-                throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
-            }
-
-            consoleService.WriteSuccess($"Detected solution file: {solutionFile}");
-            return solutionFileFileInfo;
-        }
     }
-
 }

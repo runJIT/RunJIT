@@ -6,6 +6,7 @@ using RunJit.Cli.AwsCodeCommit;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
+using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.Backend.ResharperSettings
 {
@@ -18,6 +19,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.ResharperSettings
             services.AddDotNet();
             services.AddAwsCodeCommit();
             services.AddEmbeddedFileService();
+            services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<IUpdateResharperSettingsStrategy, CloneReposAndUpdateAll>();
         }
@@ -25,7 +27,8 @@ namespace RunJit.Cli.RunJit.Update.Backend.ResharperSettings
 
     internal class CloneReposAndUpdateAll(IConsoleService consoleService,
                                           IGitService git,
-                                          IAwsCodeCommit awsCodeCommit) : IUpdateResharperSettingsStrategy
+                                          IAwsCodeCommit awsCodeCommit,
+                                          FindSolutionFile findSolutionFile) : IUpdateResharperSettingsStrategy
     {
         public bool CanHandle(UpdateResharperSettingsParameters parameters)
         {
@@ -77,7 +80,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.ResharperSettings
 
                 // 5. Check if solution file is the file or directory
                 //    if it is null or whitespace we check current directory 
-                var solutionFile = FindSolutionFile(Environment.CurrentDirectory);
+                var solutionFile = findSolutionFile.Find(Environment.CurrentDirectory);
 
                 var solutionName = solutionFile.NameWithoutExtension();
 
@@ -117,19 +120,5 @@ namespace RunJit.Cli.RunJit.Update.Backend.ResharperSettings
                 consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest Resharper settings");
             }
         }
-
-        private FileInfo FindSolutionFile(string solutionFile)
-        {
-            var directoryInfo = new DirectoryInfo(solutionFile);
-            var solutionFileFileInfo = directoryInfo.EnumerateFiles("*.sln", SearchOption.AllDirectories).FirstOrDefault();
-            if (solutionFileFileInfo.IsNull())
-            {
-                throw new FileNotFoundException($"Solution file: {solutionFile} could not be found");
-            }
-
-            consoleService.WriteSuccess($"Detected solution file: {solutionFile}");
-            return solutionFileFileInfo;
-        }
     }
-
 }
