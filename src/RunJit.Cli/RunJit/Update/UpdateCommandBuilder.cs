@@ -1,18 +1,20 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Invocation;
 using Extensions.Pack;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Update.Backend;
+using RunJit.Cli.RunJit.Update.CodeRules;
 
 namespace RunJit.Cli.RunJit.Update
 {
     public static class AddUpdateCommandBuilderExtension
     {
-        public static void AddUpdateCommandBuilder(this IServiceCollection services)
+        public static void AddUpdateCommandBuilder(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddUpdateOptionsBuilder();
-
             services.AddBackendCommandBuilder();
+            services.AddUpdateCodeRules(configuration);
             
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, UpdateCommandBuilder>();
         }

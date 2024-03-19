@@ -19,7 +19,7 @@ namespace RunJit.Cli.RunJit
             services.AddEncryptCommandBuilder();
             services.AddDecryptCommandBuilder();
             services.AddZipCommandBuilder();
-            services.AddUpdateCommandBuilder();
+            services.AddUpdateCommandBuilder(configuration);
             services.AddRenameCommandBuilder();
             services.AddFixCommandBuilder();
             services.AddCheckCommandBuilder();

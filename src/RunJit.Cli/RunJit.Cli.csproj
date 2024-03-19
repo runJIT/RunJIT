@@ -66,4 +66,7 @@
     <ItemGroup>
       <EmbeddedResource Remove="Logo\Logo.txt" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\GenJit.Api\GenJit.Api.Client\GenJit.Api.Client.csproj" />
+    </ItemGroup>
 </Project>
