@@ -11,13 +11,13 @@ namespace RunJit.Cli.Test.SystemTest
     public class UpdateBackendNetVersionTest : GlobalSetup
     {
         private const string Resource = "User";
-        private const string BasePath = "api/update";
+        private const string BasePath = "api/net-test";
 
         [TestMethod]
         public async Task Should_Update_Net_Version_For_Target_Solution()
         {
             // 1. Create new Web Api
-            var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("RunJit.Update", WebApiFolder, BasePath)).ConfigureAwait(false);
+            var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("RunJit.Update.Net", WebApiFolder, BasePath)).ConfigureAwait(false);
 
             // 2. Create Web-Api endpoints
             await Mediator.SendAsync(new CreateSimpleRestController(solutionFile, Resource, false)).ConfigureAwait(false);

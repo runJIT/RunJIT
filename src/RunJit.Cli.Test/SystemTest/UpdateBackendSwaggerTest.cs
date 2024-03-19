@@ -11,15 +11,17 @@ namespace RunJit.Cli.Test.SystemTest
     [TestClass]
     public class UpdateBackendSwaggerTests : GlobalSetup
     {
-        private const string BasePath = "api/update";
+        private const string BasePath = "api/swaggertest";
 
         [TestMethod]
-        // 
         public async Task Should_Update_And_Create_Swagger_Tests()
         {
             // 1. Create new Web Api
             var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("RunJit.Update.SwaggerTests", WebApiFolder, BasePath)).ConfigureAwait(false);
 
+            // 2. Add simple web api for swagger
+            await Mediator.SendAsync(new CreateSimpleRestController(solutionFile, "User", false)).ConfigureAwait(false);
+            
             // 3. Test if generated results is buildable
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
 

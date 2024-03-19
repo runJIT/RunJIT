@@ -11,7 +11,7 @@ namespace RunJit.Cli.Test.SystemTest
     [TestClass]
     public class UpdateBackendNugetPackagesTest : GlobalSetup
     {
-        private const string BasePath = "api/update";
+        private const string BasePath = "api/nuget-test";
 
         [TestMethod]
         public async Task Should_Update_All_Nuget_Packages_Target_Solution()
