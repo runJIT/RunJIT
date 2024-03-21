@@ -20,6 +20,7 @@
         <CustomTasksEnabled>True</CustomTasksEnabled>
         <PackageIcon>nuget-package-icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <UserSecretsId>6830e677-d5ca-450a-b24d-028018a3375c</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>
         <None Include="..\..\assets\nuget-package-icon.png">

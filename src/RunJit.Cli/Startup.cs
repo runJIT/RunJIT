@@ -2,6 +2,7 @@
 using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Auth0;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit;
 
@@ -14,7 +15,10 @@ namespace RunJit.Cli
             // 1. Infrastructure
             services.AddDotNetCliArgumentFixer();
             services.AddErrorHandler();
-
+            
+            // 2. Security
+            services.AddAuth0(configuration);
+            
             // Domains
             // RunJit
             //  -> Rename

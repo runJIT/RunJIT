@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using AspNetCore.Simple.Sdk.Authentication.Auth0;
 using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
             services.AddUpdateLocalSolutionFile(configuration);
             services.AddCloneReposAndUpdateAll();
+            
+            services.AddAuth0Settings(configuration);
 
             services.AddSingletonIfNotExists<IUpdateCodeRules, UpdateCodeRules>();
         }

@@ -1,9 +1,13 @@
 ﻿using System.Collections.Immutable;
 using System.IO.Compression;
+using System.Net.Http.Headers;
+using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using GenJit.Api.Client;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Auth0;
 using RunJit.Cli.AwsCodeCommit;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
@@ -31,6 +35,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             services.AddGenJitApiClientFactory(configuration);
             services.AddGenJitApiClient();
             services.AddHttpClient();
+            services.AddMediator();
 
             services.AddSingletonIfNotExists<IUpdateCodeRulesStrategy, UpdateLocalSolutionFile>();
         }
@@ -44,7 +49,8 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                                            IRenameFilesAndFolders renameFilesAndFolders,
                                            FindSolutionFile findSolutionFile,
                                            IGenJitApiClientFactory genJitApiClientFactory,
-                                           IHttpClientFactory httpClientFactory) : IUpdateCodeRulesStrategy
+                                           IHttpClientFactory httpClientFactory,
+                                           IMediator mediator) : IUpdateCodeRulesStrategy
     {
         public bool CanHandle(UpdateCodeRulesParameters parameters)
         {
@@ -94,7 +100,10 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             var combine = Path.Combine(solutionFile.Directory!.FullName, Guid.NewGuid().ToString().ToLowerInvariant());
             var tempFolder = new DirectoryInfo(combine);
             
+            var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
+            
             var httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
             var genjitClient = genJitApiClientFactory.CreateFrom(httpClient);
             
             var codeRuleAsFileStream = await genjitClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
