@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Update
         {
             services.AddUpdateOptionsBuilder();
             services.AddBackendCommandBuilder();
-            services.AddUpdateCodeRules(configuration);
+            services.AddUpdateCodeRulesCommandBuilder(configuration);
             
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, UpdateCommandBuilder>();
         }

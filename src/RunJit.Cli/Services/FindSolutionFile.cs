@@ -26,17 +26,23 @@ namespace RunJit.Cli.Services
                 return fileInfo;
             }
             
+            // 2. Check if path is a directory
+            var directoryInfo = new DirectoryInfo(solutionFile);
+            if (directoryInfo.Exists.IsFalse())
+            {
+                directoryInfo = new DirectoryInfo(Environment.CurrentDirectory);    
+            }
+            
             // 2. If no value or . is used we are searching in the directory
-            var currentDirectory = Environment.CurrentDirectory;
-            var files = Directory.GetFiles(currentDirectory, "*.sln", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(directoryInfo.FullName, "*.sln", SearchOption.AllDirectories);
             if (files.Length < 1)
             {
-                throw new RunJitException($"Could not find a solution file in directory {currentDirectory}");
+                throw new RunJitException($"Could not find a solution file in directory {directoryInfo}");
             }
 
             if (files.Length > 1)
             {
-                throw new RunJitException($"Found more than one solution file in directory {currentDirectory}");
+                throw new RunJitException($"Found more than one solution file in directory {directoryInfo}");
             }
 
             return new FileInfo(files[0]);

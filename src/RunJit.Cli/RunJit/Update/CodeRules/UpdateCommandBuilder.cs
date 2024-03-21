@@ -15,13 +15,12 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             // services.AddUpdateCodeRulesArgumentsBuilder();
             services.AddUpdateCodeRules(configuration);
 
-            services.AddSingletonIfNotExists<IBackendSubCommandBuilder, UpdateCodeRulesCommandBuilder>();
+            services.AddSingletonIfNotExists<IUpdateSubCommandBuilder, UpdateCodeRulesCommandBuilder>();
         }
     }
 
     internal class UpdateCodeRulesCommandBuilder(IUpdateCodeRules updateService,
-                                        // IUpdateCodeRulesArgumentsBuilder argumentsBuilder,
-                                        IUpdateCodeRulesOptionsBuilder optionsBuilder) : IBackendSubCommandBuilder
+                                                IUpdateCodeRulesOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {
         public Command Build()
         {
