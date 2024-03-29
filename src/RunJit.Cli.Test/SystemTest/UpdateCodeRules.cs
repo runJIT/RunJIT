@@ -25,6 +25,23 @@ namespace RunJit.Cli.Test.SystemTest
             // 3. Update to .Net 8
             await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFile.FullName)).ConfigureAwait(false);
         }
+        
+        [DataTestMethod]
+        [DataRow("")]
+        public async Task Should_Update_All_CodeRules_For_Target_Solution(string targetSolution)
+        {
+            // 1. Create new Web Api
+            var solutionFile = new FileInfo(targetSolution);
+
+            // 2. Test if target solution is build able
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+
+            // 3. Update code rules
+            await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFile.FullName)).ConfigureAwait(false);
+
+            // 4. Test if integration was sucessful and buildable
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+        }
     }
 
     internal sealed record UpdateCodeRulesForSolution(string solution) : ICommand;

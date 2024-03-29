@@ -177,7 +177,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             // 7. Get infos which packages are outdated
             // var outdatedCodeRulesResponse = await dotNet.ListOutdatedPackagesAsync(solutionFile).ConfigureAwait(false);
 
-            // await updateCodeRulesPackageService.UpdateCodeRulesPackageAsync(outdatedCodeRulesResponse).ConfigureAwait(false);
+            //  await updateCodeRulesPackageService.UpdateCodeRulesPackageAsync(outdatedCodeRulesResponse).ConfigureAwait(false);
 
             if (existingGitFolder.IsNotNull())
             {
