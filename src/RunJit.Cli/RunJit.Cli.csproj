@@ -13,7 +13,7 @@
             Prerequisites
             - .NET8 SDK or higher
         </PackageReleaseNotes>
-        <PackageTags>RunJit.Cli;Cli;DotNetTool;NetTool;C#;DotNet;.Net;.NetTool;GenJit;CodeJit;RanJit;</PackageTags>
+        <PackageTags>RunJit.Cli;Cli;DotNetTool;NetTool;C#;DotNet;.Net;.NetTool;RunJit;CodeJit;RanJit;</PackageTags>
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>runjit</ToolCommandName>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -68,6 +68,6 @@
       <EmbeddedResource Remove="Logo\Logo.txt" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\..\GenJit.Api\GenJit.Api.Client\GenJit.Api.Client.csproj" />
+      <ProjectReference Include="..\..\..\RunJit.Api\RunJit.Api.Client\RunJit.Api.Client.csproj" />
     </ItemGroup>
 </Project>

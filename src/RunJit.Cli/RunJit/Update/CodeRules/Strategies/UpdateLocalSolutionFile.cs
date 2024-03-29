@@ -3,7 +3,7 @@ using System.IO.Compression;
 using System.Net.Http.Headers;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
-using GenJit.Api.Client;
+using RunJit.Api.Client;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,8 +32,8 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             services.AddFindSolutionFile();
             
             
-            services.AddGenJitApiClientFactory(configuration);
-            services.AddGenJitApiClient();
+            services.AddRunJitApiClientFactory(configuration);
+            services.AddRunJitApiClient();
             services.AddHttpClient();
             services.AddMediator();
 
@@ -48,7 +48,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                                            IUpdateNugetPackageService updateNugetPackageService,
                                            IRenameFilesAndFolders renameFilesAndFolders,
                                            FindSolutionFile findSolutionFile,
-                                           IGenJitApiClientFactory genJitApiClientFactory,
+                                           IRunJitApiClientFactory RunJitApiClientFactory,
                                            IHttpClientFactory httpClientFactory,
                                            IMediator mediator) : IUpdateCodeRulesStrategy
     {
@@ -104,38 +104,36 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
-            var genjitClient = genJitApiClientFactory.CreateFrom(httpClient);
+            var RunJitApiClient = RunJitApiClientFactory.CreateFrom(httpClient);
             
-            var codeRuleAsFileStream = await genjitClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
-            
+            var codeRuleAsFileStream = await RunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
             using var zipArchive = new ZipArchive(codeRuleAsFileStream.FileStream, ZipArchiveMode.Read);
             zipArchive.ExtractToDirectory(tempFolder.FullName);
             
-            // 5. Check if solution file is the file or directory
-            //    if it is null or whitespace we check current directory 
-            var codeRuleSolution = findSolutionFile.Find(tempFolder.FullName);
+            //// 5. Check if solution file is the file or directory
+            ////    if it is null or whitespace we check current directory 
+            //var codeRuleSolution = findSolutionFile.Find(tempFolder.FullName);
 
-            // 6. Build the solution first
-            await dotNet.BuildAsync(codeRuleSolution).ConfigureAwait(false);
+            //// 6. Build the solution first
+            //await dotNet.BuildAsync(codeRuleSolution).ConfigureAwait(false);
 
-            // 7. Get infos which packages are outdated
-            var outdatedNugetCodeRuleSolution = await dotNet.ListOutdatedPackagesAsync(codeRuleSolution).ConfigureAwait(false);
+            //// 7. Get infos which packages are outdated
+            //var outdatedNugetCodeRuleSolution = await dotNet.ListOutdatedPackagesAsync(codeRuleSolution).ConfigureAwait(false);
 
-            // 8. Update the nuget packages
-            await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetCodeRuleSolution, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
+            //// 8. Update the nuget packages
+            //await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetCodeRuleSolution, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
 
             Environment.CurrentDirectory = currentRepoEnvironment;
 
-
-            foreach (var file in tempFolder.EnumerateFiles("*.cs", SearchOption.AllDirectories))
-            {
-                var fileContent = await File.ReadAllTextAsync(file.FullName);
-                if (fileContent.Contains("Pulse.CodeRules.sln"))
-                {
-                    var newFileContent = fileContent.Replace("Pulse.CodeRules.sln", $"{solutionNameNormalized}.sln");
-                    await File.WriteAllTextAsync(file.FullName, newFileContent);
-                }
-            }
+            //foreach (var file in tempFolder.EnumerateFiles("*.cs", SearchOption.AllDirectories))
+            //{
+            //    var fileContent = await File.ReadAllTextAsync(file.FullName);
+            //    if (fileContent.Contains("RunJit.CodeRules.sln"))
+            //    {
+            //        var newFileContent = fileContent.Replace("RunJit.CodeRules.sln", $"{solutionNameNormalized}.sln");
+            //        await File.WriteAllTextAsync(file.FullName, newFileContent);
+            //    }
+            //}
 
             var alreadyExistingCodeRuleFolder = solutionFile.Directory!.EnumerateDirectories("*.CodeRules").FirstOrDefault();
             if (alreadyExistingCodeRuleFolder.IsNotNull())
@@ -143,16 +141,18 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                 alreadyExistingCodeRuleFolder.Delete(true);
             }
 
-            var codeRuleFolder = tempFolder.EnumerateDirectories("Pulse.CodeRules", SearchOption.AllDirectories).FirstOrDefault();
+            var codeRuleFolder = tempFolder.EnumerateDirectories("*.CodeRules", SearchOption.AllDirectories).FirstOrDefault();
             if (codeRuleFolder.IsNull())
             {
-                throw new FileNotFoundException($"Could not find the code rules folder Pulse.CodeRules");
+                throw new FileNotFoundException($"Could not find the code rules folder RunJit.CodeRules");
             }
 
             var newTarget = new DirectoryInfo(Path.Combine(solutionFile.Directory!.FullName, codeRuleFolder.Name));
             codeRuleFolder.MoveTo(newTarget.FullName);
 
-            var renamedDirectory = renameFilesAndFolders.Rename(newTarget, "Pulse.CodeRules", $"{solutionNameNormalized}.CodeRules");
+            var projectNameFromCodeRules = codeRuleFolder.Name.Split(".")[^2];
+            
+            var renamedDirectory = renameFilesAndFolders.Rename(newTarget, projectNameFromCodeRules, solutionNameNormalized);
 
             consoleService.WriteSuccess($"New code rule folder: {renamedDirectory.FullName}");
 
@@ -162,9 +162,14 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                 throw new FileNotFoundException($"Could not find the code rules project after renaming process.");
             }
 
-            await dotNet.AddProjectToSolutionAsync(solutionFile, newCodeRuleProject);
-
             tempFolder.Delete(true);
+            
+            var allCodeRuleCsprojs = solutionFile.Directory.EnumerateFiles("*CodeRule*.csproj",SearchOption.AllDirectories).ToList();
+            foreach (var allCodeRuleCsproj in allCodeRuleCsprojs)
+            {
+                await dotNet.AddProjectToSolutionAsync(solutionFile, allCodeRuleCsproj);   
+            }
+
 
             // 6. Build the solution first
             await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
