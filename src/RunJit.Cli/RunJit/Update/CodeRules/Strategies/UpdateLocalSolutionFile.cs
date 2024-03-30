@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.IO.Compression;
 using System.Net.Http.Headers;
+using System.Security.AccessControl;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using RunJit.Api.Client;
@@ -45,7 +46,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                                            IGitService git,
                                            //IAwsCodeCommit awsCodeCommit,
                                            IDotNet dotNet,
-                                           IUpdateNugetPackageService updateNugetPackageService,
+                                           //IUpdateNugetPackageService updateNugetPackageService,
                                            IRenameFilesAndFolders renameFilesAndFolders,
                                            FindSolutionFile findSolutionFile,
                                            IRunJitApiClientFactory RunJitApiClientFactory,
@@ -75,13 +76,20 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             var existingGitFolder = solutionFile.Directory!.EnumerateDirectories(".git").FirstOrDefault();
             if (existingGitFolder.IsNotNull())
             {
+                Environment.CurrentDirectory = solutionFile.Directory!.FullName;
+                
                 // NEW check for legacy branches and delete them all
                 var branches = await git.GetRemoteBranchesAsync().ConfigureAwait(false);
-                var legacyBranches = branches.Where(b => b.Name.Contains(branchName, StringComparison.OrdinalIgnoreCase)).ToImmutableList();
+                var localBranches = await git.GetLocalBranchesAsync().ConfigureAwait(false);
 
-                await git.DeleteBranchesAsync(legacyBranches).ConfigureAwait(false);
+                if (localBranches.Any(b => b.IsActiveBranch && b.Name == branchName).IsFalse())
+                {
+                    var legacyBranches = branches.Where(b => b.Name.Contains(branchName, StringComparison.OrdinalIgnoreCase)).ToImmutableList();
 
-                await git.CreateBranchAsync(branchName).ConfigureAwait(false);
+                    await git.DeleteBranchesAsync(legacyBranches).ConfigureAwait(false);
+
+                    await git.CreateBranchAsync(branchName).ConfigureAwait(false);
+                }
             }
             
             var currentRepoEnvironment = solutionFile.Directory!.FullName;
@@ -90,11 +98,11 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             // 6. Build the solution first
             await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
 
-            // 7. Get infos which packages are outdated
-            var outdatedNugetTargetSolution = await dotNet.ListOutdatedPackagesAsync(solutionFile).ConfigureAwait(false);
+            //// 7. Get infos which packages are outdated
+            //var outdatedNugetTargetSolution = await dotNet.ListOutdatedPackagesAsync(solutionFile).ConfigureAwait(false);
 
-            // 8. Update the nuget packages
-            await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetTargetSolution, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
+            //// 8. Update the nuget packages
+            //await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetTargetSolution, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
 
             // Create temp folder for fetching and renaming and using
             var combine = Path.Combine(solutionFile.Directory!.FullName, Guid.NewGuid().ToString().ToLowerInvariant());

@@ -27,8 +27,8 @@ namespace RunJit.Cli.Test.SystemTest
         }
         
         [DataTestMethod]
-        [DataRow("")]
-        public async Task Should_Update_All_CodeRules_For_Target_Solution(string targetSolution)
+        [DataRow(@"D:\SoftwareOne\css-partners\SWO.CSS.OneSalesPartnerService.sln")]
+        public async Task Should_Update_All_CodeRules_Into_Specific_Local_Solution(string targetSolution)
         {
             // 1. Create new Web Api
             var solutionFile = new FileInfo(targetSolution);
