@@ -11,5 +11,9 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
         }
     }
 
-    internal record UpdateCodeRulesParameters(string SolutionFile, string GitRepos, string WorkingDirectory, string IgnorePackages);
+    internal record UpdateCodeRulesParameters(string SolutionFile,
+                                              string GitRepos,
+                                              string WorkingDirectory,
+                                              string IgnorePackages,
+                                              string Branch);
 }

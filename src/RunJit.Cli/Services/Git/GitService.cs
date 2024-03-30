@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
+using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
@@ -26,6 +27,8 @@ namespace RunJit.Cli.Git
     public interface IGitService
     {
         Task CloneAsync(string url, string branchName = "");
+        Task CloneAsync(string url, DirectoryInfo targetFolder);
+        Task CloneAsync(string url, string branchName, DirectoryInfo targetFolder);
         Task CheckoutAsync(string branchName);
         Task ResetHardAsync();
         Task CreateBranchAsync(string branchName);
@@ -41,6 +44,7 @@ namespace RunJit.Cli.Git
         Task InitAsync();
         Task<IImmutableList<BranchInfo>> GetAllBranchesAsync();
         Task<IImmutableList<BranchInfo>> GetLocalBranchesAsync();
+        Task FetchAsync();
     }
 
 
@@ -53,6 +57,20 @@ namespace RunJit.Cli.Git
             var branchInfo = branchName.IsNullOrWhiteSpace() ? string.Empty : $" --branch {branchName}";
 
             return RunGitCommandAsync($"clone {branchInfo} {url}");
+        }
+
+        public Task CloneAsync(string url, string branchName, DirectoryInfo targetFolder)
+        {
+            Throw.IfNotExists(targetFolder);
+
+            return RunGitCommandAsync($"clone -b {branchName} {url} {targetFolder.FullName}");
+        }
+
+        public Task CloneAsync(string url, DirectoryInfo targetFolder)
+        {
+            Throw.IfNotExists(targetFolder);
+
+            return RunGitCommandAsync($"clone {url} {targetFolder.FullName}");
         }
 
         public Task CheckoutAsync(string branchName)
@@ -149,6 +167,11 @@ namespace RunJit.Cli.Git
             return branches;
         }
 
+        public Task FetchAsync()
+        {
+            return RunGitCommandAsync("fetch -p");
+        }
+
         public async Task<IImmutableList<BranchInfo>> GetRemoteBranchesAsync()
         {
             var listBranchOutput = await RunGitCommandAsync("branch -r").ConfigureAwait(false);
@@ -182,17 +205,19 @@ namespace RunJit.Cli.Git
         {
             consoleService.WriteInfo($"git {arguments}");
 
-            var stringBuilder = new StringBuilder();
-            var command = Process.StartProcess("git", arguments, null, o => stringBuilder.AppendLine(o));
+            var outputStringBuilder = new StringBuilder();
+            var errorStringBuilder = new StringBuilder();
+            var command = Process.StartProcess("git", arguments, null, o => outputStringBuilder.AppendLine(o), e => errorStringBuilder.AppendLine(e));
             await command.WaitForExitAsync().ConfigureAwait(false);
 
-            var output = stringBuilder.ToString();
+            var output = outputStringBuilder.ToString();
+            var errors = errorStringBuilder.ToString();
             // var command = await dotNetTool.RunAsync("git", arguments).ConfigureAwait(false);
             if (command.ExitCode != 0)
             {
                 if (output.Contains("nothing to commit, working tree clean").IsFalse())
                 {
-                    throw new RunJitException($"git {arguments} was not successful.: ErrorCode: {command.ExitCode}{Environment.NewLine}Output: {Environment.NewLine}{output}");
+                    throw new RunJitException($"git {arguments} was not successful.: ErrorCode: {command.ExitCode}{Environment.NewLine}Output: {Environment.NewLine}{output}. Error:{errors}");
                 }
             }
             consoleService.WriteSuccess($"git {arguments} was successful.");

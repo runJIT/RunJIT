@@ -25,6 +25,7 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
             yield return SolutionFile();
             yield return WorkingDirectory();
             yield return IgnorePackage();
+            yield return BasedOnBranch();
         }
 
         public Option GitRepos()
@@ -71,6 +72,18 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
                 Argument = new Argument<string>("ignorePackages")
                 {
                     Description = "Option to give the package name with it which should not be updated. Sample. EPP or commaseparated multiple. EPP;MySql"
+                }
+            };
+        }
+        
+        public Option BasedOnBranch()
+        {
+            return new Option(new[] { "--branch", "-b" }, "Give the reference branch for. If you update code rules by using git url to clone please provide the reference branch from")
+            {
+                Required = false,
+                Argument = new Argument<string>("branch")
+                {
+                    Description = "Give the reference branch for. If you update code rules by using git url to clone please provide the reference branch from"
                 }
             };
         }

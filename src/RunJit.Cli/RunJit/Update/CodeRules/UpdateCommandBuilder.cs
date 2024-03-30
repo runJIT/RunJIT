@@ -27,7 +27,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             var command = new Command("coderules", "Adds or update code rules for the given solution or git repos");
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
             // argumentsBuilder.Build().ToList().ForEach(argument => command.AddArgument(argument));
-            command.Handler = CommandHandler.Create<string, string, string, string>((solution, gitRepos, workingDirectory, ignorePackages) => updateService.HandleAsync(new UpdateCodeRulesParameters(solution ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty, ignorePackages ?? string.Empty)));
+            command.Handler = CommandHandler.Create<string, string, string, string, string>((solution, gitRepos, workingDirectory, ignorePackages, branch) => updateService.HandleAsync(new UpdateCodeRulesParameters(solution ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty, ignorePackages ?? string.Empty, branch ?? string.Empty)));
             return command;
         }
     }

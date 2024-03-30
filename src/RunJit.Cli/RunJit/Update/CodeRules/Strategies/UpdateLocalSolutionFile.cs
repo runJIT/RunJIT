@@ -109,12 +109,11 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             var tempFolder = new DirectoryInfo(combine);
             
             var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
-            
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
-            var RunJitApiClient = RunJitApiClientFactory.CreateFrom(httpClient);
+            var rRunJitApiClient = RunJitApiClientFactory.CreateFrom(httpClient);
             
-            var codeRuleAsFileStream = await RunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
+            var codeRuleAsFileStream = await rRunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
             using var zipArchive = new ZipArchive(codeRuleAsFileStream.FileStream, ZipArchiveMode.Read);
             zipArchive.ExtractToDirectory(tempFolder.FullName);
             

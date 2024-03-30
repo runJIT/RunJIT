@@ -42,6 +42,23 @@ namespace RunJit.Cli.Test.SystemTest
             // 4. Test if integration was sucessful and buildable
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
         }
+        
+        [DataTestMethod]
+        [DataRow(@"https://softwareone-ca@dev.azure.com/softwareone-ca/Sales%20and%20Marketing/_git/css-partners")]
+        public async Task Should_Update_Code_Rules_By_Cloning_First_A_Repo(string gitUrl)
+        {
+            // 1. Create new Web Api
+            await Mediator.SendAsync(new UpdateCodeRulesPackagesForGitRepos(gitUrl, CodeRuleFolder.FullName)).ConfigureAwait(false);
+
+            //// 2. Test if target solution is build able
+            //await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+
+            //// 3. Update code rules
+            //await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFile.FullName)).ConfigureAwait(false);
+
+            //// 4. Test if integration was sucessful and buildable
+            //await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+        }
     }
 
     internal sealed record UpdateCodeRulesForSolution(string solution) : ICommand;
@@ -101,12 +118,13 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            yield return "backend";
             yield return "coderules";
             yield return "--git-repos";
             yield return parameters.GitRepos;
             yield return "--working-directory";
             yield return parameters.WorkingDirectory;
+            yield return "--branch";
+            yield return "develop";
         }
     }
 }

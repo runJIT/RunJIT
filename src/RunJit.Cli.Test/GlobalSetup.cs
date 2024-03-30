@@ -1,5 +1,6 @@
 ﻿using AspNetCore.Simple.Sdk.Mediator;
 using DotNetTool.Service;
+using Extensions.Pack;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,6 +16,8 @@ namespace RunJit.Cli.Test
         protected static DirectoryInfo WebApiFolder { get; private set; } = null!;
 
         protected static DirectoryInfo NugetFolder { get; private set; } = null!;
+        
+        protected static DirectoryInfo CodeRuleFolder { get; private set; } = null!;
 
         protected static IDotNetTool DotNetTool { get; private set; } = null!;
 
@@ -36,6 +39,7 @@ namespace RunJit.Cli.Test
             DotNetTool = DotNetToolFactory.Create();
             WebApiFolder = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "WebApi"));
             NugetFolder = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Nuget"));
+            CodeRuleFolder = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "CodeRules"));
             Services = serviceProvider;
             
             // Install components
@@ -54,7 +58,30 @@ namespace RunJit.Cli.Test
                 NugetFolder.Delete(true);
             }
 
-            NugetFolder.Create();
+            CodeRuleFolder.Create();
+            
+            if (CodeRuleFolder.Exists)
+            {
+                var gitFolders = CodeRuleFolder.EnumerateDirectories(".git", SearchOption.AllDirectories);
+
+                foreach (var gitFolder in gitFolders)
+                {
+                    if (gitFolder.IsNotNull())
+                    {
+                        gitFolder.Attributes = FileAttributes.Normal;
+                        foreach (var info in gitFolder.GetFileSystemInfos("*", SearchOption.AllDirectories))
+                        {
+                            info.Attributes = FileAttributes.Normal;
+                        }
+
+                        gitFolder.Delete(true);
+                    }
+                }
+                
+                CodeRuleFolder.Delete(true);
+            }
+
+            CodeRuleFolder.Create();
         }
     }
 }

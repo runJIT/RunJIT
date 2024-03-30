@@ -46,6 +46,11 @@ namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
                 throw new RunJitException($"Please call {nameof(IUpdateCodeRulesStrategy.CanHandle)} before call {nameof(IUpdateCodeRulesStrategy.HandleAsync)}");
             }
 
+            if (parameters.Branch.IsNullOrWhiteSpace())
+            {
+                throw new RunJitException($"Please provider a branch name which have to be used as base for integrating the code rules.");
+            }
+
             // 1. Check if solution file is the file or directory
             //    if it is null or whitespace we check current directory
             var repos = parameters.GitRepos.Split(';');
