@@ -17,7 +17,7 @@ namespace RunJit.Cli.Test.SystemTest
         public async Task Should_Update_All_CodeRules_For_Target_Solution()
         {
             // 1. Create new Web Api
-            var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("RunJit.Update.CodeRule", WebApiFolder, BasePath)).ConfigureAwait(false);
+            var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("Simple.Project", WebApiFolder, BasePath)).ConfigureAwait(false);
 
             // 3. Test if generated results is buildable
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
