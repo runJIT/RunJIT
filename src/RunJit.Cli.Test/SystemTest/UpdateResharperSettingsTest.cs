@@ -7,7 +7,7 @@ using RunJit.Cli.Test.Extensions;
 
 namespace RunJit.Cli.Test.SystemTest
 {
-    [TestCategory("runjit update backend resharper settings")]
+    [TestCategory("runjit update resharper settings")]
     [TestClass]
     public class UpdateResharperSettings : GlobalSetup
     {
@@ -50,7 +50,7 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            yield return "backend";
+            
             yield return "resharpersettings";
             yield return "--solution";
             yield return parameters.solution.FullName;
@@ -83,7 +83,7 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            yield return "backend";
+            
             yield return "resharpersettings";
             yield return "--git-repos";
             yield return parameters.GitRepos;

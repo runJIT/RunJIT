@@ -12,7 +12,10 @@ namespace RunJit.Cli.Auth0
         public static void AddAuth0(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuth0Settings(configuration);
-            services.AddMediator(typeof(GetAuth0TokenFor));
+            services.AddMediatR(config =>
+            {
+                config.RegisterServicesFromAssembly(typeof(GetAuth0TokenFor).Assembly);
+            });
         }
     }
 

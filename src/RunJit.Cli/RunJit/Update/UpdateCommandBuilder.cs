@@ -1,10 +1,13 @@
 ﻿using System.CommandLine;
-using System.CommandLine.Invocation;
 using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.RunJit.Update.Backend;
+using RunJit.Cli.RunJit.Rename.Solution;
 using RunJit.Cli.RunJit.Update.CodeRules;
+using RunJit.Cli.RunJit.Update.Net;
+using RunJit.Cli.RunJit.Update.Nuget;
+using RunJit.Cli.RunJit.Update.ResharperSettings;
+using RunJit.Cli.RunJit.Update.SwaggerTests;
 
 namespace RunJit.Cli.RunJit.Update
 {
@@ -12,22 +15,26 @@ namespace RunJit.Cli.RunJit.Update
     {
         public static void AddUpdateCommandBuilder(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddUpdateOptionsBuilder();
             services.AddBackendCommandBuilder();
             services.AddUpdateCodeRulesCommandBuilder(configuration);
+            
+            
+            services.AddDotNetCommandBuilder();
+            services.AddUpdateNugetCommandBuilder();
+            services.AddUpdateCodeRulesCommandBuilder(configuration);
+            services.AddUpdateSwaggerTestsCommandBuilder();
+            services.AddUpdateResharperSettingsCommandBuilder();
             
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, UpdateCommandBuilder>();
         }
     }
 
-    internal class UpdateCommandBuilder(IUpdateOptionsBuilder optionsBuilder,
-                                        IEnumerable<IUpdateSubCommandBuilder> subCommandBuilders)
+    internal class UpdateCommandBuilder(IEnumerable<IUpdateSubCommandBuilder> subCommandBuilders)
         : IRunJitSubCommandBuilder
     {
         public Command Build()
         {
             var command = new Command("update", "Update the ultimate RunJit.Cli");
-            optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
             subCommandBuilders.ForEach(x => command.AddCommand(x.Build()));
             return command;
         }

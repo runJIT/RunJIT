@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
-using RunJit.Cli.RunJit.Update.Backend.Net;
+using RunJit.Cli.RunJit.Update.Net;
 using RunJit.Cli.Services;
 using Solution.Parser.Solution;
 

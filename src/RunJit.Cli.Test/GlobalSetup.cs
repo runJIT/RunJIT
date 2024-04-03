@@ -1,4 +1,5 @@
-﻿using AspNetCore.Simple.Sdk.Mediator;
+﻿using AspNetCore.Simple.Sdk.Authentication.Auth0;
+using AspNetCore.Simple.Sdk.Mediator;
 using DotNetTool.Service;
 using Extensions.Pack;
 using MediatR;
@@ -30,6 +31,7 @@ namespace RunJit.Cli.Test
             var serviceCollection = new ServiceCollection();
 
             serviceCollection.AddMediator();
+            serviceCollection.AddMediator(typeof(GetAuth0TokenFor));
             serviceCollection.AddSingleton(testContext);
             serviceCollection.AddSingleton<IDotNetTool>(dotnetTool);
             

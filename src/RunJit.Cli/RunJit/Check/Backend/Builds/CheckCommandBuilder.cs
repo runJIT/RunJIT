@@ -2,7 +2,6 @@
 using System.CommandLine.Invocation;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.RunJit.Fix.EmbededResources;
 
 namespace RunJit.Cli.RunJit.Check.Backend.Builds
 {

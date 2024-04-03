@@ -6,7 +6,7 @@ using RunJit.Cli.Test.Commands;
 
 namespace RunJit.Cli.Test.SystemTest
 {
-    [TestCategory("runjit update backend net")]
+    [TestCategory("runjit update net")]
     [TestClass]
     public class UpdateBackendNetVersionTest : GlobalSetup
     {
@@ -52,7 +52,6 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            yield return "backend";
             yield return ".net";
             yield return parameters.solution;
             yield return "--version";

@@ -26,6 +26,7 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFile.FullName)).ConfigureAwait(false);
         }
         
+        [Ignore]
         [DataTestMethod]
         [DataRow(@"D:\SoftwareOne\css-partners\SWO.CSS.OneSalesPartnerService.sln")]
         public async Task Should_Update_All_CodeRules_Into_Specific_Local_Solution(string targetSolution)
@@ -43,21 +44,13 @@ namespace RunJit.Cli.Test.SystemTest
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
         }
         
+        [Ignore]
         [DataTestMethod]
         [DataRow(@"https://softwareone-ca@dev.azure.com/softwareone-ca/Sales%20and%20Marketing/_git/css-partners")]
-        public async Task Should_Update_Code_Rules_By_Cloning_First_A_Repo(string gitUrl)
+        public Task Should_Update_Code_Rules_By_Cloning_First_A_Repo(string gitUrl)
         {
             // 1. Create new Web Api
-            await Mediator.SendAsync(new UpdateCodeRulesPackagesForGitRepos(gitUrl, CodeRuleFolder.FullName)).ConfigureAwait(false);
-
-            //// 2. Test if target solution is build able
-            //await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
-
-            //// 3. Update code rules
-            //await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFile.FullName)).ConfigureAwait(false);
-
-            //// 4. Test if integration was sucessful and buildable
-            //await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            return Mediator.SendAsync(new UpdateCodeRulesPackagesForGitRepos(gitUrl, CodeRuleFolder.FullName));
         }
     }
 

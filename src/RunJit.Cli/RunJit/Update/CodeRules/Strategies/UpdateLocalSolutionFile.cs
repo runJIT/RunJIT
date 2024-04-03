@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.IO.Compression;
 using System.Net.Http.Headers;
-using System.Security.AccessControl;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using RunJit.Api.Client;
@@ -13,9 +12,9 @@ using RunJit.Cli.AwsCodeCommit;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
-using RunJit.Cli.RunJit.Update.Backend.Net;
-using RunJit.Cli.RunJit.Update.Backend.Nuget;
+using RunJit.Cli.RunJit.Update.Net;
 using RunJit.Cli.Services;
+using RunJit.Cli.RunJit.Update.Nuget;
 
 namespace RunJit.Cli.RunJit.Update.CodeRules
 {
@@ -36,7 +35,10 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             services.AddRunJitApiClientFactory(configuration);
             services.AddRunJitApiClient();
             services.AddHttpClient();
-            services.AddMediator();
+            services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(typeof(AddUpdateLocalSolutionFileExtension).Assembly);
+            });
 
             services.AddSingletonIfNotExists<IUpdateCodeRulesStrategy, UpdateLocalSolutionFile>();
         }

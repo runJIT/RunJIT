@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.RunJit.Rename.Backend;
+using RunJit.Cli.RunJit.Rename.Solution;
 
 namespace RunJit.Cli.RunJit.Rename
 {

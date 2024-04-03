@@ -68,7 +68,7 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "rename";
-            yield return "backend";
+            yield return "solution";
             yield return parameters.SolutionFileOrFolder;
             yield return "--old-name";
             yield return parameters.OldName;

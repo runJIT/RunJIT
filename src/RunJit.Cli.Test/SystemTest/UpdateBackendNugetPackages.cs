@@ -7,7 +7,7 @@ using RunJit.Cli.Test.Extensions;
 
 namespace RunJit.Cli.Test.SystemTest
 {
-    [TestCategory("runjit update backend nuget")]
+    [TestCategory("runjit update nuget")]
     [TestClass]
     public class UpdateBackendNugetPackagesTest : GlobalSetup
     {
@@ -52,7 +52,7 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            yield return "backend";
+            
             yield return "nuget";
             yield return "--solution";
             yield return parameters.solution;
@@ -85,7 +85,7 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            yield return "backend";
+            
             yield return "nuget";
             yield return "--git-repos";
             yield return parameters.GitRepos;

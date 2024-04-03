@@ -3,7 +3,6 @@ using System.CommandLine.Invocation;
 using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.RunJit.Update.Backend;
 
 namespace RunJit.Cli.RunJit.Update.CodeRules
 {

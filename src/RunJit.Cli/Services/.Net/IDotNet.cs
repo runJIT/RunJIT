@@ -3,7 +3,7 @@ using System.Text;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
-using RunJit.Cli.RunJit.Update.Backend.Nuget;
+using RunJit.Cli.RunJit.Update.Nuget;
 
 namespace RunJit.Cli.Net
 {

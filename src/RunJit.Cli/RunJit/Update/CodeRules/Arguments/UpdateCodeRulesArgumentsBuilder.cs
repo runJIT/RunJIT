@@ -1,7 +1,7 @@
 ﻿//using Extensions.Pack;
 //using Microsoft.Extensions.DependencyInjection;
 
-//namespace RunJit.Cli.RunJit.Update.Backend.CodeRules
+//namespace RunJit.Cli.RunJit.Update.CodeRules
 //{
 //    public static class AddUpdateCodeRulesArgumentsBuilderExtension
 //    {

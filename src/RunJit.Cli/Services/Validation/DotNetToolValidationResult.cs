@@ -1,5 +1,4 @@
 ﻿using Extensions.Pack;
-using RunJit.Cli.Models;
 using RunJit.Cli.Models.Validation;
 
 namespace RunJit.Cli
