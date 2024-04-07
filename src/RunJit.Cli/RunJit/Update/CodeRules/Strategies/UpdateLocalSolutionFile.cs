@@ -3,8 +3,8 @@ using System.IO.Compression;
 using System.Net.Http.Headers;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
-using RunJit.Api.Client;
 using MediatR;
+using RunJit.Api.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Auth0;
@@ -13,8 +13,8 @@ using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
 using RunJit.Cli.RunJit.Update.Net;
-using RunJit.Cli.Services;
 using RunJit.Cli.RunJit.Update.Nuget;
+using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.CodeRules
 {
@@ -51,7 +51,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                                            //IUpdateNugetPackageService updateNugetPackageService,
                                            IRenameFilesAndFolders renameFilesAndFolders,
                                            FindSolutionFile findSolutionFile,
-                                           IRunJitApiClientFactory RunJitApiClientFactory,
+                                           IRunJitApiClientFactory runJitApiClientFactory,
                                            IHttpClientFactory httpClientFactory,
                                            IMediator mediator) : IUpdateCodeRulesStrategy
     {
@@ -113,7 +113,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
-            var rRunJitApiClient = RunJitApiClientFactory.CreateFrom(httpClient);
+            var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
 
             var codeRuleAsFileStream = await rRunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
             using var zipArchive = new ZipArchive(codeRuleAsFileStream.FileStream, ZipArchiveMode.Read);

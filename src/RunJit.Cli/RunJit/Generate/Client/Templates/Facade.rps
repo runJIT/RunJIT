@@ -1,0 +1,24 @@
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+$usings$
+
+namespace $namespace$
+{
+    public static class Add$name$Extension
+    {
+        public static void Add$name$(this IServiceCollection services)
+        {
+$serviceRegistrations$
+        }
+    }
+
+    public class $name$
+    {  
+        public $name$($paramters$)
+        {
+$assignmentExpressions$
+        }
+
+$properties$
+    }
+}

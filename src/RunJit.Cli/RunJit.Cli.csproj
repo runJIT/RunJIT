@@ -21,6 +21,7 @@
         <PackageIcon>nuget-package-icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <UserSecretsId>6830e677-d5ca-450a-b24d-028018a3375c</UserSecretsId>
+        <StartupObject>Microsoft.VisualStudio.TestPlatform.TestHost.Program</StartupObject>
     </PropertyGroup>
     <ItemGroup>
         <None Include="..\..\assets\nuget-package-icon.png">
@@ -69,5 +70,6 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\..\..\RunJit.Api\RunJit.Api.Client\RunJit.Api.Client.csproj" />
+      <ProjectReference Include="..\RunJit.Cli.CodeRules\RunJit.Cli.CodeRules.csproj" />
     </ItemGroup>
 </Project>

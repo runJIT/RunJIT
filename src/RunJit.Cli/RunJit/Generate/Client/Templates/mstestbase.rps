@@ -1,0 +1,35 @@
+﻿using System.Diagnostics;
+using Extensions.Pack;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace $namespace$
+{
+    [TestClass]
+    public abstract class MsTestBase : ModuleIntegrationTestBase<Startup>
+    {
+
+        [AssemblyInitialize]
+        public static async Task InitAsync(TestContext testContext)
+        {
+            // Very important we have to set now our own asserts.
+            AspNetCore.Simple.MsTest.Sdk.HttpClientAssertExtensions.CustomAssertMethod = typeof(HttpClientAssertExtensions).GetMethod(nameof(HttpClientAssertExtensions.AssertHttpCallAsync));
+
+            await AssemblyInitializeAsync(testContext, (services, configuration) =>
+            {
+                services.Add$clientName$();
+                services.Add$clientName$Factory(configuration);
+            }).ConfigureAwait(false);
+
+
+            var $clientName$Factory = ServiceProvider.GetOrThrowMissingException<I$clientName$Factory>();
+            $clientName$ = $clientName$Factory.CreateFrom(Client);
+
+        }
+
+        protected static $clientName$ $clientName$ { get; private set; } = null!;
+
+
+        [AssemblyCleanup]
+        public static void Cleanup() => AssemblyCleanup();
+    }   
+}

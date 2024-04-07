@@ -6,7 +6,6 @@ using RunJit.Cli.AwsCodeCommit;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
-using RunJit.Cli.Services;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Fix.EmbededResources

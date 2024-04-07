@@ -5,7 +5,6 @@ using RunJit.Cli.AwsCodeCommit;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
-using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.Nuget
 {

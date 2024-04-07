@@ -1,0 +1,60 @@
+﻿using System.Collections.Immutable;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace RunJit.Cli.RunJit.Generate.Client
+{
+    internal static class AddUsingsBuilderExtension
+    {
+        internal static void AddUsingsBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<UsingsBuilder>();
+        }
+    }
+
+    // What we create here:
+    // - We create needed using needed from the facades
+    // 
+    // Samples:
+    //
+    // using Api.Admin;
+    // using Api.Alive;
+    // using Api.BulkResources;
+    // using Api.BulkResourceTranslations;
+    // using Api.Caching;
+    // using Api.Category;
+    // using Api.Countries;
+    // using Api.ErrorLog;
+    // using Api.Files;
+    // using Api.Filter;
+    internal class UsingsBuilder
+    {
+        internal string BuildFrom(IImmutableList<GeneratedFacade> facades, string projectName)
+        {
+            var usings = facades.Select(facade => $"using {projectName}.{ClientGenConstants.Api}.{facade.Domain};").Flatten(Environment.NewLine);
+            return usings;
+        }
+
+        internal string BuildFrom(GeneratedClient generatedClient, string projectName)
+        {
+            var usings = CollectUsings(generatedClient).Flatten(Environment.NewLine);
+
+            return usings;
+
+            IEnumerable<string> CollectUsings(GeneratedClient generatedClient)
+            {
+                foreach (var facade in generatedClient.Facades)
+                {
+                    // Users
+                    yield return $"using {projectName}.{ClientGenConstants.Api}.{facade.Domain};";
+
+                    foreach (var endpoint in facade.Endpoints)
+                    {
+                        // Users.V1
+                        yield return $"using {projectName}.{ClientGenConstants.Api}.{facade.Domain}.{endpoint.ControllerInfo.Version.Normalized};";
+                    }
+                }
+            }
+        }
+    }
+}

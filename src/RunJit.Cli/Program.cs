@@ -1,4 +1,4 @@
-namespace RunJit.Cli
+﻿namespace RunJit.Cli
 {
     public static class Program
     {
