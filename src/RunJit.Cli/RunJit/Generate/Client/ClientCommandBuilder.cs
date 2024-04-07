@@ -1,15 +1,16 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Invocation;
 using Extensions.Pack;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.Client
 {
     internal static class AddClientCommandBuilderExtension
     {
-        internal static void AddClientCommandBuilder(this IServiceCollection services)
+        internal static void AddClientCommandBuilder(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddClient();
+            services.AddClient(configuration);
             services.AddClientOptionsBuilder();
 
             services.AddSingletonIfNotExists<IGenerateSubCommandBuilder, ClientCommandBuilder>();

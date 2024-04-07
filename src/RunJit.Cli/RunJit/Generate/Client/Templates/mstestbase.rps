@@ -1,35 +1,47 @@
-﻿using System.Diagnostics;
+﻿using AspNetCore.Simple.MsTest.Sdk;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace $namespace$
 {
     [TestClass]
-    public abstract class MsTestBase : ModuleIntegrationTestBase<Startup>
+    public abstract class ClientTestBase
     {
-
+        private static ApiTestBase<Startup>? _customWebApplicationFactory;
+        private static HttpClient? _httpClient;
+      
+        // In this sample we currently use assembly initialize, to save performance, but you can do it also different.
         [AssemblyInitialize]
-        public static async Task InitAsync(TestContext testContext)
+        public static Task AssemblyInitializeAsync(TestContext _)
         {
-            // Very important we have to set now our own asserts.
-            AspNetCore.Simple.MsTest.Sdk.HttpClientAssertExtensions.CustomAssertMethod = typeof(HttpClientAssertExtensions).GetMethod(nameof(HttpClientAssertExtensions.AssertHttpCallAsync));
-
-            await AssemblyInitializeAsync(testContext, (services, configuration) =>
-            {
+            // Create this with new, is not a fault, the reason is to keep the test class more cleaner.
+            _customWebApplicationFactory = new ApiTestBase<Startup>("Development", (services, config) =>
+            {                
                 services.Add$clientName$();
-                services.Add$clientName$Factory(configuration);
-            }).ConfigureAwait(false);
+                services.Add$clientName$Factory(config);
+            });
+    
+    
+            var serviceProvider = _customWebApplicationFactory.Services;
+             
+            _httpClient = _customWebApplicationFactory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+    
+            // Add your client authentication here !
+    
+            var $clientName$Factory = serviceProvider.GetOrThrowMissingException<I$clientName$Factory>();
+            $clientName$ = $clientName$Factory.CreateFrom(_httpClient);
 
-
-            var $clientName$Factory = ServiceProvider.GetOrThrowMissingException<I$clientName$Factory>();
-            $clientName$ = $clientName$Factory.CreateFrom(Client);
-
+            return Task.CompletedTask;
         }
-
+    	      
         protected static $clientName$ $clientName$ { get; private set; } = null!;
-
-
+    
         [AssemblyCleanup]
-        public static void Cleanup() => AssemblyCleanup();
-    }   
+        public static void AssemblyCleanup()
+        {
+            _customWebApplicationFactory?.Dispose();
+            _httpClient?.Dispose();
+        }  
+    }
 }

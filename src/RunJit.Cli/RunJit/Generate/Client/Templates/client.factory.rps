@@ -55,7 +55,7 @@ namespace $projectName$
 
         public $clientName$ CreateFrom(HttpRequest httpRequest)
         {
-            var httpClient = _httpClientFactory.CreateHttpClient();
+            var httpClient = _httpClientFactory.CreateClient();
             httpRequest.Headers.ForEach(headerEntry =>
             {
                 // Important not content and host header copy
@@ -83,17 +83,13 @@ namespace $projectName$
     public static class Add$clientName$SettingsExtension
     {
         public static void Add$clientName$Settings(this IServiceCollection services, IConfiguration configuration)
-        {
-            var settings = configuration.GetSetting<$clientName$Settings>();
-            if (settings.IsNull())
+        {          
+            if(configuration.TryGetSettings<$clientName$Settings>(out var clientSettings).IsFalse())
             {
-                settings = new $clientName$Settings();
+                clientSettings = new $clientName$Settings();
             }
-
-            var tenantSettings = configuration.GetSetting<Tenant>();
-            settings = settings with { BaseAddress = settings.BaseAddress.Replace("{tenant}", tenantSettings.Name) };
-
-            services.AddSingletonIfNotExists(settings);
+            
+            services.AddSingletonIfNotExists(clientSettings);
         }
     }
 

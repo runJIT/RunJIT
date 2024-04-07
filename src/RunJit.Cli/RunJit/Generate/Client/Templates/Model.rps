@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using AspNetCore.Simple.Sdk.Caching;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

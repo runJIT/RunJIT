@@ -15,11 +15,10 @@ namespace RunJit.Cli.Test.SystemTest
         private const string BasePath = "api/client-gen";
 
         [TestMethod]
-        //
         public async Task Generate_Client_For_Simple_Rest_Endpoint()
         {
             // 1. Create new Web Api
-            var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("ClientGen", WebApiFolder, BasePath)).ConfigureAwait(false);
+            var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("Runjit.ClientGen", WebApiFolder, BasePath)).ConfigureAwait(false);
 
             // 2. Create Web-Api endpoints
             await Mediator.SendAsync(new CreateSimpleRestController(solutionFile, Resource, false)).ConfigureAwait(false);
@@ -31,10 +30,10 @@ namespace RunJit.Cli.Test.SystemTest
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
         }
 
-        // [Ignore("Dev only")]
+        [Ignore("Dev only")]
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
-        public Task Create_Client(string solutionPath)
+        public Task Generate_Client_Of_Existing_Solution_For(string solutionPath)
         {
             return Mediator.SendAsync(new GenerateClient(new FileInfo(solutionPath), false));
         }

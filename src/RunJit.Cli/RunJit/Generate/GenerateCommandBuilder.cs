@@ -10,7 +10,7 @@ namespace RunJit.Cli.RunJit.Generate
     {
         public static void AddGenerateCommandBuilder(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddClientCommandBuilder();
+            services.AddClientCommandBuilder(configuration);
             
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, GenerateCommandBuilder>();
         }

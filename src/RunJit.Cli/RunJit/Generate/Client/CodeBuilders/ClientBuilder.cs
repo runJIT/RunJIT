@@ -46,12 +46,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
     //         public AccountsFacade Accounts { get; init; }  <-- PropertiesBuilder
     //     }
     // }
-    internal class ClientBuilder(
-        UsingsBuilder usingsBuilder,
-        ParameterBuilder parameterBuilder,
-        AssignExpressionBuilder assignExpressionBuilder,
-        ServiceRegistrationBuilder serviceRegistrationBuilder,
-        PropertiesBuilder propertiesBuilder)
+    internal class ClientBuilder(UsingsBuilder usingsBuilder,
+                                 ParameterBuilder parameterBuilder,
+                                 AssignExpressionBuilder assignExpressionBuilder,
+                                 ServiceRegistrationBuilder serviceRegistrationBuilder,
+                                 PropertiesBuilder propertiesBuilder)
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.client.rps");
 

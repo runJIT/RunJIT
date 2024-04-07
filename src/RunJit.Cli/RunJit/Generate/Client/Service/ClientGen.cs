@@ -1,20 +1,22 @@
 ﻿using System.CommandLine.Invocation;
 using Extensions.Pack;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.Client
 {
     internal static class AddClientExtension
     {
-        internal static void AddClient(this IServiceCollection services)
+        internal static void AddClient(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddConsoleService();
             services.AddDotNetToolToolBuildFromStrategy();
             services.AddClientCreator();
             services.AddProcessService();
             services.AddTargetFolderService();
-            services.AddTemplateExtractor();
+            services.AddTemplateExtractor(configuration);
             services.AddTemplateService();
+            services.AddBuildClientFromConsole();
 
             services.AddSingletonIfNotExists<IClientGen, ClientGen>();
         }
@@ -55,7 +57,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var targetDirectory = targetFolderService.CreateTargetDirectory(client);
 
             // 3. Extract templates solution or project templates depends on parameters
-            templateExtractor.ExtractTo(targetDirectory, parameters);
+            await templateExtractor.ExtractToAsync(targetDirectory, parameters).ConfigureAwait(false);
 
             // 4. Renaming all stuff
             templateService.RenameAllIn(targetDirectory, client);
