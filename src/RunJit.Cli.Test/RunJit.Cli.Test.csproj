@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <IsPackable>false</IsPackable>
+        <UserSecretsId>31d14e5f-d607-481f-9526-46b77ac4fd42</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="AspNetCore.Simple.MsTest.Sdk" Version="2.0.2" />
