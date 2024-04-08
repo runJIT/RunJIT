@@ -11,6 +11,7 @@ using RunJit.Cli.AwsCodeCommit;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
+using RunJit.Cli.RunJit.Generate.Client;
 using RunJit.Cli.RunJit.Update.CodeRules;
 using RunJit.Cli.Services;
 
@@ -53,7 +54,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
             {
                 throw new RunJitException($"Please call {nameof(IUpdateCodeRulesStrategy.CanHandle)} before call {nameof(IUpdateCodeRulesStrategy.HandleAsync)}");
             }
-            
+
             if (parameters.Branch.IsNullOrWhiteSpace())
             {
                 throw new RunJitException($"Please provider a branch name which have to be used as base for integrating the code rules.");
@@ -67,8 +68,8 @@ namespace RunJit.Cli.RunJit.New.Lambda
             {
                 Directory.CreateDirectory(orginalStartFolder);
             }
-            
-            
+
+
             foreach (var repo in repos)
             {
                 var index = repos.IndexOf(repo) + 1;
@@ -84,7 +85,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
                 }
 
                 Environment.CurrentDirectory = targetDirectoryInfo.FullName;
-                
+
                 // 1. Git clone
                 await git.CloneAsync(repo, parameters.Branch, targetDirectoryInfo).ConfigureAwait(false);
                 await git.FetchAsync().ConfigureAwait(false);
@@ -131,6 +132,33 @@ namespace RunJit.Cli.RunJit.New.Lambda
                 var codeRuleAsFileStream = await rRunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
                 using var zipArchive = new ZipArchive(codeRuleAsFileStream.FileStream, ZipArchiveMode.Read);
                 zipArchive.ExtractToDirectory(tempFolder.FullName);
+
+                // 3. replace placeholders
+                // Solution and projects
+                var projectName = ExtractProjectName(parameters);
+                renameFilesAndFolders.Rename(tempFolder, "rps.template", projectName);
+
+                renameFilesAndFolders.Rename(tempFolder, "$lambda-name$", parameters.LambdaName);
+
+                // DotNetTool name
+                // class etc. and rest
+                renameFilesAndFolders.Rename(tempFolder, "Rps", parameters.FunctionName);
+
+                renameFilesAndFolders.Rename(tempFolder, "$module$", parameters.ModuleName);
+
+                // Move all folder into real target solution folder
+                foreach (var directory in tempFolder.EnumerateDirectories())
+                {
+                    var destDirName = new DirectoryInfo(Path.Combine(parameters.Solution.Directory!.FullName, directory.Name));
+                    Directory.Move(directory.FullName, destDirName.FullName);
+
+                    var csprojFiles = destDirName.EnumerateFiles("*.csproj", SearchOption.TopDirectoryOnly);
+                    foreach (var csproj in csprojFiles)
+                    {
+                        await dotNet.AddProjectToSolutionAsync(parameters.Solution, csproj).ConfigureAwait(false);
+                    }
+
+                }
 
                 //// 5. Check if solution file is the file or directory
                 ////    if it is null or whitespace we check current directory 
@@ -218,6 +246,11 @@ namespace RunJit.Cli.RunJit.New.Lambda
 
                 consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest coderules packages");
             }
+        }
+        
+        private static string ExtractProjectName(LambdaParameters parameters)
+        {
+            return parameters.LambdaName.Split("-").Select(word => word.FirstCharToUpper()).Flatten(".");
         }
     }
 }

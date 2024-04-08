@@ -7,6 +7,7 @@ using RunJit.Cli.RunJit.Decrypt;
 using RunJit.Cli.RunJit.Encrypt;
 using RunJit.Cli.RunJit.Fix;
 using RunJit.Cli.RunJit.Generate;
+using RunJit.Cli.RunJit.New;
 using RunJit.Cli.RunJit.Rename;
 using RunJit.Cli.RunJit.Update;
 using RunJit.Cli.RunJit.Zip;
@@ -25,6 +26,7 @@ namespace RunJit.Cli.RunJit
             services.AddFixCommandBuilder();
             services.AddCheckCommandBuilder();
             services.AddGenerateCommandBuilder(configuration);
+            services.AddNewCommandBuilder(configuration);
 
             services.AddSingletonIfNotExists<IRunJitCommandBuilder, RunJitCommandBuilder>();
         }

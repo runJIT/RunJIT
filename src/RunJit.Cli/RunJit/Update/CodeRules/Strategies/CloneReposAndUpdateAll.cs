@@ -37,7 +37,8 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                                           FindSolutionFile findSolutionFile,
                                           IMediator mediator,
                                           IHttpClientFactory httpClientFactory,
-                                          IRunJitApiClientFactory runJitApiClientFactory) : IUpdateCodeRulesStrategy
+                                          IRunJitApiClientFactory runJitApiClientFactory,
+                                          RunJitApiClientSettings runJitApiClientSettings) : IUpdateCodeRulesStrategy
     {
         public bool CanHandle(UpdateCodeRulesParameters parameters)
         {
@@ -124,6 +125,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
                 var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
                 var httpClient = httpClientFactory.CreateClient();
+                httpClient.BaseAddress = new Uri(runJitApiClientSettings.BaseAddress);
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
                 var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
 

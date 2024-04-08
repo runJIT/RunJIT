@@ -41,6 +41,9 @@ namespace RunJit.Cli.RunJit.New.Lambda
                 cfg.RegisterServicesFromAssembly(typeof(AddAddLambdaIntoLocalSolutionExtension).Assembly);
             });
 
+            
+            services.AddFindSourceFolder();
+            
             services.AddSingletonIfNotExists<IAddNewLambdaServiceStrategy, AddLambdaIntoLocalSolution>();
         }
     }
@@ -54,7 +57,9 @@ namespace RunJit.Cli.RunJit.New.Lambda
                                               FindSolutionFile findSolutionFile,
                                               IRunJitApiClientFactory runJitApiClientFactory,
                                               IHttpClientFactory httpClientFactory,
-                                              IMediator mediator) : IAddNewLambdaServiceStrategy
+                                              IMediator mediator,
+                                              RunJitApiClientSettings runJitApiClientSettings,
+                                              FindSourceFolder findSourceFolder) : IAddNewLambdaServiceStrategy
     {
         public bool CanHandle(LambdaParameters parameters)
         {
@@ -113,73 +118,46 @@ namespace RunJit.Cli.RunJit.New.Lambda
 
             var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
             var httpClient = httpClientFactory.CreateClient();
+            httpClient.BaseAddress = new Uri(runJitApiClientSettings.BaseAddress);
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
             var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
 
-            var codeRuleAsFileStream = await rRunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
+            var codeRuleAsFileStream = await rRunJitApiClient.Lambdas.V1.CreateLambdaAsync().ConfigureAwait(false);
             using var zipArchive = new ZipArchive(codeRuleAsFileStream.FileStream, ZipArchiveMode.Read);
             zipArchive.ExtractToDirectory(tempFolder.FullName);
 
-            //// 5. Check if solution file is the file or directory
-            ////    if it is null or whitespace we check current directory 
-            //var codeRuleSolution = findSolutionFile.Find(tempFolder.FullName);
-
-            //// 6. Build the solution first
-            //await dotNet.BuildAsync(codeRuleSolution).ConfigureAwait(false);
-
-            //// 7. Get infos which packages are outdated
-            //var outdatedNugetCodeRuleSolution = await dotNet.ListOutdatedPackagesAsync(codeRuleSolution).ConfigureAwait(false);
-
-            //// 8. Update the nuget packages
-            //await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetCodeRuleSolution, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
-
-            Environment.CurrentDirectory = currentRepoEnvironment;
-
-            //foreach (var file in tempFolder.EnumerateFiles("*.cs", SearchOption.AllDirectories))
-            //{
-            //    var fileContent = await File.ReadAllTextAsync(file.FullName);
-            //    if (fileContent.Contains("RunJit.CodeRules.sln"))
-            //    {
-            //        var newFileContent = fileContent.Replace("RunJit.CodeRules.sln", $"{solutionNameNormalized}.sln");
-            //        await File.WriteAllTextAsync(file.FullName, newFileContent);
-            //    }
-            //}
-
-            var alreadyExistingCodeRuleFolder = solutionFile.Directory!.EnumerateDirectories("*.CodeRules").FirstOrDefault();
-            if (alreadyExistingCodeRuleFolder.IsNotNull())
+            foreach (var enumerateDirectory in tempFolder.EnumerateDirectories())
             {
-                alreadyExistingCodeRuleFolder.Delete(true);
+                // 3. replace placeholders
+                // Solution and projects
+                var projectName = ExtractProjectName(parameters);
+                renameFilesAndFolders.Rename(enumerateDirectory, "rps.template", projectName);
+
+                renameFilesAndFolders.Rename(enumerateDirectory, "$lambda-name$", parameters.LambdaName);
+
+                // DotNetTool name
+                // class etc. and rest
+                renameFilesAndFolders.Rename(enumerateDirectory, "Rps", parameters.FunctionName);
+
+                renameFilesAndFolders.Rename(enumerateDirectory, "$module$", parameters.ModuleName);
             }
 
+            var sourceFolder = findSourceFolder.GetTargetSourceFolder(solutionFile);
+            
             foreach (var directory in tempFolder.EnumerateDirectories())
             {
-                var newTarget = new DirectoryInfo(Path.Combine(solutionFile.Directory!.FullName, directory.Name));
+                var newTarget = new DirectoryInfo(Path.Combine(sourceFolder.FullName, directory.Name));
                 directory.MoveTo(newTarget.FullName);
-
-                var projectNameFromCodeRules = directory.Name.Split(".").First();
-
-                var renamedDirectory = renameFilesAndFolders.Rename(newTarget, projectNameFromCodeRules, solutionNameNormalized);
-
-                consoleService.WriteSuccess($"New code rule folder: {renamedDirectory.FullName}");
-
-                var newCodeRuleProject = renamedDirectory.EnumerateFiles("*.csproj").FirstOrDefault();
-                if (newCodeRuleProject.IsNull())
+                
+                var csprojs = newTarget.EnumerateFiles("*.csproj", SearchOption.TopDirectoryOnly);
+                foreach (var projectFile in csprojs)
                 {
-                    throw new FileNotFoundException($"Could not find the code rules project after renaming process.");
+                    await dotNet.AddProjectToSolutionAsync(solutionFile, projectFile);    
                 }
             }
-
+            
             tempFolder.Delete(true);
             
-            var allCodeRuleCsprojs = solutionFile.Directory.EnumerateFiles("*CodeRule*.csproj", SearchOption.AllDirectories)
-                                                 .ToList();
-                
-            foreach (var allCodeRuleCsproj in allCodeRuleCsprojs)
-            {
-                await dotNet.AddProjectToSolutionAsync(solutionFile, allCodeRuleCsproj);
-            }
-            
-
             // 6. Build the solution first
             await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
 
@@ -206,6 +184,11 @@ namespace RunJit.Cli.RunJit.New.Lambda
             }
 
             consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest code rules");
+        }
+        
+        private static string ExtractProjectName(LambdaParameters parameters)
+        {
+            return parameters.LambdaName.Split("-").Select(word => word.FirstCharToUpper()).Flatten(".");
         }
     }
 }
