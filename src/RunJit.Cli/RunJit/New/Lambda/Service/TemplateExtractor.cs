@@ -33,7 +33,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
             var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
 
-            var codeRuleAsFileStream = await rRunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
+            var codeRuleAsFileStream = await rRunJitApiClient.Lambdas.V1.CreateLambdaAsync().ConfigureAwait(false);
             using var zipArchive = new ZipArchive(codeRuleAsFileStream.FileStream, ZipArchiveMode.Read);
             zipArchive.ExtractToDirectory(directoryInfo.FullName);
             

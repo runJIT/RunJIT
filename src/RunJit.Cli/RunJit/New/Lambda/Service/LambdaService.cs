@@ -4,6 +4,7 @@ using DotNetTool.Service;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
+using RunJit.Cli.Net;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {
@@ -24,7 +25,10 @@ namespace RunJit.Cli.RunJit.New.Lambda
         Task HandleAsync(LambdaParameters parameters);
     }
 
-    internal partial class LambdaService(TemplateExtractor templateExtractor, TemplateService templateService, IConsoleService consoleService) : ILambdaService
+    internal partial class LambdaService(TemplateExtractor templateExtractor, 
+                                         TemplateService templateService, 
+                                         IConsoleService consoleService,
+                                         IDotNet dotNet) : ILambdaService
     {
         public async Task HandleAsync(LambdaParameters parameters)
         {
@@ -44,7 +48,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
             templateService.RenameAllIn(parameters.Solution.Directory, lambdaInfos);
 
             // 4. include generated projects into the solution
-            var dotNetTool = await IncludeIntoSolutionAsync(parameters.Solution.FullName, parameters.Solution.Directory, projectName).ConfigureAwait(false);
+            var dotNetTool = await IncludeIntoSolutionAsync(parameters.Solution, parameters.Solution.Directory, projectName).ConfigureAwait(false);
 
             // 5. Update nuget packages
             await dotNetTool.RunAsync("dotnet", $"restore {parameters.Solution.FullName}").ConfigureAwait(false);
@@ -59,14 +63,14 @@ namespace RunJit.Cli.RunJit.New.Lambda
             return new LambdaParameters(parameters.Solution, parameters.ModuleName.ToLower(), parameters.FunctionName.FirstCharToUpper(), parameters.LambdaName.ToLower());
         }
 
-        private static async Task<DotNetTool.Service.DotNetTool> IncludeIntoSolutionAsync(string solutionFullName, DirectoryInfo solutionDirectory, string projectName)
+        private async Task<DotNetTool.Service.DotNetTool> IncludeIntoSolutionAsync(FileInfo solutionFile, DirectoryInfo solutionDirectory, string projectName)
         {
-            var projectFiles = solutionDirectory.EnumerateFiles("*.csproj", searchOption: SearchOption.AllDirectories).Where(file => file.Name.Contains(projectName)).ToList();
+            var projectFiles = solutionDirectory.EnumerateFiles("*.csproj", SearchOption.AllDirectories).Where(file => file.Name.Contains(projectName)).ToList();
             var dotNetTool = DotNetToolFactory.Create();
 
             foreach (var project in projectFiles)
             {
-                await dotNetTool.RunAsync("dotnet", $"sln {solutionFullName} add {project.FullName}").ConfigureAwait(false);
+                await dotNet.AddProjectToSolutionAsync(solutionFile, project).ConfigureAwait(false);
             }
 
             return dotNetTool;
@@ -83,22 +87,23 @@ namespace RunJit.Cli.RunJit.New.Lambda
             {
                 throw new RunJitException($"The provided solution file: {parameters.Solution.FullName} does not exist.");
             }
+
             if (AlphanumericWithMinus().IsMatch(parameters.ModuleName).IsFalse())
             {
                 throw new RunJitException("ModuleName should contain no special characters other than '-'. " +
-                                         "\nExample: 'core'");
+                                          "\nExample: 'core'");
             }
 
             if (AlphanumericWithStartingLetter().IsMatch(parameters.FunctionName).IsFalse())
             {
                 throw new RunJitException("FunctionName should be alphanumeric and not begin with a number. " +
-                                            "\nExample: 'CallGpt'");
+                                          "\nExample: 'CallGpt'");
             }
 
             if (AlphanumericWithMinus().IsMatch(parameters.LambdaName).IsFalse())
             {
                 throw new RunJitException("LambdaName should contain no special characters other than '-'. " +
-                                         "\nExample: 'analytics-gpt-chat'");
+                                          "\nExample: 'analytics-gpt-chat'");
             }
         }
 
