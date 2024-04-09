@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.IO.Compression;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using MediatR;
@@ -154,6 +155,19 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
             foreach (var directory in tempFolder.EnumerateDirectories())
             {
+                // 1. Find solution file usage and exchange to correct solution file name
+                var mstestbaseClasses = directory.EnumerateFiles("MsTestBase.cs", SearchOption.AllDirectories).ToList();
+                foreach (var mstestbaseClass in mstestbaseClasses)
+                {
+                    var fileContent = await File.ReadAllTextAsync(mstestbaseClass.FullName);
+                    
+                    string pattern = @"new SolutionFileName\("".*\.sln""\)";
+                    string replacement = @$"new SolutionFileName(""{solutionFile.Name}"")";
+                    string result = Regex.Replace(fileContent, pattern, replacement);
+                    
+                    await File.WriteAllTextAsync(mstestbaseClass.FullName, result);
+                }
+                
                 var newTarget = new DirectoryInfo(Path.Combine(solutionFile.Directory!.FullName, directory.Name));
                 directory.MoveTo(newTarget.FullName);
 
@@ -169,17 +183,18 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                     throw new FileNotFoundException($"Could not find the code rules project after renaming process.");
                 }
             }
-
-            tempFolder.Delete(true);
             
+            
+            tempFolder.Delete(true);
+
             var allCodeRuleCsprojs = solutionFile.Directory.EnumerateFiles("*CodeRule*.csproj", SearchOption.AllDirectories)
                                                  .ToList();
-                
+
             foreach (var allCodeRuleCsproj in allCodeRuleCsprojs)
             {
                 await dotNet.AddProjectToSolutionAsync(solutionFile, allCodeRuleCsproj);
             }
-            
+
 
             // 6. Build the solution first
             await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
