@@ -23,15 +23,15 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new CreateSimpleRestController(solutionFile, Resource, false)).ConfigureAwait(false);
 
             // 3. Update to .Net 8
-            await Mediator.SendAsync(new UpdateBackendNetVersion(solutionFile.FullName, 8)).ConfigureAwait(false);
+            await Mediator.SendAsync(new UpdateNetVersion(solutionFile.FullName, 8)).ConfigureAwait(false);
         }
     }
 
-    internal sealed record UpdateBackendNetVersion(string solution, int version) : ICommand;
+    internal sealed record UpdateNetVersion(string solution, int version) : ICommand;
 
-    internal sealed class UpdateBackendNetVersionHandler : ICommandHandler<UpdateBackendNetVersion>
+    internal sealed class UpdateBackendNetVersionHandler : ICommandHandler<UpdateNetVersion>
     {
-        public async Task Handle(UpdateBackendNetVersion request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateNetVersion request, CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -47,7 +47,7 @@ namespace RunJit.Cli.Test.SystemTest
             Assert.AreEqual(0, exitCode, output);
         }
 
-        private IEnumerable<string> CollectConsoleParameters(UpdateBackendNetVersion parameters)
+        private IEnumerable<string> CollectConsoleParameters(UpdateNetVersion parameters)
         {
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";

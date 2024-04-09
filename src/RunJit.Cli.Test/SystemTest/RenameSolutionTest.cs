@@ -7,9 +7,9 @@ using RunJit.Cli.Test.Extensions;
 
 namespace RunJit.Cli.Test.SystemTest
 {
-    [TestCategory("runjit rename backend")]
+    [TestCategory("runjit rename solution")]
     [TestClass]
-    public class RenameBackendTest : GlobalSetup
+    public class RenameSolutionTest : GlobalSetup
     {
         private const string Resource = "User";
         private const string BasePath = "api/new-web-api";
