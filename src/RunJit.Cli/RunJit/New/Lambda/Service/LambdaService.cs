@@ -1,17 +1,9 @@
-﻿using System.IO.Compression;
-using System.Net.Http.Headers;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Argument.Check;
-using AspNetCore.Simple.Sdk.Mediator;
 using DotNetTool.Service;
 using Extensions.Pack;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Api.Client;
-using RunJit.Cli.Auth0;
 using RunJit.Cli.ErrorHandling;
-using RunJit.Cli.Net;
-using RunJit.Cli.RunJit.New.Lambda.Models;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {
@@ -21,6 +13,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
         {
             services.AddConsoleService();
             services.AddLambdaParameters();
+            services.AddTemplateExtractor();
             services.AddTemplateService();
             services.AddSingletonIfNotExists<ILambdaService, LambdaService>();
         }
@@ -31,12 +24,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
         Task HandleAsync(LambdaParameters parameters);
     }
 
-    internal partial class LambdaService(TemplateService templateService, 
-                                         IConsoleService consoleService,
-                                         IRunJitApiClientFactory runJitApiClientFactory,
-                                         IMediator mediator,
-                                         IHttpClientFactory httpClientFactory,
-                                         IDotNet dotNet) : ILambdaService
+    internal partial class LambdaService(TemplateExtractor templateExtractor, TemplateService templateService, IConsoleService consoleService) : ILambdaService
     {
         public async Task HandleAsync(LambdaParameters parameters)
         {
@@ -49,47 +37,29 @@ namespace RunJit.Cli.RunJit.New.Lambda
             var projectName = ExtractProjectName(parameters);
             var lambdaInfos = new LambdaInfos(parameters, projectName);
 
-            // 3. Download template
-            var combine = Path.Combine(parameters.Solution.Directory!.FullName, Guid.NewGuid().ToString().ToLowerInvariant());
-            var tempFolder = new DirectoryInfo(combine);
-            
-            var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
-            var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
+            // 2. extract lambda template
+            await templateExtractor.ExtractToAsync(parameters.Solution.Directory);
 
-            var codeRuleAsFileStream = await rRunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
-            using var zipArchive = new ZipArchive(codeRuleAsFileStream.FileStream, ZipArchiveMode.Read);
-            zipArchive.ExtractToDirectory(tempFolder.FullName);
-            
             // 3. replace placeholders
-            templateService.RenameAllIn(tempFolder, lambdaInfos);
+            templateService.RenameAllIn(parameters.Solution.Directory, lambdaInfos);
 
-            // Move all folder into real target solution folder
-            foreach (var directory in tempFolder.EnumerateDirectories())
-            {
-                var destDirName = new DirectoryInfo(Path.Combine(parameters.Solution.Directory.FullName, directory.Name));
-                Directory.Move(directory.FullName, destDirName.FullName);
+            // 4. include generated projects into the solution
+            var dotNetTool = await IncludeIntoSolution(parameters.Solution.FullName, parameters.Solution.Directory, projectName).ConfigureAwait(false);
 
-                var csprojFiles = destDirName.EnumerateFiles("*.csproj", SearchOption.TopDirectoryOnly);
-                foreach (var csproj in csprojFiles)
-                {
-                    await dotNet.AddProjectToSolutionAsync(parameters.Solution, csproj).ConfigureAwait(false);
-                }
-                
-            }
+            // 5. Update nuget packages
+            await dotNetTool.RunAsync("dotnet", $"restore {parameters.Solution.FullName}").ConfigureAwait(false);
 
-            consoleService.WriteSuccess($"Lambda: '{parameters.LambdaName}' successful created");
+            consoleService.WriteSuccess($"Pulse lambda: '{parameters.LambdaName}' successful created");
 
-            consoleService.WriteSuccess(EmbeddedFile.GetFileContentFrom("Logo.Logo.txt"));
+            consoleService.WriteSuccess(EmbeddedFile.GetFileContentFrom("Logo.RunJit.txt"));
         }
 
         private LambdaParameters PreparedParameters(LambdaParameters parameters)
         {
-            return new LambdaParameters(parameters.Solution, parameters.ModuleName.ToLower(), parameters.FunctionName.FirstCharToUpper(), parameters.LambdaName.ToLower(),  parameters.GitRepos, parameters.Branch, parameters.WorkingDirectory);
+            return new LambdaParameters(parameters.Solution, parameters.ModuleName.ToLower(), parameters.FunctionName.FirstCharToUpper(), parameters.LambdaName.ToLower());
         }
 
-        private static async Task<DotNetTool.Service.DotNetTool> IncludeIntoSolutionAsync(string solutionFullName, DirectoryInfo solutionDirectory, string projectName)
+        private static async Task<DotNetTool.Service.DotNetTool> IncludeIntoSolution(string solutionFullName, DirectoryInfo solutionDirectory, string projectName)
         {
             var projectFiles = solutionDirectory.EnumerateFiles("*.csproj", searchOption: SearchOption.AllDirectories).Where(file => file.Name.Contains(projectName)).ToList();
             var dotNetTool = DotNetToolFactory.Create();

@@ -10,7 +10,7 @@ namespace RunJit.Cli.RunJit.New
     {
         public static void AddNewCommandBuilder(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddLambdaCommandBuilder(configuration);
+            services.AddLambdaCommandBuilder();
             
             
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, NewCommandBuilder>();

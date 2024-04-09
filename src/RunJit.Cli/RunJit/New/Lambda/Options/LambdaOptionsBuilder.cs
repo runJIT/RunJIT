@@ -25,8 +25,6 @@ namespace RunJit.Cli.RunJit.New.Lambda
             yield return BuildModuleNameOption();
             yield return BuildFunctionNameOption();
             yield return BuildLambdaNameOption();
-            yield return BasedOnBranch();
-            yield return WorkingDirectory();
         }
 
         private Option BuildSolutionOption()
@@ -70,30 +68,6 @@ namespace RunJit.Cli.RunJit.New.Lambda
                 Argument = new Argument<string>("lambdaName")
                 {
                     Description = "The deployment name of the lambda"
-                }
-            };
-        }
-        
-        public Option BasedOnBranch()
-        {
-            return new Option(new[] { "--branch", "-b" }, "Give the reference branch for. If you update code rules by using git url to clone please provide the reference branch from")
-            {
-                Required = false,
-                Argument = new Argument<string>("branch")
-                {
-                    Description = "Give the reference branch for. If you update code rules by using git url to clone please provide the reference branch from"
-                }
-            };
-        }
-        
-        public Option WorkingDirectory()
-        {
-            return new Option(new[] { "--working-directory", "-wd" }, "The working directory in which all operation should be executed")
-            {
-                Required = false,
-                Argument = new Argument<string>("workingDirectory")
-                {
-                    Description = "The working directory in which all operation should be executed"
                 }
             };
         }

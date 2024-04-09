@@ -67,9 +67,7 @@
         <EmbeddedResource Include="**\*.DotSettings" />
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Remove="Logo\Logo.txt" />
-    </ItemGroup>
-    <ItemGroup>
+      <None Remove="Logo\RunJit.txt" />
       <None Remove="RunJit\Generate\Client\Templates\client.zip" />
     </ItemGroup>
     <ItemGroup>

@@ -22,10 +22,13 @@ namespace RunJit.Cli.Services
         public DirectoryInfo Rename(DirectoryInfo directoryInfo, string originalName, string newName)
         {
             // Check the new target folder exists
+
             var newRootFolder = new DirectoryInfo(directoryInfo.FullName.Replace(originalName, newName));
-
-            Directory.Move(directoryInfo.FullName, newRootFolder.FullName);
-
+            if (directoryInfo.FullName.Contains(originalName))
+            {
+                Directory.Move(directoryInfo.FullName, newRootFolder.FullName);    
+            }
+            
             var folders = newRootFolder.EnumerateDirectories("*.*", SearchOption.AllDirectories).ToList();
             foreach (var folder in folders)
             {

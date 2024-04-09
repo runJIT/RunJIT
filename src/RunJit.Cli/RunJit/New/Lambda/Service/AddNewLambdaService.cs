@@ -4,17 +4,14 @@ using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
-using RunJit.Cli.RunJit.New.Lambda;
+using RunJit.Cli.RunJit.Update.CodeRules;
 
-namespace RunJit.Cli.RunJit.Update.CodeRules
+namespace RunJit.Cli.RunJit.New.Lambda
 {
     public static class AddNewLambdaServiceExtension
     {
         public static void AddNewLambdaService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddNewLambdaIntoLocalSolution(configuration);
-            services.AddCloneRepoAndAddLambda();
-
             services.AddUpdateLocalSolutionFile(configuration);
             services.AddCloneReposAndUpdateAll();
             
