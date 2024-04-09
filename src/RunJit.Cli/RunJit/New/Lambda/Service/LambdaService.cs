@@ -44,7 +44,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
             templateService.RenameAllIn(parameters.Solution.Directory, lambdaInfos);
 
             // 4. include generated projects into the solution
-            var dotNetTool = await IncludeIntoSolution(parameters.Solution.FullName, parameters.Solution.Directory, projectName).ConfigureAwait(false);
+            var dotNetTool = await IncludeIntoSolutionAsync(parameters.Solution.FullName, parameters.Solution.Directory, projectName).ConfigureAwait(false);
 
             // 5. Update nuget packages
             await dotNetTool.RunAsync("dotnet", $"restore {parameters.Solution.FullName}").ConfigureAwait(false);
@@ -59,7 +59,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
             return new LambdaParameters(parameters.Solution, parameters.ModuleName.ToLower(), parameters.FunctionName.FirstCharToUpper(), parameters.LambdaName.ToLower());
         }
 
-        private static async Task<DotNetTool.Service.DotNetTool> IncludeIntoSolution(string solutionFullName, DirectoryInfo solutionDirectory, string projectName)
+        private static async Task<DotNetTool.Service.DotNetTool> IncludeIntoSolutionAsync(string solutionFullName, DirectoryInfo solutionDirectory, string projectName)
         {
             var projectFiles = solutionDirectory.EnumerateFiles("*.csproj", searchOption: SearchOption.AllDirectories).Where(file => file.Name.Contains(projectName)).ToList();
             var dotNetTool = DotNetToolFactory.Create();
