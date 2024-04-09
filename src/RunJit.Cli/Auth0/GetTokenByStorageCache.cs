@@ -50,11 +50,18 @@ namespace RunJit.Cli.Auth0
             var secretFileContent = await File.ReadAllTextAsync(jsonFilePath, cancellationToken).ConfigureAwait(false);
             var auth0Token = secretFileContent.FromJsonStringOrDefault<Auth0Token>();
 
-            if (auth0Token.IsNull() || auth0Token.ExpiresOnUtc.Subtract(DateTimeOffset.UtcNow).TotalMinutes < 1)
+            if (auth0Token.IsNull())
             {
                 auth0Token = await mediator.SendAsync(new GetAuth0TokenFor(authSettings), cancellationToken).ConfigureAwait(false);
                 await File.WriteAllTextAsync(fileInfo.FullName, auth0Token.ToJsonIntended(), cancellationToken).ConfigureAwait(false);
             }
+            
+            if (auth0Token.IsNotNull() && auth0Token.ExpiresOnUtc.Subtract(DateTimeOffset.UtcNow).TotalMinutes < 1)
+            {
+                auth0Token = await mediator.SendAsync(new GetAuth0TokenFor(authSettings), cancellationToken).ConfigureAwait(false);
+                await File.WriteAllTextAsync(fileInfo.FullName, auth0Token.ToJsonIntended(), cancellationToken).ConfigureAwait(false);
+            }
+            
 
             // If all fine we already use existing token.
             return auth0Token;
