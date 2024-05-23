@@ -12,7 +12,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
             services.AddConsoleService();
             services.AddCheckBackendBuildsParameters();
 
-            services.AddUpdateLocalSolutionFile();
+            // services.AddUpdateLocalSolutionFile();
             services.AddCloneReposAndUpdateAll();
 
             services.AddSingletonIfNotExists<ICheckBackendBuilds, CheckBackendBuilds>();

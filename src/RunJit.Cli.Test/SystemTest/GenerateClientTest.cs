@@ -30,7 +30,7 @@ namespace RunJit.Cli.Test.SystemTest
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
         }
 
-        [Ignore("Dev only")]
+        // [Ignore("Dev only")]
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
         public Task Generate_Client_Of_Existing_Solution_For(string solutionPath)

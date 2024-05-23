@@ -91,13 +91,6 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
                     appsettingElement.Add(new XAttribute("Remove", "appsetting*.json"));
                     itemgroupIgnore.Add(appsettingElement);
 
-
-                    //<ItemGroup>
-                    //    <Content Include="appsettings.test.json">
-                    //    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-                    //    </Content>
-                    //</ItemGroup>
-
                     // Test project need special handling :/ 
                     if (appsettings.Any(a => a.Name.Contains("test")))
                     {

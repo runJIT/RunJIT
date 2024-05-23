@@ -44,8 +44,21 @@ namespace $projectName$
             _httpCallHandlerFactory = httpCallHandlerFactory;
         }
 
+        public $clientName$ CreateFrom(string token)
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+            httpClient.BaseAddress = new Uri(_$clientName$Settings.BaseAddress);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
+
+            var client = BuildClient(httpClientHandler);
+
+            return client;
+        }
+
         public $clientName$ CreateFrom(HttpClient httpClient)
         {
+            httpClient.BaseAddress = new Uri(_$clientName$Settings.BaseAddress);
             var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
 
             var client = BuildClient(httpClientHandler);
