@@ -21,12 +21,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class MethodParser(
-        DataTypeFinder dataTypeFinder,
-        UrlBuilder urlBuilder,
-        ModelNormalizer modelNormalizer,
-        ParameterNormalizer parameterNormalizer,
-        ResponseTypeNormalizer responseTypeNormalizer)
+    internal class MethodParser(DataTypeFinder dataTypeFinder,
+                                UrlBuilder urlBuilder,
+                                ModelNormalizer modelNormalizer,
+                                ParameterNormalizer parameterNormalizer,
+                                ResponseTypeNormalizer responseTypeNormalizer)
     {
         internal IImmutableList<MethodInfos> Parse(IImmutableList<Method> methods,
                                                    string baseUrl,

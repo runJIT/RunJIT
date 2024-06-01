@@ -50,36 +50,37 @@ namespace RunJit.Cli.RunJit.Generate.Client
         private readonly string _versionClass = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.version.class.rps");
 
 
-        internal IImmutableList<GeneratedClientCodeForController> Create(IImmutableList<ControllerInfo> controllerInfos, string projectName, string clientName)
+        internal IImmutableList<GeneratedClientCodeForController> Create(IImmutableList<EndpointGroup> endpointGroups, string projectName, string clientName)
         {
-            return controllerInfos.Select(controller => Create(controller, projectName, clientName)).ToImmutableList();
+            return endpointGroups.Select(controller => Create(controller, projectName, clientName)).ToImmutableList();
         }
 
 
-        internal GeneratedClientCodeForController Create(ControllerInfo controllerInfo, string projectName, string clientName)
+        internal GeneratedClientCodeForController Create(EndpointGroup endpointGroup, string projectName, string clientName)
         {
-            var domainName = $"{controllerInfo.Name.Replace("Controller", string.Empty)}";
-            var domainNameWithVersion = $"{domainName}{controllerInfo.Version.Normalized}";
+            var domainName = endpointGroup.GroupName;
+            var domainNameWithVersion = $"{domainName}{endpointGroup.Version.Normalized}";
 
-            var methods = methodBuilder.BuildFor(controllerInfo);
+            var methods = methodBuilder.BuildFor(endpointGroup);
 
-            var @namespace = $"{projectName}.{ClientGenConstants.Api}.{domainName}.{controllerInfo.Version.Normalized}";
+            var @namespace = $"{projectName}.{ClientGenConstants.Api}.{domainName}.{endpointGroup.Version.Normalized}";
 
-            var controllerObsoleteAttribute = controllerInfo.Attributes.FirstOrDefault(a => a.Name == "Obsolete");
-            var attributes = controllerObsoleteAttribute.IsNotNull() ? controllerObsoleteAttribute.SyntaxTree : string.Empty;
-
+            //var controllerObsoleteAttribute = endpointGroup.Attributes.FirstOrDefault(a => a.Name == "Obsolete");
+            //var attributes = controllerObsoleteAttribute.IsNotNull() ? controllerObsoleteAttribute.SyntaxTree : string.Empty;
+            var attributes = string.Empty;
+            
+            
             var methodSyntax = methods.Flatten($"{Environment.NewLine}{Environment.NewLine}");
 
-
             var syntaxTree = _versionClass.Replace("$name$", domainName)
-                                          .Replace("$version$", controllerInfo.Version.Normalized)
+                                          .Replace("$version$", endpointGroup.Version.Normalized)
                                           .Replace("$methods$", methodSyntax)
                                           .Replace("$projectName$", projectName)
                                           .Replace("$clientName$", clientName)
                                           .Replace("$namespace$", @namespace)
                                           .Replace("$attributes$", attributes);
 
-            return new GeneratedClientCodeForController(controllerInfo, syntaxTree, domainNameWithVersion);
+            return new GeneratedClientCodeForController(endpointGroup, syntaxTree, domainNameWithVersion);
         }
     }
 }

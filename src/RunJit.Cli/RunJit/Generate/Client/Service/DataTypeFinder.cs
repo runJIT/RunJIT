@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
 using Extensions.Pack;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Solution.Parser.CSharp;
 
@@ -36,7 +37,24 @@ namespace RunJit.Cli.RunJit.Generate.Client
             return allModels;
         }
 
+        internal IImmutableList<DeclarationToType> FindDataType(IImmutableList<string> fullqualifiedNames, 
+                                                                IImmutableList<CSharpSyntaxTree> syntaxTrees,
+                                                                IImmutableList<Type> reflectionTypes)
+        {
+            var alreadyFound = new List<string>();
 
+            var types = reflectionTypes.Where(t => fullqualifiedNames.Contains(t.FullName)).ToImmutableList();
+            
+            var allTypesWithAllSubTypes = GetAllSubTypes(types, alreadyFound).ToImmutableList();
+
+            var allModels = allTypesWithAllSubTypes.Select(type => syntaxTrees.FindDataType(type))
+                                                   .Where(result => result.Declaration.IsNotNull())
+                                                   .Select(result => new DeclarationToType(result.Declaration!, result.Type))
+                                                   .ToImmutableList();
+
+            return allModels;
+        }
+        
         private IEnumerable<Type> GetAllSubTypes(IImmutableList<Type> types, List<string> alreadyFound)
         {
             foreach (var type in types)

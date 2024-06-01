@@ -43,7 +43,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             {
                 foreach (var endpoint in facade.Endpoints)
                 {
-                    var domain = endpoint.ControllerInfo.DomainName.ToLowerInvariant();
+                    var domain = endpoint.ControllerInfo.GroupName.ToLowerInvariant();
                     var version = endpoint.ControllerInfo.Version.Normalized.ToLowerInvariant();
 
                     yield return $"api_005C{domain}_005C{version}_005Cmodels";

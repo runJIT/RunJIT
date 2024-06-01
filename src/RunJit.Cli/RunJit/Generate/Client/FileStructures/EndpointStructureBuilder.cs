@@ -16,10 +16,9 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class EndpointStructureBuilder(
-        VersionFolderBuilder versionFolderBuilder,
-        ModelFolderBuilder modelFolderBuilder,
-        ModelsToFilesWriter modelsToFileWriter)
+    internal class EndpointStructureBuilder(VersionFolderBuilder versionFolderBuilder,
+                                            ModelFolderBuilder modelFolderBuilder,
+                                            ModelsToFilesWriter modelsToFileWriter)
     {
         internal async Task CreateAsync(DirectoryInfo domainFolder,
                                         IImmutableList<GeneratedClientCodeForController> endpoints,
@@ -39,7 +38,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 var modelsFolder = modelFolderBuilder.Build(versionFolder);
 
                 // 3. Get all models / data types
-                var dataTypes = endpoint.ControllerInfo.Methods.SelectMany(m => m.Models).ToImmutableList();
+                var dataTypes = endpoint.ControllerInfo.Endpoints.SelectMany(m => m.Models).ToImmutableList();
 
                 // 4. Write all models to files
                 await modelsToFileWriter.WriteAsync(modelsFolder, endpoint, dataTypes, projectName, clientName);

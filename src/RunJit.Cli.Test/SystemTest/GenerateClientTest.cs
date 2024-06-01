@@ -1,6 +1,9 @@
 ﻿using System.Diagnostics;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RunJit.Cli.Test.Commands;
 using RunJit.Cli.Test.Extensions;
@@ -33,9 +36,60 @@ namespace RunJit.Cli.Test.SystemTest
         // [Ignore("Dev only")]
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
+        [DataRow(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln")]
         public Task Generate_Client_Of_Existing_Solution_For(string solutionPath)
         {
             return Mediator.SendAsync(new GenerateClient(new FileInfo(solutionPath), false));
+        }
+
+
+        [TestMethod]
+        public async Task Next_Level_Parsing()
+        {
+            // Adjust the path to your solution file
+            string solutionPath = "D:\\AzureDevOps\\AspNetCore.MinimalApi.Sdk\\AspNetCore.MinimalApi.Sdk.sln";
+
+            // Load the workspace and project
+            var workspace = MSBuildWorkspace.Create();
+            var solution = await workspace.OpenSolutionAsync(solutionPath);
+
+            var project = solution.Projects.FirstOrDefault(p => p.Name == "MinimalApi");
+
+            if (project == null)
+            {
+                Console.WriteLine("Project not found.");
+                return;
+            }
+
+            // Get the compilation
+            var compilation = await project.GetCompilationAsync();
+
+            // Find the document and the syntax tree
+            var document = project.Documents.FirstOrDefault(d => d.Name == "GetAllToDoEndpoints.cs");
+            Assert.IsNotNull(document);
+            
+            var syntaxTree = await document.GetSyntaxTreeAsync();
+
+            Assert.IsNotNull(syntaxTree);
+            
+            // Get the semantic model
+            Assert.IsNotNull(compilation);
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+
+            var root = syntaxTree.GetRoot();
+
+            var returnStatement = root.DescendantNodes()
+                                      .OfType<ReturnStatementSyntax>()
+                                      .Last();
+
+            var returnExpression = returnStatement.Expression as InvocationExpressionSyntax;
+            
+            Assert.IsNotNull(returnExpression);
+
+            var methodSymbol = semanticModel.GetSymbolInfo(returnExpression).Symbol as IMethodSymbol;
+            var returnType = methodSymbol?.ReturnType;
+
+            Console.WriteLine($"Return type: {returnType}");
         }
     }
 

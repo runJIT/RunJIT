@@ -40,6 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{6AC9F702
 		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunJit.Api.Client", "..\RunJit.Api\src\RunJit.Api.Client\RunJit.Api.Client.csproj", "{1EF63AAD-1908-4496-B5BA-600BD642DB23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{D52C1514-E9FB-4053-9094-B9DF7352D99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D52C1514-E9FB-4053-9094-B9DF7352D99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D52C1514-E9FB-4053-9094-B9DF7352D99C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EF63AAD-1908-4496-B5BA-600BD642DB23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EF63AAD-1908-4496-B5BA-600BD642DB23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EF63AAD-1908-4496-B5BA-600BD642DB23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EF63AAD-1908-4496-B5BA-600BD642DB23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

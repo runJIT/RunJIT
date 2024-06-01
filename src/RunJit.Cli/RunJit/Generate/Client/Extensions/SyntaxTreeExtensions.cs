@@ -1,11 +1,23 @@
 ﻿using System.Collections.Immutable;
+using System.Reflection;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Routing;
 using Solution.Parser.CSharp;
+using Solution.Parser.CSharp.Models;
 
 namespace RunJit.Cli.RunJit.Generate.Client
 {
     internal static class SyntaxTreeExtensions
     {
+        private static readonly string[] MapActions = new string[]
+        {
+            ".MapGet(",
+            ".MapPost(",
+            ".MapDelete(",
+            ".MapPut(",
+            ".MapPatch("
+        };
+        
         internal static IImmutableList<Class> GetAllControllers(this IImmutableList<CSharpSyntaxTree> syntaxTrees)
         {
             var controllers = (from syntaxTree in syntaxTrees

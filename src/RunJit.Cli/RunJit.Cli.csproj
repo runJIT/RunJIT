@@ -37,7 +37,7 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.0" />
+        <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.1" />
         <PackageReference Include="DotNetTool.Service" Version="0.3.0" />
         <PackageReference Include="Extensions.Pack" Version="5.0.0" />
         <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
@@ -49,9 +49,9 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-        <PackageReference Include="NuGet.Versioning" Version="6.9.1" />
+        <PackageReference Include="NuGet.Versioning" Version="6.10.0" />
         <PackageReference Include="RunJit.Api.Client" Version="0.1.0-alpha.40" />
-        <PackageReference Include="Solution.Parser" Version="2.0.4" />
+        <PackageReference Include="Solution.Parser" Version="2.0.12" />
         <PackageReference Include="System.CommandLine" Version="0.3.0-alpha.20054.1" />
     </ItemGroup>
     <ItemGroup>
@@ -72,5 +72,8 @@
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="RunJit\Generate\Client\Templates\client.zip" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\RunJit.Api\src\RunJit.Api.Client\RunJit.Api.Client.csproj" />
     </ItemGroup>
 </Project>

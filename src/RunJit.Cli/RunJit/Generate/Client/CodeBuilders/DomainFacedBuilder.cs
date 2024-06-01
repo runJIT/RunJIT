@@ -43,11 +43,10 @@ namespace RunJit.Cli.RunJit.Generate.Client
     //         public AdminV1 V1 { get; init; }     <-- PropertiesBuilder
     //     }
     // }
-    internal class DomainFacedBuilder(
-        AssignExpressionBuilder assignExpressionBuilder,
-        ParameterBuilder parameterBuilder,
-        ServiceRegistrationBuilder serviceRegistrationBuilder,
-        PropertiesBuilder propertiesBuilder)
+    internal class DomainFacedBuilder(AssignExpressionBuilder assignExpressionBuilder,
+                                      ParameterBuilder parameterBuilder,
+                                      ServiceRegistrationBuilder serviceRegistrationBuilder,
+                                      PropertiesBuilder propertiesBuilder)
     {
         private readonly string _facadeTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.facade.rps");
 
@@ -59,7 +58,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             // UserFacade
             // => UserV1
             // => UserV2
-            var groupedControllers = generatedClientCodeForEndpoints.GroupBy(g => g.ControllerInfo.Name).ToImmutableList();
+            var groupedControllers = generatedClientCodeForEndpoints.GroupBy(g => g.ControllerInfo.GroupName).ToImmutableList();
 
             var facades = groupedControllers.Select(group => BuildFrom(group, projectName, clientName));
 
