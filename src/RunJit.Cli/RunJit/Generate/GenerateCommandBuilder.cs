@@ -3,6 +3,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Generate.Client;
+using RunJit.Cli.RunJit.Generate.CustomEndpoint;
 
 namespace RunJit.Cli.RunJit.Generate
 {
@@ -11,6 +12,7 @@ namespace RunJit.Cli.RunJit.Generate
         public static void AddGenerateCommandBuilder(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddClientCommandBuilder(configuration);
+            services.AddGenerateCustomEndpointCommandBuilder();
             
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, GenerateCommandBuilder>();
         }
