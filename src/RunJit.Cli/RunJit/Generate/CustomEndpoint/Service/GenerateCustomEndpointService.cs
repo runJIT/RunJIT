@@ -23,10 +23,16 @@ namespace RunJit.Cli.RunJit.Generate.CustomEndpoint
                 parameters.TargetFolder.Create();
             }
 
-            var endpointData = parameters.EndpointData.FromJsonStringAs<EndpointData>();
+            var endpointData = parameters.EndpointData;
+            if(endpointData.EndsWith(".json"))
+            {
+                endpointData = await File.ReadAllTextAsync(endpointData);
+            }
+            
+            var deserializedData = endpointData.FromJsonStringAs<EndpointData>();
 
             // I need a recursive function with a trampolin pattern to iterate over the endpointData.Templates and create the folders and files
-            await CreateFoldersAndFiles(parameters.TargetFolder, endpointData.Templates);
+            await CreateFoldersAndFiles(parameters.TargetFolder, deserializedData.Templates);
 
             consoleService.WriteSuccess($"Endpoints successfully created for your endpoint data:{Environment.NewLine}{parameters.EndpointData}");
         }
