@@ -64,6 +64,33 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
         public async Task HandleAsync(UpdateCodeRulesParameters parameters)
         {
+            try
+            {
+                await HandleInternalAsync(parameters).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                var solutionFile = findSolutionFile.Find(parameters.SolutionFile);
+                var folders = solutionFile.Directory!.EnumerateDirectories().ToImmutableList();
+                foreach (var directoryInfo in folders)
+                {
+                    if (Guid.TryParse(directoryInfo.Name, out var _))
+                    {
+                        directoryInfo.Delete(true);
+                    }
+
+                    if (directoryInfo.Name.Contains("RunJit", StringComparison.OrdinalIgnoreCase))
+                    {
+                        directoryInfo.Delete(true);
+                    }
+                }
+
+                // Cleanup temp folders and runjit folders
+            }
+        }
+
+        private async Task HandleInternalAsync(UpdateCodeRulesParameters parameters)
+        {
             // 0. Check that precondition is met
             if (CanHandle(parameters).IsFalse())
             {
@@ -147,10 +174,28 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             //    }
             //}
 
-            var alreadyExistingCodeRuleFolder = solutionFile.Directory!.EnumerateDirectories("*.CodeRules").FirstOrDefault();
+            var alreadyExistingCodeRuleFolder = solutionFile.Directory!.EnumerateDirectories($"{solutionFile.NameWithoutExtension()}*.CodeRules").FirstOrDefault();
             if (alreadyExistingCodeRuleFolder.IsNotNull())
             {
+                var projectFileInfo = alreadyExistingCodeRuleFolder.EnumerateFiles("*.csproj").FirstOrDefault();
+                if (projectFileInfo.IsNotNull())
+                {
+                    await dotNet.RemoveProjectFromSolutionAsync(solutionFile, projectFileInfo);
+                }
+
                 alreadyExistingCodeRuleFolder.Delete(true);
+            }
+
+            var fixtureFolder = solutionFile.Directory!.EnumerateDirectories($"{solutionFile.NameWithoutExtension()}*.Fixtures").FirstOrDefault();
+            if (fixtureFolder.IsNotNull())
+            {
+                var projectFileInfo = fixtureFolder.EnumerateFiles("*.csproj").FirstOrDefault();
+                if (projectFileInfo.IsNotNull())
+                {
+                    await dotNet.RemoveProjectFromSolutionAsync(solutionFile, projectFileInfo);
+                }
+
+                fixtureFolder.Delete(true);
             }
 
             foreach (var directory in tempFolder.EnumerateDirectories())
@@ -160,15 +205,25 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                 foreach (var mstestbaseClass in mstestbaseClasses)
                 {
                     var fileContent = await File.ReadAllTextAsync(mstestbaseClass.FullName);
-                    
+
                     string pattern = @"new SolutionFileName\("".*\.sln""\)";
                     string replacement = @$"new SolutionFileName(""{solutionFile.Name}"")";
                     string result = Regex.Replace(fileContent, pattern, replacement);
-                    
+
                     await File.WriteAllTextAsync(mstestbaseClass.FullName, result);
                 }
-                
+
                 var newTarget = new DirectoryInfo(Path.Combine(solutionFile.Directory!.FullName, directory.Name));
+                if (newTarget.Exists)
+                {
+                    // If custom rules directory already exists skip it
+                    if (newTarget.Name.Contains(".Custom", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    newTarget.Delete(true);
+                }
                 directory.MoveTo(newTarget.FullName);
 
                 var projectNameFromCodeRules = directory.Name.Split(".").First();
@@ -183,8 +238,8 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                     throw new FileNotFoundException($"Could not find the code rules project after renaming process.");
                 }
             }
-            
-            
+
+
             tempFolder.Delete(true);
 
             var allCodeRuleCsprojs = solutionFile.Directory.EnumerateFiles("*CodeRule*.csproj", SearchOption.AllDirectories)
@@ -221,7 +276,23 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                 //                                           qualityUpdateCodeRulesPackages).ConfigureAwait(false);
             }
 
+            // Cleanup
+            var folders = solutionFile.Directory!.EnumerateDirectories().ToImmutableList();
+            foreach (var directoryInfo in folders)
+            {
+                if (Guid.TryParse(directoryInfo.Name, out var _))
+                {
+                    directoryInfo.Delete(true);
+                }
+
+                if (directoryInfo.Name.Contains("RunJit", StringComparison.OrdinalIgnoreCase))
+                {
+                    directoryInfo.Delete(true);
+                }
+            }
+
             consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest code rules");
+
         }
     }
 }

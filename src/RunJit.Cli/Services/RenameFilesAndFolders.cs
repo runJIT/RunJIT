@@ -26,7 +26,15 @@ namespace RunJit.Cli.Services
             var newRootFolder = new DirectoryInfo(directoryInfo.FullName.Replace(originalName, newName));
             if (directoryInfo.FullName.Contains(originalName))
             {
-                Directory.Move(directoryInfo.FullName, newRootFolder.FullName);    
+                try
+                {
+                    Directory.Move(directoryInfo.FullName, newRootFolder.FullName);    
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                
             }
             
             var folders = newRootFolder.EnumerateDirectories("*.*", SearchOption.AllDirectories).ToList();

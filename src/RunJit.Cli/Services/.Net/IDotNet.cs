@@ -24,6 +24,7 @@ namespace RunJit.Cli.Net
         Task<TryResult> TryBuildAsync(FileInfo solutionFileOrProject);
         Task RestoreNugetPackagesAsync(FileInfo solutionFileOrProject);
         Task AddProjectToSolutionAsync(FileInfo solutionFileInfo, FileInfo projectFileInfo);
+        Task RemoveProjectFromSolutionAsync(FileInfo solutionFileInfo, FileInfo projectFileInfo);
         Task RunAsync(string command, string arguments);
 
     }
@@ -139,6 +140,22 @@ namespace RunJit.Cli.Net
             }
 
             consoleService.WriteSuccess($"Add project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} successful");
+        }
+
+        public async Task RemoveProjectFromSolutionAsync(FileInfo solutionFileInfo, FileInfo projectFileInfo)
+        {
+            consoleService.WriteInfo($"Remove project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName}");
+
+            var buildResult = Process.StartProcess("dotnet", $"sln {solutionFileInfo.FullName} remove {projectFileInfo.FullName} --in-root");
+            await buildResult.WaitForExitAsync().ConfigureAwait(false);
+
+            // var RemoveProjectResult = await dotNetTool.RunAsync("dotnet", $"sln {solutionFileInfo.FullName} Remove {projectFileInfo.FullName} --in-root");
+            if (buildResult.ExitCode != 0)
+            {
+                throw new RunJitException($"Remove project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} failed.");
+            }
+
+            consoleService.WriteSuccess($"Remove project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} successful");
         }
 
         public async Task RunAsync(string command, string arguments)
