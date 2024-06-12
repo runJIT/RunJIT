@@ -8,8 +8,8 @@
         <PackageReference Include="AspNetCore.Simple.MsTest.Sdk" Version="3.0.2" />
         <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.1" />
         <PackageReference Include="Irony" Version="1.5.1" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.9.2" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.10.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.10.0" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
         <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />

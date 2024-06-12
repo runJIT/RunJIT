@@ -51,7 +51,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
         <PackageReference Include="NuGet.Versioning" Version="6.10.0" />
         <PackageReference Include="RunJit.Api.Client" Version="0.1.0-alpha.40" />
-        <PackageReference Include="Solution.Parser" Version="2.0.12" />
+        <PackageReference Include="Solution.Parser" Version="2.0.13" />
         <PackageReference Include="System.CommandLine" Version="0.3.0-alpha.20054.1" />
     </ItemGroup>
     <ItemGroup>
