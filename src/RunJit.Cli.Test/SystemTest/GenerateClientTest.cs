@@ -33,10 +33,11 @@ namespace RunJit.Cli.Test.SystemTest
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
         }
 
-        // [Ignore("Dev only")]
+        [Ignore("Dev only")]
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
         [DataRow(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln")]
+        [DataRow(@"D:\AzureDevOps\SoftwareOne.Workshop.November.2023\RunJit\UserManagement\UserManagement.sln")]
         public Task Generate_Client_Of_Existing_Solution_For(string solutionPath)
         {
             return Mediator.SendAsync(new GenerateClient(new FileInfo(solutionPath), false));
