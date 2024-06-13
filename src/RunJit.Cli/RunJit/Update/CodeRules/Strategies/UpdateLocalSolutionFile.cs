@@ -71,21 +71,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             catch (Exception)
             {
                 var solutionFile = findSolutionFile.Find(parameters.SolutionFile);
-                var folders = solutionFile.Directory!.EnumerateDirectories().ToImmutableList();
-                foreach (var directoryInfo in folders)
-                {
-                    if (Guid.TryParse(directoryInfo.Name, out var _))
-                    {
-                        directoryInfo.Delete(true);
-                    }
-
-                    if (directoryInfo.Name.Contains("RunJit", StringComparison.OrdinalIgnoreCase))
-                    {
-                        directoryInfo.Delete(true);
-                    }
-                }
-
-                // Cleanup temp folders and runjit folders
+                Cleanup(solutionFile);
             }
         }
 
@@ -276,6 +262,14 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                 //                                           qualityUpdateCodeRulesPackages).ConfigureAwait(false);
             }
 
+            Cleanup(solutionFile);
+
+            consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest code rules");
+
+        }
+
+        private static void Cleanup(FileInfo solutionFile)
+        {
             // Cleanup
             var folders = solutionFile.Directory!.EnumerateDirectories().ToImmutableList();
             foreach (var directoryInfo in folders)
@@ -290,9 +284,6 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                     directoryInfo.Delete(true);
                 }
             }
-
-            consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest code rules");
-
         }
     }
 }
