@@ -38,7 +38,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
             foreach (var controller in controllers)
             {
                 // 0. Reflection controller
-                var controllerType = reflectionTypes.First(type => type.FullName == controller.FullQualifiedName);
+                var controllerType = reflectionTypes.FirstOrDefault(type => type.FullName == controller.FullQualifiedName);
+                if (controllerType.IsNull())
+                {
+                    continue;
+                }
 
                 // 1. Extract meta infos version, base url and son on.
                 var version = controller.Attributes.FirstOrDefault(a => a.Name == "ApiVersion")?.Arguments?.FirstOrDefault()?.Trim('"') ?? "1.0";
