@@ -24,12 +24,13 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new UpdateResharperSettingsForSolution(solutionFile)).ConfigureAwait(false);
         }
         
-        [Ignore("Dev purpose only")]
-        [TestMethod]
-        public async Task Should_Update_A_Specific_Solution_With_New_Resharper_Settings_Tests()
+        //[Ignore("Dev purpose only")]
+        [DataTestMethod]
+        [DataRow(@"D:\ResharperSettingsUpdate\pulse-core-service\pulse.core.service.sln")]
+        public async Task Should_Update_A_Specific_Solution_With_New_Resharper_Settings_Tests(string solution)
         {
             // 1. Create new Web Api
-            var solutionFile = new FileInfo(@"D:\ResharperSettingsUpdate\pulse-core\PulseCore.sln");
+            var solutionFile = new FileInfo(solution);
 
             // 3. Test if generated results is buildable
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");

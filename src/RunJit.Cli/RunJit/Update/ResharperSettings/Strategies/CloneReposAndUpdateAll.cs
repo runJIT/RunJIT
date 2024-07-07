@@ -87,11 +87,8 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
                 var resharperSettingsFile = new FileInfo(Path.Combine(solutionFile.Directory!.FullName, $"{solutionName}.sln.DotSettings"));
                 if (resharperSettingsFile.Exists)
                 {
-                    var xOrg = XDocument.Parse(resharperSettings);
                     var existingFileContent = await File.ReadAllTextAsync(resharperSettingsFile.FullName).ConfigureAwait(false);
-                    var current = XDocument.Parse(existingFileContent);
-
-                    if (XNode.DeepEquals(xOrg, current))
+                    if (resharperSettings.Length == existingFileContent.Length)
                     {
                         consoleService.WriteSuccess($"Solution: {solutionFile.FullName} R# setting already up to date nothing to update !");
                         return;
