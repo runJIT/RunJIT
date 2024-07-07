@@ -23,6 +23,20 @@ namespace RunJit.Cli.Test.SystemTest
             // 3. Update to .Net 8
             await Mediator.SendAsync(new UpdateResharperSettingsForSolution(solutionFile)).ConfigureAwait(false);
         }
+        
+        [Ignore("Dev purpose only")]
+        [TestMethod]
+        public async Task Should_Update_A_Specific_Solution_With_New_Resharper_Settings_Tests()
+        {
+            // 1. Create new Web Api
+            var solutionFile = new FileInfo(@"D:\ResharperSettingsUpdate\pulse-core\PulseCore.sln");
+
+            // 3. Test if generated results is buildable
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+
+            // 3. Update to .Net 8
+            await Mediator.SendAsync(new UpdateResharperSettingsForSolution(solutionFile)).ConfigureAwait(false);
+        }
     }
 
     internal sealed record UpdateResharperSettingsForSolution(FileInfo solution) : ICommand;
