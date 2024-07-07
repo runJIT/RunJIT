@@ -50,7 +50,6 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            
             yield return "resharpersettings";
             yield return "--solution";
             yield return parameters.solution.FullName;
