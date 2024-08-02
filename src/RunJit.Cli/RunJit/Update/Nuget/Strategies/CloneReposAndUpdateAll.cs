@@ -26,8 +26,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
     internal class CloneReposAndUpdateAll(IConsoleService consoleService,
                                           IGitService git,
                                           IDotNet dotNet,
-
-                                          //IUpdateNugetPackageService updateNugetPackageService,
+                                          IUpdateNugetPackageService updateNugetPackageService,
                                           IAwsCodeCommit awsCodeCommit,
                                           FindSolutionFile findSolutionFile) : IUpdateNugetStrategy
     {
@@ -87,33 +86,11 @@ namespace RunJit.Cli.RunJit.Update.Nuget
                 // 6. Build the solution first
                 await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
 
-                var allCsproj = solutionFile.Directory!.EnumerateFiles("*.csproj", SearchOption.AllDirectories).ToList();
+                // 7. Get infos which packages are outdated
+                var outdatedNugetResponse = await dotNet.ListOutdatedPackagesAsync(solutionFile).ConfigureAwait(false);
 
-                foreach (var fileInfo in allCsproj)
-                {
-                    var fileContent = await File.ReadAllTextAsync(fileInfo.FullName).ConfigureAwait(false);
-
-                    if (fileContent.Contains("PulseCore.Client"))
-                    {
-                        await dotNet.AddNugetPackageAsync(fileInfo.FullName, "PulseCore.Client", "1.1.0-alpha.1328").ConfigureAwait(false);
-                    }
-
-                    if (fileContent.Contains("PulseCore.Contracts"))
-                    {
-                        await dotNet.AddNugetPackageAsync(fileInfo.FullName, "PulseCore.Contracts", "1.1.0-alpha.1328").ConfigureAwait(false);
-                    }
-
-                    if (fileContent.Contains("PulseCore.Cache"))
-                    {
-                        await dotNet.AddNugetPackageAsync(fileInfo.FullName, "PulseCore.Cache", "1.1.0-alpha.1328").ConfigureAwait(false);
-                    }
-                }
-
-                //// 7. Get infos which packages are outdated
-                //var outdatedNugetResponse = await dotNet.ListOutdatedPackagesAsync(solutionFile).ConfigureAwait(false);
-
-                //// 8. Update the nuget packages
-                //await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetResponse, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
+                // 8. Update the nuget packages
+                await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetResponse, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
 
                 // 9. Add changes to git
                 await git.AddAsync().ConfigureAwait(false);
