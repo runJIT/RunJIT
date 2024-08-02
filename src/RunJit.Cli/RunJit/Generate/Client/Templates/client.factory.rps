@@ -31,23 +31,25 @@ namespace $projectName$
     internal class $clientName$Factory : I$clientName$Factory
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly $clientName$Settings _$clientName$Settings;
+        private readonly $clientName$Settings _$clientNameLower$Settings;
         private readonly HttpCallHandlerFactory _httpCallHandlerFactory;
         private readonly string[] _allowedHeadersToCopy = new[] {"User-Agent", "Authorization", "x-", "Referer"};
 
         public $clientName$Factory(IHttpClientFactory httpClientFactory,
-                                   $clientName$Settings $clientName$Settings,
+                                   $clientName$Settings $clientNameLower$Settings,
                                    HttpCallHandlerFactory httpCallHandlerFactory)
         {
             _httpClientFactory = httpClientFactory;
-            _$clientName$Settings = $clientName$Settings;
+            _$clientNameLower$Settings = $clientNameLower$Settings;
             _httpCallHandlerFactory = httpCallHandlerFactory;
         }
 
         public $clientName$ CreateFrom(string token)
         {
             var httpClient = _httpClientFactory.CreateClient();
-            httpClient.BaseAddress = new Uri(_$clientName$Settings.BaseAddress);
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "$projectName$");
+
+            httpClient.BaseAddress = new Uri(_$clientNameLower$Settings.BaseAddress);
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
 
@@ -58,7 +60,18 @@ namespace $projectName$
 
         public $clientName$ CreateFrom(HttpClient httpClient)
         {
-            httpClient.BaseAddress = new Uri(_$clientName$Settings.BaseAddress);
+            // For possibility to fake or moq the client here. Important for current core lambda tests
+            if (httpClient.BaseAddress.IsNull() || httpClient.BaseAddress.AbsoluteUri.IsNullOrWhiteSpace())
+            {
+                httpClient.BaseAddress = new Uri(_pulseSustainabilityClientSettings.BaseAddress);
+            }
+
+            // pulse specific headers needed
+            if (httpClient.DefaultRequestHeaders.Contains("User-Agent").IsFalse())
+            {
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "$projectName$");
+            }
+
             var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
 
             var client = BuildClient(httpClientHandler);
@@ -69,16 +82,30 @@ namespace $projectName$
         public $clientName$ CreateFrom(HttpRequest httpRequest)
         {
             var httpClient = _httpClientFactory.CreateClient();
+
             httpRequest.Headers.ForEach(headerEntry =>
             {
                 // Important not content and host header copy
                 if (_allowedHeadersToCopy.Any(allowedHeader => headerEntry.Key.Contains(allowedHeader, StringComparison.OrdinalIgnoreCase)))
                 {
-                    httpClient.DefaultRequestHeaders.Add(headerEntry.Key, headerEntry.Value.FirstOrDefault() ?? string.Empty);
+                    if (httpClient.DefaultRequestHeaders.Contains(headerEntry.Key).IsFalse())
+                    {
+                        httpClient.DefaultRequestHeaders.Add(headerEntry.Key, headerEntry.Value.FirstOrDefault() ?? string.Empty);
+                    }
                 }
             });
 
-            httpClient.BaseAddress = new Uri(_$clientName$Settings.BaseAddress);
+            // For possibility to fake or moq the client here. Important for current core lambda tests
+            if (httpClient.BaseAddress.IsNull() ||
+                httpClient.BaseAddress.AbsoluteUri.IsNullOrWhiteSpace())
+            {
+                httpClient.BaseAddress = new Uri(_pulseSustainabilityClientSettings.BaseAddress);
+            }
+
+            if (httpClient.DefaultRequestHeaders.Contains("User-Agent").IsFalse())
+            {
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "$projectName$");
+            }
 
             var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
 

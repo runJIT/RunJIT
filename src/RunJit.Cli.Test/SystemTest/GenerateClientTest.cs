@@ -34,7 +34,7 @@ namespace RunJit.Cli.Test.SystemTest
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
         }
 
-        ///[Ignore("Dev only")]
+        [Ignore("Dev only")]
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
         [DataRow(@"D:\Siemens\pulse-core\PulseCore.sln")]
@@ -46,6 +46,7 @@ namespace RunJit.Cli.Test.SystemTest
             return Mediator.SendAsync(new GenerateClient(new FileInfo(solutionPath), false));
         }
 
+        [Ignore("Dev only")]
         [TestMethod]
         public async Task Next_Level_Parsing()
         {
