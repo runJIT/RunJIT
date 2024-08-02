@@ -11,7 +11,7 @@
 //            services.AddSingletonIfNotExists<IUpdateResharperSettingsPackageService, UpdateResharperSettingsPackageService>();
 //        }
 //    }
-    
+
 //    internal interface IUpdateResharperSettingsPackageService
 //    {
 //        Task UpdateResharperSettingsPackageAsync(OutdatedSwaggerTestsResponse outdatedSwaggerTestsResponse);
@@ -22,7 +22,9 @@
 //    {
 //        public async Task UpdateResharperSettingsPackageAsync(FileInfo solutionFileInfo)
 //        {
-            
+
 //        }
 //    }
 //}
+
+

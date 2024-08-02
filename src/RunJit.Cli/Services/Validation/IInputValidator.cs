@@ -7,7 +7,7 @@ namespace RunJit.Cli
     {
         ValidationResult Validate(string value);
     }
-    
+
     [DebuggerDisplay("Validate: '{" + nameof(IsValid) + "}")]
     public class ValidationResult(string errors)
     {

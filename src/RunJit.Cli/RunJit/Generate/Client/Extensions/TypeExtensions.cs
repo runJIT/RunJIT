@@ -7,9 +7,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
         internal static IEnumerable<Type> GetAllGenericArguments(this Type type)
         {
             var genericArguments = type.GetGenericArguments();
+
             foreach (var genericArgument in genericArguments)
             {
                 var subTypes = GetAllGenericArguments(genericArgument);
+
                 foreach (var subType in subTypes)
                 {
                     yield return subType;
@@ -27,6 +29,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             }
 
             var genericArguments = type.GetGenericArguments();
+
             foreach (var genericArgument in genericArguments)
             {
                 yield return genericArgument;

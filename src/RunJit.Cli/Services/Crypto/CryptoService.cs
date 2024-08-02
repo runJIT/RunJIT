@@ -16,6 +16,7 @@ namespace RunJit.Cli.Crypto
     public interface ICryptoService
     {
         Task<string> EncryptAsync(string clearText);
+
         Task<string> DecryptAsync(string encrypted);
     }
 

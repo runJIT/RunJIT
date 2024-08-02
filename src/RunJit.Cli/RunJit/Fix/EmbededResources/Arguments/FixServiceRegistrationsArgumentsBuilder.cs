@@ -26,9 +26,9 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
         public System.CommandLine.Argument BuildSourceOption()
         {
             return new System.CommandLine.Argument<string>()
-            {
-                Name = "solutionFile",
-            };
+                   {
+                       Name = "solutionFile",
+                   };
         }
     }
 }

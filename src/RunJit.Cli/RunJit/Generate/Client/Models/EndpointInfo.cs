@@ -30,23 +30,23 @@ namespace RunJit.Cli.RunJit.Generate.Client
         public required ResponseType ResponseType { get; init; }
 
         public required IImmutableList<ProduceResponseTypes> ProduceResponseTypes { get; init; } = ImmutableList<ProduceResponseTypes>.Empty;
-        
+
         public required IImmutableList<DeclarationBase> Models { get; init; } = ImmutableList<DeclarationBase>.Empty;
-        
-        public ObsoleteInfo? ObsoleteInfo{ get; init; }
+
+        public ObsoleteInfo? ObsoleteInfo { get; init; }
     }
 
     public record ObsoleteInfo(string Info);
-    
+
     [DebuggerDisplay("{GroupName}")]
     public record EndpointGroup
     {
         public IImmutableList<EndpointInfo> Endpoints { get; init; } = ImmutableList<EndpointInfo>.Empty;
-        
+
         public required string GroupName { get; init; } = string.Empty;
-        
+
         public required VersionInfo Version { get; init; } = new("1.0", "V1");
-        
-        public ObsoleteInfo? ObsoleteInfo{ get; init; }
+
+        public ObsoleteInfo? ObsoleteInfo { get; init; }
     }
 }

@@ -16,12 +16,14 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
     internal interface ITemplateService
     {
-        void RenameAllIn(DirectoryInfo targetDirectory, Client client);
+        void RenameAllIn(DirectoryInfo targetDirectory,
+                         Client client);
     }
 
     internal class TemplateService(IRenameFilesAndFolders renameFilesAndFolders) : ITemplateService
     {
-        public void RenameAllIn(DirectoryInfo targetDirectory, Client client)
+        public void RenameAllIn(DirectoryInfo targetDirectory,
+                                Client client)
         {
             renameFilesAndFolders.Rename2(targetDirectory, "rps.template", client.ProjectName);
         }

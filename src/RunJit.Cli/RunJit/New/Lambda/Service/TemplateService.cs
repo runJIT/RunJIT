@@ -14,7 +14,8 @@ namespace RunJit.Cli.RunJit.New.Lambda
 
     internal class TemplateService(RenameFilesAndFolders renameFilesAndFolders)
     {
-        public void RenameAllIn(DirectoryInfo targetDirectory, LambdaInfos lambdaInfos)
+        public void RenameAllIn(DirectoryInfo targetDirectory,
+                                LambdaInfos lambdaInfos)
         {
             // Solution and projects
             renameFilesAndFolders.Rename(targetDirectory, "rps.template", lambdaInfos.ProjectName);

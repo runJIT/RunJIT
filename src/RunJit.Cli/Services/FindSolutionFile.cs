@@ -12,7 +12,7 @@ namespace RunJit.Cli
             services.AddSingletonIfNotExists<FindSolutionFile>();
         }
     }
-    
+
     internal class FindSolutionFile
     {
         internal FileInfo Find(string solutionFile)
@@ -25,16 +25,18 @@ namespace RunJit.Cli
 
                 return fileInfo;
             }
-            
+
             // 2. Check if path is a directory
             var directoryInfo = new DirectoryInfo(solutionFile);
+
             if (directoryInfo.Exists.IsFalse())
             {
-                directoryInfo = new DirectoryInfo(Environment.CurrentDirectory);    
+                directoryInfo = new DirectoryInfo(Environment.CurrentDirectory);
             }
-            
+
             // 2. If no value or . is used we are searching in the directory
             var files = Directory.GetFiles(directoryInfo.FullName, "*.sln", SearchOption.AllDirectories);
+
             if (files.Length < 1)
             {
                 throw new RunJitException($"Could not find a solution file in directory {directoryInfo}");

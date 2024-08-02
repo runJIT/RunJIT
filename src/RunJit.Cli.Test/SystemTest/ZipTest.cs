@@ -12,7 +12,9 @@ namespace RunJit.Cli.Test.SystemTest
     public class ZipTest : GlobalSetup
     {
         private const string ProjectName = "RunJit.Zip";
+
         private const string Resource = "User";
+
         private const string BasePath = "api/data-management";
 
         [TestMethod]
@@ -33,11 +35,13 @@ namespace RunJit.Cli.Test.SystemTest
         }
     }
 
-    internal sealed record ZipDirectory(string Directory, string ZipFile) : ICommand<FileInfo>;
+    internal sealed record ZipDirectory(string Directory,
+                                        string ZipFile) : ICommand<FileInfo>;
 
     internal sealed class ZipDirectoryHandler : ICommandHandler<ZipDirectory, FileInfo>
     {
-        public async Task<FileInfo> Handle(ZipDirectory request, CancellationToken cancellationToken)
+        public async Task<FileInfo> Handle(ZipDirectory request,
+                                           CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -47,12 +51,13 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
 
             var zipFile = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).Last();
+
             return new FileInfo(zipFile);
         }
 
@@ -67,20 +72,22 @@ namespace RunJit.Cli.Test.SystemTest
         }
     }
 
-
     internal sealed record InstallRequiredComponents : ICommand;
 
     internal sealed class InstallAllInOneCliHandler(IDotNetTool donDotNetTool) : ICommandHandler<InstallRequiredComponents>
     {
-        public async Task Handle(InstallRequiredComponents request, CancellationToken cancellationToken)
+        public async Task Handle(InstallRequiredComponents request,
+                                 CancellationToken cancellationToken)
         {
             var result = await donDotNetTool.ExistsAsync("pulse.cli").ConfigureAwait(false);
+
             if (result.IsNotNull())
             {
                 return;
             }
-            
+
             var installResult = await donDotNetTool.InstallAsync("pulse", "0.1.0-alpha.372").ConfigureAwait(false);
+
             if (installResult.ExitCode != 0)
             {
                 throw new Exception(installResult.Output);

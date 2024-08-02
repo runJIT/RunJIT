@@ -76,17 +76,13 @@ namespace RunJit.Cli.RunJit.Generate.Client
     //    public ImmutableList<DeclarationBase> Models { get; init; } = ImmutableList<DeclarationBase>.Empty;
     //}
 
-
     internal class MinimalApiEndpointParser(DataTypeFinder dataTypeFinder)
     {
         private string[] mapActions = new string[]
-        {
-            ".MapGet(",
-            ".MapPost(",
-            ".MapDelete(",
-            ".MapPut(",
-            ".MapPatch("
-        };
+                                      {
+                                          ".MapGet(", ".MapPost(", ".MapDelete(",
+                                          ".MapPut(", ".MapPatch("
+                                      };
 
         internal IImmutableList<EndpointInfo> ExtractFrom(IImmutableList<CSharpSyntaxTree> syntaxTrees,
                                                           IImmutableList<Type> reflectionTypes)
@@ -97,7 +93,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var endpointMappings = GetAllStatements(basePath, syntaxTrees, reflectionTypes);
 
             return endpointMappings;
-
 
             //// 2. Extract all needed infos for generation out
             //var controllerInfos = Parse(endpointMappings, reflectionTypes, syntaxTrees).ToImmutableList();
@@ -114,6 +109,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                     if (statement.SyntaxTree.Contains("MapGroup") && statement.SyntaxTree.Contains(".WithApiVersionSet"))
                     {
                         var result = Regex.Match(statement.SyntaxTree, @"MapGroup\(\""(.*?)\""");
+
                         if (result.Success)
                         {
                             return result.Groups[1].Value;
@@ -130,6 +126,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                             if (statement.Contains("MapGroup") && statement.Contains(".WithApiVersionSet"))
                             {
                                 var result = Regex.Match(statement, @"MapGroup\(\""(.*?)\""");
+
                                 if (result.Success)
                                 {
                                     return result.Groups[1].Value;
@@ -143,7 +140,9 @@ namespace RunJit.Cli.RunJit.Generate.Client
             return string.Empty;
         }
 
-        private IImmutableList<EndpointInfo> GetAllStatements(string basePath, IImmutableList<CSharpSyntaxTree> syntaxTrees, IImmutableList<Type> reflectionTypes)
+        private IImmutableList<EndpointInfo> GetAllStatements(string basePath,
+                                                              IImmutableList<CSharpSyntaxTree> syntaxTrees,
+                                                              IImmutableList<Type> reflectionTypes)
         {
             var listStatements = ImmutableList<EndpointInfo>.Empty;
 
@@ -164,23 +163,24 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                     var normalizedBasePath = basePath.Replace("{apiVersion:apiVersion}", version.Original);
                                     var relativeUrl = ExtractRelativeUrl(methodStatement);
                                     var url = $"{normalizedBasePath}/{relativeUrl}";
-                                    
+
                                     var endpointInfo = new EndpointInfo
-                                    {
-                                        Name = ExtractName(methodStatement),
-                                        DomainName = ExtractDomainName(methodStatement),
-                                        Version = version,
-                                        BaseUrl = normalizedBasePath,
-                                        GroupName = ExtractGroupName(methodStatement),
-                                        SwaggerOperationId = ExtractSwaggerOperationId(methodStatement, version),
-                                        HttpAction = ExtractHttpAction(methodStatement),
-                                        RelativeUrl = url,
-                                        Parameters = ExtractParameters(methodStatement),
-                                        RequestType = ExtractRequestType(methodStatement),
-                                        ResponseType = ExtractResponseType(produceResponseTypes),
-                                        ProduceResponseTypes = produceResponseTypes,
-                                        Models = GetAllUsedModels(produceResponseTypes, syntaxTrees, reflectionTypes, version)
-                                    };
+                                                       {
+                                                           Name = ExtractName(methodStatement),
+                                                           DomainName = ExtractDomainName(methodStatement),
+                                                           Version = version,
+                                                           BaseUrl = normalizedBasePath,
+                                                           GroupName = ExtractGroupName(methodStatement),
+                                                           SwaggerOperationId = ExtractSwaggerOperationId(methodStatement, version),
+                                                           HttpAction = ExtractHttpAction(methodStatement),
+                                                           RelativeUrl = url,
+                                                           Parameters = ExtractParameters(methodStatement),
+                                                           RequestType = ExtractRequestType(methodStatement),
+                                                           ResponseType = ExtractResponseType(produceResponseTypes),
+                                                           ProduceResponseTypes = produceResponseTypes,
+                                                           Models = GetAllUsedModels(produceResponseTypes, syntaxTrees, reflectionTypes,
+                                                                                     version)
+                                                       };
 
                                     listStatements = listStatements.Add(endpointInfo);
                                 }
@@ -188,7 +188,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
                         }
                     }
                 }
-
             }
 
             return listStatements;
@@ -200,12 +199,14 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                                                  VersionInfo versionInfo)
         {
             var responseType = produceResponseTypes.FirstOrDefault(p => p.StatusCode >= 200 && p.StatusCode < 300)?.Type;
+
             if (responseType.IsNull())
             {
                 return ImmutableList<DeclarationBase>.Empty;
             }
-            
+
             var match = GlobalRegex.GetGenericTypeRegex().Match(responseType);
+
             if (match.Success)
             {
                 responseType = match.Groups[0].Value.TrimStart('<').TrimEnd('>');
@@ -227,22 +228,26 @@ namespace RunJit.Cli.RunJit.Generate.Client
         private ResponseType ExtractResponseType(IImmutableList<ProduceResponseTypes> produceResponseTypes)
         {
             var responseType = produceResponseTypes.FirstOrDefault(p => p.StatusCode >= 200 && p.StatusCode < 300)?.Type;
+
             if (responseType.IsNull())
             {
                 return new ResponseType("void", "void");
             }
+
             return new ResponseType(responseType, responseType);
         }
 
         private string ExtractName(string code)
         {
             var match = Regex.Match(code, @"\.WithTags\(""(?<tag>[^""]+)""\)");
+
             return match.Success ? match.Groups["tag"].Value : string.Empty;
         }
 
         private string ExtractDomainName(string code)
         {
             var match = Regex.Match(code, @"\.WithTags\(""(?<tag>[^""]+)""\)");
+
             return match.Success ? match.Groups["tag"].Value : string.Empty;
         }
 
@@ -262,24 +267,29 @@ namespace RunJit.Cli.RunJit.Generate.Client
         private string ExtractGroupName(string code)
         {
             var match = Regex.Match(code, @"\.WithTags\(""(?<tag>[^""]+)""\)");
+
             return match.Success ? match.Groups["tag"].Value : string.Empty;
         }
 
-        private string ExtractSwaggerOperationId(string code, VersionInfo versionInfo)
+        private string ExtractSwaggerOperationId(string code,
+                                                 VersionInfo versionInfo)
         {
             var match = Regex.Match(code, @"\.WithName\(""(?<name>[^""]+)""\)");
+
             return match.Success ? match.Groups["name"].Value.Replace(versionInfo.Normalized, string.Empty) : string.Empty;
         }
 
         private string ExtractHttpAction(string code)
         {
             var match = Regex.Match(code, @"\.Map(?<action>\w+)\(");
+
             return match.Success ? match.Groups["action"].Value : string.Empty;
         }
 
         private string ExtractRelativeUrl(string code)
         {
             var match = Regex.Match(code, @"Map\w+\(\""(.*?)\""");
+
             return match.Success ? match.Groups[1].Value : string.Empty;
         }
 
@@ -289,6 +299,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var regexBrackets = new Regex(@"\((.*?)\)");
 
             var match = regex.Match(code);
+
             if (match.Success)
             {
                 var method = match.Value.Replace(" =>", string.Empty);
@@ -296,11 +307,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 var parameters = method.TrimStart('(').TrimEnd(')').Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim().TrimStart('(').TrimEnd(')'));
                 var ignoreServices = parameters.Where(p => p.DoesNotContain("[FromService")).Where(p => p.Contains(" ")).ToList();
                 var result = Parse(ignoreServices).ToImmutableList();
+
                 return result;
             }
 
             return ImmutableList<Parameter>.Empty;
-
 
             IEnumerable<Parameter> Parse(IEnumerable<string> parameters)
             {
@@ -314,11 +325,18 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
                     var splitted = parameter.Split(" = ").First().Split(" ");
                     var defaultValue = isOptional ? parameter.Split(" = ").Last() : null;
-                    var attribute = parameter.StartsWith('[') ? ImmutableList.Create<Attribute>(new Attribute(splitted[0].TrimStart('[').TrimEnd(']'), ImmutableList<string>.Empty, parameter, string.Empty)) : ImmutableList<Attribute>.Empty;
+
+                    var attribute = parameter.StartsWith('[')
+                                        ? ImmutableList.Create<Attribute>(new Attribute(splitted[0].TrimStart('[').TrimEnd(']'), ImmutableList<string>.Empty, parameter,
+                                                                                        string.Empty))
+                                        : ImmutableList<Attribute>.Empty;
+
                     var type = splitted.Length == 3 ? splitted[1] : splitted[0];
                     var name = splitted.Length == 3 ? splitted[2] : splitted[1];
 
-                    yield return new Parameter(type, name, attribute, parameter, isOptional, defaultValue, string.Empty);
+                    yield return new Parameter(type, name, attribute,
+                                               parameter, isOptional, defaultValue,
+                                               string.Empty);
                 }
             }
         }
@@ -344,7 +362,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // Implement logic to extract response type
             return new ResponseType("", "");
-
         }
 
         private IImmutableList<ProduceResponseTypes> ExtractProduceResponseTypes(string code)

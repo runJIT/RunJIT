@@ -30,6 +30,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                          .Select(version => version.ToApiVersion());
 
             var orderedVersions = allVersions.OrderBy(v => v.Major).ThenBy(v => v.Minor).ToImmutableList();
+
             return orderedVersions;
         }
     }

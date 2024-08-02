@@ -11,5 +11,8 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
         }
     }
 
-    internal record UpdateResharperSettingsParameters(string SolutionFile, string GitRepos, string WorkingDirectory, string IgnorePackages);
+    internal record UpdateResharperSettingsParameters(string SolutionFile,
+                                                      string GitRepos,
+                                                      string WorkingDirectory,
+                                                      string IgnorePackages);
 }

@@ -14,7 +14,6 @@ namespace RunJit.Cli.CodeRules
         [ClassInitialize]
         public static void ClassInit(TestContext _)
         {
-
             _services = FindServices().ToImmutableList();
 
             IEnumerable<(Class Class, Class? Registration, CSharpSyntaxTree syntaxTree)> FindServices()
@@ -27,6 +26,7 @@ namespace RunJit.Cli.CodeRules
                     foreach (var service in services)
                     {
                         var registrationClass = cSharpSyntaxTree.Classes.FirstOrDefault(@class => @class.Name.Contains($"{service.Name}Extension"));
+
                         yield return (service, registrationClass, cSharpSyntaxTree);
                     }
                 }
@@ -36,13 +36,11 @@ namespace RunJit.Cli.CodeRules
         [TestMethod]
         public void Each_Service_Should_Have_A_Registration_Extension_In_The_Same_File()
         {
-
-
             var missingServiceRegistration = (from service in _services
                                               where service.Registration is null
                                               select new
-                                              {
-                                                  Error = $@"
+                                                     {
+                                                         Error = $@"
 Your service:       {service.Class.Name} does not have a service registration declared in same file. 
                     If it is in same file please check the nam
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -57,61 +55,64 @@ Sample:             internal static class Add{service.Class.Name}Extension
                     }}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 "
-                                              }).ToImmutableList();
-
+                                                     }).ToImmutableList();
 
             Assert.IsTrue(missingServiceRegistration.IsEmpty(),
-                $"Total errors: {missingServiceRegistration.Count}. No service registration was found for your declared service:{Environment.NewLine}{missingServiceRegistration.Select(e => e.Error).Flatten(Environment.NewLine)}");
+                          $"Total errors: {missingServiceRegistration.Count}. No service registration was found for your declared service:{Environment.NewLine}{missingServiceRegistration.Select(e => e.Error).Flatten(Environment.NewLine)}");
         }
 
         [TestMethod]
         public void Each_Service_Have_To_Register_Its_Dependencies_Too()
         {
-            var exceptions = ImmutableList.Create("ILoggerFactory", "IFileService", "IDirectoryService", "IHttpClientFactory");
+            var exceptions = ImmutableList.Create("ILoggerFactory", "IFileService", "IDirectoryService",
+                                                  "IHttpClientFactory");
 
             var missingDependencyRegistrations = GetMissingDependencyRegistrations().ToList();
 
             Assert.IsTrue(missingDependencyRegistrations.IsEmpty(),
-                $"Missing dependency registraions detected (Total: {missingDependencyRegistrations.Count}:{Environment.NewLine}{missingDependencyRegistrations.Flatten(Environment.NewLine)}");
+                          $"Missing dependency registraions detected (Total: {missingDependencyRegistrations.Count}:{Environment.NewLine}{missingDependencyRegistrations.Flatten(Environment.NewLine)}");
 
             IEnumerable<string> GetMissingDependencyRegistrations()
             {
                 var servicesWithRegistrations = _services.Where(s => s.Registration is not null).ToImmutableList();
+
                 foreach (var service in servicesWithRegistrations)
                 {
                     var dependencies = service.Class.Constructors.SelectMany(c => c.Parameters).DistinctBy(item => item.Name).ToList();
                     var simpleDependencies = dependencies.Where(d => d.Type.DoesNotContain("<")).ToList();
 
                     var missingRegistrationsOf = simpleDependencies.Where(dependency =>
-                    {
-                        var registrationName = servicesWithRegistrations.FirstOrDefault(reg => reg.Registration?.Name == $"Add{dependency.Type}");
+                                                                          {
+                                                                              var registrationName = servicesWithRegistrations.FirstOrDefault(reg => reg.Registration?.Name == $"Add{dependency.Type}");
 
-                        var neutralName = registrationName.Registration.IsNull() ? dependency.Type.TrimStart('I').ToLowerInvariant() : registrationName.Registration?.Name.ToLowerInvariant() ?? string.Empty;
-                        var missingDependencyRegistration = service.Registration!.Methods.All(method =>
-                        {
-                            var result = method.LineStatements.Any(statement =>
-                            {
-                                if (statement.Contains("//"))
-                                {
-                                    return false;
-                                }
-                                var statementToLower = statement.ToLowerInvariant();
-                                var result = statementToLower.Contains($"add{neutralName}") ||
-                                             statementToLower.Contains($"add{neutralName.Replace("settings", string.Empty)}") ||
-                                             statementToLower.Contains($"add{dependency.Name.ToLowerInvariant()}") ||
-                                             statementToLower.Contains($"add{dependency.Name.ToLowerInvariant()}") ||
-                                             statementToLower.Contains($"addhostedservice<{dependency.Type.ToLowerInvariant()}") ||
-                                             statementToLower.Contains($"addsingletonifnotexists<{dependency.Type.ToLowerInvariant()}");
+                                                                              var neutralName = registrationName.Registration.IsNull() ? dependency.Type.TrimStart('I').ToLowerInvariant() : registrationName.Registration?.Name.ToLowerInvariant() ?? string.Empty;
 
-                                return result;
-                            }).IsFalse();
+                                                                              var missingDependencyRegistration = service.Registration!.Methods.All(method =>
+                                                                                                                                                    {
+                                                                                                                                                        var result = method.LineStatements.Any(statement =>
+                                                                                                                                                                                               {
+                                                                                                                                                                                                   if (statement.Contains("//"))
+                                                                                                                                                                                                   {
+                                                                                                                                                                                                       return false;
+                                                                                                                                                                                                   }
 
-                            return result;
-                        });
+                                                                                                                                                                                                   var statementToLower = statement.ToLowerInvariant();
 
-                        return missingDependencyRegistration;
-                    }).ToImmutableList();
+                                                                                                                                                                                                   var result = statementToLower.Contains($"add{neutralName}") ||
+                                                                                                                                                                                                                statementToLower.Contains($"add{neutralName.Replace("settings", string.Empty)}") ||
+                                                                                                                                                                                                                statementToLower.Contains($"add{dependency.Name.ToLowerInvariant()}") ||
+                                                                                                                                                                                                                statementToLower.Contains($"add{dependency.Name.ToLowerInvariant()}") ||
+                                                                                                                                                                                                                statementToLower.Contains($"addhostedservice<{dependency.Type.ToLowerInvariant()}") ||
+                                                                                                                                                                                                                statementToLower.Contains($"addsingletonifnotexists<{dependency.Type.ToLowerInvariant()}");
 
+                                                                                                                                                                                                   return result;
+                                                                                                                                                                                               }).IsFalse();
+
+                                                                                                                                                        return result;
+                                                                                                                                                    });
+
+                                                                              return missingDependencyRegistration;
+                                                                          }).ToImmutableList();
 
                     var filteredMissing = missingRegistrationsOf.Where(missing => exceptions.All(e => missing.Type.NotEqualsTo(e))).ToImmutableList();
 
@@ -145,19 +146,16 @@ Ctor:       {service.Class.Name}({service.Class.Constructors.MaxBy(c => c.Parame
         [TestMethod]
         public void Each_Service_Registration_Have_To_Be_Called()
         {
-
             var missingRegistrationCalls = FindMissingRegistrationCalls().ToList();
 
             Assert.IsTrue(missingRegistrationCalls.IsEmpty(),
                           $"We found not called service registrations extension. Please call your registrations otherwise your application will not work.{Environment.NewLine}{missingRegistrationCalls.Flatten(Environment.NewLine)}");
-
 
             IEnumerable<string> FindMissingRegistrationCalls()
             {
                 var serviceWithRegistrations = from service in _services
                                                where service.Registration is not null
                                                select service;
-
 
                 var statements = ProductiveCodeSyntaxTreesToAnaylze.SelectMany(c => c.Classes).SelectMany(c => c.Methods).SelectMany(m => m.Statements).ToList();
 
@@ -166,6 +164,7 @@ Ctor:       {service.Class.Name}({service.Class.Constructors.MaxBy(c => c.Parame
                     foreach (var registrationMethod in serviceWithRegistration.Registration.Methods)
                     {
                         var missing = !statements.Any(statement => statement.Contains($".{registrationMethod.Name}"));
+
                         if (missing)
                         {
                             yield return $@"

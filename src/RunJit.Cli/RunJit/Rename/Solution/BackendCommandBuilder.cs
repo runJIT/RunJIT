@@ -12,7 +12,7 @@ namespace RunJit.Cli.RunJit.Rename.Solution
             services.AddBackendOptionsBuilder();
             services.AddBackendArgumentsBuilder();
             services.AddBackendService();
-            
+
             services.AddSingletonIfNotExists<IRenameSubCommandBuilder, BackendCommandBuilder>();
         }
     }
@@ -26,7 +26,11 @@ namespace RunJit.Cli.RunJit.Rename.Solution
             var command = new Command("solution", "Commands to do some actions on backend");
             backendOptionsBuilder.Build().ForEach(x => command.AddOption(x));
             backendArgumentsBuilder.Build().ForEach(x => command.AddArgument(x));
-            command.Handler = CommandHandler.Create<string, string, string>((fileOrFolder, oldName, newName) => backendService.HandleAsync(new BackendParameters(fileOrFolder, oldName, newName)));
+
+            command.Handler = CommandHandler.Create<string, string, string>((fileOrFolder,
+                                                                             oldName,
+                                                                             newName) => backendService.HandleAsync(new BackendParameters(fileOrFolder, oldName, newName)));
+
             return command;
         }
     }

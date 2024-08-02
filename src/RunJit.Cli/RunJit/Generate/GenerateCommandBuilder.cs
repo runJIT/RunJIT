@@ -9,11 +9,12 @@ namespace RunJit.Cli.RunJit.Generate
 {
     public static class AddGenerateCommandBuilderExtension
     {
-        public static void AddGenerateCommandBuilder(this IServiceCollection services, IConfiguration configuration)
+        public static void AddGenerateCommandBuilder(this IServiceCollection services,
+                                                     IConfiguration configuration)
         {
             services.AddClientCommandBuilder(configuration);
             services.AddGenerateCustomEndpointCommandBuilder();
-            
+
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, GenerateCommandBuilder>();
         }
     }
@@ -24,6 +25,7 @@ namespace RunJit.Cli.RunJit.Generate
         {
             var generateCommand = new Command("generate", "The command to generate something like a client, tests or any other cool things");
             generateSubCommandBuilders.ToList().ForEach(builder => generateCommand.AddCommand(builder.Build()));
+
             return generateCommand;
         }
     }

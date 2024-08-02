@@ -56,6 +56,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
 
             // 4. Check if git exists
             var existingGitFolder = solutionFile.Directory!.EnumerateDirectories(".git").FirstOrDefault();
+
             if (existingGitFolder.IsNotNull())
             {
                 // NEW check for legacy branches and delete them all

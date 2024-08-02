@@ -15,7 +15,9 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
 
     internal class EmbeddedFileService
     {
-        internal void EmbedFile(ProjectFile projectFile, string namesapce, string file)
+        internal void EmbedFile(ProjectFile projectFile,
+                                string namesapce,
+                                string file)
         {
             var withoutProject = namesapce.Replace($"{projectFile.ProjectFileInfo.Value.NameWithoutExtension()}.", string.Empty);
             var replaceDots = withoutProject.Replace(".", @"\");
@@ -24,6 +26,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
             var xdocument = XDocument.Load(projectFile.ProjectFileInfo.Value.FullName);
 
             var elements = xdocument.ElementsBy("EmbeddedResource");
+
             if (elements.IsEmpty())
             {
                 var itemGroup = new XElement("ItemGroup");

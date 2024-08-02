@@ -27,17 +27,20 @@ namespace RunJit.Cli.RunJit.Generate.CustomEndpoint
         public required string Folder { get; init; }
 
         public IImmutableList<CodeFile> Files { get; init; } = ImmutableList<CodeFile>.Empty;
-        
+
         public IImmutableList<Template> Templates { get; init; } = ImmutableList<Template>.Empty;
     }
 
     public record CodeFile
     {
         public required string Name { get; set; }
-        
+
         public required string Content { get; set; }
     }
 
-    internal record UrlParameter(string Name, string Type);
-    internal record QueryParameter(string Name, string Type);
+    internal record UrlParameter(string Name,
+                                 string Type);
+
+    internal record QueryParameter(string Name,
+                                   string Type);
 }

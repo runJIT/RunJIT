@@ -11,13 +11,13 @@ namespace RunJit.Cli
         }
     }
 
-
     // I need a conversion of all system types names to the C# names
     public class NetTypeNameNormalizer
     {
         public string Normalize(Type type)
         {
             var typeName = type.Name;
+
             switch (typeName)
             {
                 case nameof(String):
@@ -51,5 +51,4 @@ namespace RunJit.Cli
             }
         }
     }
-
 }

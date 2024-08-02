@@ -16,13 +16,17 @@ namespace RunJit.Cli
         string ReadLine();
 
         void WriteInput(string value);
+
         void WriteSample(string value);
+
         void WriteError(string value);
+
         void WriteSuccess(string value);
+
         void WriteInfo(string value);
+
         void WriteLine();
     }
-
 
     internal class ConsoleService : IConsoleService
     {
@@ -54,6 +58,7 @@ namespace RunJit.Cli
         {
             var result = Console.ReadLine();
             Console.WriteLine();
+
             return result ?? string.Empty;
         }
 

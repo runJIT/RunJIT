@@ -26,7 +26,10 @@ namespace RunJit.Cli.RunJit.Update.Net
             var command = new Command(".net", "Update the .Net framework");
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
             argumentsBuilder.Build().ToList().ForEach(argument => command.AddArgument(argument));
-            command.Handler = CommandHandler.Create<string, int>((solutionFile, version) => updateService.HandleAsync(new DotNetParameters(solutionFile, version)));
+
+            command.Handler = CommandHandler.Create<string, int>((solutionFile,
+                                                                  version) => updateService.HandleAsync(new DotNetParameters(solutionFile, version)));
+
             return command;
         }
     }

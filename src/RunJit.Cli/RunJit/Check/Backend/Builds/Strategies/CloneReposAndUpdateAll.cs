@@ -64,15 +64,15 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
 
                 // 3. Checkout master branch
                 await git.CheckoutAsync("master").ConfigureAwait(false);
-                
+
                 // NEW check for legacy branches and delete them all
                 var branches = await git.GetRemoteBranchesAsync().ConfigureAwait(false);
                 var branchName = "quality/ms-build-check";
-                
-                var legacyBranches = branches.Where(b => b.Name.Contains(branchName,StringComparison.OrdinalIgnoreCase)).ToImmutableList();
-                
+
+                var legacyBranches = branches.Where(b => b.Name.Contains(branchName, StringComparison.OrdinalIgnoreCase)).ToImmutableList();
+
                 await git.DeleteBranchesAsync(legacyBranches).ConfigureAwait(false);
-                
+
                 // 4. Create new branch, check that branch is unique
                 var qualityCheckBackendBuildsPackages = branchName;
 
@@ -90,7 +90,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
                 {
                     // Create error txt -> hint pipeline can be green cause of different net versions !
                     var errorFile = Path.Combine(solutionFile.Directory!.FullName, "build-errors.txt");
-                    await File.WriteAllTextAsync(errorFile, tryBuildResult.Message);
+                    await File.WriteAllTextAsync(errorFile, tryBuildResult.Message).ConfigureAwait(false);
 
                     // 7. Add changes to git
                     await git.AddAsync().ConfigureAwait(false);

@@ -11,5 +11,8 @@ namespace RunJit.Cli.RunJit.Update.Nuget
         }
     }
 
-    internal record UpdateNugetParameters(string SolutionFile, string GitRepos, string WorkingDirectory, string IgnorePackages);
+    internal record UpdateNugetParameters(string SolutionFile,
+                                          string GitRepos,
+                                          string WorkingDirectory,
+                                          string IgnorePackages);
 }

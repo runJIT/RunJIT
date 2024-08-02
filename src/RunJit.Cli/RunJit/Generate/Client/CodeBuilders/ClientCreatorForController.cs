@@ -14,7 +14,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-
     // What we are creating here:
     // - We are creating a specific client class per controller in the api
     // - The code template RunJit.Generate.Client.Templates.version.class.rps contains most predefined stuff which have to be replaced only
@@ -29,7 +28,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
     //     }
     // }
 
-
     // public class AccountsV1  <-- DomainName -> Controller name shorten without controller postfix
     // {
     //     private readonly IHttpCallHandler _httpCallHandler;
@@ -38,7 +36,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
     //     {
     //         _httpCallHandler = httpCallHandler;
     //     }
-
 
     //     public Task<AddAccountResponse> AddAccountAsync(AddAccountPayload addAccountPayload)  <-- MethodBuilder creates all methods
     //     {
@@ -49,14 +46,16 @@ namespace RunJit.Cli.RunJit.Generate.Client
     {
         private readonly string _versionClass = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.version.class.rps");
 
-
-        internal IImmutableList<GeneratedClientCodeForController> Create(IImmutableList<EndpointGroup> endpointGroups, string projectName, string clientName)
+        internal IImmutableList<GeneratedClientCodeForController> Create(IImmutableList<EndpointGroup> endpointGroups,
+                                                                         string projectName,
+                                                                         string clientName)
         {
             return endpointGroups.Select(controller => Create(controller, projectName, clientName)).ToImmutableList();
         }
 
-
-        internal GeneratedClientCodeForController Create(EndpointGroup endpointGroup, string projectName, string clientName)
+        internal GeneratedClientCodeForController Create(EndpointGroup endpointGroup,
+                                                         string projectName,
+                                                         string clientName)
         {
             var domainName = endpointGroup.GroupName;
             var domainNameWithVersion = $"{domainName}{endpointGroup.Version.Normalized}";
@@ -68,8 +67,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             //var controllerObsoleteAttribute = endpointGroup.Attributes.FirstOrDefault(a => a.Name == "Obsolete");
             //var attributes = controllerObsoleteAttribute.IsNotNull() ? controllerObsoleteAttribute.SyntaxTree : string.Empty;
             var attributes = string.Empty;
-            
-            
+
             var methodSyntax = methods.Flatten($"{Environment.NewLine}{Environment.NewLine}");
 
             var syntaxTree = _versionClass.Replace("$name$", domainName)

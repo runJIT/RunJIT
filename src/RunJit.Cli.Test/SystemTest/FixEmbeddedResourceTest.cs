@@ -12,9 +12,11 @@ namespace RunJit.Cli.Test.SystemTest
     public class FixEmbeddedResourceTest : GlobalSetup
     {
         private const string Resource = "User";
+
         private const string BasePath = "api/client-gen";
 
         [TestMethod]
+
         //
         public async Task Fix_All_Service_Registrations()
         {
@@ -28,15 +30,17 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new FixEmbeddedResourceLocally(solutionFile.FullName)).ConfigureAwait(false);
 
             //// 4. Test if generated results is buildable
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
         }
     }
 
-    internal sealed record FixEmbeddedResource(string GitRepos, string WorkingDirectory) : ICommand;
+    internal sealed record FixEmbeddedResource(string GitRepos,
+                                               string WorkingDirectory) : ICommand;
 
     internal sealed class FixEmbeddedResourceHandler : ICommandHandler<FixEmbeddedResource>
     {
-        public async Task Handle(FixEmbeddedResource request, CancellationToken cancellationToken)
+        public async Task Handle(FixEmbeddedResource request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -46,7 +50,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
@@ -69,7 +73,8 @@ namespace RunJit.Cli.Test.SystemTest
 
     internal sealed class FixEmbeddedResourceLocallyHandler : ICommandHandler<FixEmbeddedResourceLocally>
     {
-        public async Task Handle(FixEmbeddedResourceLocally request, CancellationToken cancellationToken)
+        public async Task Handle(FixEmbeddedResourceLocally request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -79,7 +84,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);

@@ -25,6 +25,7 @@ namespace RunJit.Cli.RunJit.Update.Net
                                  FindSolutionFile findSolutionFile) : IDotNetService
     {
         private readonly Regex _versionReplaceRegex = new(@"(\d+\.\d-+)", RegexOptions.Compiled);
+
         readonly Regex _netVersionReplaceRegex = new(@"net\d+\.\d+", RegexOptions.Compiled);
 
         public async Task HandleAsync(DotNetParameters parameters)
@@ -35,12 +36,13 @@ namespace RunJit.Cli.RunJit.Update.Net
             //    if it is null or whitespace we check current directory
             var solutionFile = findSolutionFile.Find(parameters.SolutionFile);
 
-
             // 2. Update docker file if exists
             var dockerFiles = solutionFile.Directory!.EnumerateFiles("Dockerfile");
+
             foreach (var dockerFile in dockerFiles)
             {
                 var fileContent = await File.ReadAllTextAsync(dockerFile.FullName).ConfigureAwait(false);
+
                 // FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
                 var newfileContent = _versionReplaceRegex.Replace(fileContent, $"{parameters.Version}.0-");
                 await File.WriteAllTextAsync(dockerFile.FullName, newfileContent).ConfigureAwait(false);
@@ -48,6 +50,7 @@ namespace RunJit.Cli.RunJit.Update.Net
 
             // 3. Update directory.props if exists
             var directoryBuildProps = solutionFile.Directory!.EnumerateFiles("Directory.Build.props").FirstOrDefault();
+
             if (directoryBuildProps.IsNotNull())
             {
                 // Read the directoryBuildProps file content and replace net7.0 with net8.0. Can you use a regex that the version can be any number
@@ -58,6 +61,7 @@ namespace RunJit.Cli.RunJit.Update.Net
 
             // 4. Update all project files - because we have not already directory.props working in place
             var allProjectFiles = solutionFile.Directory!.EnumerateFiles("*.csproj", SearchOption.AllDirectories);
+
             foreach (var allProjectFile in allProjectFiles)
             {
                 var projectFileContent = await File.ReadAllTextAsync(allProjectFile.FullName).ConfigureAwait(false);

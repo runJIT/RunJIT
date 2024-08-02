@@ -14,9 +14,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class CollectIntegrateIntoSourceSolution(
-        IntegrateIntoSourceSolutionValidator inputValidator,
-        ICollectTillInputCorrect collectTillInputCorrect)
+    internal class CollectIntegrateIntoSourceSolution(IntegrateIntoSourceSolutionValidator inputValidator,
+                                                      ICollectTillInputCorrect collectTillInputCorrect)
     {
         private const string Title = @"Where would you like to create your client:
 1. Into your given source solutions {0}
@@ -28,6 +27,7 @@ Enter one of the option numbers like '1' or '2'";
         {
             var formattedTitle = string.Format(Title, sourceSolution.FullName);
             var optionResult = collectTillInputCorrect.CollectTillInputIsValid(formattedTitle, inputValidator);
+
             // Default is integrate into your source solution.
             return int.Parse(optionResult) == 1;
         }

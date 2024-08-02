@@ -19,13 +19,13 @@ namespace RunJit.Cli
                                                 string @namespace,
                                                 bool value)
         {
-
             var normalizedNamespace = @namespace.Replace($"{projectFile.ProjectFileInfo.FileNameWithoutExtenion}.", string.Empty);
 
             // runjit_005Cgenerate_005Cclient_005Cbuilders
             var resharperIgnoreEntry = normalizedNamespace.Split('.').Select(part => part.ToLower()).Flatten("_005C");
 
             var xDocument = GetXDocument(projectFile);
+
             if (xDocument.ToString().Contains(@namespace))
             {
                 return;
@@ -44,6 +44,7 @@ namespace RunJit.Cli
         private (XDocument XDocument, string Path) GetXDocument(ProjectFile projectFile)
         {
             var dotSetttings = projectFile.ProjectFileInfo.Value.Directory!.EnumerateFiles($"{projectFile.ProjectFileInfo.Value.Name}.DotSettings").FirstOrDefault();
+
             if (dotSetttings.IsNotNull())
             {
                 return (XDocument.Load(dotSetttings.FullName), dotSetttings.FullName);
@@ -51,6 +52,7 @@ namespace RunJit.Cli
 
             var path = $"{projectFile.ProjectFileInfo.Value.FullName}.DotSettings";
             var dotSettingsTemplate = GetType().Assembly.GetEmbeddedFileAsStream("Generate.RestControllerNew.Code.NamespaceProvider.Template.DotSettings.xml");
+
             return (XDocument.Load(dotSettingsTemplate), path);
         }
     }

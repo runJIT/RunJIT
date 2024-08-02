@@ -13,18 +13,18 @@ namespace RunJit.Cli.RunJit.Update
 {
     public static class AddUpdateCommandBuilderExtension
     {
-        public static void AddUpdateCommandBuilder(this IServiceCollection services, IConfiguration configuration)
+        public static void AddUpdateCommandBuilder(this IServiceCollection services,
+                                                   IConfiguration configuration)
         {
             services.AddBackendCommandBuilder();
             services.AddUpdateCodeRulesCommandBuilder(configuration);
-            
-            
+
             services.AddDotNetCommandBuilder();
             services.AddUpdateNugetCommandBuilder();
             services.AddUpdateCodeRulesCommandBuilder(configuration);
             services.AddUpdateSwaggerTestsCommandBuilder();
             services.AddUpdateResharperSettingsCommandBuilder();
-            
+
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, UpdateCommandBuilder>();
         }
     }
@@ -36,6 +36,7 @@ namespace RunJit.Cli.RunJit.Update
         {
             var command = new Command("update", "Update the ultimate RunJit.Cli");
             subCommandBuilders.ForEach(x => command.AddCommand(x.Build()));
+
             return command;
         }
     }

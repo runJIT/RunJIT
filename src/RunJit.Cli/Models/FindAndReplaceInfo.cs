@@ -4,7 +4,8 @@ namespace RunJit.Cli.Models
 {
     internal class FindAndReplaceInfo
     {
-        public FindAndReplaceInfo(string find, string replace)
+        public FindAndReplaceInfo(string find,
+                                  string replace)
         {
             Throw.IfNullOrWhiteSpace(find);
             Throw.IfNullOrWhiteSpace(replace);

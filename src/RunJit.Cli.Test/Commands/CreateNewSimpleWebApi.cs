@@ -6,11 +6,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RunJit.Cli.Test.Commands
 {
-    internal sealed record CreateNewSimpleWebApi(string ProjectName, DirectoryInfo Output, string BasePath) : ICommand<FileInfo>;
+    internal sealed record CreateNewSimpleWebApi(string ProjectName,
+                                                 DirectoryInfo Output,
+                                                 string BasePath) : ICommand<FileInfo>;
 
     internal sealed class CreateNewSimpleWebApiHandler(IDotNetTool dotNetTool) : ICommandHandler<CreateNewSimpleWebApi, FileInfo>
     {
-        public async Task<FileInfo> Handle(CreateNewSimpleWebApi request, CancellationToken cancellationToken)
+        public async Task<FileInfo> Handle(CreateNewSimpleWebApi request,
+                                           CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -20,7 +23,6 @@ namespace RunJit.Cli.Test.Commands
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-
 
             var result = await dotNetTool.RunAsync("pulse", consoleCall).ConfigureAwait(false);
 

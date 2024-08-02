@@ -14,15 +14,15 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class CollectTargetPath(
-        TargetPathValidator inputValidator,
-        ICollectTillInputCorrect collectTillInputCorrect)
+    internal class CollectTargetPath(TargetPathValidator inputValidator,
+                                     ICollectTillInputCorrect collectTillInputCorrect)
     {
         private const string Title = @"Please enter the target path where the client should be generated. Sample: D:\Clients\";
 
         public DirectoryInfo Collect()
         {
             var directoryPath = collectTillInputCorrect.CollectTillInputIsValid(Title, inputValidator);
+
             return new DirectoryInfo(directoryPath);
         }
     }

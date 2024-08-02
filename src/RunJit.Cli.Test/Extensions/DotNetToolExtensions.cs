@@ -7,12 +7,16 @@ namespace RunJit.Cli.Test.Extensions
 {
     internal static class DotNetToolExtensions
     {
-        public static async Task AssertRunAsync(this IDotNetTool dotNetTool, string dotnetTool, string arguments)
+        public static async Task AssertRunAsync(this IDotNetTool dotNetTool,
+                                                string dotnetTool,
+                                                string arguments)
         {
             var stringBuilderStdOut = new StringBuilder();
             var stringBuilderErrorOut = new StringBuilder();
 
-            var process = Process.StartProcess(dotnetTool, arguments, null, stdout => stringBuilderStdOut.AppendLine(stdout), error => stringBuilderErrorOut.AppendLine(error));
+            var process = Process.StartProcess(dotnetTool, arguments, null,
+                                               stdout => stringBuilderStdOut.AppendLine(stdout), error => stringBuilderErrorOut.AppendLine(error));
+
             await process.WaitForExitAsync().ConfigureAwait(false);
 
             var errors = stringBuilderErrorOut.ToString();

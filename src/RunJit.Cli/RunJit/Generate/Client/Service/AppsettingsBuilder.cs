@@ -15,9 +15,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.appsettings.test.json");
 
-        public string BuildFor(string projectName, string clientName)
+        public string BuildFor(string projectName,
+                               string clientName)
         {
             var appsettings = _clientTemplate.Replace("$moduleName$", clientName);
+
             return appsettings;
         }
     }

@@ -17,14 +17,17 @@ namespace RunJit.Cli.RunJit.Generate.Client
         internal ImmutableList<ControllerInfo> Reorganize(ImmutableList<ControllerInfo> controllers)
         {
             var reorganizedControllers = ReorganizeInternal(controllers).ToImmutableList();
+
             return reorganizedControllers;
 
             static IEnumerable<ControllerInfo> ReorganizeInternal(ImmutableList<ControllerInfo> controllers)
             {
                 var groupedByVersions = controllers.GroupBy(controller => controller.Version).ToImmutableList();
+
                 foreach (var groupByVersion in groupedByVersions)
                 {
                     var groupedByDomain = groupByVersion.GroupBy(controller => controller.GroupName).ToImmutableList();
+
                     foreach (var boundContext in groupedByDomain)
                     {
                         var methods = boundContext.SelectMany(item => item.Methods).ToImmutableList();
@@ -32,15 +35,15 @@ namespace RunJit.Cli.RunJit.Generate.Client
                         var normalizedGroupName = string.Join("", boundContext.Key.Where(char.IsLetterOrDigit));
 
                         yield return new ControllerInfo
-                        {
-                            DomainName = normalizedGroupName,
-                            GroupName = normalizedGroupName,
-                            Name = normalizedGroupName,
-                            Methods = methods,
-                            BaseUrl = boundContext.First().BaseUrl,
-                            Version = groupByVersion.Key,
-                            Attributes = attributes
-                        };
+                                     {
+                                         DomainName = normalizedGroupName,
+                                         GroupName = normalizedGroupName,
+                                         Name = normalizedGroupName,
+                                         Methods = methods,
+                                         BaseUrl = boundContext.First().BaseUrl,
+                                         Version = groupByVersion.Key,
+                                         Attributes = attributes
+                                     };
                     }
                 }
             }

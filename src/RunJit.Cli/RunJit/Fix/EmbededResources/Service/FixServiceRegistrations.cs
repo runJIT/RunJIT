@@ -29,6 +29,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
         public Task HandleAsync(FixEmbeddedResourcesParameters parameters)
         {
             var fixServiceRegistrationsStrategy = fixServiceRegistrationsStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
+
             if (fixServiceRegistrationsStrategy.Count < 1)
             {
                 throw new RunJitException($"Could not find a strategy a update nuget strategy for parameters: {parameters}");
@@ -42,7 +43,6 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
             return fixServiceRegistrationsStrategy[0].HandleAsync(parameters);
         }
     }
-
 
     interface IFixEmbeddedResourcesStrategy
     {

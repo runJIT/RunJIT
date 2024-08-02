@@ -16,9 +16,8 @@ namespace RunJit.Cli.RunJit.Encrypt
         }
     }
 
-    internal sealed class EncryptCommandBuilder(
-        IEncryptArgumentsBuilder encryptArgumentsBuilder,
-        IEncryptService encryptService)
+    internal sealed class EncryptCommandBuilder(IEncryptArgumentsBuilder encryptArgumentsBuilder,
+                                                IEncryptService encryptService)
         : IRunJitSubCommandBuilder
     {
         public Command Build()
@@ -27,6 +26,7 @@ namespace RunJit.Cli.RunJit.Encrypt
             var arguments = encryptArgumentsBuilder.Build();
             arguments.ToList().ForEach(argument => newCommand.AddArgument(argument));
             newCommand.Handler = CommandHandler.Create<string>(value => encryptService.HandleAsync(new EncryptParameters(value)));
+
             return newCommand;
         }
     }

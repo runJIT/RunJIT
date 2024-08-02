@@ -35,16 +35,16 @@ namespace RunJit.Cli.CodeRules
                                                       .ToImmutableList();
 
             TestCodeSyntaxTrees = parsedSolution.UnitTestProjects.Where(p => p.ProjectFileInfo.FileNameWithoutExtenion == "AspNetCore.Simple.ClientGenerator.Tests")
-                                                                 .SelectMany(p => p.CSharpFileInfos)
-                                                                 .Select(c => c.Parse())
-                                                                 .ToImmutableList();
+                                                .SelectMany(p => p.CSharpFileInfos)
+                                                .Select(c => c.Parse())
+                                                .ToImmutableList();
 
             AllSyntaxTrees = parsedSolution.Projects.SelectMany(p => p.CSharpFileInfos)
-                                                    .Select(c => c.Parse())
-                                                    .ToImmutableList();
-
+                                           .Select(c => c.Parse())
+                                           .ToImmutableList();
         }
     }
 
-    public record SqlScript(FileInfo FileInfo, string Content);
+    public record SqlScript(FileInfo FileInfo,
+                            string Content);
 }

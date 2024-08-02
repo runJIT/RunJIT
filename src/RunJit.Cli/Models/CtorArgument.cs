@@ -4,7 +4,8 @@ using Extensions.Pack;
 namespace RunJit.Cli.Models
 {
     [DebuggerDisplay("{" + nameof(Name) + "}")]
-    internal class CtorArgument(string type, string name)
+    internal class CtorArgument(string type,
+                                string name)
     {
         public string Type { get; } = type;
 

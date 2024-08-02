@@ -17,8 +17,11 @@ namespace RunJit.Cli.RunJit.New.Lambda
                                     string lambdaName)
     {
         public FileInfo Solution { get; } = solution;
+
         public string ModuleName { get; } = moduleName;
+
         public string FunctionName { get; } = functionName;
+
         public string LambdaName { get; } = lambdaName;
     }
 }

@@ -36,8 +36,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
             var codeRuleAsFileStream = await rRunJitApiClient.Lambdas.V1.CreateLambdaAsync().ConfigureAwait(false);
             using var zipArchive = new ZipArchive(codeRuleAsFileStream.FileStream, ZipArchiveMode.Read);
             zipArchive.ExtractToDirectory(directoryInfo.FullName);
-            
-            
+
             //var template = this.GetType().Assembly.GetEmbeddedFileAsStream("RunJit.New.Lambda.Templates.lambda.template");
 
             //using var zipArchive = new ZipArchive(template);

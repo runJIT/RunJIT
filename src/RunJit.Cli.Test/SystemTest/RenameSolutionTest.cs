@@ -12,10 +12,12 @@ namespace RunJit.Cli.Test.SystemTest
     public class RenameSolutionTest : GlobalSetup
     {
         private const string Resource = "User";
-        private const string BasePath = "api/new-web-api";
-        private const string OldName = "RunJit.Api.To.Rename.OldName";
-        private const string NewName = "RunJit.Api.To.Rename.NewName";
 
+        private const string BasePath = "api/new-web-api";
+
+        private const string OldName = "RunJit.Api.To.Rename.OldName";
+
+        private const string NewName = "RunJit.Api.To.Rename.NewName";
 
         [TestMethod]
         public async Task Should_Create_A_Module_And_Rename_The_Whole_Backend_From_Old_To_New_Name()
@@ -27,13 +29,13 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new CreateSimpleRestController(solutionFile, Resource, false)).ConfigureAwait(false);
 
             // 3. To proof all should be fine we build the solution
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
 
             // 4. Rename anything
             var renamedSolution = await Mediator.SendAsync(new RenameBackend(solutionFile.FullName, OldName, NewName)).ConfigureAwait(false);
 
             // 5. After renaming all should be fine if we try to build the solution
-            await DotNetTool.AssertRunAsync("dotnet", $"build {renamedSolution.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {renamedSolution.FullName}").ConfigureAwait(false);
         }
     }
 
@@ -43,7 +45,8 @@ namespace RunJit.Cli.Test.SystemTest
 
     internal sealed class RenameBackendHandler(TestContext testContext) : ICommandHandler<RenameBackend, FileInfo>
     {
-        public async Task<FileInfo> Handle(RenameBackend request, CancellationToken cancellationToken)
+        public async Task<FileInfo> Handle(RenameBackend request,
+                                           CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -54,12 +57,13 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
 
             var solutionFile = new FileInfo(request.SolutionFileOrFolder.Replace(request.OldName, request.NewName));
+
             return solutionFile;
         }
 

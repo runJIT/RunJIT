@@ -10,11 +10,12 @@ namespace RunJit.Cli.RunJit.New.Lambda
 {
     public static class AddNewLambdaServiceExtension
     {
-        public static void AddNewLambdaService(this IServiceCollection services, IConfiguration configuration)
+        public static void AddNewLambdaService(this IServiceCollection services,
+                                               IConfiguration configuration)
         {
             services.AddUpdateLocalSolutionFile(configuration);
             services.AddCloneReposAndUpdateAll();
-            
+
             services.AddAuth0Settings(configuration);
 
             services.AddSingletonIfNotExists<IAddNewLambdaService, AddNewLambdaService>();
@@ -31,6 +32,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
         public Task HandleAsync(LambdaParameters parameters)
         {
             var updateCodeRulesStrategy = updateCodeRulesStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
+
             if (updateCodeRulesStrategy.Count < 1)
             {
                 throw new RunJitException($"Could not find a strategy a update nuget strategy for parameters: {parameters}");
@@ -44,7 +46,6 @@ namespace RunJit.Cli.RunJit.New.Lambda
             return updateCodeRulesStrategy[0].HandleAsync(parameters);
         }
     }
-
 
     interface IAddNewLambdaServiceStrategy
     {

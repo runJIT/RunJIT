@@ -11,5 +11,8 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
         }
     }
 
-    internal record CheckBackendBuildsParameters(string SolutionFile, string GitRepos, string WorkingDirectory, string IgnorePackages);
+    internal record CheckBackendBuildsParameters(string SolutionFile,
+                                                 string GitRepos,
+                                                 string WorkingDirectory,
+                                                 string IgnorePackages);
 }

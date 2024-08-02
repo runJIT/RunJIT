@@ -41,7 +41,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 var dataTypes = endpoint.ControllerInfo.Endpoints.SelectMany(m => m.Models).ToImmutableList();
 
                 // 4. Write all models to files
-                await modelsToFileWriter.WriteAsync(modelsFolder, endpoint, dataTypes, projectName, clientName);
+                await modelsToFileWriter.WriteAsync(modelsFolder, endpoint, dataTypes,
+                                                    projectName, clientName).ConfigureAwait(false);
             }
         }
     }

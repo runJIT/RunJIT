@@ -25,8 +25,8 @@ namespace RunJit.Cli.RunJit.New.Lambda
         Task HandleAsync(LambdaParameters parameters);
     }
 
-    internal partial class LambdaService(TemplateExtractor templateExtractor, 
-                                         TemplateService templateService, 
+    internal partial class LambdaService(TemplateExtractor templateExtractor,
+                                         TemplateService templateService,
                                          IConsoleService consoleService,
                                          IDotNet dotNet) : ILambdaService
     {
@@ -42,7 +42,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
             var lambdaInfos = new LambdaInfos(parameters, projectName);
 
             // 2. extract lambda template
-            await templateExtractor.ExtractToAsync(parameters.Solution.Directory);
+            await templateExtractor.ExtractToAsync(parameters.Solution.Directory).ConfigureAwait(false);
 
             // 3. replace placeholders
             templateService.RenameAllIn(parameters.Solution.Directory, lambdaInfos);
@@ -60,10 +60,13 @@ namespace RunJit.Cli.RunJit.New.Lambda
 
         private LambdaParameters PreparedParameters(LambdaParameters parameters)
         {
-            return new LambdaParameters(parameters.Solution, parameters.ModuleName.ToLower(), parameters.FunctionName.FirstCharToUpper(), parameters.LambdaName.ToLower());
+            return new LambdaParameters(parameters.Solution, parameters.ModuleName.ToLower(), parameters.FunctionName.FirstCharToUpper(),
+                                        parameters.LambdaName.ToLower());
         }
 
-        private async Task<DotNetTool.Service.DotNetTool> IncludeIntoSolutionAsync(FileInfo solutionFile, DirectoryInfo solutionDirectory, string projectName)
+        private async Task<DotNetTool.Service.DotNetTool> IncludeIntoSolutionAsync(FileInfo solutionFile,
+                                                                                   DirectoryInfo solutionDirectory,
+                                                                                   string projectName)
         {
             var projectFiles = solutionDirectory.EnumerateFiles("*.csproj", SearchOption.AllDirectories).Where(file => file.Name.Contains(projectName)).ToList();
             var dotNetTool = DotNetToolFactory.Create();

@@ -16,6 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         internal DirectoryInfo Build(DirectoryInfo versionFolder)
         {
             var modelsFolder = new DirectoryInfo(Path.Combine(versionFolder.FullName, "Models"));
+
             if (modelsFolder.Exists.IsFalse())
             {
                 modelsFolder.Create();

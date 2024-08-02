@@ -6,11 +6,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RunJit.Cli.Test.Commands
 {
-    internal sealed record CreateSimpleRestController(FileInfo Solution, string ResourceName, bool WithCaching) : ICommand;
+    internal sealed record CreateSimpleRestController(FileInfo Solution,
+                                                      string ResourceName,
+                                                      bool WithCaching) : ICommand;
 
     internal sealed class CreateSimpleRestControllerHandler(IDotNetTool donDotNetTool) : ICommandHandler<CreateSimpleRestController>
     {
-        public async Task Handle(CreateSimpleRestController request, CancellationToken cancellationToken)
+        public async Task Handle(CreateSimpleRestController request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -21,7 +24,7 @@ namespace RunJit.Cli.Test.Commands
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
 
-            var result = await donDotNetTool.RunAsync("pulse", consoleCall);
+            var result = await donDotNetTool.RunAsync("pulse", consoleCall).ConfigureAwait(false);
 
             Assert.AreEqual(0, result.ExitCode, result.Output);
         }

@@ -22,7 +22,16 @@ namespace RunJit.Cli.CodeRules
         [TestMethod]
         public void Api_Namespaces_Should_Not_Contain_Any_Technical_Aspects()
         {
-            var technicalAspects = new[] { "Facade", "Builder", "Controller", "Extensions", "Model", "Queries", "Query", "Command", "Service", "Helper", "Collector", "AppSetting", "Provider", "Sql", "Validation", "Mapper", "Wrapper" };
+            var technicalAspects = new[]
+                                   {
+                                       "Facade", "Builder", "Controller",
+                                       "Extensions", "Model", "Queries",
+                                       "Query", "Command", "Service",
+                                       "Helper", "Collector", "AppSetting",
+                                       "Provider", "Sql", "Validation",
+                                       "Mapper", "Wrapper"
+                                   };
+
             var versions = new string[] { "V1" };
 
             var invalidNamespaces = (from syntaxTree in ProductiveCodeSyntaxTreesToAnaylze
@@ -32,16 +41,15 @@ namespace RunJit.Cli.CodeRules
                                      let sinceVersion = @namespace.Substring(indexOfVersion, @namespace.Length - indexOfVersion - 1)
                                      where technicalAspects.Any(sinceVersion.Contains)
                                      select new
-                                     {
-                                         CurrentNamespace = @namespace,
-                                         ExpectedNamesapce = @namespace.Replace($".{@namespace.Split('.').Last()}", string.Empty)
-                                     }).ToImmutableList();
+                                            {
+                                                CurrentNamespace = @namespace,
+                                                ExpectedNamesapce = @namespace.Replace($".{@namespace.Split('.').Last()}", string.Empty)
+                                            }).ToImmutableList();
 
             var onlyUniqueNamespaces = invalidNamespaces.Distinct(name => name.CurrentNamespace);
 
-
             Assert.IsTrue(invalidNamespaces.IsEmpty(),
-                @$"Your namespace contains technical aspects like {technicalAspects.Flatten(", ")} or many more. 
+                          @$"Your namespace contains technical aspects like {technicalAspects.Flatten(", ")} or many more. 
                       Your namespace should only contain your domain and version.{Environment.NewLine}{ConsoleTable.From(onlyUniqueNamespaces)}");
         }
     }

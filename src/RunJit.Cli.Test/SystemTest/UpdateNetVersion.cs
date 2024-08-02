@@ -12,6 +12,7 @@ namespace RunJit.Cli.Test.SystemTest
     public class UpdateBackendNetVersionTest : GlobalSetup
     {
         private const string Resource = "User";
+
         private const string BasePath = "api/net-test";
 
         [TestMethod]
@@ -28,11 +29,13 @@ namespace RunJit.Cli.Test.SystemTest
         }
     }
 
-    internal sealed record UpdateNetVersion(string solution, int version) : ICommand;
+    internal sealed record UpdateNetVersion(string solution,
+                                            int version) : ICommand;
 
     internal sealed class UpdateBackendNetVersionHandler : ICommandHandler<UpdateNetVersion>
     {
-        public async Task Handle(UpdateNetVersion request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateNetVersion request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -42,7 +45,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);

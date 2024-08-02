@@ -28,25 +28,19 @@ namespace RunJit.Cli.RunJit.Rename.Solution
         public Option BuildOldNameOption()
         {
             return new Option(new[] { "--old-name", "-on" }, "The old or current name of your backend. Sample RunJit.Cli or Simple.WebApi")
-            {
-                Required = true,
-                Argument = new Argument<string>("oldName")
-                {
-                    Description = "The old or current name of your backend. Sample RunJit.Cli or Simple.WebApi"
-                }
-            };
+                   {
+                       Required = true,
+                       Argument = new Argument<string>("oldName") { Description = "The old or current name of your backend. Sample RunJit.Cli or Simple.WebApi" }
+                   };
         }
-        
+
         public Option BuildNewNameOption()
         {
             return new Option(new[] { "--new-name", "-nn" }, "The new name of your backend. Sample RunJit.Cli or Simple.WebApi")
-            {
-                Required = true,
-                Argument = new Argument<string>("newName")
-                {
-                    Description = "The new name of your backend. Sample RunJit.Cli or Simple.WebApi"
-                }
-            };
+                   {
+                       Required = true,
+                       Argument = new Argument<string>("newName") { Description = "The new name of your backend. Sample RunJit.Cli or Simple.WebApi" }
+                   };
         }
     }
 }

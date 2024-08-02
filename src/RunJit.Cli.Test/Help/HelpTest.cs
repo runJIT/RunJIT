@@ -24,13 +24,14 @@ namespace RunJit.Cli.Test.Help
         [DataRow("runjit database delete table --help", "Help.Outputs.runjit-database-delete-table-help.txt")]
         [DataRow("runjit database new --help", "Help.Outputs.runjit-database-new-help.txt")]
         [DataRow("runjit database new table --help", "Help.Outputs.runjit-database-new-table-help.txt")]
-        public async Task Should_Print_Out_Expected_Help_Infos_On_Pulse_Command(string parameters, string expectedOutput)
+        public async Task Should_Print_Out_Expected_Help_Infos_On_Pulse_Command(string parameters,
+                                                                                string expectedOutput)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
 
             var paramterAsArray = parameters.Split(" ");
-            var exitCode = await Program.Main(paramterAsArray);
+            var exitCode = await Program.Main(paramterAsArray).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);

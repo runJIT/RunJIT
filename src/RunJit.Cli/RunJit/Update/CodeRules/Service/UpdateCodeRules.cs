@@ -9,14 +9,15 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 {
     public static class AddUpdateCodeRulesExtension
     {
-        public static void AddUpdateCodeRules(this IServiceCollection services, IConfiguration configuration)
+        public static void AddUpdateCodeRules(this IServiceCollection services,
+                                              IConfiguration configuration)
         {
             services.AddConsoleService();
             services.AddUpdateCodeRulesParameters();
 
             services.AddUpdateLocalSolutionFile(configuration);
             services.AddCloneReposAndUpdateAll();
-            
+
             services.AddAuth0Settings(configuration);
 
             services.AddSingletonIfNotExists<IUpdateCodeRules, UpdateCodeRules>();
@@ -33,6 +34,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
         public Task HandleAsync(UpdateCodeRulesParameters parameters)
         {
             var updateCodeRulesStrategy = updateCodeRulesStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
+
             if (updateCodeRulesStrategy.Count < 1)
             {
                 throw new RunJitException($"Could not find a strategy a update nuget strategy for parameters: {parameters}");
@@ -46,7 +48,6 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             return updateCodeRulesStrategy[0].HandleAsync(parameters);
         }
     }
-
 
     interface IUpdateCodeRulesStrategy
     {

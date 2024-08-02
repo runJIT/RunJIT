@@ -14,16 +14,15 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-
-    internal class CollectSolutionPath(
-        SolutionFileValidator inputValidator,
-        ICollectTillInputCorrect collectTillInputCorrect)
+    internal class CollectSolutionPath(SolutionFileValidator inputValidator,
+                                       ICollectTillInputCorrect collectTillInputCorrect)
     {
         private const string Title = @"Please enter the full path to your backend solution. Sample: D:\Projetcs\ClientGen\ClientGen.sln";
 
         public FileInfo Collect()
         {
             var solutionFile = collectTillInputCorrect.CollectTillInputIsValid(Title, inputValidator);
+
             return new FileInfo(solutionFile);
         }
     }

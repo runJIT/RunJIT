@@ -13,9 +13,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
     internal class DomainFolderBuilder
     {
-        internal DirectoryInfo Build(DirectoryInfo apiFolder, GeneratedFacade generatedFacade)
+        internal DirectoryInfo Build(DirectoryInfo apiFolder,
+                                     GeneratedFacade generatedFacade)
         {
             var domainFolder = new DirectoryInfo(Path.Combine(apiFolder.FullName, generatedFacade.Domain));
+
             if (domainFolder.Exists.IsFalse())
             {
                 domainFolder.Create();

@@ -24,13 +24,16 @@ namespace RunJit.Cli.RunJit.Generate.CustomEndpoint
         {
             var command = new Command("custom-endpoint", "The command to create a new pulse web api solution");
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
+
             command.Handler = CommandHandler.Create<DirectoryInfo, string, bool>((targetFolder,
                                                                                   endpointData,
                                                                                   overwriteCode) =>
-            {
-                var parameters = new GenerateCustomEndpointParameters(targetFolder, endpointData, overwriteCode);
-                return generateEndpointService.GenerateAsync(parameters);
-            });
+                                                                                 {
+                                                                                     var parameters = new GenerateCustomEndpointParameters(targetFolder, endpointData, overwriteCode);
+
+                                                                                     return generateEndpointService.GenerateAsync(parameters);
+                                                                                 });
+
             return command;
         }
     }

@@ -43,9 +43,11 @@ namespace RunJit.Cli.RunJit.Zip
 
             consoleService.WriteSuccess("Zip-File successfully created.");
             consoleService.WriteSuccess(parameters.ZipFile.FullName);
+
             return Task.CompletedTask;
         }
     }
 
-    internal record ZipParameters(DirectoryInfo Directory, FileInfo ZipFile);
+    internal record ZipParameters(DirectoryInfo Directory,
+                                  FileInfo ZipFile);
 }

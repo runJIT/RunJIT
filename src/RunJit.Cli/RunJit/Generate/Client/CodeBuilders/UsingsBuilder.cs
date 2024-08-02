@@ -29,13 +29,16 @@ namespace RunJit.Cli.RunJit.Generate.Client
     // using Api.Filter;
     internal class UsingsBuilder
     {
-        internal string BuildFrom(IImmutableList<GeneratedFacade> facades, string projectName)
+        internal string BuildFrom(IImmutableList<GeneratedFacade> facades,
+                                  string projectName)
         {
             var usings = facades.Select(facade => $"using {projectName}.{ClientGenConstants.Api}.{facade.Domain};").Flatten(Environment.NewLine);
+
             return usings;
         }
 
-        internal string BuildFrom(GeneratedClient generatedClient, string projectName)
+        internal string BuildFrom(GeneratedClient generatedClient,
+                                  string projectName)
         {
             var usings = CollectUsings(generatedClient).Flatten(Environment.NewLine);
 

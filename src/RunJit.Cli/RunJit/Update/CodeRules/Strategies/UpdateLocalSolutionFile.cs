@@ -21,7 +21,8 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 {
     internal static class AddUpdateLocalSolutionFileExtension
     {
-        internal static void AddUpdateLocalSolutionFile(this IServiceCollection services, IConfiguration configuration)
+        internal static void AddUpdateLocalSolutionFile(this IServiceCollection services,
+                                                        IConfiguration configuration)
         {
             services.AddConsoleService();
             services.AddGitService();
@@ -32,14 +33,14 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             services.AddRenameFilesAndFolders();
             services.AddFindSolutionFile();
 
-
             services.AddRunJitApiClientFactory(configuration);
             services.AddRunJitApiClient();
             services.AddHttpClient();
+
             services.AddMediatR(cfg =>
-            {
-                cfg.RegisterServicesFromAssembly(typeof(AddUpdateLocalSolutionFileExtension).Assembly);
-            });
+                                {
+                                    cfg.RegisterServicesFromAssembly(typeof(AddUpdateLocalSolutionFileExtension).Assembly);
+                                });
 
             services.AddSingletonIfNotExists<IUpdateCodeRulesStrategy, UpdateLocalSolutionFile>();
         }
@@ -47,8 +48,10 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
     internal class UpdateLocalSolutionFile(IConsoleService consoleService,
                                            IGitService git,
+
                                            //IAwsCodeCommit awsCodeCommit,
                                            IDotNet dotNet,
+
                                            //IUpdateNugetPackageService updateNugetPackageService,
                                            IRenameFilesAndFolders renameFilesAndFolders,
                                            FindSolutionFile findSolutionFile,
@@ -91,6 +94,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
             // 4. Check if git exists
             var existingGitFolder = solutionFile.Directory!.EnumerateDirectories(".git").FirstOrDefault();
+
             if (existingGitFolder.IsNotNull())
             {
                 Environment.CurrentDirectory = solutionFile.Directory!.FullName;
@@ -161,24 +165,28 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             //}
 
             var alreadyExistingCodeRuleFolder = solutionFile.Directory!.EnumerateDirectories($"{solutionFile.NameWithoutExtension()}*.CodeRules").FirstOrDefault();
+
             if (alreadyExistingCodeRuleFolder.IsNotNull())
             {
                 var projectFileInfo = alreadyExistingCodeRuleFolder.EnumerateFiles("*.csproj").FirstOrDefault();
+
                 if (projectFileInfo.IsNotNull())
                 {
-                    await dotNet.RemoveProjectFromSolutionAsync(solutionFile, projectFileInfo);
+                    await dotNet.RemoveProjectFromSolutionAsync(solutionFile, projectFileInfo).ConfigureAwait(false);
                 }
 
                 alreadyExistingCodeRuleFolder.Delete(true);
             }
 
             var fixtureFolder = solutionFile.Directory!.EnumerateDirectories($"{solutionFile.NameWithoutExtension()}*.Fixtures").FirstOrDefault();
+
             if (fixtureFolder.IsNotNull())
             {
                 var projectFileInfo = fixtureFolder.EnumerateFiles("*.csproj").FirstOrDefault();
+
                 if (projectFileInfo.IsNotNull())
                 {
-                    await dotNet.RemoveProjectFromSolutionAsync(solutionFile, projectFileInfo);
+                    await dotNet.RemoveProjectFromSolutionAsync(solutionFile, projectFileInfo).ConfigureAwait(false);
                 }
 
                 fixtureFolder.Delete(true);
@@ -188,18 +196,20 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             {
                 // 1. Find solution file usage and exchange to correct solution file name
                 var mstestbaseClasses = directory.EnumerateFiles("MsTestBase.cs", SearchOption.AllDirectories).ToList();
+
                 foreach (var mstestbaseClass in mstestbaseClasses)
                 {
-                    var fileContent = await File.ReadAllTextAsync(mstestbaseClass.FullName);
+                    var fileContent = await File.ReadAllTextAsync(mstestbaseClass.FullName).ConfigureAwait(false);
 
                     string pattern = @"new SolutionFileName\("".*\.sln""\)";
                     string replacement = @$"new SolutionFileName(""{solutionFile.Name}"")";
                     string result = Regex.Replace(fileContent, pattern, replacement);
 
-                    await File.WriteAllTextAsync(mstestbaseClass.FullName, result);
+                    await File.WriteAllTextAsync(mstestbaseClass.FullName, result).ConfigureAwait(false);
                 }
 
                 var newTarget = new DirectoryInfo(Path.Combine(solutionFile.Directory!.FullName, directory.Name));
+
                 if (newTarget.Exists)
                 {
                     // If custom rules directory already exists skip it
@@ -210,6 +220,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
                     newTarget.Delete(true);
                 }
+
                 directory.MoveTo(newTarget.FullName);
 
                 var projectNameFromCodeRules = directory.Name.Split(".").First();
@@ -219,12 +230,12 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                 consoleService.WriteSuccess($"New code rule folder: {renamedDirectory.FullName}");
 
                 var newCodeRuleProject = renamedDirectory.EnumerateFiles("*.csproj").FirstOrDefault();
+
                 if (newCodeRuleProject.IsNull())
                 {
                     throw new FileNotFoundException($"Could not find the code rules project after renaming process.");
                 }
             }
-
 
             tempFolder.Delete(true);
 
@@ -233,9 +244,8 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
             foreach (var allCodeRuleCsproj in allCodeRuleCsprojs)
             {
-                await dotNet.AddProjectToSolutionAsync(solutionFile, allCodeRuleCsproj);
+                await dotNet.AddProjectToSolutionAsync(solutionFile, allCodeRuleCsproj).ConfigureAwait(false);
             }
-
 
             // 6. Build the solution first
             await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
@@ -265,13 +275,13 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             Cleanup(solutionFile);
 
             consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest code rules");
-
         }
 
         private static void Cleanup(FileInfo solutionFile)
         {
             // Cleanup
             var folders = solutionFile.Directory!.EnumerateDirectories().ToImmutableList();
+
             foreach (var directoryInfo in folders)
             {
                 if (Guid.TryParse(directoryInfo.Name, out var _))

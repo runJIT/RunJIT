@@ -40,6 +40,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             }
 
             var result = stringBuilder.ToString();
+
             return result;
         }
     }

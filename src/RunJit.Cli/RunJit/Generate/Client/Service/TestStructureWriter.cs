@@ -17,9 +17,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class TestStructureWriter(
-        MsTestBaseClassBuilder msTestBaseClassBuilder,
-        AppsettingsBuilder appsettingsBuilder)
+    internal class TestStructureWriter(MsTestBaseClassBuilder msTestBaseClassBuilder,
+                                       AppsettingsBuilder appsettingsBuilder)
     {
         public async Task WriteFileStructureAsync(SolutionFile solutionFile,
                                                   ProjectFile clientProject,
@@ -32,6 +31,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             // Environment
             // -> MsTestBase
             var environmentFolder = new DirectoryInfo(Path.Combine(clientTestProject.ProjectFileInfo.Value.Directory!.FullName, "Environment"));
+
             if (environmentFolder.NotExists())
             {
                 environmentFolder.Create();
@@ -61,13 +61,14 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var dotNetTool = DotNetToolFactory.Create();
 
             // 4.1 Client project reference is needed
-            await dotNetTool.RunAsync("dotnet", $"add {clientTestProject.ProjectFileInfo.Value.FullName} reference {clientProject.ProjectFileInfo.Value.FullName}");
+            await dotNetTool.RunAsync("dotnet", $"add {clientTestProject.ProjectFileInfo.Value.FullName} reference {clientProject.ProjectFileInfo.Value.FullName}").ConfigureAwait(false);
 
             // 4.2 API project reference is needed too because of startup.cs
             var webAppProject = solutionFile.ProductiveProjects.FirstOrDefault(p => p.Document.ToString().Contains("Sdk=\"Microsoft.NET.Sdk.Web\""));
+
             if (webAppProject.IsNotNull())
             {
-                await dotNetTool.RunAsync("dotnet", $"add {clientTestProject.ProjectFileInfo.Value.FullName} reference {webAppProject.ProjectFileInfo.Value.FullName}");
+                await dotNetTool.RunAsync("dotnet", $"add {clientTestProject.ProjectFileInfo.Value.FullName} reference {webAppProject.ProjectFileInfo.Value.FullName}").ConfigureAwait(false);
             }
         }
     }

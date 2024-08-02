@@ -35,9 +35,9 @@ namespace RunJit.Cli.RunJit.Generate.Client
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             var assembly = Assembly.LoadFrom(assemblyFile.FullName);
             var types = assembly.GetTypes().ToImmutableList();
+
             return types;
         }
-
 
         private IEnumerable<Type> GetDeepTypeInfos(IImmutableList<Type> types)
         {
@@ -56,15 +56,18 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 yield return type;
 
                 var genericTypes = type.GetAllTypesFromGenericType().DistinctBy(t => t.FullName);
+
                 foreach (var genericType in genericTypes)
                 {
                     yield return genericType;
                 }
 
                 var methods = type.GetMethods();
+
                 foreach (var method in methods)
                 {
                     var parameters = method.GetParameters();
+
                     foreach (var parameter in parameters)
                     {
                         yield return parameter.ParameterType;
@@ -75,7 +78,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
             }
         }
 
-        private Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+        private Assembly? CurrentDomain_AssemblyResolve(object? sender,
+                                                        ResolveEventArgs args)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var strings = args.Name.Split(',');
@@ -83,6 +87,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // 1. Check first if it is already loaded in current app domain
             var alreadyLoaded = assemblies.FirstOrDefault(a => a.GetName().Name == strings.First());
+
             if (alreadyLoaded.IsNotNull())
             {
                 return alreadyLoaded;
@@ -91,6 +96,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             // 2. Check current directory
             var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
             var dll = currentDirectory.EnumerateFiles(searchPattern).FirstOrDefault();
+
             if (dll.IsNotNull())
             {
                 return Assembly.LoadFrom(dll.FullName);
@@ -99,6 +105,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             // 3. Search in Net 7 runtimes
             var runtimeAssemblies = Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll");
             var foundInRuntimeFolder = runtimeAssemblies.FirstOrDefault(file => file.Contains(searchPattern));
+
             if (foundInRuntimeFolder.IsNotNullOrWhiteSpace())
             {
                 Assembly.LoadFrom(foundInRuntimeFolder);
@@ -120,6 +127,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             catch (Exception e)
             {
                 Console.WriteLine(e);
+
                 return null;
             }
         }

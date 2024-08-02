@@ -5,6 +5,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using NuGet.Versioning;
 using RunJit.Cli.Models;
+using RunJit.Cli.Resharper;
 using Solution.Parser.CSharp;
 using Solution.Parser.Solution;
 using FileInfo = System.IO.FileInfo;
@@ -29,17 +30,19 @@ namespace RunJit.Cli.RunJit.Generate.Client
     //        -> UserV1.cs
     // -> Client.cs
     // -> ClientFactory.cs
-    public record GeneratedClient(IImmutableList<GeneratedFacade> Facades, string SyntaxTree);
+    public record GeneratedClient(IImmutableList<GeneratedFacade> Facades,
+                                  string SyntaxTree);
 
-    public record GeneratedFacade(
-        IImmutableList<GeneratedClientCodeForController> Endpoints,
-        string SyntaxTree,
-        string Domain,
-        string FacadeName);
+    public record GeneratedFacade(IImmutableList<GeneratedClientCodeForController> Endpoints,
+                                  string SyntaxTree,
+                                  string Domain,
+                                  string FacadeName);
 
     public record GeneratedFacades(IImmutableList<GeneratedFacade> ControllerInfos);
 
-    public record GeneratedClientCodeForController(EndpointGroup ControllerInfo, string SyntaxTree, string Domain);
+    public record GeneratedClientCodeForController(EndpointGroup ControllerInfo,
+                                                   string SyntaxTree,
+                                                   string Domain);
 
     internal static class AddClientCreatorExtension
     {
@@ -64,6 +67,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             services.AddMinimalApiEndpointParser();
             services.AddOrganizeMinimalEndpoints();
+            
+            services.AddSolutionCodeCleanup();
 
             services.AddSingletonIfNotExists<ClientCreator>();
         }
@@ -84,10 +89,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                  MinimalApiEndpointParser minimalApiEndpointParser,
                                  OrganizeMinimalEndpoints organizeMinimalEndpoints)
     {
-        internal async Task GenerateClientAsync(Client client, FileInfo clientSolution)
+        internal async Task GenerateClientAsync(Client client,
+                                                FileInfo clientSolution)
         {
             // 0. Add new client projects into existing solution
-            await solutionFileModifier.AddProjectsAsync(client.SolutionFileInfo);
+            await solutionFileModifier.AddProjectsAsync(client.SolutionFileInfo).ConfigureAwait(false);
 
             // 1. Parse source solution - Meta level no code parsing here
             var parsedSolution = new SolutionFileInfo(client.SolutionFileInfo.FullName).Parse();
@@ -103,7 +109,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // 3. Get all types which are declared in the API assembly - Need to unique ident the types for client generation.
             var types = apiTypeLoader.GetAllTypesFrom(parsedSolution);
-            
+
             // 4. Sync nuget packages - New feature we check which packages are predefined in the template
             //   and sync them up to the parent solution in which it will be included
             await nugetUpdater.UpdateAsync(parsedSolution, clientProject).ConfigureAwait(false);
@@ -126,7 +132,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // NEW !! TEST
             var mappedToEndpoints = organizedEndpoints.Any() ? organizedEndpoints : controllerInfos.ToEndpointInfos();
-            
+
             // 7. Collect all endpoints
             var allEndpoints = endpointClientGenerator.Create(mappedToEndpoints, projectName, clientName);
 
@@ -146,19 +152,22 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var clientFolder = clientProject.ProjectFileInfo.Value.Directory!;
 
             // 13. Write client class
-            await File.WriteAllTextAsync(Path.Combine(clientFolder.FullName, $"{clientName}.cs"), generatedClient.SyntaxTree);
+            await File.WriteAllTextAsync(Path.Combine(clientFolder.FullName, $"{clientName}.cs"), generatedClient.SyntaxTree).ConfigureAwait(false);
 
             // 14. Write client factory class
-            await File.WriteAllTextAsync(Path.Combine(clientFolder.FullName, $"{clientName}Factory.cs"), clientFactory);
+            await File.WriteAllTextAsync(Path.Combine(clientFolder.FullName, $"{clientName}Factory.cs"), clientFactory).ConfigureAwait(false);
 
             // 15. Write R# settings
-            await File.WriteAllTextAsync($"{clientProject.ProjectFileInfo.Value.FullName}.DotSettings", resharperSettings);
+            await File.WriteAllTextAsync($"{clientProject.ProjectFileInfo.Value.FullName}.DotSettings", resharperSettings).ConfigureAwait(false);
 
             // 16. Write facades, domain and version classes
-            await clientStructureWriter.WriteFileStructureAsync(generatedClient, clientProject, projectName, clientName);
+            await clientStructureWriter.WriteFileStructureAsync(generatedClient, clientProject, projectName,
+                                                                clientName).ConfigureAwait(false);
 
             // 17.Creates or updates base test structure
-            await testStructureWriter.WriteFileStructureAsync(parsedSolution, clientProject, clientTestProject, projectName, clientName);
+            await testStructureWriter.WriteFileStructureAsync(parsedSolution, clientProject, clientTestProject,
+                                                              projectName, clientName).ConfigureAwait(false);
+            
         }
     }
 
@@ -171,6 +180,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             foreach (var controllerInfo in controllerInfos)
             {
                 var endpoints = ImmutableList.CreateBuilder<EndpointInfo>();
+
                 foreach (var method in controllerInfo.Methods)
                 {
                     var endpoint = method.ToEndpointInfo(controllerInfo.GroupName, controllerInfo.Version);
@@ -178,11 +188,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 }
 
                 var endpointGroup = new EndpointGroup()
-                {
-                    GroupName = controllerInfo.GroupName,
-                    Endpoints = endpoints.ToImmutable(),
-                    Version = controllerInfo.Version
-                };
+                                    {
+                                        GroupName = controllerInfo.GroupName,
+                                        Endpoints = endpoints.ToImmutable(),
+                                        Version = controllerInfo.Version
+                                    };
 
                 endpointGroups.Add(endpointGroup);
             }
@@ -191,30 +201,31 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-
     internal static class MethodInfoExtensions
     {
-        internal static EndpointInfo ToEndpointInfo(this MethodInfos methodInfo, string groupName, VersionInfo versionInfo)
+        internal static EndpointInfo ToEndpointInfo(this MethodInfos methodInfo,
+                                                    string groupName,
+                                                    VersionInfo versionInfo)
         {
             var obsoleteValue = methodInfo.Attributes.FirstOrDefault(a => a.Name.StartsWith("Obsolete"))?.Arguments.FirstOrDefault();
 
             var endpoint = new EndpointInfo()
-            {
-                ResponseType = methodInfo.ResponseType,
-                BaseUrl = methodInfo.RelativeUrl,
-                DomainName = methodInfo.Name,
-                HttpAction = methodInfo.HttpAction,
-                GroupName = groupName,
-                Parameters = methodInfo.Parameters,
-                SwaggerOperationId = methodInfo.SwaggerOperationId,
-                ProduceResponseTypes = methodInfo.ProduceResponseTypes,
-                RequestType = methodInfo.RequestType,
-                Version = versionInfo,
-                ObsoleteInfo = obsoleteValue.IsNull() ? null : new ObsoleteInfo(obsoleteValue),
-                Models = methodInfo.Models,
-                Name = methodInfo.Name,
-                RelativeUrl = methodInfo.RelativeUrl
-            };
+                           {
+                               ResponseType = methodInfo.ResponseType,
+                               BaseUrl = methodInfo.RelativeUrl,
+                               DomainName = methodInfo.Name,
+                               HttpAction = methodInfo.HttpAction,
+                               GroupName = groupName,
+                               Parameters = methodInfo.Parameters,
+                               SwaggerOperationId = methodInfo.SwaggerOperationId,
+                               ProduceResponseTypes = methodInfo.ProduceResponseTypes,
+                               RequestType = methodInfo.RequestType,
+                               Version = versionInfo,
+                               ObsoleteInfo = obsoleteValue.IsNull() ? null : new ObsoleteInfo(obsoleteValue),
+                               Models = methodInfo.Models,
+                               Name = methodInfo.Name,
+                               RelativeUrl = methodInfo.RelativeUrl
+                           };
 
             return endpoint;
         }

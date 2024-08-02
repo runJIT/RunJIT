@@ -18,12 +18,12 @@ namespace RunJit.Cli.Test.SystemTest
             var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("RunJit.Update.Resharper.Settings", WebApiFolder, "api/resharper")).ConfigureAwait(false);
 
             // 3. Test if generated results is buildable
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
 
             // 3. Update to .Net 8
             await Mediator.SendAsync(new UpdateResharperSettingsForSolution(solutionFile)).ConfigureAwait(false);
         }
-        
+
         //[Ignore("Dev purpose only")]
         [DataTestMethod]
         [DataRow(@"D:\ResharperSettingsUpdate\pulse-core-service\pulse.core.service.sln")]
@@ -33,7 +33,7 @@ namespace RunJit.Cli.Test.SystemTest
             var solutionFile = new FileInfo(solution);
 
             // 3. Test if generated results is buildable
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
 
             // 3. Update to .Net 8
             await Mediator.SendAsync(new UpdateResharperSettingsForSolution(solutionFile)).ConfigureAwait(false);
@@ -44,7 +44,8 @@ namespace RunJit.Cli.Test.SystemTest
 
     internal sealed class UpdateResharperSettingsHandler : ICommandHandler<UpdateResharperSettingsForSolution>
     {
-        public async Task Handle(UpdateResharperSettingsForSolution request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateResharperSettingsForSolution request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -54,7 +55,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
@@ -71,12 +72,13 @@ namespace RunJit.Cli.Test.SystemTest
         }
     }
 
-
-    internal sealed record UpdateResharperSettingsForGitRepos(string GitRepos, string WorkingDirectory) : ICommand;
+    internal sealed record UpdateResharperSettingsForGitRepos(string GitRepos,
+                                                              string WorkingDirectory) : ICommand;
 
     internal sealed class UpdateResharperSettingsForGitReposHandler : ICommandHandler<UpdateResharperSettingsForGitRepos>
     {
-        public async Task Handle(UpdateResharperSettingsForGitRepos request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateResharperSettingsForGitRepos request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -86,7 +88,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
@@ -97,7 +99,7 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            
+
             yield return "resharpersettings";
             yield return "--git-repos";
             yield return parameters.GitRepos;

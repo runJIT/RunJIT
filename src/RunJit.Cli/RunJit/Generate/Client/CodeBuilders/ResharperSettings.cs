@@ -11,7 +11,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-
     // What we create here:
     // - We create here the resharper project settings to setup namespace providers correctly
     // 
@@ -25,6 +24,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     internal class ResharperSettingsBuilder
     {
         private readonly string _resharperSettingsEntry = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.project.settings.entry.rps");
+
         private readonly string _resharperSettingsTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.project.settings.rps");
 
         public string BuildFrom(GeneratedClient dataType)

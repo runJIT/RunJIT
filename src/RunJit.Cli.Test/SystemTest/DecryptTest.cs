@@ -16,13 +16,13 @@ namespace RunJit.Cli.Test.SystemTest
             var stringToDecrypt = "Hello World";
 
             // 2. Create Web-Api endpoints
-            var encryptedString = await Mediator.Send(new EncryptString(stringToDecrypt));
+            var encryptedString = await Mediator.Send(new EncryptString(stringToDecrypt)).ConfigureAwait(false);
 
             // 3. Test that not same string is containing
             Assert.AreNotEqual(encryptedString, stringToDecrypt);
 
             // 4. Decrypt string
-            var decryptedString = await Mediator.Send(new DecryptString(encryptedString));
+            var decryptedString = await Mediator.Send(new DecryptString(encryptedString)).ConfigureAwait(false);
 
             // 5. Check that after decryption we have the same value
             Assert.AreEqual(stringToDecrypt, decryptedString);
@@ -33,7 +33,8 @@ namespace RunJit.Cli.Test.SystemTest
 
     internal sealed class DecryptStringHandler : ICommandHandler<DecryptString, string>
     {
-        public async Task<string> Handle(DecryptString request, CancellationToken cancellationToken)
+        public async Task<string> Handle(DecryptString request,
+                                         CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -43,12 +44,13 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
 
             var decryptedString = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).Last();
+
             return decryptedString;
         }
 

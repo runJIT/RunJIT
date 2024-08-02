@@ -16,12 +16,14 @@ namespace RunJit.Cli.ErrorHandling
 
     internal interface IErrorHandler
     {
-        Task HandleErrorsAsync(InvocationContext context, Func<InvocationContext, Task> next);
+        Task HandleErrorsAsync(InvocationContext context,
+                               Func<InvocationContext, Task> next);
     }
 
     internal class ErrorHandler(IConsoleService consoleService) : IErrorHandler
     {
-        public async Task HandleErrorsAsync(InvocationContext context, Func<InvocationContext, Task> next)
+        public async Task HandleErrorsAsync(InvocationContext context,
+                                            Func<InvocationContext, Task> next)
         {
             try
             {

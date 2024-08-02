@@ -16,13 +16,20 @@ namespace RunJit.Cli.RunJit.New.Lambda
         }
     }
 
-    internal class LambdaCommandBuilder(ILambdaService lambdaService, ILambdaOptionsBuilder optionsBuilder) : INewSubCommandBuilder
+    internal class LambdaCommandBuilder(ILambdaService lambdaService,
+                                        ILambdaOptionsBuilder optionsBuilder) : INewSubCommandBuilder
     {
         public Command Build()
         {
             var command = new Command("lambda", "Command to create a new aws lambda");
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
-            command.Handler = CommandHandler.Create<FileInfo, string, string, string>((solution, moduleName, functionName, lambdaName) => lambdaService.HandleAsync(new LambdaParameters(solution, moduleName, functionName, lambdaName)));
+
+            command.Handler = CommandHandler.Create<FileInfo, string, string, string>((solution,
+                                                                                       moduleName,
+                                                                                       functionName,
+                                                                                       lambdaName) => lambdaService.HandleAsync(new LambdaParameters(solution, moduleName, functionName,
+                                                                                                                                                     lambdaName)));
+
             return command;
         }
     }

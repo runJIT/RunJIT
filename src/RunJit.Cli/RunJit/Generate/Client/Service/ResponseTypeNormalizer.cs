@@ -38,6 +38,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // 3. External type we need full qualified name
             var returnTypeWithTask = method.ReturnParameter.Contains(returnType.FullName!) ? method.ReturnParameter : method.ReturnParameter.Replace(returnType.Name, returnType.FullName);
+
             return new ResponseType(returnTypeWithTask, returnType.FullName!);
         }
     }

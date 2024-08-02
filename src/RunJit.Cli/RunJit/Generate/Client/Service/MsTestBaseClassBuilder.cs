@@ -15,7 +15,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.mstestbase.rps");
 
-        public string BuildFor(string testProjectName, string clientName)
+        public string BuildFor(string testProjectName,
+                               string clientName)
         {
             var msTestBaseClass = _clientTemplate.Replace("$name$", clientName)
                                                  .Replace("$clientName$", clientName)

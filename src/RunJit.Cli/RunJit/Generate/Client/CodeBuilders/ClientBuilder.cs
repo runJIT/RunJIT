@@ -54,7 +54,9 @@ namespace RunJit.Cli.RunJit.Generate.Client
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.client.rps");
 
-        public GeneratedClient BuildFor(IImmutableList<GeneratedFacade> facades, string projectName, string clientName)
+        public GeneratedClient BuildFor(IImmutableList<GeneratedFacade> facades,
+                                        string projectName,
+                                        string clientName)
         {
             var parameters = parameterBuilder.BuildFrom(facades);
             var serviceRegistrations = serviceRegistrationBuilder.BuildFrom(facades);

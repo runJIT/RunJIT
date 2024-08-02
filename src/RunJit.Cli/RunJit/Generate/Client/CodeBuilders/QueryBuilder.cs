@@ -30,12 +30,14 @@ namespace RunJit.Cli.RunJit.Generate.Client
         internal string BuildFrom(Method method)
         {
             var queryParams = CollectQueryParam(method).ToImmutableList();
+
             if (queryParams.IsEmpty())
             {
                 return string.Empty;
             }
 
             var queryParamsFlatten = queryParams.Flatten("&");
+
             return $"?{queryParamsFlatten}";
         }
 
@@ -56,6 +58,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 {
                     // {resourceTypeIds.ToQueryParams("resourceTypeId")}
                     yield return @$"{{{parameter.Name}.ToQueryParams(""{parameterName}"")}}";
+
                     continue;
                 }
 

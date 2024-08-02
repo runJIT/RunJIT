@@ -13,9 +13,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
     internal class VersionFolderBuilder
     {
-        internal DirectoryInfo Build(DirectoryInfo apiFolder, GeneratedClientCodeForController generatedFacade)
+        internal DirectoryInfo Build(DirectoryInfo apiFolder,
+                                     GeneratedClientCodeForController generatedFacade)
         {
             var versionFolder = new DirectoryInfo(Path.Combine(apiFolder.FullName, generatedFacade.ControllerInfo.Version.Normalized));
+
             if (versionFolder.Exists.IsFalse())
             {
                 versionFolder.Create();

@@ -15,9 +15,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class FacadeStructureBuilder(
-        DomainFolderBuilder domainFolderBuilder,
-        EndpointStructureBuilder endpointStructureBuilder)
+    internal class FacadeStructureBuilder(DomainFolderBuilder domainFolderBuilder,
+                                          EndpointStructureBuilder endpointStructureBuilder)
     {
         internal async Task CreateAsync(DirectoryInfo apiFolder,
                                         IImmutableList<GeneratedFacade> clientFacades,
@@ -33,7 +32,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 await File.WriteAllTextAsync(Path.Combine(domainFolder.FullName, $"{generatedFacade.FacadeName}.cs"), generatedFacade.SyntaxTree).ConfigureAwait(false);
 
                 // 2. Write endpoint file structures
-                await endpointStructureBuilder.CreateAsync(domainFolder, generatedFacade.Endpoints, projectName, clientName).ConfigureAwait(false);
+                await endpointStructureBuilder.CreateAsync(domainFolder, generatedFacade.Endpoints, projectName,
+                                                           clientName).ConfigureAwait(false);
             }
         }
     }

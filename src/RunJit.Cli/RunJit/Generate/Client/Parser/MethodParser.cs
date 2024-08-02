@@ -34,7 +34,9 @@ namespace RunJit.Cli.RunJit.Generate.Client
         {
             // Only methods which represents a http endpoint
             var publicMethods = methods.Where(m => m.Attributes.Any(attribute => attribute.Name.StartWith("Http"))).ToImmutableList();
-            return publicMethods.Select(method => Parse(method, baseUrl, reflectionTypes, syntaxTrees)).ToImmutableList();
+
+            return publicMethods.Select(method => Parse(method, baseUrl, reflectionTypes,
+                                                        syntaxTrees)).ToImmutableList();
         }
 
         private MethodInfos Parse(Method method,
@@ -53,8 +55,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             if (methods.Count != 1)
             {
-                throw new RunJitException(
-                    $"Unexpected method count for method name: {method.Name}. Please go sure your current code state match the assemblies in your project. Please try to rebuild the solution before you run the client gen again");
+                throw new RunJitException($"Unexpected method count for method name: {method.Name}. Please go sure your current code state match the assemblies in your project. Please try to rebuild the solution before you run the client gen again");
             }
 
             var methodReflection = methods[0];
@@ -71,41 +72,43 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var responseType = responseTypeNormalizer.GetResponseType(methodReflection, method, normalizeDataTypes);
 
             return new MethodInfos
-            {
-                Name = method.Name,
-                SwaggerOperationId = swaggerOperationId,
-                HttpAction = httpAction,
-                ProduceResponseTypes = produceResponseType,
-                RelativeUrl = relativeUrl,
-                Parameters = parameters,
-                ResponseType = responseType,
-                RequestType = null, // ToDo not sure how realy to detect ot many possibilities here,
-                Attributes = method.Attributes,
-                Models = normalizeDataTypes
-            };
+                   {
+                       Name = method.Name,
+                       SwaggerOperationId = swaggerOperationId,
+                       HttpAction = httpAction,
+                       ProduceResponseTypes = produceResponseType,
+                       RelativeUrl = relativeUrl,
+                       Parameters = parameters,
+                       ResponseType = responseType,
+                       RequestType = null, // ToDo not sure how realy to detect ot many possibilities here,
+                       Attributes = method.Attributes,
+                       Models = normalizeDataTypes
+                   };
         }
 
         private static IImmutableList<ProduceResponseTypes> GetProduceResponseType(Method method)
         {
             var produceResponseType = method.Attributes.Where(attribute => attribute.Name == "ProducesResponseType")
                                             .Select(produce =>
-                                            {
-                                                var type = produce.Arguments.FirstOrDefault() ?? string.Empty;
-                                                var code = produce.Arguments.LastOrDefault()?.ToIntOrDefault() ?? 0;
-                                                return new ProduceResponseTypes(type, code);
-                                            }).ToImmutableList();
+                                                    {
+                                                        var type = produce.Arguments.FirstOrDefault() ?? string.Empty;
+                                                        var code = produce.Arguments.LastOrDefault()?.ToIntOrDefault() ?? 0;
+
+                                                        return new ProduceResponseTypes(type, code);
+                                                    }).ToImmutableList();
+
             return produceResponseType;
         }
 
-
-        private IImmutableList<MethodInfo> FilterByReturnType(IImmutableList<MethodInfo> methods, Method method)
+        private IImmutableList<MethodInfo> FilterByReturnType(IImmutableList<MethodInfo> methods,
+                                                              Method method)
         {
             var filteredMethods = methods.Where(m =>
-            {
-                var returnTypes = m.ReturnType.GetAllGenericArguments();
-                return returnTypes.Any(t => method.ReturnParameter.Contains(t.Name));
-            }).ToImmutableList();
+                                                {
+                                                    var returnTypes = m.ReturnType.GetAllGenericArguments();
 
+                                                    return returnTypes.Any(t => method.ReturnParameter.Contains(t.Name));
+                                                }).ToImmutableList();
 
             return filteredMethods;
         }

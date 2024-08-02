@@ -11,5 +11,6 @@ namespace RunJit.Cli.RunJit.Update.Net
         }
     }
 
-    internal record DotNetParameters(string SolutionFile, int Version);
+    internal record DotNetParameters(string SolutionFile,
+                                     int Version);
 }

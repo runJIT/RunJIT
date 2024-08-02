@@ -17,7 +17,7 @@ namespace RunJit.Cli.Test
         protected static DirectoryInfo WebApiFolder { get; private set; } = null!;
 
         protected static DirectoryInfo NugetFolder { get; private set; } = null!;
-        
+
         protected static DirectoryInfo CodeRuleFolder { get; private set; } = null!;
 
         protected static IDotNetTool DotNetTool { get; private set; } = null!;
@@ -34,7 +34,7 @@ namespace RunJit.Cli.Test
             serviceCollection.AddMediator(typeof(GetAuth0TokenFor));
             serviceCollection.AddSingleton(testContext);
             serviceCollection.AddSingleton<IDotNetTool>(dotnetTool);
-            
+
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             Mediator = serviceProvider.GetRequiredService<IMediator>();
@@ -43,10 +43,10 @@ namespace RunJit.Cli.Test
             NugetFolder = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Nuget"));
             CodeRuleFolder = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "CodeRules"));
             Services = serviceProvider;
-            
+
             // Install components
             await Mediator.SendAsync(new InstallRequiredComponents()).ConfigureAwait(false);
-            
+
             // 1. Cleanup anything before any test runs
             if (WebApiFolder.Exists)
             {
@@ -61,7 +61,7 @@ namespace RunJit.Cli.Test
             }
 
             CodeRuleFolder.Create();
-            
+
             if (CodeRuleFolder.Exists)
             {
                 var gitFolders = CodeRuleFolder.EnumerateDirectories(".git", SearchOption.AllDirectories);
@@ -71,6 +71,7 @@ namespace RunJit.Cli.Test
                     if (gitFolder.IsNotNull())
                     {
                         gitFolder.Attributes = FileAttributes.Normal;
+
                         foreach (var info in gitFolder.GetFileSystemInfos("*", SearchOption.AllDirectories))
                         {
                             info.Attributes = FileAttributes.Normal;
@@ -79,7 +80,7 @@ namespace RunJit.Cli.Test
                         gitFolder.Delete(true);
                     }
                 }
-                
+
                 CodeRuleFolder.Delete(true);
             }
 

@@ -17,7 +17,7 @@ namespace RunJit.Cli
         public async Task<int> RunAsync(string[] args)
         {
             Throw.IfNull(args);
-            
+
             // Get needed service to invoke client generator. Important anything have to be handled by dependency injection
             var rootCommand = serviceProvider.GetService<IRunJitCommandBuilder>()!.Build();
             var errorHandler = serviceProvider.GetService<IErrorHandler>()!;
@@ -38,6 +38,7 @@ namespace RunJit.Cli
 
             // Here the cli sdk of microsoft will be invoked and manage any command execution
             var result = await parser.InvokeAsync(fixedArgs).ConfigureAwait(false);
+
             return result;
         }
     }

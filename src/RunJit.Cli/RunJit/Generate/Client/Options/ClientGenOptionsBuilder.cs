@@ -40,9 +40,10 @@ namespace RunJit.Cli.RunJit.Generate.Client
         private Option Solution()
         {
             return new Option(new[] { "--solution", "-s" }, @"File path to your backend solution where your api is implemented. Sample: D:\Projects\ClientGen\ClientGen.sln")
-            {
-                Required = false, Argument = new Argument<FileInfo>("solution") { Description = @"File path to your backend solution where your api is implemented. Sample: D:\Projects\ClientGen\ClientGen.sln" }
-            };
+                   {
+                       Required = false,
+                       Argument = new Argument<FileInfo>("solution") { Description = @"File path to your backend solution where your api is implemented. Sample: D:\Projects\ClientGen\ClientGen.sln" }
+                   };
         }
     }
 }

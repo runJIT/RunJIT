@@ -30,7 +30,9 @@ namespace RunJit.Cli.RunJit.Zip
             arguments.ForEach(argument => newCommand.AddArgument(argument));
             options.ForEach(option => newCommand.AddOption(option));
 
-            newCommand.Handler = CommandHandler.Create<DirectoryInfo, FileInfo>((directory, zipFile) => zipService.ZipAsync(new ZipParameters(directory, zipFile)));
+            newCommand.Handler = CommandHandler.Create<DirectoryInfo, FileInfo>((directory,
+                                                                                 zipFile) => zipService.ZipAsync(new ZipParameters(directory, zipFile)));
+
             return newCommand;
         }
     }

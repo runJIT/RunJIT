@@ -39,6 +39,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             {
                 // 0. Reflection controller
                 var controllerType = reflectionTypes.FirstOrDefault(type => type.FullName == controller.FullQualifiedName);
+
                 if (controllerType.IsNull())
                 {
                     continue;
@@ -46,15 +47,17 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
                 // 1. Extract meta infos version, base url and son on.
                 var version = controller.Attributes.FirstOrDefault(a => a.Name == "ApiVersion")?.Arguments?.FirstOrDefault()?.Trim('"') ?? "1.0";
+
                 var normalizedVersion = $"V{version.Replace(".0", string.Empty) // V1.0 => V1
                                                    .Replace(".", "_")}"; // V1.1 => V1_1}"
 
                 var baseUrl = controller.Attributes.FirstOrDefault(a => a.Name == "Route")?.Arguments.FirstOrDefault()?.Replace("{version:apiVersion}", version.ToLowerInvariant()).Trim('"') ?? string.Empty;
 
-
                 // 2. Now parse all methods
                 var methodReflection = controllerType.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).ToImmutableList();
-                var methods = methodParser.Parse(controller.Methods, baseUrl, methodReflection, syntaxTrees);
+
+                var methods = methodParser.Parse(controller.Methods, baseUrl, methodReflection,
+                                                 syntaxTrees);
 
                 // 3. Use ApiExplorerSettings to override the base url
                 var domainName = controller.Name.Replace("Controller", string.Empty);
@@ -62,15 +65,15 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
                 // 3. Return controller infos
                 yield return new ControllerInfo
-                {
-                    Name = controller.Name,
-                    DomainName = domainName,
-                    Version = new VersionInfo(version, normalizedVersion),
-                    BaseUrl = baseUrl,
-                    Methods = methods,
-                    Attributes = controller.Attributes,
-                    GroupName = groupName
-                };
+                             {
+                                 Name = controller.Name,
+                                 DomainName = domainName,
+                                 Version = new VersionInfo(version, normalizedVersion),
+                                 BaseUrl = baseUrl,
+                                 Methods = methods,
+                                 Attributes = controller.Attributes,
+                                 GroupName = groupName
+                             };
             }
         }
     }

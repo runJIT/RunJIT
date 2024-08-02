@@ -10,6 +10,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
         public static void AddUpdateSwaggerTestsCommandBuilder(this IServiceCollection services)
         {
             services.AddUpdateSwaggerTestsOptionsBuilder();
+
             // services.AddUpdateSwaggerTestsArgumentsBuilder();
             services.AddUpdateSwaggerTests();
 
@@ -18,6 +19,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
     }
 
     internal class UpdateSwaggerTestsCommandBuilder(IUpdateSwaggerTests updateService,
+
                                                     // IUpdateSwaggerTestsArgumentsBuilder argumentsBuilder,
                                                     IUpdateSwaggerTestsOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {
@@ -25,8 +27,14 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
         {
             var command = new Command("swaggertests", "Adds or update code rules for the given solution or git repos");
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
+
             // argumentsBuilder.Build().ToList().ForEach(argument => command.AddArgument(argument));
-            command.Handler = CommandHandler.Create<string, string, string, string>((solution, gitRepos, workingDirectory, ignorePackages) => updateService.HandleAsync(new UpdateSwaggerTestsParameters(solution ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty, ignorePackages ?? string.Empty)));
+            command.Handler = CommandHandler.Create<string, string, string, string>((solution,
+                                                                                     gitRepos,
+                                                                                     workingDirectory,
+                                                                                     ignorePackages) => updateService.HandleAsync(new UpdateSwaggerTestsParameters(solution ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty,
+                                                                                                                                                                   ignorePackages ?? string.Empty)));
+
             return command;
         }
     }

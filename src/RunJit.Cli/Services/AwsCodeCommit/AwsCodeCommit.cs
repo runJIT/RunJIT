@@ -26,7 +26,6 @@ namespace RunJit.Cli.AwsCodeCommit
                                     string repositoryName,
                                     string sourceBranchName,
                                     string targetBranchName = "master");
-
     }
 
     internal class AwsCodeCommit(IConsoleService consoleService,
@@ -55,13 +54,13 @@ namespace RunJit.Cli.AwsCodeCommit
         {
             consoleService.WriteInfo("Create AWS Code commit PR");
             consoleService.WriteInfo($@"aws codecommit create-pull-request --title ""{title}"" --description ""{description}"" --targets repositoryName=""{repositoryName},sourceReference={sourceBranchName},destinationReference={targetBranchName}""");
-            
+
             var stringBuilder = new StringBuilder();
             var pullRequestResponse = Process.StartProcess("aws", $@"codecommit create-pull-request --title ""{title}"" --description ""{description}"" --targets repositoryName=""{repositoryName},sourceReference={sourceBranchName},destinationReference={targetBranchName}""");
             await pullRequestResponse.WaitForExitAsync().ConfigureAwait(false);
 
             var output = stringBuilder.ToString();
-            
+
             // var pullRequestResponse = await donDotNetTool.RunAsync("aws", $@"codecommit create-pull-request --title ""{title}"" --description ""{description}"" --targets repositoryName=""{repositoryName},sourceReference={sourceBranchName},destinationReference={targetBranchName}""").ConfigureAwait(false);
             if (pullRequestResponse.ExitCode != 0 &&
                 pullRequestResponse.ExitCode != 255) // 255 is creating PR successfully :/ strange

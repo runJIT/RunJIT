@@ -12,6 +12,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"{nameof(clientGenParameters.SolutionFile)} = {clientGenParameters.SolutionFile.FullName}");
             stringBuilder.AppendLine($"{nameof(clientGenParameters.UseVisualStudio)} = {clientGenParameters?.UseVisualStudio}");
+
             return stringBuilder.ToString();
         }
     }

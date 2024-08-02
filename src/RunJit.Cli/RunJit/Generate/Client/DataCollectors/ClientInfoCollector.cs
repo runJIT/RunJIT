@@ -22,9 +22,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     // ToDo: ClientGen Info collector
-    internal class ClientInfoCollector(
-        CollectSolutionPath collectSolutionPath,
-        CollectTargetPath collectTargetPath) : IClientInfoCollector
+    internal class ClientInfoCollector(CollectSolutionPath collectSolutionPath,
+                                       CollectTargetPath collectTargetPath) : IClientInfoCollector
     {
         private readonly CollectTargetPath _collectTargetPath = collectTargetPath;
 
@@ -41,7 +40,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var projectName = $"{solutionFileInfo.NameWithoutExtension()}.Client";
             var dotnetToolName = new DotNetToolName("dotnet-clientgen", "clientgen");
 
-            return new Client(projectName, dotnetToolName, solutionFileInfo, targetDirectory);
+            return new Client(projectName, dotnetToolName, solutionFileInfo,
+                              targetDirectory);
         }
     }
 }

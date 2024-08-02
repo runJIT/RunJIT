@@ -35,33 +35,37 @@ namespace RunJit.Cli.RunJit.Rename.Solution
 
             // 2. Kill all debug and obj folders first
             var binFolders = currentDirectory.EnumerateDirectories("bin", SearchOption.AllDirectories).ToList();
+
             binFolders.ForEach(folder =>
-            {
-                try
-                {
-                    folder.Delete(true);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            });
+                               {
+                                   try
+                                   {
+                                       folder.Delete(true);
+                                   }
+                                   catch (Exception e)
+                                   {
+                                       Console.WriteLine(e);
+                                   }
+                               });
+
             var objFolders = currentDirectory.EnumerateDirectories("obj", SearchOption.AllDirectories).ToList();
+
             objFolders.ForEach(folder =>
-            {
-                try
-                {
-                    folder.Delete(true);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            });
+                               {
+                                   try
+                                   {
+                                       folder.Delete(true);
+                                   }
+                                   catch (Exception e)
+                                   {
+                                       Console.WriteLine(e);
+                                   }
+                               });
 
             var newDirectoryInfo = renameFilesAndFolders.Rename(solutionFile.Directory!, parameters.OldName, parameters.NewName);
 
             var newSolutionFile = newDirectoryInfo.EnumerateFiles("*.sln").FirstOrDefault();
+
             if (newSolutionFile.IsNull())
             {
                 throw new RunJitException($"The new expected solution file with the name {parameters.NewName} was not found in the current directory: {currentDirectory.FullName}");

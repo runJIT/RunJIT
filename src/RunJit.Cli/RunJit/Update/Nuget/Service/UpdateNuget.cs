@@ -29,6 +29,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
         public Task HandleAsync(UpdateNugetParameters parameters)
         {
             var updateNugetStrategy = updateNugetStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
+
             if (updateNugetStrategy.Count < 1)
             {
                 throw new RunJitException($"Could not find a strategy a update nuget strategy for parameters: {parameters}");
@@ -42,7 +43,6 @@ namespace RunJit.Cli.RunJit.Update.Nuget
             return updateNugetStrategy[0].HandleAsync(parameters);
         }
     }
-
 
     interface IUpdateNugetStrategy
     {
@@ -60,22 +60,29 @@ namespace RunJit.Cli.RunJit.Update.Nuget
     public class Project
     {
         public string Path { get; init; } = string.Empty;
+
         public IImmutableList<Framework> Frameworks { get; init; } = ImmutableList<Framework>.Empty;
     }
 
     public class OutdatedNugetResponse
     {
         public int Version { get; init; }
+
         public string Parameters { get; init; } = string.Empty;
+
         public IImmutableList<string> Sources { get; init; } = ImmutableList<string>.Empty;
+
         public IImmutableList<Project> Projects { get; init; } = ImmutableList<Project>.Empty;
     }
 
     public class TopLevelPackage
     {
         public string Id { get; init; } = string.Empty;
+
         public string RequestedVersion { get; init; } = string.Empty;
+
         public string ResolvedVersion { get; init; } = string.Empty;
+
         public string LatestVersion { get; init; } = string.Empty;
     }
 }

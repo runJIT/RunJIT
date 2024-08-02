@@ -9,14 +9,13 @@ namespace RunJit.Cli.Models
 {
     [DebuggerDisplay("{" + nameof(Name) + "}")]
     [method: JsonConstructor]
-    public class CommandInfo(
-        string value,
-        string name,
-        string normalizedName,
-        string description,
-        ArgumentInfo? argumentInfo,
-        IImmutableList<OptionInfo> options,
-        IImmutableList<CommandInfo> subCommands)
+    public class CommandInfo(string value,
+                             string name,
+                             string normalizedName,
+                             string description,
+                             ArgumentInfo? argumentInfo,
+                             IImmutableList<OptionInfo> options,
+                             IImmutableList<CommandInfo> subCommands)
         : InfoBase(value, name, normalizedName)
     {
         public IImmutableList<CommandInfo> SubCommands { get; } = subCommands;

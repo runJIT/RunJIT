@@ -24,14 +24,13 @@ namespace RunJit.Cli.RunJit.Zip
             yield return BuildZipFileOption();
         }
 
-
         private Option BuildZipFileOption()
         {
             return new Option(new[] { "--zip-file", "-zf" }, "The full file path for the zip file")
-            {
-                Argument = new Argument<FileInfo>("zipFile") { Description = "The target zip file info." },
-                Required = true
-            };
+                   {
+                       Argument = new Argument<FileInfo>("zipFile") { Description = "The target zip file info." },
+                       Required = true
+                   };
         }
     }
 }

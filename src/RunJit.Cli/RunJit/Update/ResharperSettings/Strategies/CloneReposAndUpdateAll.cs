@@ -85,12 +85,15 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
 
                 var resharperSettings = EmbeddedFile.GetFileContentFrom("Update.ResharperSettings.Template.Resharper.sln.DotSettings");
                 var resharperSettingsFile = new FileInfo(Path.Combine(solutionFile.Directory!.FullName, $"{solutionName}.sln.DotSettings"));
+
                 if (resharperSettingsFile.Exists)
                 {
                     var existingFileContent = await File.ReadAllTextAsync(resharperSettingsFile.FullName).ConfigureAwait(false);
+
                     if (resharperSettings.Length == existingFileContent.Length)
                     {
                         consoleService.WriteSuccess($"Solution: {solutionFile.FullName} R# setting already up to date nothing to update !");
+
                         return;
                     }
                 }

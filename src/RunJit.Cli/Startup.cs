@@ -10,15 +10,16 @@ namespace RunJit.Cli
 {
     internal class Startup
     {
-        internal void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        internal void ConfigureServices(IServiceCollection services,
+                                        IConfiguration configuration)
         {
             // 1. Infrastructure
             services.AddDotNetCliArgumentFixer();
             services.AddErrorHandler();
-            
+
             // 2. Security
             services.AddAuth0(configuration);
-            
+
             // Domains
             // RunJit
             //  -> Rename

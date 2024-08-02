@@ -70,7 +70,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
                 // NEW check for legacy branches and delete them all
                 var branches = await git.GetRemoteBranchesAsync().ConfigureAwait(false);
                 var branchName = "quality/fix-embedded-resources";
-                
+
                 var legacyBranches = branches.Where(b => b.Name.Contains(branchName, StringComparison.OrdinalIgnoreCase)).ToImmutableList();
 
                 await git.DeleteBranchesAsync(legacyBranches).ConfigureAwait(false);
@@ -92,7 +92,6 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
                     var csprojFileInfo = new FileInfo(csprojFile.ProjectFileInfo.Value.FullName);
                     var csprojXml = XDocument.Load(csprojFileInfo.FullName);
 
-
                     // Get all <EmbeddedResource Include="API\CalculateCo2\ExcelFiles\co2-sample-invalid.xlsx"> from csprojXml
                     // and extract the file extension name
                     var allEmbeddedFiles = csprojXml.Descendants().Where(e => e.Name.LocalName == "EmbeddedResource").Select(node => node.Attribute("Include")?.Value).FilterNullObjects().ToList();
@@ -101,6 +100,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
                     var xmlElements = csprojXml.Descendants().Where(e => fileExtensions.Any(extension => e.Attributes().Any(a => a.Value.Contains($".{extension}") ||
                                                                                                                                  a.Value.Contains(@"\*") ||
                                                                                                                                  a.Value.Contains(@"\**")))).ToList();
+
                     xmlElements.Remove();
 
                     var itemGroup = new XElement("ItemGroup");
@@ -108,6 +108,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
                     foreach (var fileExtension in fileExtensions)
                     {
                         var sqlElement = csprojXml.Descendants().FirstOrDefault(e => e.Name.LocalName == "EmbeddedResource" && (e.Attribute("Include")?.Value == $@"**\*.{fileExtension}"));
+
                         if (sqlElement.IsNull())
                         {
                             var embeddedResourceSql = new XElement("EmbeddedResource");
@@ -123,13 +124,14 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
 
                     // all appsettings.x.json have to be ignored for now
                     var appsettings = csprojFile.ProjectFileInfo.Value.Directory!.EnumerateFiles("appsetting*.json").ToList();
+
                     if (appsettings.Any())
                     {
                         var itemgroupIgnore = new XElement("ItemGroup");
                         var appsettingElement = new XElement("EmbeddedResource");
                         appsettingElement.Add(new XAttribute("Remove", "appsetting*.json"));
                         itemgroupIgnore.Add(appsettingElement);
-                        
+
                         // Test project need special handling :/ 
                         if (appsettings.Any(a => a.Name.Contains("test")))
                         {
@@ -142,10 +144,9 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
                             content.Add(copyToOutputDirectory);
 
                             csprojXml.Root!.Add(copyToOutPut);
-
                         }
-                        csprojXml.Root!.Add(itemgroupIgnore);
 
+                        csprojXml.Root!.Add(itemgroupIgnore);
                     }
 
                     // remove empty elements

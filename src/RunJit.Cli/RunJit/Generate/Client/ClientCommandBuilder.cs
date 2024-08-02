@@ -8,7 +8,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
 {
     internal static class AddClientCommandBuilderExtension
     {
-        internal static void AddClientCommandBuilder(this IServiceCollection services, IConfiguration configuration)
+        internal static void AddClientCommandBuilder(this IServiceCollection services,
+                                                     IConfiguration configuration)
         {
             services.AddClient(configuration);
             services.AddClientOptionsBuilder();
@@ -17,13 +18,18 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ClientCommandBuilder(IClientGen clientGen, IClientGenOptionsBuilder optionsBuilder) : IGenerateSubCommandBuilder
+    internal class ClientCommandBuilder(IClientGen clientGen,
+                                        IClientGenOptionsBuilder optionsBuilder) : IGenerateSubCommandBuilder
     {
         public Command Build()
         {
             var command = new Command("client", "The command to generate a new .net client into a .net web api project");
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
-            command.Handler = CommandHandler.Create<bool, bool, FileInfo>((usevisualstudio, build, solution) => clientGen.HandleAsync(new ClientParameters(usevisualstudio, build, solution)));
+
+            command.Handler = CommandHandler.Create<bool, bool, FileInfo>((usevisualstudio,
+                                                                           build,
+                                                                           solution) => clientGen.HandleAsync(new ClientParameters(usevisualstudio, build, solution)));
+
             return command;
         }
     }

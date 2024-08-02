@@ -13,17 +13,19 @@ namespace RunJit.Cli.Extensions
             }
 
             var splittedString = version.Split(".");
+
             if (int.TryParse(splittedString[0], out var major))
             {
                 return new ApiVersion { Major = major };
             }
 
-            var vSplit = version.Split(new[] { 'v', 'V' },StringSplitOptions.RemoveEmptyEntries);
+            var vSplit = version.Split(new[] { 'v', 'V' }, StringSplitOptions.RemoveEmptyEntries);
+
             if (int.TryParse(vSplit.Last(), out var majorFromVersion))
             {
                 return new ApiVersion { Major = majorFromVersion };
             }
-            
+
             return new ApiVersion { Major = 1 };
         }
 

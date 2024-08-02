@@ -28,24 +28,27 @@ namespace RunJit.Cli.RunJit.Generate.Client
     {
         private readonly Regex _parameterRegEx = new("(?<=\\{).+?(?=\\})");
 
-        internal string BuildFrom(string baseUrl, Method method)
+        internal string BuildFrom(string baseUrl,
+                                  Method method)
         {
             var httpAttribute = method.Attributes.FirstOrDefault(a => a.Name.StartWith("Http"));
             var httpMethodRoute = httpAttribute?.Arguments.FirstOrDefault()?.Trim('"') ?? string.Empty;
             var relativeUrl = $"{baseUrl.TrimEnd('/')}/{httpMethodRoute.TrimStart('/')}";
 
             var routeOnMethod = method.Attributes.FirstOrDefault(a => a.Name == "Route")?.Arguments.FirstOrDefault()?.Trim('"');
+
             if (routeOnMethod.IsNotNullOrWhiteSpace())
             {
                 relativeUrl = $"{baseUrl.TrimEnd('/')}/{routeOnMethod}/{httpMethodRoute.TrimStart('/')}";
             }
 
             var urlParameters = _parameterRegEx.Matches(relativeUrl).Select(m => m.Value);
+
             urlParameters.ForEach(param =>
-            {
-                var normalizedParameter = param.FirstCharToLower();
-                relativeUrl = relativeUrl.Replace(param, normalizedParameter);
-            });
+                                  {
+                                      var normalizedParameter = param.FirstCharToLower();
+                                      relativeUrl = relativeUrl.Replace(param, normalizedParameter);
+                                  });
 
             // Specific file parameter notation have to be replaced too.
             relativeUrl = relativeUrl.Replace("**", string.Empty);

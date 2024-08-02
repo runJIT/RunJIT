@@ -16,9 +16,8 @@ namespace RunJit.Cli.RunJit.Decrypt
         }
     }
 
-    internal sealed class PackCommandBuilder(
-        IDecryptArgumentsBuilder encryptArgumentsBuilder,
-        IDecryptService decryptService)
+    internal sealed class PackCommandBuilder(IDecryptArgumentsBuilder encryptArgumentsBuilder,
+                                             IDecryptService decryptService)
         : IRunJitSubCommandBuilder
     {
         public Command Build()
@@ -27,6 +26,7 @@ namespace RunJit.Cli.RunJit.Decrypt
             var arguments = encryptArgumentsBuilder.Build();
             arguments.ToList().ForEach(argument => newCommand.AddArgument(argument));
             newCommand.Handler = CommandHandler.Create<string>(value => decryptService.HandleAsync(new DecryptParameters(value)));
+
             return newCommand;
         }
     }

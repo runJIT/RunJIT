@@ -10,6 +10,7 @@ namespace RunJit.Cli.RunJit
             services.AddSingletonIfNotExists<IDotNetCliArgumentFixer, RunJitArgumentFixer>();
         }
     }
+
     internal interface IDotNetCliArgumentFixer
     {
         string[] Fix(string[] args);
@@ -21,6 +22,7 @@ namespace RunJit.Cli.RunJit
         {
             var defaultArgs = new[] { "runjit" };
             var newArgs = defaultArgs.Concat(args).Distinct().ToList();
+
             return newArgs.ToArray();
         }
     }

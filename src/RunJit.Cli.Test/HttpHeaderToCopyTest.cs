@@ -25,7 +25,6 @@ namespace RunJit.Cli.Test
             Assert.AreEqual(dictionarySource.ToJson(), dictionaryTarget.ToJson());
         }
 
-
         [TestMethod]
         public void How_To_Copy_All_Headers_To_HttpClient()
         {

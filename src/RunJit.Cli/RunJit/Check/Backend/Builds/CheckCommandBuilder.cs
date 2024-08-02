@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
     }
 
     internal sealed class CheckBackendBuildsCommandBuilder(ICheckBackendBuildsOptionsBuilder checkBackendBuildsOptionsBuilder,
-        ICheckBackendBuilds checkBackendBuilds) : ICheckBackendSubCommandBuilder
+                                                           ICheckBackendBuilds checkBackendBuilds) : ICheckBackendSubCommandBuilder
     {
         public Command Build()
         {
@@ -27,7 +27,11 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
             //checkBackendBuildsArgumentsBuilder.Build().ForEach(arg => checkCommand.AddArgument(arg));
             checkBackendBuildsOptionsBuilder.Build().ForEach(opt => checkCommand.AddOption(opt));
 
-            checkCommand.Handler = CommandHandler.Create<string, string, string, string>((solution, gitRepos, workingDirectory, ignorePackages) => checkBackendBuilds.HandleAsync(new CheckBackendBuildsParameters(solution ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty, ignorePackages ?? string.Empty)));
+            checkCommand.Handler = CommandHandler.Create<string, string, string, string>((solution,
+                                                                                          gitRepos,
+                                                                                          workingDirectory,
+                                                                                          ignorePackages) => checkBackendBuilds.HandleAsync(new CheckBackendBuildsParameters(solution ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty,
+                                                                                                                                                                             ignorePackages ?? string.Empty)));
 
             return checkCommand;
         }

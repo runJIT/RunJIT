@@ -8,11 +8,11 @@ namespace RunJit.Cli.RunJit.New
 {
     public static class AddNewCommandBuilderExtension
     {
-        public static void AddNewCommandBuilder(this IServiceCollection services, IConfiguration configuration)
+        public static void AddNewCommandBuilder(this IServiceCollection services,
+                                                IConfiguration configuration)
         {
             services.AddLambdaCommandBuilder();
-            
-            
+
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, NewCommandBuilder>();
         }
     }
@@ -23,6 +23,7 @@ namespace RunJit.Cli.RunJit.New
         {
             var newCommand = new Command("new", "The command to create a new solution, project, lambda and many more");
             newSubCommandBuilders.ToList().ForEach(builder => newCommand.AddCommand(builder.Build()));
+
             return newCommand;
         }
     }

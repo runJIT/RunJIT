@@ -23,7 +23,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
         {
             foreach (var dataType in dataTypes)
             {
-                var model = modelBuilder.BuildFrom(dataType, controller, projectName, clientName);
+                var model = modelBuilder.BuildFrom(dataType, controller, projectName,
+                                                   clientName);
 
                 await File.WriteAllTextAsync(Path.Combine(modelsFolder.FullName, $"{dataType.Name}.cs"), model).ConfigureAwait(false);
             }

@@ -20,12 +20,12 @@ namespace RunJit.Cli.Test.SystemTest
             var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("RunJit.Update.Nuget", WebApiFolder, BasePath)).ConfigureAwait(false);
 
             // 2. Test if generated results is buildable
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
 
             // 3. Update nuget packages
             await Mediator.SendAsync(new UpdateBackendNugetPackagesForSolution(solutionFile.FullName)).ConfigureAwait(false);
         }
-        
+
         [DataTestMethod]
         [DataRow("codecommit::eu-central-1://pulse-datamanagement")]
         [DataRow("codecommit::eu-central-1://pulse-survey")]
@@ -50,7 +50,8 @@ namespace RunJit.Cli.Test.SystemTest
 
     internal sealed class UpdateBackendNugetPackagesHandler : ICommandHandler<UpdateBackendNugetPackagesForSolution>
     {
-        public async Task Handle(UpdateBackendNugetPackagesForSolution request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateBackendNugetPackagesForSolution request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -60,7 +61,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
@@ -71,19 +72,20 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            
+
             yield return "nuget";
             yield return "--solution";
             yield return parameters.solution;
         }
     }
 
-
-    internal sealed record UpdateBackendNugetPackagesForGitRepos(string GitRepos, string WorkingDirectory) : ICommand;
+    internal sealed record UpdateBackendNugetPackagesForGitRepos(string GitRepos,
+                                                                 string WorkingDirectory) : ICommand;
 
     internal sealed class UpdateBackendNugetPackagesForGitReposHandler : ICommandHandler<UpdateBackendNugetPackagesForGitRepos>
     {
-        public async Task Handle(UpdateBackendNugetPackagesForGitRepos request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateBackendNugetPackagesForGitRepos request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -93,7 +95,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
@@ -104,7 +106,7 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            
+
             yield return "nuget";
             yield return "--git-repos";
             yield return parameters.GitRepos;

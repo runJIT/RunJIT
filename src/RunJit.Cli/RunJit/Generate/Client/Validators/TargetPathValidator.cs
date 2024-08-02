@@ -19,6 +19,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             // Throw.IfNullOrWhiteSpace(() => value);
 
             var errors = CollectErrors(value).Flatten(Environment.NewLine);
+
             return new ValidationResult(errors);
         }
 
@@ -27,12 +28,14 @@ namespace RunJit.Cli.RunJit.Generate.Client
             if (value.IsNullOrWhiteSpace())
             {
                 yield return $"The target path: '{value}' must not be null, empty or whitespace";
+
                 yield break;
             }
 
             if (value.Contains(" "))
             {
                 yield return $"TThe target path: '{value}' must not contains whitespace";
+
                 yield break;
             }
 

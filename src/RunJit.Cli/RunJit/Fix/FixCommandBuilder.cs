@@ -10,7 +10,7 @@ namespace RunJit.Cli.RunJit.Fix
         public static void AddFixCommandBuilder(this IServiceCollection services)
         {
             services.AddFixEmbeddedResourcesCommandBuilder();
-            
+
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, FixCommandBuilder>();
         }
     }
@@ -22,6 +22,7 @@ namespace RunJit.Cli.RunJit.Fix
         {
             var command = new Command("fix", "Ultimate runjit fixtures");
             subCommandBuilders.ForEach(x => command.AddCommand(x.Build()));
+
             return command;
         }
     }

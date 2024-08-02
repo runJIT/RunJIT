@@ -7,7 +7,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
 {
     internal static class AddClientExtension
     {
-        internal static void AddClient(this IServiceCollection services, IConfiguration configuration)
+        internal static void AddClient(this IServiceCollection services,
+                                       IConfiguration configuration)
         {
             services.AddConsoleService();
             services.AddDotNetToolToolBuildFromStrategy();
@@ -27,14 +28,13 @@ namespace RunJit.Cli.RunJit.Generate.Client
         Task<int> HandleAsync(ClientParameters parameters);
     }
 
-    internal class ClientGen(
-        ITargetFolderService targetFolderService,
-        ITemplateExtractor templateExtractor,
-        ITemplateService templateService,
-        IProcessService processService,
-        IConsoleService consoleService,
-        ClientGeneratorBuilder clientGeneratorBuilder,
-        ClientCreator clientCreator)
+    internal class ClientGen(ITargetFolderService targetFolderService,
+                             ITemplateExtractor templateExtractor,
+                             ITemplateService templateService,
+                             IProcessService processService,
+                             IConsoleService consoleService,
+                             ClientGeneratorBuilder clientGeneratorBuilder,
+                             ClientCreator clientCreator)
         : IClientGen
     {
         public async Task<int> HandleAsync(ClientParameters parameters)
@@ -44,6 +44,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             if (parameters.Build)
             {
                 var dotnetBuildResult = await processService.RunAsync("dotnet", $"build {parameters.SolutionFile.FullName}").ConfigureAwait(false);
+
                 if (dotnetBuildResult.ExitCode != 0)
                 {
                     return dotnetBuildResult.ExitCode;
@@ -75,6 +76,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             await Process.ExecuteAsync("dotnet", $"restore {solutionFile.FullName}").ConfigureAwait(false);
 
             consoleService.WriteSuccess($"Enjoy your new generated: '{client.ProjectName}' client");
+
             return 0;
         }
     }

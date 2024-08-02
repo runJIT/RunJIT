@@ -17,6 +17,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         internal DirectoryInfo Build(ProjectFile clientProject)
         {
             var apiFolder = new DirectoryInfo(Path.Combine(clientProject.ProjectFileInfo.Value.Directory!.FullName, ClientGenConstants.Api));
+
             if (apiFolder.Exists)
             {
                 apiFolder.Delete(true);
@@ -27,7 +28,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
             return apiFolder;
         }
     }
-
 
     internal static class ClientGenConstants
     {

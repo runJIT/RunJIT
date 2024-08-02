@@ -13,9 +13,12 @@ namespace RunJit.Cli.RunJit.New.Lambda
 
     internal class RenameFilesAndFolders
     {
-        public void Rename(DirectoryInfo directoryInfo, string originalName, string newName)
+        public void Rename(DirectoryInfo directoryInfo,
+                           string originalName,
+                           string newName)
         {
             var folders = directoryInfo.EnumerateDirectories("*.*", SearchOption.AllDirectories);
+
             foreach (var folder in folders)
             {
                 if (folder.Name.Contains(originalName))
@@ -25,9 +28,11 @@ namespace RunJit.Cli.RunJit.New.Lambda
             }
 
             var allFiles = directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories);
+
             foreach (var fileInfo in allFiles)
             {
                 var content = File.ReadAllText(fileInfo.FullName);
+
                 if (content.Contains(originalName))
                 {
                     var newContent = content.Replace(originalName, newName);

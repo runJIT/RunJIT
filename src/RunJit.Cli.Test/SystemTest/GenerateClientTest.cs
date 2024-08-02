@@ -15,6 +15,7 @@ namespace RunJit.Cli.Test.SystemTest
     public class GenerateClientTest : GlobalSetup
     {
         private const string Resource = "User";
+
         private const string BasePath = "api/client-gen";
 
         [TestMethod]
@@ -30,7 +31,7 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new GenerateClient(solutionFile)).ConfigureAwait(false);
 
             //// 4. Test if generated results is buildable
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
         }
 
         // [Ignore("Dev only")]
@@ -39,11 +40,11 @@ namespace RunJit.Cli.Test.SystemTest
         [DataRow(@"D:\Siemens\pulse-core\PulseCore.sln")]
         [DataRow(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln")]
         [DataRow(@"D:\AzureDevOps\SoftwareOne.Workshop.November.2023\RunJit\UserManagement\UserManagement.sln")]
+        [DataRow(@"D:\Siemens\pulse-sustainability\Pulse.Sustainability.sln")]
         public Task Generate_Client_Of_Existing_Solution_For(string solutionPath)
         {
             return Mediator.SendAsync(new GenerateClient(new FileInfo(solutionPath), false));
         }
-
 
         [TestMethod]
         public async Task Next_Level_Parsing()
@@ -53,27 +54,28 @@ namespace RunJit.Cli.Test.SystemTest
 
             // Load the workspace and project
             var workspace = MSBuildWorkspace.Create();
-            var solution = await workspace.OpenSolutionAsync(solutionPath);
+            var solution = await workspace.OpenSolutionAsync(solutionPath).ConfigureAwait(false);
 
             var project = solution.Projects.FirstOrDefault(p => p.Name == "MinimalApi");
 
             if (project == null)
             {
                 Console.WriteLine("Project not found.");
+
                 return;
             }
 
             // Get the compilation
-            var compilation = await project.GetCompilationAsync();
+            var compilation = await project.GetCompilationAsync().ConfigureAwait(false);
 
             // Find the document and the syntax tree
             var document = project.Documents.FirstOrDefault(d => d.Name == "GetAllToDoEndpoints.cs");
             Assert.IsNotNull(document);
-            
-            var syntaxTree = await document.GetSyntaxTreeAsync();
+
+            var syntaxTree = await document.GetSyntaxTreeAsync().ConfigureAwait(false);
 
             Assert.IsNotNull(syntaxTree);
-            
+
             // Get the semantic model
             Assert.IsNotNull(compilation);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
@@ -85,7 +87,7 @@ namespace RunJit.Cli.Test.SystemTest
                                       .Last();
 
             var returnExpression = returnStatement.Expression as InvocationExpressionSyntax;
-            
+
             Assert.IsNotNull(returnExpression);
 
             var methodSymbol = semanticModel.GetSymbolInfo(returnExpression).Symbol as IMethodSymbol;
@@ -95,11 +97,13 @@ namespace RunJit.Cli.Test.SystemTest
         }
     }
 
-    internal sealed record GenerateClient(FileInfo SolutionFile, bool BuildBeforeGenerate = true) : ICommand;
+    internal sealed record GenerateClient(FileInfo SolutionFile,
+                                          bool BuildBeforeGenerate = true) : ICommand;
 
     internal sealed class GenerateClientHandler : ICommandHandler<GenerateClient>
     {
-        public async Task Handle(GenerateClient request, CancellationToken cancellationToken)
+        public async Task Handle(GenerateClient request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -109,7 +113,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
@@ -123,6 +127,7 @@ namespace RunJit.Cli.Test.SystemTest
             yield return "client";
             yield return "--solution";
             yield return request.SolutionFile.FullName;
+
             if (request.BuildBeforeGenerate)
             {
                 yield return "--build";

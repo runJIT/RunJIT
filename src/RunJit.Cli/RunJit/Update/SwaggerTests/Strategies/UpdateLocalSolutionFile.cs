@@ -17,6 +17,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
             services.AddGitService();
             services.AddDotNet();
             services.AddDotNetService();
+
             // services.AddUpdateSwaggerTestsPackageService();
             services.AddFindSolutionFile();
 
@@ -52,12 +53,14 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
             var solutionFileParsed = new SolutionFileInfo(solutionFile.FullName).Parse();
 
             var webApiProject = solutionFileParsed.ProductiveProjects.Where(p => p.Document.ToString().Contains("Sdk=\"Microsoft.NET.Sdk.Web\"")).ToImmutableList();
+
             if (webApiProject.Count != 1)
             {
                 throw new RunJitException($"Could not find a web api project in solution: {solutionFile.FullName}");
             }
 
             var targetTestProject = solutionFileParsed.UnitTestProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion.Contains($"{webApiProject[0].ProjectFileInfo.FileNameWithoutExtenion}.Test"));
+
             if (targetTestProject.IsNull())
             {
                 throw new RunJitException($"Could not find the test project for the web api in the solution: {solutionFile.FullName}");
@@ -66,6 +69,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
             // Go sure solution parser is in place
             // Now we start Magic
             var solutionParser = targetTestProject.PackageReferences.FirstOrDefault(p => p.Include.Contains("Solution.Parser"));
+
             if (solutionParser.IsNull())
             {
                 await dotNet.RunAsync("dotnet", $"add {targetTestProject.ProjectFileInfo.Value.FullName} package Solution.Parser").ConfigureAwait(false);
@@ -73,6 +77,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
 
             // JsonDiffPatch
             var jsonDiffPatch = targetTestProject.PackageReferences.FirstOrDefault(p => p.Include.Contains("JsonDiffPatch"));
+
             if (jsonDiffPatch.IsNull())
             {
                 await dotNet.RunAsync("dotnet", $"add {targetTestProject.ProjectFileInfo.Value.FullName} package JsonDiffPatch").ConfigureAwait(false);
@@ -94,6 +99,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
             // Now we have to embed the files if they was not already embedded
             var swaggerFolder = new DirectoryInfo(Path.Combine(targetTestProject.ProjectFileInfo.Value.Directory!.FullName, "Swagger"));
             var jsonFiles = swaggerFolder.EnumerateFiles("*.json", SearchOption.AllDirectories).ToImmutableList();
+
             // 7. Embed the JSON files into the test project
             foreach (var jsonFile in jsonFiles)
             {

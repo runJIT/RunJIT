@@ -21,9 +21,9 @@ namespace RunJit.Cli.Test.SystemTest
 
             // 2. Add simple web api for swagger
             await Mediator.SendAsync(new CreateSimpleRestController(solutionFile, "User", false)).ConfigureAwait(false);
-            
+
             // 3. Test if generated results is buildable
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
 
             // 3. Update to .Net 8
             await Mediator.SendAsync(new UpdateBackendSwaggerTestsForSolution(solutionFile.FullName)).ConfigureAwait(false);
@@ -34,7 +34,8 @@ namespace RunJit.Cli.Test.SystemTest
 
     internal sealed class UpdateBackendSwaggerTestsHandler : ICommandHandler<UpdateBackendSwaggerTestsForSolution>
     {
-        public async Task Handle(UpdateBackendSwaggerTestsForSolution request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateBackendSwaggerTestsForSolution request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -44,7 +45,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
@@ -55,19 +56,20 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            
+
             yield return "coderules";
             yield return "--solution";
             yield return parameters.solution;
         }
     }
 
-
-    internal sealed record UpdateBackendSwaggerTestsForGitRepos(string GitRepos, string WorkingDirectory) : ICommand;
+    internal sealed record UpdateBackendSwaggerTestsForGitRepos(string GitRepos,
+                                                                string WorkingDirectory) : ICommand;
 
     internal sealed class UpdateBackendSwaggerTestsForGitReposHandler : ICommandHandler<UpdateBackendSwaggerTestsForGitRepos>
     {
-        public async Task Handle(UpdateBackendSwaggerTestsForGitRepos request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateBackendSwaggerTestsForGitRepos request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -77,7 +79,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
@@ -88,7 +90,7 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            
+
             yield return "swaggertests";
             yield return "--git-repos";
             yield return parameters.GitRepos;

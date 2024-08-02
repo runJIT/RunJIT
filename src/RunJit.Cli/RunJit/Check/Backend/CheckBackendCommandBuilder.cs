@@ -21,6 +21,7 @@ namespace RunJit.Cli.RunJit.Check.Backend
         {
             var checkBackendCommand = new Command("backend", "The command to check or proof some specific conditions on backends.");
             checkBackendSubCommandBuilders.ForEach(builder => checkBackendCommand.AddCommand(builder.Build()));
+
             return checkBackendCommand;
         }
     }

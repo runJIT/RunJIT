@@ -15,9 +15,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ClientStructureWriter(
-        ApiFolderBuilder apiFolderBuilder,
-        FacadeStructureBuilder facadeStructureBuilder)
+    internal class ClientStructureWriter(ApiFolderBuilder apiFolderBuilder,
+                                         FacadeStructureBuilder facadeStructureBuilder)
     {
         public async Task WriteFileStructureAsync(GeneratedClient client,
                                                   ProjectFile clientProject,
@@ -28,7 +27,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var apiFolder = apiFolderBuilder.Build(clientProject);
 
             // 1. Domain structure like Users, Resources and more
-            await facadeStructureBuilder.CreateAsync(apiFolder, client.Facades, projectName, clientName).ConfigureAwait(false);
+            await facadeStructureBuilder.CreateAsync(apiFolder, client.Facades, projectName,
+                                                     clientName).ConfigureAwait(false);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         public ValidationResult Validate(string value)
         {
             var errors = CollectErrors(value).Flatten(Environment.NewLine);
+
             return new ValidationResult(errors);
         }
 
@@ -24,16 +25,19 @@ namespace RunJit.Cli.RunJit.Generate.Client
             if (value.IsNullOrWhiteSpace())
             {
                 yield return $"The solution file path: '{value}' must not be null, empty or whitespace";
+
                 yield break;
             }
 
             if (value.Contains(" "))
             {
                 yield return $"The solution file path: '{value}' must not contains whitespace";
+
                 yield break;
             }
 
             var solutionFile = new FileInfo(value);
+
             if (solutionFile.Exists.IsFalse())
             {
                 yield return $"The solution file path: '{solutionFile.FullName}' does not exists";

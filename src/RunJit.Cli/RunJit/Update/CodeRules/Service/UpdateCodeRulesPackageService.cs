@@ -11,7 +11,7 @@
 //            services.AddSingletonIfNotExists<IUpdateCodeRulesPackageService, UpdateCodeRulesPackageService>();
 //        }
 //    }
-    
+
 //    internal interface IUpdateCodeRulesPackageService
 //    {
 //        Task UpdateCodeRulesPackageAsync(OutdatedCodeRulesResponse outdatedCodeRulesResponse);
@@ -22,7 +22,9 @@
 //    {
 //        public async Task UpdateCodeRulesPackageAsync(FileInfo solutionFileInfo)
 //        {
-            
+
 //        }
 //    }
 //}
+
+

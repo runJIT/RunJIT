@@ -18,8 +18,8 @@ namespace RunJit.Cli.CodeRules
                                    from @method in @class.Methods
                                    where method.Statements.Count < 2 && method.MethodBody.Contains("await") && method.LineStatements.Count < 2
                                    select new
-                                   {
-                                       Error = $@"
+                                          {
+                                              Error = $@"
 Do not use await if you only return a task
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Class:  {@class.FullQualifiedName}
@@ -29,10 +29,10 @@ Method: {method.MethodValue}
 Sample: {method.MethodValue.Replace("return await", "return").Replace(".ConfigureAwait(false)", string.Empty).Replace(".ConfigureAwait(true)", string.Empty)}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 "
-                                   }).ToImmutableList();
+                                          }).ToImmutableList();
 
             Assert.IsTrue(returnAwaitOnly.IsEmpty(),
-                @$"Invalid response type. Findings: '{returnAwaitOnly.Count}': {Environment.NewLine}{returnAwaitOnly.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
+                          @$"Invalid response type. Findings: '{returnAwaitOnly.Count}': {Environment.NewLine}{returnAwaitOnly.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
         }
 
         [TestMethod]
@@ -44,8 +44,8 @@ Sample: {method.MethodValue.Replace("return await", "return").Replace(".Configur
                                   where method.Statements.Count == 1 &&
                                         (method.Statements[0].StartWith("await") || method.Statements[0].StartWith("return await"))
                                   select new
-                                  {
-                                      Error = $@"
+                                         {
+                                             Error = $@"
 Do not use await if you only return a task
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Class:  {@class.FullQualifiedName}
@@ -55,10 +55,10 @@ Method: {method.MethodValue}
 Sample: {method.MethodValue.Replace("return await", "return").Replace("await", "return").Replace(" async", string.Empty).Replace(".ConfigureAwait(false)", string.Empty).Replace(".ConfigureAwait(true)", string.Empty)}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 "
-                                  };
+                                         };
 
             Assert.IsTrue(returnAwaitOnly.IsEmpty(),
-                @$"Invalid response type. Findings: '{returnAwaitOnly.Count()}': {Environment.NewLine}{returnAwaitOnly.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
+                          @$"Invalid response type. Findings: '{returnAwaitOnly.Count()}': {Environment.NewLine}{returnAwaitOnly.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
         }
 
         [TestMethod]
@@ -72,8 +72,8 @@ Sample: {method.MethodValue.Replace("return await", "return").Replace("await", "
                                   where method.ReturnParameter.Contains("Task") && method.Name.EndWith("Async").IsFalse()
                                   where method.Name.NotEqualsTo("Handle") // Exception MediatR class dont have async :(
                                   select new
-                                  {
-                                      Error = $@"
+                                         {
+                                             Error = $@"
 Please name your async methods correctly with postfix 'Async'.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Class:  {@class.FullQualifiedName}
@@ -83,10 +83,10 @@ Method: {method.Name}
 Sample: {method.Name}Async
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 "
-                                  };
+                                         };
 
             Assert.IsTrue(returnAwaitOnly.IsEmpty(),
-                @$"Please name your async methods correctly with postfix 'Async'. Findings {returnAwaitOnly.Count()}': {Environment.NewLine}{returnAwaitOnly.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
+                          @$"Please name your async methods correctly with postfix 'Async'. Findings {returnAwaitOnly.Count()}': {Environment.NewLine}{returnAwaitOnly.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
         }
 
         [TestMethod]
@@ -100,8 +100,8 @@ Sample: {method.Name}Async
                                   where method.ReturnParameter.Contains("Task") && method.Name.EndWith("Async").IsFalse()
                                   where method.Name.NotEqualsTo("Handle") // Exception MediatR class dont have async :(
                                   select new
-                                  {
-                                      Error = $@"
+                                         {
+                                             Error = $@"
 Please name your async methods correctly with postfix 'Async'
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Class:  {@class.FullQualifiedName}
@@ -111,10 +111,10 @@ Method: {method.Name}
 Sample: {method.Name}Async
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 "
-                                  };
+                                         };
 
             Assert.IsTrue(returnAwaitOnly.IsEmpty(),
-                @$"Please name your async methods correctly with postfix 'Async'. Findings: '{returnAwaitOnly.Count()}': {Environment.NewLine}{returnAwaitOnly.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
+                          @$"Please name your async methods correctly with postfix 'Async'. Findings: '{returnAwaitOnly.Count()}': {Environment.NewLine}{returnAwaitOnly.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
         }
 
         [TestMethod]
@@ -125,8 +125,8 @@ Sample: {method.Name}Async
                                          from @method in @class.Methods
                                          where method.ReturnParameter.Contains("Task<IEnumerable")
                                          select new
-                                         {
-                                             Error = $@"
+                                                {
+                                                    Error = $@"
 Never use IEnumerable as return type for async methods.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Class:  {@class.FullQualifiedName}
@@ -138,10 +138,10 @@ Sample: {method.MethodValue.Split(Environment.NewLine)[0].Replace(method.ReturnP
 Best:   {method.MethodValue.Split(Environment.NewLine)[0].Replace(method.ReturnParameter, method.ReturnParameter.Replace("Task<IEnumerable", "IAsyncEnumerable"))}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 "
-                                         };
+                                                };
 
             Assert.IsTrue(ienumerableReturnTypes.IsEmpty(),
-                @$"Never use IEnumerable as return type for async methods. Findings: '{ienumerableReturnTypes.Count()}': {Environment.NewLine}{ienumerableReturnTypes.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
+                          @$"Never use IEnumerable as return type for async methods. Findings: '{ienumerableReturnTypes.Count()}': {Environment.NewLine}{ienumerableReturnTypes.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
         }
 
         [TestMethod]
@@ -152,8 +152,8 @@ Best:   {method.MethodValue.Split(Environment.NewLine)[0].Replace(method.ReturnP
                                          from @method in @class.Methods
                                          where method.ReturnParameter.Contains("IEnumerable<Task")
                                          select new
-                                         {
-                                             Error = $@"
+                                                {
+                                                    Error = $@"
 Never use IEnumerable as return type for async methods.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Class:  {@class.FullQualifiedName}
@@ -163,10 +163,10 @@ Method: {method.MethodValue.Split(Environment.NewLine)[0]}
 Sample: {method.MethodValue.Split(Environment.NewLine)[0].Replace(method.ReturnParameter, $"{method.ReturnParameter.Replace("IEnumerable<Task", "IAsyncEnumerable").TrimEnd('>')}>")}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 "
-                                         };
+                                                };
 
             Assert.IsTrue(ienumerableReturnTypes.IsEmpty(),
-                @$"Never use IEnumerable as return type for async methods. Findings: '{ienumerableReturnTypes.Count()}': {Environment.NewLine}{ienumerableReturnTypes.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
+                          @$"Never use IEnumerable as return type for async methods. Findings: '{ienumerableReturnTypes.Count()}': {Environment.NewLine}{ienumerableReturnTypes.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
         }
 
         [TestMethod]
@@ -179,8 +179,8 @@ Sample: {method.MethodValue.Split(Environment.NewLine)[0].Replace(method.ReturnP
                                     from statement in @method.Statements
                                     where statement.Contains($"{nameof(Task)}.{nameof(Task.WaitAll)}")
                                     select new
-                                    {
-                                        Error = $@"
+                                           {
+                                               Error = $@"
 Never use blocking Task.WaitAll operations, use Task.WhenAll instead.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Class:     {@class.FullQualifiedName}
@@ -192,12 +192,11 @@ Statement: {statement}
 Sample:    {statement.Replace($"{nameof(Task)}.{nameof(Task.WaitAll)}", $"await {nameof(Task)}.{nameof(Task.WhenAll)}")}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 "
-                                    };
+                                           };
 
             Assert.IsTrue(blockingOperation.IsEmpty(),
-                @$"Never use blocking Task.WaitAll operations, use Task.WhenAll instead.. Findings: '{blockingOperation.Count()}': {Environment.NewLine}{blockingOperation.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
+                          @$"Never use blocking Task.WaitAll operations, use Task.WhenAll instead.. Findings: '{blockingOperation.Count()}': {Environment.NewLine}{blockingOperation.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
         }
-
 
         [DataTestMethod]
         [DataRow(".Result;")]
@@ -212,8 +211,8 @@ Sample:    {statement.Replace($"{nameof(Task)}.{nameof(Task.WaitAll)}", $"await 
                                      from statement in @method.Statements
                                      where statement.Contains(blockingOperation)
                                      select new
-                                     {
-                                         Error = $@"
+                                            {
+                                                Error = $@"
 Never use blocking {blockingOperation} operation, use async/await for async operations
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Class:     {@class.FullQualifiedName}
@@ -225,15 +224,11 @@ Statement: {statement}
 Sample:    {statement.Replace("= ", "= await ").Replace(blockingOperation, ".ConfigureAwait(false)")}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 "
-                                     };
+                                            };
 
             Assert.IsTrue(blockingOperations.IsEmpty(),
-                @$"Never use blocking {blockingOperation} operation, use async/await for async operations. Findings: '{blockingOperations.Count()}': {Environment.NewLine}{blockingOperations.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
+                          @$"Never use blocking {blockingOperation} operation, use async/await for async operations. Findings: '{blockingOperations.Count()}': {Environment.NewLine}{blockingOperations.Select(error => error.Error).Flatten(Environment.NewLine)}{Environment.NewLine}");
         }
-
-
-
-
 
         //        [TestMethod]
         //        public void Use_For_Each_Await_Statement_A_Separate_Line()

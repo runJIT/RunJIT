@@ -11,7 +11,7 @@ namespace RunJit.Cli.Test.SystemTest
     [TestClass]
     public class UpdateCodeRulesTest : GlobalSetup
     {
-        private const string BasePath = "api/update";
+        private const string BasePath = "api/cleanup";
 
         [TestMethod]
         public async Task Should_Update_All_CodeRules_For_Target_Solution()
@@ -20,13 +20,13 @@ namespace RunJit.Cli.Test.SystemTest
             var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("Simple.Project", WebApiFolder, BasePath)).ConfigureAwait(false);
 
             // 3. Test if generated results is buildable
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
 
             // 3. Update to .Net 8
             await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFile.FullName)).ConfigureAwait(false);
         }
-        
-        //[Ignore]
+
+        [Ignore]
         [DataTestMethod]
         [DataRow(@"D:\SoftwareOne\css-partners\SWO.CSS.OneSalesPartnerService.sln")]
         [DataRow(@"D:\AzureDevOps\SoftwareOne.Workshop.November.2023\RunJit\UserManagement\UserManagement.sln")]
@@ -37,15 +37,15 @@ namespace RunJit.Cli.Test.SystemTest
             var solutionFile = new FileInfo(targetSolution);
 
             // 2. Test if target solution is build able
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
 
             // 3. Update code rules
             await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFile.FullName)).ConfigureAwait(false);
 
             // 4. Test if integration was sucessful and buildable
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
         }
-        
+
         [Ignore]
         [DataTestMethod]
         [DataRow(@"https://softwareone-ca@dev.azure.com/softwareone-ca/Sales%20and%20Marketing/_git/css-partners")]
@@ -60,7 +60,8 @@ namespace RunJit.Cli.Test.SystemTest
 
     internal sealed class UpdateCodeRulesForSolutionHandler : ICommandHandler<UpdateCodeRulesForSolution>
     {
-        public async Task Handle(UpdateCodeRulesForSolution request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateCodeRulesForSolution request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -70,7 +71,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);
@@ -87,12 +88,13 @@ namespace RunJit.Cli.Test.SystemTest
         }
     }
 
-
-    internal sealed record UpdateCodeRulesPackagesForGitRepos(string GitRepos, string WorkingDirectory) : ICommand;
+    internal sealed record UpdateCodeRulesPackagesForGitRepos(string GitRepos,
+                                                              string WorkingDirectory) : ICommand;
 
     internal sealed class UpdateCodeRulesPackagesForGitReposHandler : ICommandHandler<UpdateCodeRulesPackagesForGitRepos>
     {
-        public async Task Handle(UpdateCodeRulesPackagesForGitRepos request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateCodeRulesPackagesForGitRepos request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -102,7 +104,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Assert.AreEqual(0, exitCode, output);

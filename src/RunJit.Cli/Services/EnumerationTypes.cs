@@ -22,15 +22,15 @@ namespace RunJit.Cli
         // All this types will bot be found as type in the system namespace so we need this information too.
         // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table
         private static readonly List<string> BaseEnumerableTypeNames = new List<string>
-        {
-            "Enumerable",
-            "List",
-            "Collection",
-            "[]",
-            "Array",
-            "Immutable",
-            "Dictionary"
-        };
+                                                                       {
+                                                                           "Enumerable",
+                                                                           "List",
+                                                                           "Collection",
+                                                                           "[]",
+                                                                           "Array",
+                                                                           "Immutable",
+                                                                           "Dictionary"
+                                                                       };
 
         public bool IsListType(string typeName)
         {

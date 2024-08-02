@@ -11,7 +11,7 @@
 //            services.AddSingletonIfNotExists<IUpdateSwaggerTestsPackageService, UpdateSwaggerTestsPackageService>();
 //        }
 //    }
-    
+
 //    internal interface IUpdateSwaggerTestsPackageService
 //    {
 //        Task UpdateSwaggerTestsPackageAsync(OutdatedSwaggerTestsResponse outdatedSwaggerTestsResponse);
@@ -22,7 +22,9 @@
 //    {
 //        public async Task UpdateSwaggerTestsPackageAsync(FileInfo solutionFileInfo)
 //        {
-            
+
 //        }
 //    }
 //}
+
+

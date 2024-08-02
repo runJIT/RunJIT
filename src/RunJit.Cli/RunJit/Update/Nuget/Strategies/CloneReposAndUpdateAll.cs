@@ -26,6 +26,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
     internal class CloneReposAndUpdateAll(IConsoleService consoleService,
                                           IGitService git,
                                           IDotNet dotNet,
+
                                           //IUpdateNugetPackageService updateNugetPackageService,
                                           IAwsCodeCommit awsCodeCommit,
                                           FindSolutionFile findSolutionFile) : IUpdateNugetStrategy
@@ -87,9 +88,11 @@ namespace RunJit.Cli.RunJit.Update.Nuget
                 await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
 
                 var allCsproj = solutionFile.Directory!.EnumerateFiles("*.csproj", SearchOption.AllDirectories).ToList();
+
                 foreach (var fileInfo in allCsproj)
                 {
                     var fileContent = await File.ReadAllTextAsync(fileInfo.FullName).ConfigureAwait(false);
+
                     if (fileContent.Contains("PulseCore.Client"))
                     {
                         await dotNet.AddNugetPackageAsync(fileInfo.FullName, "PulseCore.Client", "1.1.0-alpha.1328").ConfigureAwait(false);

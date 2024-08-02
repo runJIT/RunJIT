@@ -29,6 +29,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
         public Task HandleAsync(UpdateSwaggerTestsParameters parameters)
         {
             var updateSwaggerTestsStrategy = updateSwaggerTestsStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
+
             if (updateSwaggerTestsStrategy.Count < 1)
             {
                 throw new RunJitException($"Could not find a strategy a update nuget strategy for parameters: {parameters}");
@@ -42,7 +43,6 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
             return updateSwaggerTestsStrategy[0].HandleAsync(parameters);
         }
     }
-
 
     interface IUpdateSwaggerTestsStrategy
     {

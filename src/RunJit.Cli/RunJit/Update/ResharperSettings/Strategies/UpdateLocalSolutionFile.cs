@@ -25,9 +25,9 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
     }
 
     internal class UpdateLocalSolutionFile(IConsoleService consoleService,
-                                          IGitService git,
-                                          IAwsCodeCommit awsCodeCommit,
-                                          FindSolutionFile findSolutionFile) : IUpdateResharperSettingsStrategy
+                                           IGitService git,
+                                           IAwsCodeCommit awsCodeCommit,
+                                           FindSolutionFile findSolutionFile) : IUpdateResharperSettingsStrategy
     {
         public bool CanHandle(UpdateResharperSettingsParameters parameters)
         {
@@ -43,7 +43,6 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
                 throw new RunJitException($"Please call {nameof(IUpdateResharperSettingsStrategy.CanHandle)} before call {nameof(IUpdateResharperSettingsStrategy.HandleAsync)}");
             }
 
-
             // 1. Check if solution file is the file or directory
             //    if it is null or whitespace we check current directory
             var solutionFile = findSolutionFile.Find(parameters.SolutionFile);
@@ -56,6 +55,7 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
 
             // 4. Check if git exists
             var existingGitFolder = solutionFile.Directory!.EnumerateDirectories(".git").FirstOrDefault();
+
             if (existingGitFolder.IsNotNull())
             {
                 // NEW check for legacy branches and delete them all
@@ -71,12 +71,15 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
 
             var resharperSettings = EmbeddedFile.GetFileContentFrom("Update.ResharperSettings.Template.Resharper.sln.DotSettings");
             var resharperSettingsFile = new FileInfo(Path.Combine(solutionFile.Directory!.FullName, $"{solutionName}.sln.DotSettings"));
+
             if (resharperSettingsFile.Exists)
             {
                 var existingFileContent = await File.ReadAllTextAsync(resharperSettingsFile.FullName).ConfigureAwait(false);
+
                 if (resharperSettings.Length == existingFileContent.Length)
                 {
                     consoleService.WriteSuccess($"Solution: {solutionFile.FullName} R# setting already up to date nothing to update !");
+
                     return;
                 }
             }
@@ -96,12 +99,11 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
 
                 // 12. Create pull request
                 await awsCodeCommit.CreatePullRequestAsync("Update R# settings",
-                                                            "Update R# settings to the newest versions",
-                                                            branchName).ConfigureAwait(false);
+                                                           "Update R# settings to the newest versions",
+                                                           branchName).ConfigureAwait(false);
             }
 
             consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest Resharper settings");
-
         }
     }
 }

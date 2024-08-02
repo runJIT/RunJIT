@@ -14,7 +14,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
 {
     internal static class AddTemplateExtractorExtension
     {
-        internal static void AddTemplateExtractor(this IServiceCollection services, IConfiguration configuration)
+        internal static void AddTemplateExtractor(this IServiceCollection services,
+                                                  IConfiguration configuration)
         {
             services.AddSingletonIfNotExists<ITemplateExtractor, TemplateExtractor>();
             services.AddRunJitApiClientFactory(configuration);
@@ -24,7 +25,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
     internal interface ITemplateExtractor
     {
-        Task ExtractToAsync(DirectoryInfo directoryInfo, ClientParameters clientGenParameters);
+        Task ExtractToAsync(DirectoryInfo directoryInfo,
+                            ClientParameters clientGenParameters);
     }
 
     internal class TemplateExtractor(IRunJitApiClientFactory runJitApiClientFactory,
@@ -32,7 +34,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                      IHttpClientFactory httpClientFactory,
                                      RunJitApiClientSettings runJitApiClientSettings) : ITemplateExtractor
     {
-        public async Task ExtractToAsync(DirectoryInfo directoryInfo, ClientParameters clientGenParameters)
+        public async Task ExtractToAsync(DirectoryInfo directoryInfo,
+                                         ClientParameters clientGenParameters)
         {
             var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
             var httpClient = httpClientFactory.CreateClient();
@@ -41,7 +44,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
 
             var generateClientResponse = await rRunJitApiClient.Clients.V1.GenerateClientAsync().ConfigureAwait(false);
-            
+
             using var zipArchive = new ZipArchive(generateClientResponse.FileStream);
             zipArchive.ExtractToDirectory(directoryInfo.FullName, true);
         }

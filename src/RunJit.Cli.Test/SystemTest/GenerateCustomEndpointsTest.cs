@@ -22,27 +22,27 @@ namespace RunJit.Cli.Test.SystemTest
         {
             // 0. Project name
             var projectName = "UserManagement";
-            
+
             // 1. Create new Web Api
             var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi(projectName, WebApiFolder, BasePath)).ConfigureAwait(false);
 
             // 2. Get web api project
             var parsedSolution = new SolutionFileInfo(solutionFile.FullName).Parse();
             var webAppProject = parsedSolution.ProductiveProjects.First(p => p.Document.ToString().Contains("Sdk=\"Microsoft.NET.Sdk.Web\""));
-            
+
             // 2. Generate rest api from a sql 
-            var endpointData = (await File.ReadAllTextAsync(template)).FromJsonStringAs<EndpointData>();
+            var endpointData = (await File.ReadAllTextAsync(template).ConfigureAwait(false)).FromJsonStringAs<EndpointData>();
 
             var json = endpointData.ToJsonIntended();
-            
+
             // iterate over the endpointData recursively.
             // for each file content if it is a path, read the file and replace the content wih the file content
-            await WalkThroughTree(endpointData.Templates);
-            
-            await Mediator.SendAsync(new GenerateCustomEndpoint(webAppProject.ProjectFileInfo.Value.Directory!, endpointData, true));
+            await WalkThroughTree(endpointData.Templates).ConfigureAwait(false);
+
+            await Mediator.SendAsync(new GenerateCustomEndpoint(webAppProject.ProjectFileInfo.Value.Directory!, endpointData, true)).ConfigureAwait(false);
 
             // 3. Test if generated solution can be build :) 
-            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}");
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
         }
 
         private static async Task WalkThroughTree(IImmutableList<Template> templates)
@@ -62,14 +62,15 @@ namespace RunJit.Cli.Test.SystemTest
             }
         }
     }
-    
+
     internal sealed record GenerateCustomEndpoint(DirectoryInfo DirectoryInfo,
                                                   EndpointData EndpointData,
                                                   bool OverwriteCode) : ICommand;
 
     internal sealed class GenerateCustomEndpointHandler : ICommandHandler<GenerateCustomEndpoint>
     {
-        public async Task Handle(GenerateCustomEndpoint request, CancellationToken cancellationToken)
+        public async Task Handle(GenerateCustomEndpoint request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -79,7 +80,7 @@ namespace RunJit.Cli.Test.SystemTest
             Console.WriteLine();
             Console.WriteLine(consoleCall);
             Debug.WriteLine(consoleCall);
-            var exitCode = await Program.Main(strings);
+            var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
             Debug.WriteLine(output);
@@ -98,12 +99,13 @@ namespace RunJit.Cli.Test.SystemTest
             yield return request.DirectoryInfo.FullName;
 
             yield return "--endpoint-data";
+
             var json = request.EndpointData.ToJsonIntended();
+
             yield return json;
 
             yield return "--overwrite-code";
             yield return request.OverwriteCode.ToString();
-
         }
     }
 }

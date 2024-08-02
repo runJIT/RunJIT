@@ -10,7 +10,7 @@ namespace RunJit.Cli.RunJit.Rename
         public static void AddRenameCommandBuilder(this IServiceCollection services)
         {
             services.AddBackendCommandBuilder();
-            
+
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, RenameCommandBuilder>();
         }
     }
@@ -21,6 +21,7 @@ namespace RunJit.Cli.RunJit.Rename
         {
             var command = new Command("rename", "Command to rename a specific context");
             subCommandBuilders.ForEach(x => command.AddCommand(x.Build()));
+
             return command;
         }
     }
