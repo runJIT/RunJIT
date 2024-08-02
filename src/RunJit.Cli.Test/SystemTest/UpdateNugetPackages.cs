@@ -25,6 +25,25 @@ namespace RunJit.Cli.Test.SystemTest
             // 3. Update nuget packages
             await Mediator.SendAsync(new UpdateBackendNugetPackagesForSolution(solutionFile.FullName)).ConfigureAwait(false);
         }
+        
+        [DataTestMethod]
+        [DataRow("codecommit::eu-central-1://pulse-datamanagement")]
+        [DataRow("codecommit::eu-central-1://pulse-survey")]
+        [DataRow("codecommit::eu-central-1://pulse-core-service")]
+        [DataRow("codecommit::eu-central-1://pulse-actionmanagement")]
+        [DataRow("codecommit::eu-central-1://pulse-flow")]
+        [DataRow("codecommit::eu-central-1://pulse-documentmanagement")]
+        [DataRow("codecommit::eu-central-1://pulse-dbi")]
+        [DataRow("codecommit::eu-central-1://pulse-tableau")]
+        [DataRow("codecommit::eu-central-1://pulse-powerbi")]
+        [DataRow("codecommit::eu-central-1://pulse-sustainability")]
+        [DataRow("codecommit::eu-central-1://pulse-estell")]
+        [DataRow("codecommit::eu-central-1://pulse-database")]
+        public async Task Check_Out_Update_Custom(string gitUrl)
+        {
+            // 3. Update to .Net 8
+            await Mediator.SendAsync(new UpdateBackendNugetPackagesForGitRepos(gitUrl, @"D:\NugetUpdate")).ConfigureAwait(false);
+        }
     }
 
     internal sealed record UpdateBackendNugetPackagesForSolution(string solution) : ICommand;

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
