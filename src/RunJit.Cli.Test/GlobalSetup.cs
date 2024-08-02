@@ -17,6 +17,8 @@ namespace RunJit.Cli.Test
         protected static DirectoryInfo WebApiFolder { get; private set; } = null!;
 
         protected static DirectoryInfo NugetFolder { get; private set; } = null!;
+        
+        protected static DirectoryInfo CodeCleanupFolder { get; private set; } = null!;
 
         protected static DirectoryInfo CodeRuleFolder { get; private set; } = null!;
 
@@ -42,6 +44,7 @@ namespace RunJit.Cli.Test
             WebApiFolder = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "WebApi"));
             NugetFolder = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Nuget"));
             CodeRuleFolder = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "CodeRules"));
+            CodeCleanupFolder = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "CodeCleanup"));
             Services = serviceProvider;
 
             // Install components
@@ -59,29 +62,45 @@ namespace RunJit.Cli.Test
             {
                 NugetFolder.Delete(true);
             }
-
-            CodeRuleFolder.Create();
-
-            if (CodeRuleFolder.Exists)
+            
+            if (CodeCleanupFolder.Exists)
             {
-                var gitFolders = CodeRuleFolder.EnumerateDirectories(".git", SearchOption.AllDirectories);
-
-                foreach (var gitFolder in gitFolders)
+                foreach (var folder in CodeCleanupFolder.EnumerateDirectories("*", SearchOption.AllDirectories))
                 {
-                    if (gitFolder.IsNotNull())
+                    if (folder.IsNotNull())
                     {
-                        gitFolder.Attributes = FileAttributes.Normal;
+                        folder.Attributes = FileAttributes.Normal;
 
-                        foreach (var info in gitFolder.GetFileSystemInfos("*", SearchOption.AllDirectories))
+                        foreach (var info in folder.GetFileSystemInfos("*", SearchOption.AllDirectories))
                         {
                             info.Attributes = FileAttributes.Normal;
                         }
 
-                        gitFolder.Delete(true);
+                        folder.Delete(true);
                     }
                 }
+            }
+            else
+            {
+                CodeCleanupFolder.Create();   
+            }
 
-                CodeRuleFolder.Delete(true);
+            if (CodeRuleFolder.Exists)
+            {
+                foreach (var folder in CodeCleanupFolder.EnumerateDirectories("*", SearchOption.AllDirectories))
+                {
+                    if (folder.IsNotNull())
+                    {
+                        folder.Attributes = FileAttributes.Normal;
+
+                        foreach (var info in folder.GetFileSystemInfos("*", SearchOption.AllDirectories))
+                        {
+                            info.Attributes = FileAttributes.Normal;
+                        }
+
+                        folder.Delete(true);
+                    }
+                }
             }
 
             CodeRuleFolder.Create();

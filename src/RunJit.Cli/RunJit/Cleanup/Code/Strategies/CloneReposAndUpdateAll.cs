@@ -81,14 +81,6 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
                 //    if it is null or whitespace we check current directory 
                 var solutionFile = findSolutionFile.Find(Environment.CurrentDirectory);
 
-                // 7. Check for R# dot settings if existed, if not create one
-                var dotSettingsFile  = new FileInfo($"{solutionFile.FullName}.DotSettings");
-                if (dotSettingsFile.NotExists())
-                {
-                    var fileContent = EmbeddedFile.GetFileContentFrom("Resharper.sln.DotSettings");
-                    await File.WriteAllTextAsync(dotSettingsFile.FullName, fileContent).ConfigureAwait(false);
-                }
-                
                 // 8. Build the solution first, we can not clean up the code if the solution is not building
                 await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
                 

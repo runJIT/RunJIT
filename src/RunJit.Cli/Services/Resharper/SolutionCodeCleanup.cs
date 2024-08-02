@@ -49,10 +49,36 @@ namespace RunJit.Cli.Resharper
                 }
             }
 
-            // 2. Run R# code cleanup
-            consoleService.WriteInfo($"Start code cleanup for solution: {solutionFile.FullName}");
-            var cleanupResult = await dotnetTool.RunAsync("jd", $"cleanupcode {solutionFile.FullName}").ConfigureAwait(false);
+            // 2. Check for R# dot settings if existed, if not create one
+            var dotSettingsFile = new FileInfo($"{solutionFile.FullName}.DotSettings");
+            if (dotSettingsFile.NotExists())
+            {
+                var fileContent = EmbeddedFile.GetFileContentFrom("Resharper.sln.DotSettings");
+                await File.WriteAllTextAsync(dotSettingsFile.FullName, fileContent).ConfigureAwait(false);
+            }
 
+            // 3. Update .editorconfig must be in sync with the .DotSettings file
+            var editorConfigFile = new FileInfo(Path.Combine($"{solutionFile.Directory!.FullName}", ".editorconfig"));
+            var editorConfig = EmbeddedFile.GetFileContentFrom(".editorconfig");
+            await File.WriteAllTextAsync(editorConfigFile.FullName, editorConfig).ConfigureAwait(false);
+            
+            // 4. Get the absolute installation path of the .dotnet/tools directory
+            string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var dotnetToolDirectory = new DirectoryInfo(Path.Combine(userProfile, ".dotnet", "tools"));
+
+            // 5. Find absolute path of the installed R# dotnet tool
+            var jbTool = dotnetToolDirectory.EnumerateFiles("jb*").FirstOrDefault();
+            if (jbTool.IsNull())
+            {
+                consoleService.WriteError($"JetBrains.ReSharper.GlobalTools is not installed or not found in the .dotnet/tools directory '{dotnetToolDirectory.FullName}'");
+                return;
+            }
+
+            // 6. Run R# code cleanup
+            consoleService.WriteInfo($"Start code cleanup for solution: {solutionFile.FullName}");
+            var cleanupResult = await dotnetTool.RunAsync(jbTool.FullName, $"cleanupcode {solutionFile.FullName} --settings={dotSettingsFile.FullName}").ConfigureAwait(false);
+
+            // 7. Print execution result
             if (cleanupResult.ExitCode == 0)
             {
                 consoleService.WriteSuccess($"Code cleanup in solution {solutionFile.FullName} was successful");

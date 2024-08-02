@@ -14,7 +14,7 @@ namespace RunJit.Cli.Test.SystemTest
         private const string BasePath = "api/update";
 
         [TestMethod]
-        public async Task Should_Cleanup_Code_In_Target_Solution()
+        public async Task Should_Cleanup_Code_In_Local_Solution()
         {
             // 1. Create new Web Api
             var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("Simple.Project", WebApiFolder, BasePath)).ConfigureAwait(false);
@@ -24,6 +24,24 @@ namespace RunJit.Cli.Test.SystemTest
 
             // 3. Update to .Net 8
             await Mediator.SendAsync(new CleanupCodeInSolution(solutionFile.FullName)).ConfigureAwait(false);
+        }
+        
+        [DataTestMethod]
+        //[DataRow("codecommit::eu-central-1://pulse-datamanagement")]
+        //[DataRow("codecommit::eu-central-1://pulse-survey")]
+        //[DataRow("codecommit::eu-central-1://pulse-core-service")]
+        //[DataRow("codecommit::eu-central-1://pulse-actionmanagement")]
+        //[DataRow("codecommit::eu-central-1://pulse-flow")]
+        //[DataRow("codecommit::eu-central-1://pulse-documentmanagement")]
+        //[DataRow("codecommit::eu-central-1://pulse-dbi")]
+        //[DataRow("codecommit::eu-central-1://pulse-tableau")]
+        [DataRow("codecommit::eu-central-1://pulse-powerbi")]
+        //[DataRow("codecommit::eu-central-1://pulse-sustainability")]
+        //[DataRow("codecommit::eu-central-1://pulse-estell")]
+        //[DataRow("codecommit::eu-central-1://pulse-database")]
+        public async Task Should_Cleanup_Code_From_GitRepo(string gitRepo)
+        {
+            await Mediator.SendAsync(new CleanupCodeForGitRepos(gitRepo, CodeCleanupFolder.FullName)).ConfigureAwait(false);
         }
 
         [Ignore]
@@ -119,8 +137,6 @@ namespace RunJit.Cli.Test.SystemTest
             yield return parameters.GitRepos;
             yield return "--working-directory";
             yield return parameters.WorkingDirectory;
-            yield return "--branch";
-            yield return "develop";
         }
     }
 }

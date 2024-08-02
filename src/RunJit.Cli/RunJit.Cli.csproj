@@ -69,9 +69,11 @@
     <ItemGroup>
       <None Remove="Logo\RunJit.txt" />
       <None Remove="RunJit\Generate\Client\Templates\client.zip" />
+      <None Remove="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="RunJit\Generate\Client\Templates\client.zip" />
+      <EmbeddedResource Include="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\..\..\RunJit.Api\src\RunJit.Api.Client\RunJit.Api.Client.csproj" />
