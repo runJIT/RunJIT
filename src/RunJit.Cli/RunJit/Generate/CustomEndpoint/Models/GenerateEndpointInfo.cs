@@ -1,6 +1,4 @@
 ﻿using System.Collections.Immutable;
-using Solution.Parser.AspNet;
-using Solution.Parser.Project;
 
 namespace RunJit.Cli.RunJit.Generate.CustomEndpoint
 {

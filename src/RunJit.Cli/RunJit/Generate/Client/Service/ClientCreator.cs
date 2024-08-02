@@ -1,10 +1,6 @@
 ﻿using System.Collections.Immutable;
-using System.Drawing;
-using System.Reflection.Metadata.Ecma335;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using NuGet.Versioning;
-using RunJit.Cli.Models;
 using RunJit.Cli.Resharper;
 using Solution.Parser.CSharp;
 using Solution.Parser.Solution;

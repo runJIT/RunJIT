@@ -1,12 +1,9 @@
-﻿using System.Xml.Linq;
-using DotNetTool.Service;
-using Extensions.Pack;
+﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
 using RunJit.Cli.RunJit.Update.Net;
-using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Cleanup.Code
 {

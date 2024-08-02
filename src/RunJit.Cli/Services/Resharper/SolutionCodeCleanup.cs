@@ -1,6 +1,5 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using Solution.Parser.Solution;
 
 namespace RunJit.Cli.Resharper
 {

@@ -2,7 +2,6 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Cleanup.Code;
-using RunJit.Cli.RunJit.Fix.EmbededResources;
 
 namespace RunJit.Cli.RunJit.Cleanup
 {

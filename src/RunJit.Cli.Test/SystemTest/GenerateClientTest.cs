@@ -34,7 +34,7 @@ namespace RunJit.Cli.Test.SystemTest
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
         }
 
-        [Ignore("Dev only")]
+        ///[Ignore("Dev only")]
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
         [DataRow(@"D:\Siemens\pulse-core\PulseCore.sln")]

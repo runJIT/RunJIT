@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Net.Http.Headers;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Api.Client;
 using RunJit.Cli.Auth0;
 using DirectoryInfo = System.IO.DirectoryInfo;
-using FileInfo = System.IO.FileInfo;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {

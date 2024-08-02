@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
 using Extensions.Pack;
-using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Solution.Parser.CSharp;
 

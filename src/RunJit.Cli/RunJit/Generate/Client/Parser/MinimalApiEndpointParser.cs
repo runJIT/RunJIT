@@ -1,16 +1,8 @@
 ﻿using System.Collections.Immutable;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using Extensions.Pack;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
-using NuGet.Versioning;
-using Solution.Parser.AspNet;
 using Solution.Parser.CSharp;
-using Solution.Parser.CSharp.Models;
 using Attribute = Solution.Parser.CSharp.Attribute;
 
 namespace RunJit.Cli.RunJit.Generate.Client
