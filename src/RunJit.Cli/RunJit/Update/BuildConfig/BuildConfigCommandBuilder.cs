@@ -2,6 +2,7 @@
 using System.CommandLine.Invocation;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.RunJit.Fix.EmbededResources;
 using RunJit.Cli.RunJit.Update.BuildConfig;
 
 namespace RunJit.Cli.RunJit.Update.UpdateBuildConfig
@@ -13,12 +14,11 @@ namespace RunJit.Cli.RunJit.Update.UpdateBuildConfig
             services.AddUpdateBuildConfigOptionsBuilder();
             services.AddUpdateBuildConfigArgumentsBuilder();
             services.AddUpdateBuildConfigService();
-            services.AddUpdateBuildConfig();
 
             services.AddSingletonIfNotExists<IUpdateSubCommandBuilder, UpdateBuildConfigCommandBuilder>();
         }
     }
-    
+
     internal class UpdateBuildConfigCommandBuilder(IUpdateBuildConfigService updateService,
                                              IUpdateBuildConfigArgumentsBuilder argumentsBuilder,
                                              IUpdateBuildConfigOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
@@ -29,7 +29,9 @@ namespace RunJit.Cli.RunJit.Update.UpdateBuildConfig
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
             argumentsBuilder.Build().ToList().ForEach(argument => command.AddArgument(argument));
 
-            command.Handler = CommandHandler.Create<string>((solutionFile) => updateService.HandleAsync(new UpdateBuildConfigParameters(solutionFile)));
+            command.Handler = CommandHandler.Create<string, string, string>((solutionFile,
+                                                                             gitRepos,
+                                                                             workingDirectory) => updateService.HandleAsync(new UpdateBuildConfigParameters(solutionFile ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty)));
 
             return command;
         }

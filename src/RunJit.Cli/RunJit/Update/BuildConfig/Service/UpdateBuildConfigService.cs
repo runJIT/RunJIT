@@ -5,9 +5,9 @@ using RunJit.Cli.ErrorHandling;
 
 namespace RunJit.Cli.RunJit.Update.BuildConfig
 {
-    public static class AddUpdateBuildConfigExtension
+    public static class AddUUpdateBuildConfigServiceExtension
     {
-        public static void AddUpdateBuildConfig(this IServiceCollection services)
+        public static void AddUpdateBuildConfigService(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddUpdateBuildConfigParameters();
@@ -15,20 +15,20 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             services.AddUpdateLocalSolutionFile();
             services.AddCloneReposAndUpdateAll();
 
-            services.AddSingletonIfNotExists<IUpdateBuildConfig, UpdateBuildConfig>();
+            services.AddSingletonIfNotExists<IUpdateBuildConfigService, UpdateBuildConfigServiceService>();
         }
     }
 
-    internal interface IUpdateBuildConfig
+    internal interface IUpdateBuildConfigService
     {
         Task HandleAsync(UpdateBuildConfigParameters parameters);
     }
 
-    internal class UpdateBuildConfig(IEnumerable<IUpdateBuildConfigStrategy> UpdateBuildConfigStrategies) : IUpdateBuildConfig
+    internal class UpdateBuildConfigServiceService(IEnumerable<IUpdateBuildConfigStrategy> updateBuildConfigStrategies) : IUpdateBuildConfigService
     {
         public Task HandleAsync(UpdateBuildConfigParameters parameters)
         {
-            var UpdateBuildConfigStrategy = UpdateBuildConfigStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
+            var UpdateBuildConfigStrategy = updateBuildConfigStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
 
             if (UpdateBuildConfigStrategy.Count < 1)
             {

@@ -21,7 +21,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             services.AddUpdateNugetPackageService();
             services.AddFindSolutionFile();
 
-            services.AddSingletonIfNotExists<IUpdateNugetStrategy, UpdateLocalSolutionFile>();
+            services.AddSingletonIfNotExists<IUpdateBuildConfigStrategy, UpdateLocalSolutionFile>();
         }
     }
 
@@ -29,14 +29,14 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
                                            IGitService git,
                                            IAwsCodeCommit awsCodeCommit,
                                            IDotNet dotNet,
-                                           FindSolutionFile findSolutionFile) : IUpdateNugetStrategy
+                                           FindSolutionFile findSolutionFile) : IUpdateBuildConfigStrategy
     {
-        public bool CanHandle(UpdateNugetParameters parameters)
+        public bool CanHandle(UpdateBuildConfigParameters parameters)
         {
             return parameters.SolutionFile.IsNotNullOrWhiteSpace();
         }
 
-        public async Task HandleAsync(UpdateNugetParameters parameters)
+        public async Task HandleAsync(UpdateBuildConfigParameters parameters)
         {
             // 0. Check that precondition is met
             if (CanHandle(parameters).IsFalse())

@@ -16,28 +16,26 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             services.AddConsoleService();
             services.AddGitService();
             services.AddDotNet();
-            services.AddUpdateNugetPackageService();
             services.AddAwsCodeCommit();
             services.AddFindSolutionFile();
 
-            services.AddSingletonIfNotExists<IUpdateNugetStrategy, CloneReposAndUpdateAll>();
+            services.AddSingletonIfNotExists<IUpdateBuildConfigStrategy, CloneReposAndUpdateAll>();
         }
     }
 
     internal class CloneReposAndUpdateAll(IConsoleService consoleService,
                                           IGitService git,
                                           IDotNet dotNet,
-                                          IUpdateNugetPackageService updateNugetPackageService,
                                           IAwsCodeCommit awsCodeCommit,
-                                          FindSolutionFile findSolutionFile) : IUpdateNugetStrategy
+                                          FindSolutionFile findSolutionFile) : IUpdateBuildConfigStrategy
     {
-        public bool CanHandle(UpdateNugetParameters parameters)
+        public bool CanHandle(UpdateBuildConfigParameters parameters)
         {
             return parameters.SolutionFile.IsNullOrWhiteSpace() &&
                    parameters.GitRepos.IsNotNullOrWhiteSpace();
         }
 
-        public async Task HandleAsync(UpdateNugetParameters parameters)
+        public async Task HandleAsync(UpdateBuildConfigParameters parameters)
         {
             // 0. Check that precondition is met
             if (CanHandle(parameters).IsFalse())
@@ -80,9 +78,9 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
                 await git.DeleteBranchesAsync(legacyBranches).ConfigureAwait(false);
 
                 // 4. Create new branch, check that branch is unique
-                var qualityUpdateNugetPackages = branchName;
+                var qualityUpdateBuildConfigs = branchName;
 
-                await git.CreateBranchAsync(qualityUpdateNugetPackages).ConfigureAwait(false);
+                await git.CreateBranchAsync(qualityUpdateBuildConfigs).ConfigureAwait(false);
 
                 // 5. Check if solution file is the file or directory
                 //    if it is null or whitespace we check current directory 
@@ -90,9 +88,6 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
 
                 // 6. Build the solution first
                 await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
-                
-                // 7. Get infos which packages are outdated
-                var outdatedNugetResponse = await dotNet.ListOutdatedPackagesAsync(solutionFile).ConfigureAwait(false);
                 
                 // 8. Directory.Build.props
                 var file = Path.Combine(solutionFile.Directory!.FullName, "Directory.Build.props");
@@ -103,9 +98,6 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
                 //10. Write directory.build.props
                 await File.WriteAllTextAsync(file, content).ConfigureAwait(false);
                 
-                //11. Update the nuget packages
-                await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetResponse, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
-
                 //12. Add changes to git
                 await git.AddAsync().ConfigureAwait(false);
 
@@ -113,12 +105,12 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
                 await git.CommitAsync("Update nuget packages").ConfigureAwait(false);
 
                 //14. Push changes
-                await git.PushAsync(qualityUpdateNugetPackages).ConfigureAwait(false);
+                await git.PushAsync(qualityUpdateBuildConfigs).ConfigureAwait(false);
 
                 //15. Create pull request
                 await awsCodeCommit.CreatePullRequestAsync("Update nuget packages",
                                                            "Update nuget packages to the newest versions",
-                                                           qualityUpdateNugetPackages).ConfigureAwait(false);
+                                                           qualityUpdateBuildConfigs).ConfigureAwait(false);
 
                 consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest nuget packages");
             }

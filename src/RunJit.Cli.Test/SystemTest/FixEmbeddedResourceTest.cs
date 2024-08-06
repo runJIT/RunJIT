@@ -31,6 +31,7 @@ namespace RunJit.Cli.Test.SystemTest
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
         }
 
+        [Ignore("Dev only")]
         [DataTestMethod]
         [DataRow("codecommit::eu-central-1://pulse-datamanagement")]    // Merged
         [DataRow("codecommit::eu-central-1://pulse-survey")]            // Merged
