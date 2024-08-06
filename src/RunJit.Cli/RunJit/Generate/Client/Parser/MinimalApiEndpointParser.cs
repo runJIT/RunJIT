@@ -152,6 +152,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                 {
                                     var version = ExtractVersion(methodStatement);
                                     var produceResponseTypes = ExtractProduceResponseTypes(methodStatement);
+                                    var payloads = ExtractPayload(methodStatement);
                                     var normalizedBasePath = basePath.Replace("{apiVersion:apiVersion}", version.Original);
                                     var relativeUrl = ExtractRelativeUrl(methodStatement);
                                     var url = $"{normalizedBasePath}/{relativeUrl}";
@@ -171,7 +172,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                                            ResponseType = ExtractResponseType(produceResponseTypes),
                                                            ProduceResponseTypes = produceResponseTypes,
                                                            Models = GetAllUsedModels(produceResponseTypes, syntaxTrees, reflectionTypes,
-                                                                                     version)
+                                                                                     version, payloads)
                                                        };
 
                                     listStatements = listStatements.Add(endpointInfo);
@@ -188,24 +189,22 @@ namespace RunJit.Cli.RunJit.Generate.Client
         private IImmutableList<DeclarationBase> GetAllUsedModels(IImmutableList<ProduceResponseTypes> produceResponseTypes,
                                                                  IImmutableList<CSharpSyntaxTree> syntaxTrees,
                                                                  IImmutableList<Type> reflectionTypes,
-                                                                 VersionInfo versionInfo)
+                                                                 VersionInfo versionInfo,
+                                                                 IEnumerable<string> payloads)
         {
             var responseType = produceResponseTypes.FirstOrDefault(p => p.StatusCode >= 200 && p.StatusCode < 300)?.Type;
-
-            if (responseType.IsNull())
-            {
-                return ImmutableList<DeclarationBase>.Empty;
-            }
-
-            var match = GlobalRegex.GetGenericTypeRegex().Match(responseType);
+            
+            var match = GlobalRegex.GetGenericTypeRegex().Match(responseType ?? string.Empty);
 
             if (match.Success)
             {
                 responseType = match.Groups[0].Value.TrimStart('<').TrimEnd('>');
             }
 
-            var classes = syntaxTrees.SelectMany(tree => tree.Classes).Where(c => c.Name == responseType && c.FullQualifiedName.Contains(versionInfo.Normalized)).ToList();
-            var records = syntaxTrees.SelectMany(tree => tree.Records).Where(c => c.Name == responseType && c.FullQualifiedName.Contains(versionInfo.Normalized)).ToList();
+            var allModelsToFind = payloads.Concat(responseType);
+            
+            var classes = syntaxTrees.SelectMany(tree => tree.Classes).Where(c => allModelsToFind.Any(x => x == c.Name) && c.FullQualifiedName.Contains(versionInfo.Normalized)).ToList();
+            var records = syntaxTrees.SelectMany(tree => tree.Records).Where(c => allModelsToFind.Any(x => x == c.Name) && c.FullQualifiedName.Contains(versionInfo.Normalized)).ToList();
 
             var allTypes = classes.Concat(records).OfType<DeclarationBase>().ToImmutableList();
 
@@ -297,7 +296,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 var method = match.Value.Replace(" =>", string.Empty);
 
                 var parameters = method.TrimStart('(').TrimEnd(')').Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim().TrimStart('(').TrimEnd(')'));
-                var ignoreServices = parameters.Where(p => p.DoesNotContain("[FromService")).Where(p => p.Contains(" ")).ToList();
+                var ignoreServices = parameters.Where(p => p.DoesNotContain("[FromService") && p.DoesNotContain("Http")).Where(p => p.Contains(" ")).ToList();
                 var result = Parse(ignoreServices).ToImmutableList();
 
                 return result;
@@ -369,6 +368,16 @@ namespace RunJit.Cli.RunJit.Generate.Client
             }
 
             return produceResponseTypes.ToImmutable();
+        }
+        
+        private IEnumerable<string> ExtractPayload(string code)
+        {
+            var matches = Regex.Matches(code, @"\[FromBody\]\s*([^\s]+)");
+
+            foreach (Match match in matches)
+            {
+                yield return match.Groups[1].Value;
+            }
         }
     }
 }

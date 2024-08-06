@@ -100,8 +100,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var clientName = clientProject.ProjectFileInfo.FileNameWithoutExtenion.Replace(".", string.Empty);
 
             // 2. Parse all C# files
-            var allSyntaxTrees = parsedSolution.ProductiveProjects.Where(p => p.ProjectFileInfo.FileNameWithoutExtenion.DoesNotContain(clientProject.ProjectFileInfo.FileNameWithoutExtenion))
-                                               .SelectMany(p => p.CSharpFileInfos.Select(c => c.Parse())).ToImmutableList();
+            var allSyntaxTrees = parsedSolution.ProductiveProjects.Where(p => !p.ProjectFileInfo.FileNameWithoutExtenion.EndsWith(clientProject.ProjectFileInfo.FileNameWithoutExtenion) && !p.ProjectFileInfo.FileNameWithoutExtenion.EndsWith(clientProject.ProjectFileInfo.FileNameWithoutExtenion + ".")).SelectMany(p => p.CSharpFileInfos.Select(c => c.Parse())).ToImmutableList();
 
             // 3. Get all types which are declared in the API assembly - Need to unique ident the types for client generation.
             var types = apiTypeLoader.GetAllTypesFrom(parsedSolution);

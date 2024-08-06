@@ -41,6 +41,8 @@ namespace RunJit.Cli.Test.SystemTest
         [DataRow(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln")]
         [DataRow(@"D:\AzureDevOps\SoftwareOne.Workshop.November.2023\RunJit\UserManagement\UserManagement.sln")]
         [DataRow(@"D:\Siemens\pulse-sustainability\Pulse.Sustainability.sln")]
+        [DataRow("/Users/z003m9sc/Documents/RiderProjects/SiemensGPT/siemensgpt-backend/SiemensGPT.sln")]
+        [DataRow("/Users/z003m9sc/Documents/RiderProjects/PulseCloud/pulse-nexus/Pulse.Nexus.sln")]
         public Task Generate_Client_Of_Existing_Solution_For(string solutionPath)
         {
             return Mediator.SendAsync(new GenerateClient(new FileInfo(solutionPath), false));
