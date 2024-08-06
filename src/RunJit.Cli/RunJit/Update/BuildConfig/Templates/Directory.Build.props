@@ -32,6 +32,6 @@
 
         <!--This feature automatically includes a predefined set of namespaces 
         in the project, reducing the need for explicit using statements at the top of each file-->
-        <ImplicitUsings>enable</ImplicitUsings>"
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 </Project>
