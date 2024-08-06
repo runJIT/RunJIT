@@ -49,6 +49,11 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
             var repos = parameters.GitRepos.Split(';');
             var orginalStartFolder = parameters.WorkingDirectory.IsNotNullOrWhiteSpace() ? parameters.WorkingDirectory : Environment.CurrentDirectory;
 
+            if(Directory.Exists(orginalStartFolder) == false)
+            {
+                Directory.CreateDirectory(orginalStartFolder);
+            }
+            
             foreach (var repo in repos)
             {
                 var index = repos.IndexOf(repo) + 1;

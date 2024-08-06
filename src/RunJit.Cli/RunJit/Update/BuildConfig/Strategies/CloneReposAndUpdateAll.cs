@@ -5,7 +5,6 @@ using RunJit.Cli.AwsCodeCommit;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
-using RunJit.Cli.RunJit.Update.Nuget;
 
 namespace RunJit.Cli.RunJit.Update.BuildConfig
 {
@@ -40,7 +39,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             // 0. Check that precondition is met
             if (CanHandle(parameters).IsFalse())
             {
-                throw new RunJitException($"Please call {nameof(IUpdateNugetStrategy.CanHandle)} before call {nameof(IUpdateNugetStrategy.HandleAsync)}");
+                throw new RunJitException($"Please call {nameof(IUpdateBuildConfigStrategy.CanHandle)} before call {nameof(IUpdateBuildConfigStrategy.HandleAsync)}");
             }
 
             // 1. Check if solution file is the file or directory
@@ -55,7 +54,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             foreach (var repo in repos)
             {
                 var index = repos.IndexOf(repo) + 1;
-                consoleService.WriteSuccess($"Start Upgrading repo {index} of {repos.Length}");
+                consoleService.WriteSuccess($"Start updating build configurations for repo {index} of {repos.Length}");
 
                 Environment.CurrentDirectory = orginalStartFolder;
 
@@ -102,14 +101,14 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
                 await git.AddAsync().ConfigureAwait(false);
 
                 //13. Commit changes
-                await git.CommitAsync("Update nuget packages").ConfigureAwait(false);
+                await git.CommitAsync("Update build configurations").ConfigureAwait(false);
 
                 //14. Push changes
                 await git.PushAsync(qualityUpdateBuildConfigs).ConfigureAwait(false);
 
                 //15. Create pull request
-                await awsCodeCommit.CreatePullRequestAsync("Update nuget packages",
-                                                           "Update nuget packages to the newest versions",
+                await awsCodeCommit.CreatePullRequestAsync("Update build configurations",
+                                                           "Update build configurations to the newest versions",
                                                            qualityUpdateBuildConfigs).ConfigureAwait(false);
 
                 consoleService.WriteSuccess($"Solution: {solutionFile.FullName} was successfully update to the newest nuget packages");

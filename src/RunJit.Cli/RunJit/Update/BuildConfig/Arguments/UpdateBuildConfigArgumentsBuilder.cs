@@ -20,15 +20,16 @@ namespace RunJit.Cli.RunJit.Update.UpdateBuildConfig
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {
-            yield return BuildSolutionArgument();
+            yield break;
         }
 
-        public System.CommandLine.Argument BuildSolutionArgument()
-        {
-            return new System.CommandLine.Argument<string>()
-                   {
-                       Name = "solutionFile",
-                   };
-        }
+        //public System.CommandLine.Argument BuildSolutionArgument()
+        //{
+        //    return new System.CommandLine.Argument<string>()
+        //           {
+        //               Name = "solutionFile",
+                       
+        //           };
+        //}
     }
 }

@@ -29,9 +29,9 @@ namespace RunJit.Cli.RunJit.Update.UpdateBuildConfig
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
             argumentsBuilder.Build().ToList().ForEach(argument => command.AddArgument(argument));
 
-            command.Handler = CommandHandler.Create<string, string, string>((solutionFile,
+            command.Handler = CommandHandler.Create<string, string, string>((solution,
                                                                              gitRepos,
-                                                                             workingDirectory) => updateService.HandleAsync(new UpdateBuildConfigParameters(solutionFile ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty)));
+                                                                             workingDirectory) => updateService.HandleAsync(new UpdateBuildConfigParameters(solution ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty)));
 
             return command;
         }

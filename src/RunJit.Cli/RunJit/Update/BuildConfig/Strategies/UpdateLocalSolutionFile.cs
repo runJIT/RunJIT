@@ -5,8 +5,6 @@ using RunJit.Cli.AwsCodeCommit;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Git;
 using RunJit.Cli.Net;
-using RunJit.Cli.RunJit.Update.Net;
-using RunJit.Cli.RunJit.Update.Nuget;
 
 namespace RunJit.Cli.RunJit.Update.BuildConfig
 {
@@ -17,8 +15,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             services.AddConsoleService();
             services.AddGitService();
             services.AddDotNet();
-            services.AddDotNetService();
-            services.AddUpdateNugetPackageService();
+            services.AddDotNet();
             services.AddFindSolutionFile();
 
             services.AddSingletonIfNotExists<IUpdateBuildConfigStrategy, UpdateLocalSolutionFile>();
@@ -41,7 +38,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             // 0. Check that precondition is met
             if (CanHandle(parameters).IsFalse())
             {
-                throw new RunJitException($"Please call {nameof(IUpdateNugetStrategy.CanHandle)} before call {nameof(IUpdateNugetStrategy.HandleAsync)}");
+                throw new RunJitException($"Please call {nameof(IUpdateBuildConfigStrategy.CanHandle)} before call {nameof(IUpdateBuildConfigStrategy.HandleAsync)}");
             }
 
             // 1. Check if solution file is the file or directory
