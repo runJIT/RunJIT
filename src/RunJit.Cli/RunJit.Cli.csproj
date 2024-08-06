@@ -58,19 +58,21 @@
         <Compile Include="Services\.Net\IDotNet.cs" />
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Include="**\*.json" Exclude="bin\**\*;obj\**\*"/>
-        <EmbeddedResource Include="**\*.rps" Exclude="bin\**\*;obj\**\*"/>
-        <EmbeddedResource Include="**\*.template" Exclude="bin\**\*;obj\**\*"/>
-        <EmbeddedResource Include="**\*.yml" Exclude="bin\**\*;obj\**\*"/>
-        <EmbeddedResource Include="**\*.xml" Exclude="bin\**\*;obj\**\*"/>
-        <EmbeddedResource Include="**\*.txt" Exclude="bin\**\*;obj\**\*"/>
-        <EmbeddedResource Include="**\*.DotSettings" Exclude="bin\**\*;obj\**\*"/>
+        <EmbeddedResource Include="**\*.json" Exclude="bin\**\*;obj\**\*" />
+        <EmbeddedResource Include="**\*.rps" Exclude="bin\**\*;obj\**\*" />
+        <EmbeddedResource Include="**\*.template" Exclude="bin\**\*;obj\**\*" />
+        <EmbeddedResource Include="**\*.yml" Exclude="bin\**\*;obj\**\*" />
+        <EmbeddedResource Include="**\*.xml" Exclude="bin\**\*;obj\**\*" />
+        <EmbeddedResource Include="**\*.txt" Exclude="bin\**\*;obj\**\*" />
+        <EmbeddedResource Include="**\*.DotSettings" Exclude="bin\**\*;obj\**\*" />
     </ItemGroup>
     <ItemGroup>
       <None Remove="Logo\RunJit.txt" />
+      <None Remove="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
       <None Remove="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
     <ItemGroup>
+      <EmbeddedResource Include="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
       <EmbeddedResource Include="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
     <ItemGroup>

@@ -8,6 +8,7 @@ using RunJit.Cli.RunJit.Update.Net;
 using RunJit.Cli.RunJit.Update.Nuget;
 using RunJit.Cli.RunJit.Update.ResharperSettings;
 using RunJit.Cli.RunJit.Update.SwaggerTests;
+using RunJit.Cli.RunJit.Update.UpdateBuildConfig;
 
 namespace RunJit.Cli.RunJit.Update
 {
@@ -24,6 +25,7 @@ namespace RunJit.Cli.RunJit.Update
             services.AddUpdateCodeRulesCommandBuilder(configuration);
             services.AddUpdateSwaggerTestsCommandBuilder();
             services.AddUpdateResharperSettingsCommandBuilder();
+            services.AddUpdateBuildConfigCommandBuilder();
 
             services.AddSingletonIfNotExists<IRunJitSubCommandBuilder, UpdateCommandBuilder>();
         }
