@@ -7,7 +7,7 @@ using RunJit.Cli.Test.Extensions;
 
 namespace RunJit.Cli.Test.SystemTest
 {
-    [TestCategory("runjit fix serviceregistrations")]
+    [TestCategory("runjit fix embeddedresources")]
     [TestClass]
     public class FixEmbeddedResourceTest : GlobalSetup
     {
@@ -16,12 +16,10 @@ namespace RunJit.Cli.Test.SystemTest
         private const string BasePath = "api/client-gen";
 
         [TestMethod]
-
-        //
-        public async Task Fix_All_Service_Registrations()
+        public async Task Fix_All_EmbeddedResources()
         {
             // 1. Create new Web Api
-            var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("RunJit.Fix.ServiceRegistrations", WebApiFolder, BasePath)).ConfigureAwait(false);
+            var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("RunJit.Fix.EmbeddedResources", WebApiFolder, BasePath)).ConfigureAwait(false);
 
             // 2. Create Web-Api endpoints
             await Mediator.SendAsync(new CreateSimpleRestController(solutionFile, Resource, false)).ConfigureAwait(false);
@@ -31,6 +29,28 @@ namespace RunJit.Cli.Test.SystemTest
 
             //// 4. Test if generated results is buildable
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
+        }
+
+        [DataTestMethod]
+        [DataRow("codecommit::eu-central-1://pulse-datamanagement")]    // Merged
+        [DataRow("codecommit::eu-central-1://pulse-survey")]            // Merged
+        [DataRow("codecommit::eu-central-1://pulse-core-service")]      // Merged
+        [DataRow("codecommit::eu-central-1://pulse-actionmanagement")]  // Merged
+        [DataRow("codecommit::eu-central-1://pulse-flow")]              // Merged
+        [DataRow("codecommit::eu-central-1://pulse-documentmanagement")]// Merged
+        [DataRow("codecommit::eu-central-1://pulse-dbi")]               // Merged
+        [DataRow("codecommit::eu-central-1://pulse-tableau")]           // Merged
+        [DataRow("codecommit::eu-central-1://pulse-powerbi")]           // Merged
+        [DataRow("codecommit::eu-central-1://pulse-sustainability")]    // Merged
+        [DataRow("codecommit::eu-central-1://pulse-estell")]            // Merged
+        [DataRow("codecommit::eu-central-1://pulse-database")]          // Merged
+        [DataRow("codecommit::eu-central-1://pulse-common")]            // Merged
+        [DataRow("codecommit::eu-central-1://pulse-code-rules")]
+        [DataRow("codecommit::eu-central-1://pulse-core")]              // Merged
+        public async Task Fix_All_Embedded_Resources_In(string gitUrl)
+        {
+            // 3. Update to .Net 8
+            await Mediator.SendAsync(new FixEmbeddedResource(gitUrl, @"D:\EmbeddedResource")).ConfigureAwait(false);
         }
     }
 

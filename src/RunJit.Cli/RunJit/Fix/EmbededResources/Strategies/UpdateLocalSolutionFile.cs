@@ -75,6 +75,9 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
                     {
                         var embeddedResourceSql = new XElement("EmbeddedResource");
                         embeddedResourceSql.Add(new XAttribute("Include", $@"**\*.{fileExtension}"));
+                        
+                        // Very important to exclude bin and obj folders
+                        embeddedResourceSql.Add(new XAttribute("Exclude", $@"bin\**\*;obj\**\*"));
                         itemGroup.Add(embeddedResourceSql);
                     }
                 }
@@ -85,30 +88,34 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
                 }
 
                 // all appsettings.x.json have to be ignored for now
+                // all appsettings.x.json have to be ignored for now
                 var appsettings = csprojFile.ProjectFileInfo.Value.Directory!.EnumerateFiles("appsetting*.json").ToList();
-
                 if (appsettings.Any())
                 {
-                    var itemgroupIgnore = new XElement("ItemGroup");
-                    var appsettingElement = new XElement("EmbeddedResource");
-                    appsettingElement.Add(new XAttribute("Remove", "appsetting*.json"));
-                    itemgroupIgnore.Add(appsettingElement);
-
-                    // Test project need special handling :/ 
-                    if (appsettings.Any(a => a.Name.Contains("test")))
+                    var existAlready = csprojXml.Root!.ElementByAttribute("Include", "appsetting*.json");
+                    if(existAlready.IsNull())
                     {
-                        var copyToOutPut = new XElement("ItemGroup");
-                        var content = new XElement("Content");
-                        content.Add(new XAttribute("Include", "appsetting*.json"));
-                        copyToOutPut.Add(content);
-                        var copyToOutputDirectory = new XElement("CopyToOutputDirectory");
-                        copyToOutputDirectory.Value = "PreserveNewest";
-                        content.Add(copyToOutputDirectory);
+                        var itemgroupIgnore = new XElement("ItemGroup");
+                        var appsettingElement = new XElement("EmbeddedResource");
+                        appsettingElement.Add(new XAttribute("Remove", "appsetting*.json"));
+                        itemgroupIgnore.Add(appsettingElement);
 
-                        csprojXml.Root!.Add(copyToOutPut);
+                        // Test project need special handling :/ 
+                        if (appsettings.Any(a => a.Name.Contains("test")))
+                        {
+                            var copyToOutPut = new XElement("ItemGroup");
+                            var content = new XElement("Content");
+                            content.Add(new XAttribute("Include", "appsetting*.json"));
+                            copyToOutPut.Add(content);
+                            var copyToOutputDirectory = new XElement("CopyToOutputDirectory");
+                            copyToOutputDirectory.Value = "PreserveNewest";
+                            content.Add(copyToOutputDirectory);
+
+                            csprojXml.Root!.Add(copyToOutPut);
+                        }
+
+                        csprojXml.Root!.Add(itemgroupIgnore);
                     }
-
-                    csprojXml.Root!.Add(itemgroupIgnore);
                 }
 
                 // remove empty elements

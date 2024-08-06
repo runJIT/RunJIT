@@ -58,13 +58,13 @@
         <Compile Include="Services\.Net\IDotNet.cs" />
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Include="**\*.json" />
-        <EmbeddedResource Include="**\*.rps" />
-        <EmbeddedResource Include="**\*.template" />
-        <EmbeddedResource Include="**\*.yml" />
-        <EmbeddedResource Include="**\*.xml" />
-        <EmbeddedResource Include="**\*.txt" />
-        <EmbeddedResource Include="**\*.DotSettings" />
+        <EmbeddedResource Include="**\*.json" Exclude="bin\**\*;obj\**\*"/>
+        <EmbeddedResource Include="**\*.rps" Exclude="bin\**\*;obj\**\*"/>
+        <EmbeddedResource Include="**\*.template" Exclude="bin\**\*;obj\**\*"/>
+        <EmbeddedResource Include="**\*.yml" Exclude="bin\**\*;obj\**\*"/>
+        <EmbeddedResource Include="**\*.xml" Exclude="bin\**\*;obj\**\*"/>
+        <EmbeddedResource Include="**\*.txt" Exclude="bin\**\*;obj\**\*"/>
+        <EmbeddedResource Include="**\*.DotSettings" Exclude="bin\**\*;obj\**\*"/>
     </ItemGroup>
     <ItemGroup>
       <None Remove="Logo\RunJit.txt" />
