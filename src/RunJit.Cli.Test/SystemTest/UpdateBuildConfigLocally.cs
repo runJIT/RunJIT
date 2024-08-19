@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -70,6 +71,7 @@ namespace RunJit.Cli.Test.SystemTest
             var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
+            
             Assert.AreEqual(0, exitCode, output);
         }
 

@@ -30,8 +30,12 @@
         <!-- Generates an XML documentation file for the code, which is imporant for libaries api's and more -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-        <!--This feature automatically includes a predefined set of namespaces 
-        in the project, reducing the need for explicit using statements at the top of each file-->
-        <ImplicitUsings>enable</ImplicitUsings>
+        <!--We are currently do not activate this feature:
+        - Most pain is our legacy code, and still using lots of nuget packages, which cause sometimes ambiguous references.
+        - Automatically included namespaces can sometimes lead to name conflicts, requiring explicit disambiguation using fully qualified names.Performance Impact:
+        - Though typically minimal, there could be a slight performance overhead during compilation due to the inclusion of additional namespaces.Loss of Control:
+        - Developers have less control over which namespaces are included, which can lead to unnecessary inclusions that might not be used in certain files.Code Portability:
+        - Code relying on implicit usings might face issues when moved to projects or environments where implicit usings are not enabled, requiring manual addition of missing namespaces.-->
+        <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
 </Project>

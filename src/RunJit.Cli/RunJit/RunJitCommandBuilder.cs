@@ -8,6 +8,7 @@ using RunJit.Cli.RunJit.Decrypt;
 using RunJit.Cli.RunJit.Encrypt;
 using RunJit.Cli.RunJit.Fix;
 using RunJit.Cli.RunJit.Generate;
+using RunJit.Cli.RunJit.Localize;
 using RunJit.Cli.RunJit.New;
 using RunJit.Cli.RunJit.Rename;
 using RunJit.Cli.RunJit.Update;
@@ -30,6 +31,7 @@ namespace RunJit.Cli.RunJit
             services.AddGenerateCommandBuilder(configuration);
             services.AddNewCommandBuilder(configuration);
             services.AddCleanupCommandBuilder();
+            services.AddLocalizeCommandBuilder();
 
             services.AddSingletonIfNotExists<IRunJitCommandBuilder, RunJitCommandBuilder>();
         }

@@ -28,8 +28,8 @@
             <PackagePath>\</PackagePath>
         </None>
         <None Include="..\..\license.txt">
-          <Pack>True</Pack>
-          <PackagePath>\</PackagePath>
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
         </None>
         <None Include="..\..\README.md">
             <Pack>True</Pack>
@@ -37,19 +37,25 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.1" />
+        <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.2" />
         <PackageReference Include="DotNetTool.Service" Version="0.3.0" />
-        <PackageReference Include="Extensions.Pack" Version="5.0.0" />
-        <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+        <PackageReference Include="Extensions.Pack" Version="5.0.2" />
+        <PackageReference Include="GitVersion.MsBuild" Version="6.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MsBuild" Version="4.11.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-        <PackageReference Include="NuGet.Versioning" Version="6.10.0" />
+        <PackageReference Include="NuGet.Versioning" Version="6.11.0" />
         <PackageReference Include="RunJit.Api.Client" Version="0.1.0-alpha.40" />
         <PackageReference Include="Solution.Parser" Version="2.0.13" />
         <PackageReference Include="System.CommandLine" Version="0.3.0-alpha.20054.1" />
@@ -67,15 +73,15 @@
         <EmbeddedResource Include="**\*.DotSettings" Exclude="bin\**\*;obj\**\*" />
     </ItemGroup>
     <ItemGroup>
-      <None Remove="Logo\RunJit.txt" />
-      <None Remove="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
-      <None Remove="RunJit\Update\ResharperSettings\Template\.editorconfig" />
+        <None Remove="Logo\RunJit.txt" />
+        <None Remove="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
+        <None Remove="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Include="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
-      <EmbeddedResource Include="RunJit\Update\ResharperSettings\Template\.editorconfig" />
+        <EmbeddedResource Include="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
+        <EmbeddedResource Include="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\..\RunJit.Api\src\RunJit.Api.Client\RunJit.Api.Client.csproj" />
+        <ProjectReference Include="..\..\..\RunJit.Api\src\RunJit.Api.Client\RunJit.Api.Client.csproj" />
     </ItemGroup>
 </Project>

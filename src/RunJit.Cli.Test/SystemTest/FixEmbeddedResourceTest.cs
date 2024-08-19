@@ -53,6 +53,21 @@ namespace RunJit.Cli.Test.SystemTest
             // 3. Update to .Net 8
             await Mediator.SendAsync(new FixEmbeddedResource(gitUrl, @"D:\EmbeddedResource")).ConfigureAwait(false);
         }
+        
+        //[Ignore("Dev only")]
+        [DataTestMethod]
+        [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
+        [DataRow(@"D:\Siemens\pulse-core\PulseCore.sln")]
+        [DataRow(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln")]
+        [DataRow(@"D:\Siemens\pulse-sustainability\Pulse.Sustainability.sln")]
+        [DataRow("/Users/z003m9sc/Documents/RiderProjects/SiemensGPT/siemensgpt-backend/SiemensGPT.sln")]
+        [DataRow("/Users/z003m9sc/Documents/RiderProjects/PulseCloud/pulse-nexus/Pulse.Nexus.sln")]
+        [DataRow(@"D:\SoftwareOne\css-opportunity-api\SWO.CSS.Opportunity.sln")]
+        [DataRow(@"D:\SoftwareOne\css-lead-api\SWO.CSS.LeadApi.sln")]
+        public Task Fix_Embedded_Resources_In(string solutionPath)
+        {
+            return Mediator.SendAsync(new FixEmbeddedResourceLocally(solutionPath));
+        }
     }
 
     internal sealed record FixEmbeddedResource(string GitRepos,
