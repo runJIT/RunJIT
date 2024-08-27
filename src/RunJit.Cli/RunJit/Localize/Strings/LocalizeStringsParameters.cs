@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Collections.Immutable;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Localize.Strings
@@ -14,5 +15,5 @@ namespace RunJit.Cli.RunJit.Localize.Strings
     internal record LocalizeStringsParameters(string SolutionFile,
                                               string GitRepos,
                                               string WorkingDirectory,
-                                              IEnumerable<string> Languages);
+                                              IImmutableList<string> Languages);
 }

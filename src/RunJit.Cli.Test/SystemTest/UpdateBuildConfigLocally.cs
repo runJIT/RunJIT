@@ -27,24 +27,24 @@ namespace RunJit.Cli.Test.SystemTest
             // 3. Update build configurations like Directory.Build.props
             await Mediator.SendAsync(new UpdateBuildConfigLocally(solutionFile.FullName, 8)).ConfigureAwait(false);
         }
+
         
-        //[Ignore("Dev only")]
         [DataTestMethod]
-        [DataRow("codecommit::eu-central-1://pulse-datamanagement")]    
-        [DataRow("codecommit::eu-central-1://pulse-survey")]            
-        [DataRow("codecommit::eu-central-1://pulse-core-service")]      
-        [DataRow("codecommit::eu-central-1://pulse-actionmanagement")]  
-        [DataRow("codecommit::eu-central-1://pulse-flow")]              
+        [DataRow("codecommit::eu-central-1://pulse-datamanagement")]
+        [DataRow("codecommit::eu-central-1://pulse-survey")]
+        [DataRow("codecommit::eu-central-1://pulse-core-service")]
+        [DataRow("codecommit::eu-central-1://pulse-actionmanagement")]
+        [DataRow("codecommit::eu-central-1://pulse-flow")]
         [DataRow("codecommit::eu-central-1://pulse-documentmanagement")]
-        [DataRow("codecommit::eu-central-1://pulse-dbi")]                   // Merged     
-        [DataRow("codecommit::eu-central-1://pulse-tableau")]           
-        [DataRow("codecommit::eu-central-1://pulse-powerbi")]           
-        [DataRow("codecommit::eu-central-1://pulse-sustainability")]    
-        [DataRow("codecommit::eu-central-1://pulse-estell")]            
-        [DataRow("codecommit::eu-central-1://pulse-database")]          
-        [DataRow("codecommit::eu-central-1://pulse-common")]            
+        [DataRow("codecommit::eu-central-1://pulse-dbi")]
+        [DataRow("codecommit::eu-central-1://pulse-tableau")]
+        [DataRow("codecommit::eu-central-1://pulse-powerbi")]
+        [DataRow("codecommit::eu-central-1://pulse-sustainability")]
+        [DataRow("codecommit::eu-central-1://pulse-estell")]
+        [DataRow("codecommit::eu-central-1://pulse-database")]
+        [DataRow("codecommit::eu-central-1://pulse-common")]
         [DataRow("codecommit::eu-central-1://pulse-code-rules")]
-        [DataRow("codecommit::eu-central-1://pulse-core")]              
+        [DataRow("codecommit::eu-central-1://pulse-core")]
         public async Task Update_Build_Configurations_In(string gitUrl)
         {
             // 3. Update to .Net 8
@@ -71,7 +71,7 @@ namespace RunJit.Cli.Test.SystemTest
             var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
-            
+
             Assert.AreEqual(0, exitCode, output);
         }
 
@@ -84,7 +84,7 @@ namespace RunJit.Cli.Test.SystemTest
             yield return parameters.solution;
         }
     }
-    
+
     internal sealed record UpdateBuildConfig(string GitRepos,
                                                string WorkingDirectory) : ICommand;
 

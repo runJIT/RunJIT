@@ -48,7 +48,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
             //    if it is null or whitespace we check current directory
             var repos = parameters.GitRepos.Split(';');
             var orginalStartFolder = parameters.WorkingDirectory.IsNotNullOrWhiteSpace() ? parameters.WorkingDirectory : Environment.CurrentDirectory;
-            if(Directory.Exists(orginalStartFolder) == false)
+            if (Directory.Exists(orginalStartFolder) == false)
             {
                 Directory.CreateDirectory(orginalStartFolder);
             }
@@ -95,6 +95,28 @@ namespace RunJit.Cli.RunJit.Update.Nuget
 
                 // 8. Update the nuget packages
                 await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetResponse, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
+
+                // just for testing
+                var testprojectFolders = solutionFile.Directory!.EnumerateDirectories("*.Test");
+                foreach (var testprojectFolder in testprojectFolders)
+                {
+                    foreach (var csharprFile in testprojectFolder.EnumerateFiles("*.cs", SearchOption.AllDirectories))
+                    {
+                        if (csharprFile.FullName.Contains("/bin") ||
+                            csharprFile.FullName.Contains("/obj"))
+                        {
+                            continue;
+                        }
+
+                        var content = await File.ReadAllTextAsync(csharprFile.FullName).ConfigureAwait(false);
+
+                        if (content.Contains("() => "))
+                        {
+                            var newContent = content.Replace("() => ", string.Empty);
+                            await File.WriteAllTextAsync(csharprFile.FullName, newContent).ConfigureAwait(false);
+                        }
+                    }
+                }
 
                 // 9. Add changes to git
                 await git.AddAsync().ConfigureAwait(false);

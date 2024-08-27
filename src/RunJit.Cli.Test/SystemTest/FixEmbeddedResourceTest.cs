@@ -54,7 +54,7 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new FixEmbeddedResource(gitUrl, @"D:\EmbeddedResource")).ConfigureAwait(false);
         }
         
-        //[Ignore("Dev only")]
+        
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
         [DataRow(@"D:\Siemens\pulse-core\PulseCore.sln")]

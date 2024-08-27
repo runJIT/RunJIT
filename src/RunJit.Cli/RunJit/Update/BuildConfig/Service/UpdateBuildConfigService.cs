@@ -28,19 +28,19 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
     {
         public Task HandleAsync(UpdateBuildConfigParameters parameters)
         {
-            var UpdateBuildConfigStrategy = updateBuildConfigStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
+            var updateBuildConfigStrategy = updateBuildConfigStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
 
-            if (UpdateBuildConfigStrategy.Count < 1)
+            if (updateBuildConfigStrategy.Count < 1)
             {
                 throw new RunJitException($"Could not find a strategy a update nuget strategy for parameters: {parameters}");
             }
 
-            if (UpdateBuildConfigStrategy.Count > 1)
+            if (updateBuildConfigStrategy.Count > 1)
             {
                 throw new RunJitException($"Found more than one strategy a update nuget strategy for parameters: {parameters}");
             }
 
-            return UpdateBuildConfigStrategy[0].HandleAsync(parameters);
+            return updateBuildConfigStrategy[0].HandleAsync(parameters);
         }
     }
 

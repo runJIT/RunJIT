@@ -5,12 +5,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RunJit.Cli.Test.SystemTest
 {
-    [TestCategory("runjit fix embeddedresources")]
+    [TestCategory("runjit localize strings")]
     [TestClass]
     public class LocalizeStringsTest : GlobalSetup
     {
 
-        //[Ignore("Dev only")]
+        
         [DataTestMethod]
         [DataRow("codecommit::eu-central-1://pulse-datamanagement")]
         [DataRow("codecommit::eu-central-1://pulse-survey")]
@@ -67,7 +67,7 @@ namespace RunJit.Cli.Test.SystemTest
             yield return "--working-directory";
             yield return parameters.WorkingDirectory;
             yield return "--languages";
-            yield return "en;es;fr;de;it;ru;zh;ja;ko;pt";
+            yield return "en";
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Collections.Immutable;
+using Extensions.Pack;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,11 +18,12 @@ namespace RunJit.Cli.RunJit.Localize.Strings
 
     internal class StringLocalizer
     {
-        // This fixture allows you to localize all exception messages in all available language files.
-        // This code parse all the exception message strings out and create the keys and its default language "english" -> "en"
-        // into the lanuage files.
-
-        public async Task LocalizeAsync(IEnumerable<string> languages,
+        // Hint: This is a prototype to check if we are able to do a full automation of the localization process.
+        //       
+        //       This fixture allows you to localize all exception messages in all available language files.
+        //       This code parse all the exception message strings out and create the keys and its default language "english" -> "en"
+        //       into the language files.
+        public async Task LocalizeAsync(IImmutableList<string> languages,
                                         string solutionPath)
         {
             var workspace = MSBuildWorkspace.Create();
@@ -47,8 +49,8 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                 }
 
                 var allTranslations = new Dictionary<string, Dictionary<string, string>>();
-                var translationFolder = new DirectoryInfo(System.IO.Path.Combine(new FileInfo(project.FilePath).Directory!.FullName, "Translations"));
-                var languageFiles = languages.Select(l => new System.IO.FileInfo(System.IO.Path.Combine(translationFolder.FullName, $"{l}.json"))).ToList();
+                var translationFolder = new DirectoryInfo(Path.Combine(new FileInfo(project.FilePath).Directory!.FullName, "Translations"));
+                var languageFiles = languages.Select(l => new FileInfo(Path.Combine(translationFolder.FullName, $"{l}.json"))).ToList();
                 var compilation = await project.GetCompilationAsync();
 
                 if (compilation.IsNull())
@@ -101,9 +103,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                     {
                         await File.WriteAllTextAsync(languageFile.FullName, translations.ToJsonIntended());
                     }
-
                 }
-
             }
         }
 
@@ -140,7 +140,8 @@ namespace RunJit.Cli.RunJit.Localize.Strings
             return null;
         }
 
-        private static IEnumerable<TextToTranslate> GetTranslatableStrings(SemanticModel semanticModel, ThrowStatementSyntax throwStatement)
+        private static IEnumerable<TextToTranslate> GetTranslatableStrings(SemanticModel semanticModel,
+                                                                           ThrowStatementSyntax throwStatement)
         {
             // Get the method and class containing the throw statement
             var methodDeclaration = GetContainingMethod(throwStatement);
@@ -205,8 +206,11 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                     // Get the string value from the literal expression
                     var stringValue = literalExpression.Token.ValueText;
 
-                    // Combine the fully qualified class name, method name, exception type, and parameter name
-                    var parameterKey = $"{fullyQualifiedClassName}.{methodName}.{constructorSymbol.ContainingType.Name}.{parameterName}";
+                    // Combine the fully qualified class name, method name, exception type, and parameter name, and text value itself
+                    // Sample: 
+                    // throw new ArgumentException("This is the exception message");
+                    // MyAssembly.MyNamespace.MyClass.MyMethod.ArgumentException.Message.This is the exception message
+                    var parameterKey = $"{fullyQualifiedClassName}.{methodName}.{constructorSymbol.ContainingType.Name}.{parameterName}.{stringValue}";
 
                     // Return the key and the string value as a tuple
                     yield return new(parameterKey, stringValue);
