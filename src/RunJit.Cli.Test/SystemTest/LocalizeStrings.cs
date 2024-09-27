@@ -67,7 +67,7 @@ namespace RunJit.Cli.Test.SystemTest
             yield return "--working-directory";
             yield return parameters.WorkingDirectory;
             yield return "--languages";
-            yield return "en";
+            yield return "en;de";
         }
     }
 }

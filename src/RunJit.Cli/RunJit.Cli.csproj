@@ -38,6 +38,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.2" />
+        <PackageReference Include="AWSSDK.Translate" Version="3.7.400.20" />
         <PackageReference Include="DotNetTool.Service" Version="0.3.0" />
         <PackageReference Include="Extensions.Pack" Version="5.0.2" />
         <PackageReference Include="GitVersion.MsBuild" Version="6.0.2">
