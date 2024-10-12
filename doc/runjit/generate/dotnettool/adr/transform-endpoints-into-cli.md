@@ -3,6 +3,7 @@
 ## Context
 
 In our tool, we need to transform web API endpoints into command-line interface (CLI) commands. The APIs we work with might be defined using either the traditional ASP.NET Core Controller pattern or the newer minimal API pattern.
+Our goal is to generate a `CLI` based user friendly client to be able to call our `APIs`  
 
 ### Example 1: Controller-Based API
 ```csharp
@@ -71,7 +72,12 @@ GET /v1/projects/1/todos/2
 CLI Command Transformation:
 
 ```
-myApiCli todos v1 get --projectId 1 --id 2
+// Version as command
+myApiCli todos v1 getById --projectId 1 --id 2
+
+// Version as parameter
+myApiCli todos getById --projectId 1 --id 2 --version 1
+
 ```
 
 ### Pros:
@@ -99,8 +105,25 @@ GET /v1/projects/1/todos/2
 CLI Command Transformation:
 
 ```
-myApiCli todos v1 get
+myApiCli todos v1 getById
 { 
+  "projectId": 1,
+  "id": 2
+}
+```
+
+```
+myApiCli todos getById --version 1
+{ 
+  "projectId": 1,
+  "id": 2
+}
+```
+
+```
+myApiCli todos getById
+{ 
+  "version": 1
   "projectId": 1,
   "id": 2
 }
