@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Services.Endpoints;
 using Solution.Parser.CSharp;
 using Attribute = Solution.Parser.CSharp.Attribute;
 

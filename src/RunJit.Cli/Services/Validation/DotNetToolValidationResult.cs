@@ -1,6 +1,6 @@
 ﻿using Extensions.Pack;
 
-namespace RunJit.Cli
+namespace RunJit.Cli.Services
 {
     internal class DotNetToolValidationResult(IEnumerable<ValidationResult> result)
     {

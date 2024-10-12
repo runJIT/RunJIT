@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Services.Endpoints;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -14,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal class RestructureController
     {
-        internal ImmutableList<ControllerInfo> Reorganize(ImmutableList<ControllerInfo> controllers)
+        internal IImmutableList<ControllerInfo> Reorganize(ImmutableList<ControllerInfo> controllers)
         {
             var reorganizedControllers = ReorganizeInternal(controllers).ToImmutableList();
             return reorganizedControllers;

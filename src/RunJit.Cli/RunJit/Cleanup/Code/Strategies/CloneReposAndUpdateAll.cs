@@ -1,11 +1,12 @@
 ﻿using System.Collections.Immutable;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.AwsCodeCommit;
 using RunJit.Cli.ErrorHandling;
-using RunJit.Cli.Git;
-using RunJit.Cli.Net;
-using RunJit.Cli.Resharper;
+using RunJit.Cli.Services;
+using RunJit.Cli.Services.AwsCodeCommit;
+using RunJit.Cli.Services.Git;
+using RunJit.Cli.Services.Net;
+using RunJit.Cli.Services.Resharper;
 
 namespace RunJit.Cli.RunJit.Cleanup.Code
 {

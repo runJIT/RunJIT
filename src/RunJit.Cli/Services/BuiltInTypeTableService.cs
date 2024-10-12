@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Models;
 
-namespace RunJit.Cli
+namespace RunJit.Cli.Services
 {
     internal static class AddBuiltInTypeTableServiceExtension
     {

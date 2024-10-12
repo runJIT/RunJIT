@@ -1,4 +1,4 @@
-﻿namespace RunJit.Cli.RunJit.Generate.Client
+﻿namespace RunJit.Cli.Services.Endpoints
 {
     public record ResponseType(string Original,
                                string Normalized);

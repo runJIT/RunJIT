@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RunJit.Cli
+namespace RunJit.Cli.Services
 {
     public static class AddCodeFormatterExtension
     {

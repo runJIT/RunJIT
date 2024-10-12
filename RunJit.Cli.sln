@@ -42,6 +42,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{6AC9F702
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunJit.Api.Client", "..\RunJit.Api\src\RunJit.Api.Client\RunJit.Api.Client.csproj", "{1EF63AAD-1908-4496-B5BA-600BD642DB23}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArchitecturalDecisionRecords", "ArchitecturalDecisionRecords", "{CDE8C3AB-D1C4-47B7-8D95-728A481AADA3}"
+	ProjectSection(SolutionItems) = preProject
+		doc\runjit\generate\dotnettool\adr\cli-endpoint-gen.md = doc\runjit\generate\dotnettool\adr\cli-endpoint-gen.md
+		doc\runjit\generate\dotnettool\adr\transform-endpoints-into-cli.md = doc\runjit\generate\dotnettool\adr\transform-endpoints-into-cli.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runjit", "Runjit", "{FE236B75-1F72-478E-AF2D-7079E1E97EF7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generate", "Generate", "{CBCE327A-94BA-4D0F-BEF4-8E20C8113BD6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DotnetTool", "DotnetTool", "{3A9EB402-FA2A-4AC9-8B8A-5D952382FA07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +79,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CDE8C3AB-D1C4-47B7-8D95-728A481AADA3} = {3A9EB402-FA2A-4AC9-8B8A-5D952382FA07}
+		{FE236B75-1F72-478E-AF2D-7079E1E97EF7} = {0481985F-275D-44BA-B6EC-267161308F7A}
+		{CBCE327A-94BA-4D0F-BEF4-8E20C8113BD6} = {FE236B75-1F72-478E-AF2D-7079E1E97EF7}
+		{3A9EB402-FA2A-4AC9-8B8A-5D952382FA07} = {CBCE327A-94BA-4D0F-BEF4-8E20C8113BD6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4A292190-30DD-4325-883B-603B9EAE175B}

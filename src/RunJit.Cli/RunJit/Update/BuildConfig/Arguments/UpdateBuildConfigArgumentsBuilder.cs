@@ -1,7 +1,7 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RunJit.Cli.RunJit.Update.UpdateBuildConfig
+namespace RunJit.Cli.RunJit.Update.BuildConfig
 {
     public static class AddUpdateBuildConfigArgumentsBuilderExtension
     {

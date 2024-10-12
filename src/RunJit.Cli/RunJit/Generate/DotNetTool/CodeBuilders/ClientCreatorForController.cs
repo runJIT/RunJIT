@@ -2,8 +2,9 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Generate.Client;
+using RunJit.Cli.Services.Endpoints;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeBuilders
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal static class AddDotNetToolCreatorForControllerExtension
     {

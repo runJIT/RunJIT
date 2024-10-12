@@ -1,7 +1,8 @@
 ﻿using System.Collections.Immutable;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.Net;
+using RunJit.Cli.Services;
+using RunJit.Cli.Services.Net;
 
 namespace RunJit.Cli.RunJit.Update.Nuget
 {

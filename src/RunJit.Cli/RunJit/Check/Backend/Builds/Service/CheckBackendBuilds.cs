@@ -2,6 +2,7 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
+using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Check.Backend.Builds
 {

@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit.Update.Nuget;
 
-namespace RunJit.Cli.Net
+namespace RunJit.Cli.Services.Net
 {
     public static class AddDotNetExtension
     {
@@ -95,8 +95,15 @@ namespace RunJit.Cli.Net
         {
             consoleService.WriteInfo($"Build solution or project: {solutionFileOrProject}");
 
-            var process = Process.StartProcess("dotnet", $"build {solutionFileOrProject.FullName}");
+            var stringBuilder0 = new StringBuilder();
+            var stringBuilder1 = new StringBuilder();
+
+            var process = Process.StartProcess("dotnet", $"build {solutionFileOrProject.FullName}",null, item => stringBuilder0.AppendLine(item), item => stringBuilder1.AppendLine(item));
             await process.WaitForExitAsync().ConfigureAwait(false);
+
+            var a = stringBuilder0.ToString();
+            var b = stringBuilder1.ToString();
+
 
             // var buildResult = await dotNetTool.RunAsync("dotnet", $"build {solutionFileOrProject.FullName}").ConfigureAwait(false);
             if (process.ExitCode != 0)

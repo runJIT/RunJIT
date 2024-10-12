@@ -2,10 +2,8 @@
 using System.CommandLine.Invocation;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.RunJit.Fix.EmbededResources;
-using RunJit.Cli.RunJit.Update.BuildConfig;
 
-namespace RunJit.Cli.RunJit.Update.UpdateBuildConfig
+namespace RunJit.Cli.RunJit.Update.BuildConfig
 {
     public static class AddUpdateBuildConfigCommandBuilderExtension
     {

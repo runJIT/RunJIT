@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Extensions.Pack;
 
-namespace RunJit.Cli
+namespace RunJit.Cli.Services
 {
     public interface IInputValidator
     {

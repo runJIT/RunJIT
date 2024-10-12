@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using Process = DotNetTool.Service.Process;
 
-namespace RunJit.Cli.Git
+namespace RunJit.Cli.Services.Git
 {
     public static class AddGitServiceExtension
     {

@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.Git;
+using RunJit.Cli.Services.Git;
 using Process = DotNetTool.Service.Process;
 
-namespace RunJit.Cli.AwsCodeCommit
+namespace RunJit.Cli.Services.AwsCodeCommit
 {
     public static class AddAwsCodeCommitExtension
     {

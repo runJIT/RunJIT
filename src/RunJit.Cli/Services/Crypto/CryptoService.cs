@@ -2,7 +2,7 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RunJit.Cli.Crypto
+namespace RunJit.Cli.Services.Crypto
 {
     public static class AddCryptoServiceExtension
     {

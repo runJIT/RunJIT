@@ -1,6 +1,7 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.Crypto;
+using RunJit.Cli.Services;
+using RunJit.Cli.Services.Crypto;
 
 namespace RunJit.Cli.RunJit.Encrypt
 {

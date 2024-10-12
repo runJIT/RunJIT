@@ -1,7 +1,7 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RunJit.Cli
+namespace RunJit.Cli.Services
 {
     public static class AddNetTypeNameNormalizerExtension
     {

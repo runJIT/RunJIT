@@ -3,7 +3,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 
-namespace RunJit.Cli
+namespace RunJit.Cli.Services
 {
     public static class AddFindSolutionFileExtension
     {

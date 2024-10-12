@@ -16,14 +16,18 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class DotNetToolCommandBuilder(IDotNetToolGen clientGen, 
+    internal class DotNetToolCommandBuilder(IDotNetToolGen clientGen,
                                             IDotNetToolGenOptionsBuilder optionsBuilder) : IGenerateSubCommandBuilder
     {
         public Command Build()
         {
             var command = new Command(".nettool", "The command to generate a new .net client into a .net web api project");
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
-            command.Handler = CommandHandler.Create<bool, bool, FileInfo>((usevisualstudio, build, solution) => clientGen.HandleAsync(new DotNetToolParameters(usevisualstudio, build, solution)));
+
+            command.Handler = CommandHandler.Create<bool, bool, FileInfo>((usevisualstudio,
+                                                                           build,
+                                                                           solution) => clientGen.HandleAsync(new DotNetToolParameters(usevisualstudio, build, solution)));
+
             return command;
         }
     }

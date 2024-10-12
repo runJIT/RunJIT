@@ -1,9 +1,10 @@
 ﻿using System.Collections.Immutable;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeBuilders
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal static class AddQueryBuilderExtension
     {

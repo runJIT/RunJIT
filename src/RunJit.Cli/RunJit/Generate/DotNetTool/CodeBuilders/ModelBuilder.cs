@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Generate.Client;
 using Solution.Parser.CSharp;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeBuilders
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal static class AddModelBuilderExtension
     {

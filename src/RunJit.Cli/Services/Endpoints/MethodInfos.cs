@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Solution.Parser.CSharp;
 using Attribute = Solution.Parser.CSharp.Attribute;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.Services.Endpoints
 {
     [DebuggerDisplay("{Name}")]
     public record MethodInfos

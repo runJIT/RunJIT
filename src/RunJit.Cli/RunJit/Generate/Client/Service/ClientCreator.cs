@@ -1,7 +1,8 @@
 ﻿using System.Collections.Immutable;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.Resharper;
+using RunJit.Cli.Services.Endpoints;
+using RunJit.Cli.Services.Resharper;
 using Solution.Parser.CSharp;
 using Solution.Parser.Solution;
 using FileInfo = System.IO.FileInfo;

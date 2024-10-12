@@ -2,6 +2,7 @@
 using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Generate.Client
 {

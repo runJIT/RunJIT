@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Attribute = Solution.Parser.CSharp.Attribute;
 
-namespace RunJit.Cli.RunJit.Generate.Client
+namespace RunJit.Cli.Services.Endpoints
 {
     [DebuggerDisplay("{Name}")]
     public record ControllerInfo

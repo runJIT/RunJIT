@@ -2,7 +2,7 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RunJit.Cli.RunJit.Fix.EmbededResources
+namespace RunJit.Cli.RunJit.Update.BuildConfig
 {
     public static class AddUpdateBuildConfigOptionsBuilderExtension
     {

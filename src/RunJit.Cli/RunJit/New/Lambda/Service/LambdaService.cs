@@ -4,7 +4,8 @@ using DotNetTool.Service;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
-using RunJit.Cli.Net;
+using RunJit.Cli.Services;
+using RunJit.Cli.Services.Net;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {

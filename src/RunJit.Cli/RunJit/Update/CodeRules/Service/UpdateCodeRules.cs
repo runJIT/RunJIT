@@ -4,6 +4,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
+using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.CodeRules
 {

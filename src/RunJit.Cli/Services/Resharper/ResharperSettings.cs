@@ -1,7 +1,8 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.RunJit.Generate.Client;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeBuilders
+namespace RunJit.Cli.Services.Resharper
 {
     internal static class AddResharperSettingsBuilderExtension
     {
@@ -24,12 +25,17 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeBuilders
     // </wpf:ResourceDictionary>
     internal class ResharperSettingsBuilder
     {
-        private readonly string _resharperSettingsEntry = EmbeddedFile.GetFileContentFrom("Pulse.Generate.DotNetTool.Templates.project.settings.entry.rps");
-        private readonly string _resharperSettingsTemplate = EmbeddedFile.GetFileContentFrom("Pulse.Generate.DotNetTool.Templates.project.settings.rps");
+        private readonly string _resharperSettingsEntry = "<s:Boolean x:Key=\"/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=$namespace$/@EntryIndexedValue\">True</s:Boolean>";
 
-        public string BuildFrom(GeneratedDotNetTool dataType)
+        private readonly string _resharperSettingsTemplate = """
+                                                             <wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                                                             $namespaces$
+                                                             </wpf:ResourceDictionary>
+                                                             """;
+
+        public string BuildFrom(GeneratedClient generatedClient)
         {
-            var namespaceProviders = NamespaceProviderTrue(dataType);
+            var namespaceProviders = NamespaceProviderTrue(generatedClient);
             var entries = namespaceProviders.Select(namesp => _resharperSettingsEntry.Replace("$namespace$", namesp)).Flatten(Environment.NewLine);
 
             var projectSettings = _resharperSettingsTemplate.Replace("$namespaces$", entries);
@@ -37,13 +43,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeBuilders
             return projectSettings;
         }
 
-        private IEnumerable<string> NamespaceProviderTrue(GeneratedDotNetTool dataType)
+        private IEnumerable<string> NamespaceProviderTrue(GeneratedClient dataType)
         {
             foreach (var facade in dataType.Facades)
             {
                 foreach (var endpoint in facade.Endpoints)
                 {
-                    var domain = endpoint.ControllerInfo.DomainName.ToLowerInvariant();
+                    var domain = endpoint.Domain.ToLowerInvariant();
                     var version = endpoint.ControllerInfo.Version.Normalized.ToLowerInvariant();
 
                     yield return $"api_005C{domain}_005C{version}_005Cmodels";

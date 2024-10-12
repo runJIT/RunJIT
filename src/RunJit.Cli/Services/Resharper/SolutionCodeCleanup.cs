@@ -1,7 +1,7 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RunJit.Cli.Resharper
+namespace RunJit.Cli.Services.Resharper
 {
     public static class AddSolutionCodeCleanupExtension
     {
