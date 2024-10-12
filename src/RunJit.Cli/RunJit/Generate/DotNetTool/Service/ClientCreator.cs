@@ -130,6 +130,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             await dotNet.RunAsync("dotnet", $"newtool --from-file {file}").ConfigureAwait(false);
 
+
             await Task.CompletedTask;
         }
     }
@@ -175,11 +176,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                 }
 
                 var command = new SubCommand()
-                              {
-                                  Name = endpointGroup.GroupName,
-                                  Description = endpointGroup.GroupName,
-                                  Value = endpointGroup.GroupName,
-                              };
+                {
+                    Name = endpointGroup.GroupName,
+                    Description = endpointGroup.GroupName,
+                    Value = endpointGroup.GroupName,
+                };
 
                 // each domain is a command
                 foreach (var endoint in endpointGroup.Endpoints)
@@ -191,11 +192,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                     }
 
                     var subCommand = new SubCommand()
-                                     {
-                                         Name = endoint.Name,
-                                         Description = endoint.Name,
-                                         Value = endoint.Name,
-                                     };
+                    {
+                        Name = endoint.SwaggerOperationId,
+                        Description = endoint.SwaggerOperationId,
+                        Value = endoint.SwaggerOperationId,
+                    };
 
                     //foreach (var parameter in method.Parameters)
                     //{
@@ -221,11 +222,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             }
 
             var dotnetToolInfos = new DotNetToolInfos()
-                                  {
-                                      ProjectName = projectname,
-                                      DotNetToolName = new DotNetToolName() { Name = projectname },
-                                      ParameterInfo = parameterInfo
-                                  };
+            {
+                ProjectName = projectname,
+                DotNetToolName = new DotNetToolName() { Name = projectname },
+                ParameterInfo = parameterInfo
+            };
 
             return dotnetToolInfos;
         }

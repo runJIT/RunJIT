@@ -204,7 +204,10 @@ namespace RunJit.Cli.Services.Net
 
             if (buildResult.ExitCode != 0)
             {
-                var output = stringBuilder.ToString();
+                var normalOutput = stringBuilder.ToString();
+                var errorOutput = errorStringBuilder.ToString();
+
+                var output = errorOutput.IsNotNullOrWhiteSpace() ? errorOutput : normalOutput;
 
                 throw new RunJitException($"Run custom command: {command} {arguments} successful failed. {output}");
             }

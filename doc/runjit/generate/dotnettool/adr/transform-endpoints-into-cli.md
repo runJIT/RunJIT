@@ -106,6 +106,7 @@ CLI Command Transformation:
 
 ```
 myApiCli todos v1 getById
+
 { 
   "projectId": 1,
   "id": 2
@@ -114,6 +115,7 @@ myApiCli todos v1 getById
 
 ```
 myApiCli todos getById --version 1
+
 { 
   "projectId": 1,
   "id": 2
@@ -122,6 +124,7 @@ myApiCli todos getById --version 1
 
 ```
 myApiCli todos getById
+
 { 
   "version": 1
   "projectId": 1,
@@ -170,3 +173,155 @@ We choose to support both options to provide users with flexibility based on the
 - **Complexity:** Supporting two different modes of operation adds complexity to both the CLI tool and the generator.
 - **Increased Codebase:** The generator will need to support two modes, increasing the maintenance burden.
 
+
+
+## Ideas
+
+### Version as command
+
+```
+// ADD
+simpleapi todos v1 add --payload "{...}"
+
+// GET BY ID
+simpleapi todos v1 getByid --id 1
+
+// GET ALL
+simpleapi todos v1 getall
+
+simpleapi todos v1 getall --name "SonGoku"
+
+// DELETE BY ID
+simpleapi todos v1 deleteById --id 1
+
+// DELETE ALL
+simpleapi todos v1 delete
+simpleapi todos v1 delete --name "SonGoku"
+
+// Update BY ID
+simpleapi todos v1 update --payload "{..}" --id 1
+
+// Patch BY ID
+simpleapi todos v1 patch --payload "{..}" --id 1
+```
+
+### Version as parameter
+
+```
+// ADD
+simpleapi todos add --payload "{...}" --version 1
+
+// GET BY ID
+simpleapi todos getByid --id 1 --version 1
+
+// GET ALL
+simpleapi todos getall --version 1
+simpleapi todos getall --name "SonGoku" --version 1
+
+// DELETE BY ID
+simpleapi todos deleteById --id 1 --version 1
+
+
+// DELETE ALL
+simpleapi todos delete --version 1
+simpleapi todos delete --name "SonGoku" --version 1
+
+// Update BY ID
+simpleapi todos update --payload "{..}" --id 1 --version 1
+
+// Patch BY ID
+simpleapi todos patch --payload "{..}" --id 1 --version 1
+```
+
+### All in json
+```json
+// ADD
+simpleapi todos add
+{
+    "version": 1,
+    "todo": {
+        "name": "Create ADR"
+      }
+    }
+}
+```
+
+```json
+// GET BY ID
+simpleapi todos getByid
+{
+    "version": 1,
+    "id": 1
+    "todo": {
+        "name": "Create ADR"
+      }
+    }
+}
+```
+
+```json
+// GET ALL
+simpleapi todos getall
+{
+    "version": 1,
+}
+```
+
+```json
+simpleapi todos getall
+{
+    "version": 1,
+    "name": "SonGoku"
+}
+```
+
+```json
+// DELETE BY ID
+simpleapi todos deleteById
+{
+    "version": 1,
+    "id": "1"
+}
+```
+
+```json
+// DELETE ALL
+simpleapi todos delete
+{
+    "version": 1,
+}
+```
+
+```json
+simpleapi todos delete
+{
+    "version": 1,
+    "name": "SonGoku"
+}
+```
+
+```json
+// Update BY ID
+simpleapi todos update
+{
+    "version": 1,
+    "id": 1
+    "todo": {
+        "name": "Create ADR"
+      }
+    }
+}
+```
+
+```json
+// Patch BY ID
+simpleapi todos v1 patch
+{
+    "version": 1,
+    "id": 1
+    "todo": {
+        "name": "Create ADR"
+      }
+    }
+}
+```
