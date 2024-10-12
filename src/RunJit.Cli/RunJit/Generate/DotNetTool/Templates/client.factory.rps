@@ -1,0 +1,106 @@
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Extensions.Pack;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Pulse.Common.Api;
+using Pulse.Common.Extensions;
+$usings$
+
+namespace $projectName$
+{
+    public static class Add$clientName$FactoryExtension
+    {
+        public static void Add$clientName$Factory(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHttpClient();
+            services.Add$clientName$Settings(configuration);
+            services.AddResponseTypeHandleStrategy();
+
+            services.AddSingletonIfNotExists<I$clientName$Factory, $clientName$Factory>();
+        }
+    }
+
+    public interface I$clientName$Factory
+    {
+        $clientName$ CreateFrom(HttpClient sourceClient);
+        $clientName$ CreateFrom(HttpRequest httpRequest);
+    }
+
+    internal class $clientName$Factory : I$clientName$Factory
+    {
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly $clientName$Settings _$clientName$Settings;
+        private readonly HttpCallHandlerFactory _httpCallHandlerFactory;
+        private readonly string[] _allowedHeadersToCopy = new[] {"User-Agent", "Authorization", "x-", "Referer"};
+
+        public $clientName$Factory(IHttpClientFactory httpClientFactory,
+                                   $clientName$Settings $clientName$Settings,
+                                   HttpCallHandlerFactory httpCallHandlerFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+            _$clientName$Settings = $clientName$Settings;
+            _httpCallHandlerFactory = httpCallHandlerFactory;
+        }
+
+        public $clientName$ CreateFrom(HttpClient httpClient)
+        {
+            var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
+
+            var client = BuildClient(httpClientHandler);
+
+            return client;
+        }
+
+        public $clientName$ CreateFrom(HttpRequest httpRequest)
+        {
+            var httpClient = _httpClientFactory.CreatePulseHttpClient();
+            httpRequest.Headers.ForEach(headerEntry =>
+            {
+                // Important not content and host header copy
+                if (_allowedHeadersToCopy.Any(allowedHeader => headerEntry.Key.Contains(allowedHeader, StringComparison.OrdinalIgnoreCase)))
+                {
+                    httpClient.DefaultRequestHeaders.Add(headerEntry.Key, headerEntry.Value.FirstOrDefault() ?? string.Empty);
+                }
+            });
+
+            httpClient.BaseAddress = new Uri(_$clientName$Settings.BaseAddress);
+
+            var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
+
+            var client = BuildClient(httpClientHandler);
+
+            return client;
+        }
+
+        private $clientName$ BuildClient(HttpCallHandler httpClientHandler)
+        {
+            return new $clientName$($dependencies$);
+        }
+    }
+
+    public static class Add$clientName$SettingsExtension
+    {
+        public static void Add$clientName$Settings(this IServiceCollection services, IConfiguration configuration)
+        {
+            var settings = configuration.GetSetting<$clientName$Settings>();
+            if (settings.IsNull())
+            {
+                settings = new $clientName$Settings();
+            }
+
+            var tenantSettings = configuration.GetSetting<Tenant>();
+            settings = settings with { BaseAddress = settings.BaseAddress.Replace("{tenant}", tenantSettings.Name) };
+
+            services.AddSingletonIfNotExists(settings);
+        }
+    }
+
+    public record $clientName$Settings
+    {
+        public string BaseAddress { get; init; } = "http://localhost:5001/";
+    }
+}

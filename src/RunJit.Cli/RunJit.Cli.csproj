@@ -37,15 +37,15 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.2" />
-        <PackageReference Include="AWSSDK.Translate" Version="3.7.400.20" />
+        <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.6" />
+        <PackageReference Include="AWSSDK.Translate" Version="3.7.400.33" />
         <PackageReference Include="DotNetTool.Service" Version="0.3.0" />
-        <PackageReference Include="Extensions.Pack" Version="5.0.2" />
+        <PackageReference Include="Extensions.Pack" Version="5.0.4" />
         <PackageReference Include="GitVersion.MsBuild" Version="6.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -53,12 +53,12 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-        <PackageReference Include="NuGet.Versioning" Version="6.11.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+        <PackageReference Include="NuGet.Versioning" Version="6.11.1" />
         <PackageReference Include="RunJit.Api.Client" Version="0.1.0-alpha.40" />
-        <PackageReference Include="Solution.Parser" Version="2.0.13" />
+        <PackageReference Include="Solution.Parser" Version="2.0.16" />
         <PackageReference Include="System.CommandLine" Version="0.3.0-alpha.20054.1" />
     </ItemGroup>
     <ItemGroup>

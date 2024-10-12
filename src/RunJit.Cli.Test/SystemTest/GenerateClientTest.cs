@@ -15,7 +15,6 @@ namespace RunJit.Cli.Test.SystemTest
     public class GenerateClientTest : GlobalSetup
     {
         private const string Resource = "User";
-
         private const string BasePath = "api/client-gen";
 
         [TestMethod]
@@ -34,10 +33,11 @@ namespace RunJit.Cli.Test.SystemTest
             await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFile.FullName}").ConfigureAwait(false);
         }
 
-        [Ignore("Dev only")]
+        //[Ignore("Dev only")]
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
         [DataRow(@"D:\Siemens\pulse-core\PulseCore.sln")]
+        [DataRow(@"D:\Siemens\pulse-flow\Pulse.Flow.sln")]
         [DataRow(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln")]
         [DataRow(@"D:\AzureDevOps\SoftwareOne.Workshop.November.2023\RunJit\UserManagement\UserManagement.sln")]
         [DataRow(@"D:\Siemens\pulse-sustainability\Pulse.Sustainability.sln")]
