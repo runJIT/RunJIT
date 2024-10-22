@@ -1,0 +1,43 @@
+﻿using System;
+using System.Net.Http;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Pulse.Contracts.Exceptions;
+
+namespace $projectName$
+{
+    public static class AddHttpCallHandlerFactoryExtension
+    {
+        public static void AddHttpCallHandlerFactory(this IServiceCollection services)
+        {
+            services.AddResponseTypeHandleStrategy();
+            services.AddHttpRequestMessageBuilder();
+            services.AddRequestPrinter();
+
+            services.AddSingletonIfNotExists<HttpCallHandlerFactory>();
+        }
+    }
+
+    internal class HttpCallHandlerFactory
+    {
+        private readonly ResponseTypeHandleStrategy _responseTypeHandleStrategy;
+        private readonly HttpRequestMessageBuilder _httpRequestMessageBuilder;
+        private readonly IRequestPrinter _requestPrinter;
+
+        public HttpCallHandlerFactory(ResponseTypeHandleStrategy responseTypeHandleStrategy,
+                                      HttpRequestMessageBuilder httpRequestMessageBuilder,
+                                      IRequestPrinter requestPrinter)
+        {
+            _responseTypeHandleStrategy = responseTypeHandleStrategy;
+            _httpRequestMessageBuilder = httpRequestMessageBuilder;
+            _requestPrinter = requestPrinter;
+        }
+
+        internal HttpCallHandler CreateFrom(HttpClient client)
+        {
+            return new HttpCallHandler(client, _responseTypeHandleStrategy, _httpRequestMessageBuilder, _requestPrinter);
+        }
+    }
+}

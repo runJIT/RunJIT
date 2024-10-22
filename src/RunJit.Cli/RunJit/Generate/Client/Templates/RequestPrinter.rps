@@ -1,0 +1,42 @@
+﻿using System.Diagnostics;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace $projectName$
+{
+    internal static class AddRequestPrinterExtension
+    {
+        internal static void AddRequestPrinter(this IServiceCollection services)
+        {
+            services.AddCurlBuilder();
+
+            services.AddSingletonIfNotExists<IRequestPrinter, DebugWriteLinePrinter>();
+        }
+    }
+
+    // To have the possibility to overwrite the default implementation of IRequestPrinter
+    // without changing the code here
+    public interface IRequestPrinter
+    {
+        Task PrintAsync(HttpRequestMessage httpRequestMessage,
+                        HttpClient httpClient);
+    }
+
+    internal class DebugWriteLinePrinter(CurlBuilder curlBuilder,
+                                         $clientName$Settings $clientNameLower$Settings) : IRequestPrinter
+    {
+        public Task PrintAsync(HttpRequestMessage httpRequestMessage,
+                               HttpClient httpClient)
+        {
+            if ($clientNameLower$Settings.PrintCurl.IsFalse())
+            {
+                return Task.CompletedTask;
+            }
+
+            var curl = curlBuilder.BuildFrom(httpRequestMessage, httpClient);
+            Debug.WriteLine(curl);
+            return Task.CompletedTask;
+        }
+    }
+}

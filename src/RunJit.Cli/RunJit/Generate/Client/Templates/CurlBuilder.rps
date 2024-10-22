@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace $projectName$
+{
+     internal static class AddCurlBuilderExtension
+    {
+        internal static void AddCurlBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<CurlBuilder>();
+        }
+    }
+
+    internal class CurlBuilder
+    {
+        internal string BuildFrom(HttpRequestMessage httpRequestMessage,
+                                  HttpClient httpClient)
+        {
+            var curl = Extensions.Pack.EnumerableExtensions.Flatten(BuildCurl(httpRequestMessage, httpClient), @$" \{Environment.NewLine}");
+
+            var curlOutput = @$"
+
+-------------------------------------------------------------------------------------------------------
+CURL
+-------------------------------------------------------------------------------------------------------
+{curl}
+-------------------------------------------------------------------------------------------------------
+
+";
+
+
+            return curlOutput;
+
+            static IEnumerable<string> BuildCurl(HttpRequestMessage httpRequestMessage,
+                                                 HttpClient httpClient)
+            {
+                var absoluteUri = $"{httpClient.BaseAddress}{httpRequestMessage.RequestUri}";
+                var authorization = httpClient.DefaultRequestHeaders.Authorization;
+
+                // base curl call
+                yield return "curl";
+                yield return "--location";
+                yield return $"--request {httpRequestMessage.Method.Method} '{absoluteUri}'";
+
+                if (httpClient.IsNotNull())
+                {
+                    var token = "Sorry i am secret :)";
+                    yield return $"--header 'Authorization: {authorization?.Scheme} {token}'";
+                }
+
+                if (httpRequestMessage.Content is StringContent stringContent)
+                {
+                    yield return "--header 'Content-Type: application/json'";
+                    yield return $"--data-raw '{stringContent}'";
+                }
+            }
+        }
+    }
+}

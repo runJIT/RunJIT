@@ -75,6 +75,10 @@
     </ItemGroup>
     <ItemGroup>
         <None Remove="Logo\RunJit.txt" />
+        <None Remove="RunJit\Generate\Client\Templates\CurlBuilder.rps" />
+        <None Remove="RunJit\Generate\Client\Templates\HttpCallHandler.rps" />
+        <None Remove="RunJit\Generate\Client\Templates\HttpCallHandlerFactory.rps" />
+        <None Remove="RunJit\Generate\Client\Templates\RequestPrinter.rps" />
         <None Remove="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
         <None Remove="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>

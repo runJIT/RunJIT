@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using System.Net.Http.Headers;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using MediatR;
@@ -38,7 +37,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
             var httpClient = httpClientFactory.CreateClient();
             httpClient.BaseAddress = new Uri(runJitApiClientSettings.BaseAddress);
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
+            // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
             var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
 
             var generateClientResponse = await rRunJitApiClient.Clients.V1.GenerateClientAsync().ConfigureAwait(false);

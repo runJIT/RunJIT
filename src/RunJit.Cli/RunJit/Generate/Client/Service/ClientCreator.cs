@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
+using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Api.Client;
 using RunJit.Cli.Services.Endpoints;
 using RunJit.Cli.Services.Resharper;
 using Solution.Parser.CSharp;
@@ -66,6 +68,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
             services.AddOrganizeMinimalEndpoints();
             
             services.AddSolutionCodeCleanup();
+            services.AddCurlBuilder();
+            services.AddRequestPrinter();
+
+            services.AddHttpCallHandler();
+            services.AddHttpCallHandlerFactory();
 
             services.AddSingletonIfNotExists<ClientCreator>();
         }
@@ -84,7 +91,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                  TestStructureWriter testStructureWriter,
                                  RestructureController restructureController,
                                  MinimalApiEndpointParser minimalApiEndpointParser,
-                                 OrganizeMinimalEndpoints organizeMinimalEndpoints)
+                                 OrganizeMinimalEndpoints organizeMinimalEndpoints,
+                                 CurlBuilder curlBuilder,
+                                 RequestPrinter requestPrinter,
+                                 HttpCallHandler httpCallHandler,
+                                 HttpCallHandlerFactory httpCallHandlerFactory)
     {
         internal async Task GenerateClientAsync(Client client,
                                                 FileInfo clientSolution)
@@ -141,26 +152,62 @@ namespace RunJit.Cli.RunJit.Generate.Client
             // 10. Create client factory for client, specific for siemens usage with HttpRequest's
             var clientFactory = clientFactoryBuilder.BuildFor(projectName, clientName, generatedClient);
 
-            // 11. Setup R# namespace providers.
+            // 11. Create curl builder
+            var curlBuilderCode = curlBuilder.BuildFor(projectName, clientName);
+
+            // 12. Create Request printer
+            var requestPrinterCode = requestPrinter.BuildFor(projectName, clientName);
+
+            // 13. Setup R# namespace providers.
             var resharperSettings = resharperSettingsBuilder.BuildFrom(generatedClient);
 
-            // 12. Get client folder
+            // 14. Get client folder
             var clientFolder = clientProject.ProjectFileInfo.Value.Directory!;
 
-            // 13. Write client class
+            // 15. Create Curl folder
+            var curlFolder = new DirectoryInfo(Path.Combine(clientFolder.FullName, "Curl"));
+            if (curlFolder.NotExists())
+            {
+                curlFolder.Create();
+            }
+
+
+            // 16. Now we overwrite the HttpCallHandler
+            var httpCallHandlerCode = httpCallHandler.BuildFor(projectName, clientName);
+
+            // 17. Now we overwrite the HttpCallHandlerFactory
+            var httpCallHandlerFactoryCode = httpCallHandlerFactory.BuildFor(projectName, clientName);
+
+            // 18. HttpCallHandlers folder have to exist
+            var httpCallHandlersFolder = new DirectoryInfo(Path.Combine(clientFolder.FullName, "HttpCallHandlers"));
+            Throw.IfNotExists(httpCallHandlersFolder);
+
+            // 19. Write client class
             await File.WriteAllTextAsync(Path.Combine(clientFolder.FullName, $"{clientName}.cs"), generatedClient.SyntaxTree).ConfigureAwait(false);
 
-            // 14. Write client factory class
+            // 20. Write client factory class
             await File.WriteAllTextAsync(Path.Combine(clientFolder.FullName, $"{clientName}Factory.cs"), clientFactory).ConfigureAwait(false);
 
-            // 15. Write R# settings
+            // 21. Write R# settings
             await File.WriteAllTextAsync($"{clientProject.ProjectFileInfo.Value.FullName}.DotSettings", resharperSettings).ConfigureAwait(false);
 
-            // 16. Write facades, domain and version classes
+            // 22. Write new CurlBuilder
+            await File.WriteAllTextAsync(Path.Combine(curlFolder.FullName, "CurlBuilder.cs"), curlBuilderCode).ConfigureAwait(false);
+            
+            // 23. Write new Request printer
+            await File.WriteAllTextAsync(Path.Combine(curlFolder.FullName, "RequestPrinter.cs"), requestPrinterCode).ConfigureAwait(false);
+
+            // 24. Update http call handler
+            await File.WriteAllTextAsync(Path.Combine(httpCallHandlersFolder.FullName, "HttpCallHandler.cs"), httpCallHandlerCode).ConfigureAwait(false);
+            
+            // 25. Update http call handler factory
+            await File.WriteAllTextAsync(Path.Combine(httpCallHandlersFolder.FullName, "HttpCallHandlerFactory.cs"), httpCallHandlerFactoryCode).ConfigureAwait(false);
+
+            // 26. Write facades, domain and version classes
             await clientStructureWriter.WriteFileStructureAsync(generatedClient, clientProject, projectName,
                                                                 clientName).ConfigureAwait(false);
 
-            // 17.Creates or updates base test structure
+            // 19.Creates or updates base test structure
             await testStructureWriter.WriteFileStructureAsync(parsedSolution, clientProject, clientTestProject,
                                                               projectName, clientName).ConfigureAwait(false);
             
