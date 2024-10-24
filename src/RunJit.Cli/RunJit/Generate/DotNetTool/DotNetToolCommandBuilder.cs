@@ -24,9 +24,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var command = new Command(".nettool", "The command to generate a new .net client into a .net web api project");
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
 
-            command.Handler = CommandHandler.Create<bool, bool, FileInfo>((usevisualstudio,
-                                                                           build,
-                                                                           solution) => clientGen.HandleAsync(new DotNetToolParameters(usevisualstudio, build, solution)));
+            command.Handler = CommandHandler.Create<bool, bool, FileInfo, string>((usevisualstudio,
+                                                                                   build,
+                                                                                   solution,
+                                                                                   toolName) => clientGen.HandleAsync(new DotNetToolParameters(usevisualstudio, build, solution,
+                                                                                                                                                toolName)));
 
             return command;
         }

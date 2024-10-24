@@ -316,8 +316,7 @@ simpleapi todos update
 ```json
 // Patch BY ID
 simpleapi todos v1 patch
-{
-    "version": 1,
+{  
     "id": 1
     "todo": {
         "name": "Create ADR"

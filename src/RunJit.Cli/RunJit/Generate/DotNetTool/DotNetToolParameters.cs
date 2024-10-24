@@ -2,5 +2,6 @@
 {
     internal record DotNetToolParameters(bool UseVisualStudio,
                                          bool Build,
-                                         FileInfo SolutionFile);
+                                         FileInfo SolutionFile,
+                                         string ToolName);
 }

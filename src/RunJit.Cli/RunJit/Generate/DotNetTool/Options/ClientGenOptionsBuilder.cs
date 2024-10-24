@@ -26,6 +26,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             yield return Solution();
             yield return BuildMsBuild();
             yield return FromApi();
+            yield return ToolName();
         }
 
         private Option BuildUseVisualStudioOption()
@@ -57,7 +58,18 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                     Description = @"Generates an dotnet tool from an API to interact with the API"
                 }
             };
+        }
 
+        private Option ToolName()
+        {
+            return new Option(new[] { "--tool-name", "-tn" }, @"The name of the dotnet tool")
+                   {
+                       Required = true,
+                       Argument = new Argument<string>("toolName")
+                                  {
+                                      Description = @"The name of the dotnet tool"
+                                  }
+                   };
         }
     }
 }

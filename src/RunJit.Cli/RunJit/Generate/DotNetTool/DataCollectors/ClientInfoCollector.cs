@@ -35,7 +35,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var targetDirectory = solutionFileInfo;
 
             var projectName = $"{solutionFileInfo.NameWithoutExtension()}.DotNetTool";
-            var dotnetToolName = new DotNetToolName("dotnet-clientgen", "clientgen");
+            var dotnetToolName = new DotNetToolName($"dotnet-{clientGenParameters.ToolName}", clientGenParameters.ToolName);
 
             return new DotNetTool(projectName, dotnetToolName, solutionFileInfo, targetDirectory);
         }

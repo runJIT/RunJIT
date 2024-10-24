@@ -4,6 +4,8 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit.Generate.Client;
+using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen;
+using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Commands;
 using RunJit.Cli.Services.Endpoints;
 using RunJit.Cli.Services.Net;
 using RunJit.Cli.Services.Resharper;
@@ -12,6 +14,35 @@ using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
+    public static class AddDotnetToolGenExtension
+    {
+        public static void AddDotnetToolGen(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<NetToolGen>();
+
+            services.AddAppCodeGen();
+            services.AddAppBuilderCodeGen();
+            services.AddErrorHandlerCodeGen();
+            services.AddExceptionCodeGen();
+            services.AddConsoleServiceCodeGen();
+            services.AddProgramCodeGen();
+            services.AddStartupCodeGen();
+            services.AddCommandCodeGen();
+        }
+    }
+
+    internal class NetToolGen(IEnumerable<INetToolCodeGen> codeGenerators)
+    {
+        internal async Task GenerateAsync(FileInfo projectFileInfo,
+                                          DotNetToolInfos dotNetToolInfos)
+        {
+            foreach (var codeGenerator in codeGenerators)
+            {
+                await codeGenerator.GenerateAsync(projectFileInfo, dotNetToolInfos).ConfigureAwait(false);
+            }
+        }
+    }
+
     // Pulse.Sustainability.DotNetTool
     // -> Api
     //    -> Projects 
@@ -49,10 +80,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddApiVersionFinder();
             services.AddControllerParser();
             services.AddDotNetToolCreatorForController();
-            AddDomainFacedBuilderExtension.AddDomainFacedBuilder(services);
+            services.AddDomainFacedBuilder();
             services.AddDotNetToolBuilder();
             services.AddDotNetToolFactoryBuilder();
-            AddModelBuilderExtension.AddModelBuilder(services);
+            services.AddModelBuilder();
             services.AddSolutionFileModifier();
             services.AddResharperSettingsBuilder();
 
@@ -62,6 +93,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddTestStructureWriter();
             services.AddRestructureController();
             services.AddConvertControllerInfosToDotnetToolStructure();
+
+            services.AddDotnetToolGen();
 
             services.AddSingletonIfNotExists<DotNetToolCreator>();
         }
@@ -73,7 +106,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                      IDotNet dotNet,
                                      IConvertControllerInfosToDotnetToolStructure convertControllerInfos,
                                      MinimalApiEndpointParser minimalApiEndpointParser,
-                                     OrganizeMinimalEndpoints organizeMinimalEndpoints)
+                                     OrganizeMinimalEndpoints organizeMinimalEndpoints,
+                                     NetToolGen netToolGen)
     {
         internal async Task GenerateDotNetToolAsync(DotNetTool client,
                                                     FileInfo clientSolution)
@@ -83,7 +117,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var dotnettoolBuilder = "DotNetTool.Builder";
 
             var dotnetToolBuilderExists = await dotnetTool.ExistsAsync(dotnettoolBuilder).ConfigureAwait(false);
-
             if (dotnetToolBuilderExists.IsNull())
             {
                 var installResult = await dotnetTool.InstallAsync(dotnettoolBuilder).ConfigureAwait(false);
@@ -94,11 +127,32 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                 }
             }
 
+           
+
+            // 4. Create new project
+            // 5. Add all helper classes
+            //    App
+            //    - App
+            //    - AppBuilder
+            //    ErrorHandling
+            //    - ErrorHandler
+            //    - Exception
+            //    Services
+            //    - ConsoleService
+            //    MyTool (The cli which have to be generated)
+            //    - Users
+            //      - V1
+            //        - Add
+            //    Program.cs
+            //    Startup.cs
+
+
             // 1. Build the target solution first
-            await dotNet.BuildAsync(clientSolution).ConfigureAwait(false);
+            //await dotNet.BuildAsync(clientSolution).ConfigureAwait(false);
 
             // 2. Parse the solution
             var parsedSolution = new SolutionFileInfo(clientSolution.FullName).Parse();
+
 
             // 3. Parse all C# files
             var allSyntaxTrees = parsedSolution.ProductiveProjects.SelectMany(p => p.CSharpFileInfos.Select(c => c.Parse())).ToImmutableList();
@@ -123,13 +177,54 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var mappedToEndpoints = organizedEndpoints.Any() ? organizedEndpoints : controllerInfos.ToEndpointInfos();
 
             var dotnetToolStructure = convertControllerInfos.ConvertTo(mappedToEndpoints, client);
-            // 6. Check that needed cli tool builder is installed
+
+            // ----------------------------------------------------------------------------------------------------------------------------------------
+            // POC starts here
+            // 1. Check if cli project already exists
+            var dotNetToolProject = parsedSolution.ProductiveProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion == client.ProjectName);
+            if (dotNetToolProject.IsNotNull())
+            {
+                // 2. Remove project
+                await dotNet.RemoveProjectFromSolutionAsync(clientSolution, dotNetToolProject.ProjectFileInfo.Value).ConfigureAwait(false);
+
+                // 3. If exists remove all files
+                dotNetToolProject.ProjectFileInfo.Value.Directory?.Delete(true);
+            }
+
+            var netToolFolder = new DirectoryInfo(Path.Combine(clientSolution.Directory!.FullName, client.ProjectName));
+            if (netToolFolder.Exists)
+            {
+                netToolFolder.Delete(true);
+            }
+
+
+            // 4. Create new project
+            // dotnet new console --output folder1/folder2/myapp
+            var target = Path.Combine(clientSolution.Directory!.FullName, client.ProjectName);
+            await dotNet.RunAsync("dotnet", $"new console --output {target}").ConfigureAwait(false);
+
+            var dotnetToolProject = new FileInfo(Path.Combine(target, $"{client.ProjectName}.csproj"));
+            if (dotnetToolProject.NotExists())
+            {
+                throw new RunJitException($"Expected .NetTool project does not exists. {dotnetToolProject.FullName}");
+            }
+
+            // 5. Code Gen
+            await netToolGen.GenerateAsync(dotnetToolProject, dotnetToolStructure).ConfigureAwait(false);
+
+
+            // Add new net tool project into solution
+            // 2. Remove project
+            await dotNet.AddProjectToSolutionAsync(clientSolution, dotnetToolProject).ConfigureAwait(false);
+            
+            // ----------------------------------------------------------------------------------------------------------------------------------------
+
+            // 9. Check that needed cli tool builder is installed
             var json = dotnetToolStructure.ToJson();
             var file = Path.Combine(Environment.CurrentDirectory, $"{Guid.NewGuid()}.json");
             await File.WriteAllTextAsync(file, json).ConfigureAwait(false);
 
             await dotNet.RunAsync("dotnet", $"newtool --from-file {file}").ConfigureAwait(false);
-
 
             await Task.CompletedTask;
         }
@@ -145,7 +240,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal interface IConvertControllerInfosToDotnetToolStructure
     {
-        ConvertControllerInfosToDotnetToolStructure.DotNetToolInfos ConvertTo(IImmutableList<EndpointGroup> endpointGroups,
+        DotNetToolInfos ConvertTo(IImmutableList<EndpointGroup> endpointGroups,
                                                                               DotNetTool client);
     }
 
@@ -154,26 +249,24 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         public DotNetToolInfos ConvertTo(IImmutableList<EndpointGroup> endpointGroups,
                                          DotNetTool client)
         {
-            var projectname = client.ProjectName.Split(".").First().ToLowerInvariant();
+            var projectname = client.ProjectName;
             var parameterInfo = new ParameterInfo();
 
-            parameterInfo.Value = projectname;
-            parameterInfo.Name = projectname;
+            parameterInfo.Value = client.DotNetToolName.NormalizedName;
+            parameterInfo.Name = client.DotNetToolName.NormalizedName;
             parameterInfo.Description = "First try to generate a dotnet tool from an api";
             parameterInfo.Options = new List<OptionInfoInfo>();
 
             // convert controller infos into dotnet tool structure
+            // endpointGroups are grouped by version
             foreach (var endpointGroup in endpointGroups)
             {
-                if (endpointGroup.Version.Normalized != "V1")
+                var versionCommand = new SubCommand()
                 {
-                    continue;
-                }
-
-                if (endpointGroup.GroupName.Contains("Filter", StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
+                    Name = endpointGroup.Version.Normalized,
+                    Description = endpointGroup.Version.Normalized,
+                    Value = endpointGroup.Version.Normalized,
+                };
 
                 var command = new SubCommand()
                 {
@@ -181,6 +274,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                     Description = endpointGroup.GroupName,
                     Value = endpointGroup.GroupName,
                 };
+
+
+                command.SubCommands.Add(versionCommand);
 
                 // each domain is a command
                 foreach (var endoint in endpointGroup.Endpoints)
@@ -191,7 +287,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                         continue;
                     }
 
-                    var subCommand = new SubCommand()
+                    var endpointCommand = new SubCommand()
                     {
                         Name = endoint.SwaggerOperationId,
                         Description = endoint.SwaggerOperationId,
@@ -215,7 +311,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                     //    });
                     //}
 
-                    command.SubCommands.Add(subCommand);
+                    versionCommand.SubCommands.Add(endpointCommand);
                 }
 
                 parameterInfo.SubCommands.Add(command);
@@ -224,92 +320,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var dotnetToolInfos = new DotNetToolInfos()
             {
                 ProjectName = projectname,
-                DotNetToolName = new DotNetToolName() { Name = projectname },
+                DotNetToolName = new DotNetToolName() { Name = client.DotNetToolName.NormalizedName },
                 ParameterInfo = parameterInfo
             };
 
             return dotnetToolInfos;
-        }
-
-        internal record ArgumentInfo
-        {
-            public string Description { get; init; } = string.Empty;
-
-            public string Type { get; init; } = string.Empty;
-
-            public string Name { get; init; } = string.Empty;
-        }
-
-        internal record DotNetToolName
-        {
-            public string Name { get; init; } = string.Empty;
-        }
-
-        internal record OptionInfo
-        {
-            public string Alias { get; init; } = string.Empty;
-
-            public string Description { get; init; } = string.Empty;
-
-            public bool IsRequired { get; init; }
-
-            public ArgumentInfo? Argument { get; init; } = null;
-
-            public string ArgumentInfoName { get; init; } = string.Empty;
-
-            public string Value { get; init; } = string.Empty;
-
-            public string Name { get; init; } = string.Empty;
-        }
-
-        internal class ParameterInfo
-        {
-            public List<SubCommand> SubCommands { get; init; } = new List<SubCommand>();
-
-            public List<OptionInfoInfo> Options { get; set; } = new List<OptionInfoInfo>();
-
-            public ArgumentInfo? Argument { get; init; } = null;
-
-            public string Description { get; set; } = string.Empty;
-
-            public string Value { get; set; } = string.Empty;
-
-            public string Name { get; set; } = string.Empty;
-        }
-
-        internal record DotNetToolInfos
-        {
-            public string ProjectName { get; init; } = string.Empty;
-
-            public required DotNetToolName DotNetToolName { get; init; }
-
-            public required ParameterInfo ParameterInfo { get; init; }
-        }
-
-        internal record SubCommand
-        {
-            public List<SubCommand> SubCommands { get; init; } = new List<SubCommand>();
-
-            public List<OptionInfo> Options { get; init; } = new List<OptionInfo>();
-
-            public ArgumentInfo? Argument { get; init; } = null;
-
-            public string Description { get; init; } = string.Empty;
-
-            public string Value { get; init; } = string.Empty;
-
-            public string Name { get; init; } = string.Empty;
-        }
-
-        internal record OptionInfoInfo
-        {
-            public string Alias { get; } = string.Empty;
-
-            public string Description { get; } = string.Empty;
-
-            public bool IsIsRequired { get; }
-
-            public ArgumentInfo? Argument { get; set; } = null;
         }
     }
 }

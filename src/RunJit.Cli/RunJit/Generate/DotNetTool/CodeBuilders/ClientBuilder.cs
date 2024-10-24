@@ -46,16 +46,17 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     //         public AccountsFacade Accounts { get; init; }  <-- PropertiesBuilder
     //     }
     // }
-    internal class DotNetToolBuilder(
-        UsingsBuilder usingsBuilder,
-        ParameterBuilder parameterBuilder,
-        AssignExpressionBuilder assignExpressionBuilder,
-        ServiceRegistrationBuilder serviceRegistrationBuilder,
-        PropertiesBuilder propertiesBuilder)
+    internal class DotNetToolBuilder(UsingsBuilder usingsBuilder,
+                                     ParameterBuilder parameterBuilder,
+                                     AssignExpressionBuilder assignExpressionBuilder,
+                                     ServiceRegistrationBuilder serviceRegistrationBuilder,
+                                     PropertiesBuilder propertiesBuilder)
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("Pulse.Generate.DotNetTool.Templates.client.rps");
 
-        public GeneratedDotNetTool BuildFor(IImmutableList<GeneratedFacade> facades, string projectName, string clientName)
+        public GeneratedDotNetTool BuildFor(IImmutableList<GeneratedFacade> facades,
+                                            string projectName,
+                                            string clientName)
         {
             var parameters = parameterBuilder.BuildFrom(facades);
             var serviceRegistrations = serviceRegistrationBuilder.BuildFrom(facades);

@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal class ParameterNormalizer
     {
-        internal IImmutableList<Parameter> Normalize(Method method, IImmutableList<ParameterInfo> reflectionParameters, IImmutableList<DeclarationToType> allModels)
+        internal IImmutableList<Parameter> Normalize(Method method, IImmutableList<System.Reflection.ParameterInfo> reflectionParameters, IImmutableList<DeclarationToType> allModels)
         {
             return method.Parameters.Select(p =>
             {

@@ -10,7 +10,6 @@ namespace RunJit.Cli.Test.SystemTest
     [TestClass]
     public class GenerateDotNetToolTest : GlobalSetup
     {
-        private const string ModuleName = "from-sql";
         private const string BasePath = "api/from-sql";
 
         [TestMethod]       
@@ -84,7 +83,10 @@ namespace RunJit.Cli.Test.SystemTest
             yield return ".nettool";
             yield return "--solution";
             yield return request.Solution.FullName;
+            yield return "--tool-name";
+            yield return "myapi";
             yield return "--from-api";
+
         }
     }
 }
