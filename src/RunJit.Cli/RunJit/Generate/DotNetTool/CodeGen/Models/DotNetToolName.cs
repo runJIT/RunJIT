@@ -1,6 +1,6 @@
 ﻿using Argument.Check;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     public class DotNetToolName
     {

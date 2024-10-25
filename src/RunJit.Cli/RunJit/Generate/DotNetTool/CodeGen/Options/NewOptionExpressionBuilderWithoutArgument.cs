@@ -1,8 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Options
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class NewOptionExpressionBuilderWithoutArgument : INewOptionExpressionBuilder
     {
@@ -28,7 +27,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Options
         {
             Throw.IfNull(() => optionInfo);
 
-            return optionInfo.Argument.IsNull();
+            return ObjectExtensions.IsNull((object?)optionInfo.Argument);
         }
     }
 }

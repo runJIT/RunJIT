@@ -1,8 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Parameter
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class ParameterWithoutArgsOrOptionsClassBuilder : IParameterSpecificClassBuilder
     {
@@ -35,7 +34,7 @@ namespace $namespace$
         {
             Throw.IfNull(() => parameterInfo);
 
-            return parameterInfo.Argument.IsNull() && parameterInfo.Options.IsNullOrEmpty();
+            return ObjectExtensions.IsNull((object?)parameterInfo.Argument) && parameterInfo.Options.IsNullOrEmpty();
         }
     }
 }

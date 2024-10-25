@@ -1,8 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Options
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class NewOptionExpressionBuilderWithArgument : INewOptionExpressionBuilder
     {
@@ -22,7 +21,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Options
 
             var newTemplate = OptionArgumentTemplate.Replace("$option-name$", optionInfo.Value)
                                                     .Replace("$option-alias$", optionInfo.Alias)
-                                                    .Replace("$option-argument-name$", optionInfo.NormalizedName.FirstCharToLower())
+                                                    .Replace("$option-argument-name$", global::Extensions.Pack.StringExtensions.FirstCharToLower((string)optionInfo.NormalizedName))
                                                     .Replace("$option-description$", optionInfo.Description)
                                                     .Replace("$required-value$", optionInfo.IsIsRequired.ToString().ToLower())
                                                     .Replace("$type$", optionInfo.Argument.OptimizedType)
@@ -35,7 +34,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Options
         {
             Throw.IfNull(() => optionInfo);
 
-            return optionInfo.Argument.IsNotNull();
+            return ObjectExtensions.IsNotNull((object?)optionInfo.Argument);
         }
     }
 }

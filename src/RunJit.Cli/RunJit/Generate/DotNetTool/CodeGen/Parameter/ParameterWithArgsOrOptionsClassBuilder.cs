@@ -1,8 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Parameter
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class ParameterWithArgsOrOptionsClassBuilder : IParameterSpecificClassBuilder
     {
@@ -58,7 +57,7 @@ $properties$
         {
             Throw.IfNull(() => parameterInfo);
 
-            return parameterInfo.Argument.IsNotNull() || parameterInfo.Options.Any();
+            return ObjectExtensions.IsNotNull((object?)parameterInfo.Argument) || parameterInfo.Options.Any();
         }
 
         private string BuildPropertyString(IEnumerable<Property> properties)

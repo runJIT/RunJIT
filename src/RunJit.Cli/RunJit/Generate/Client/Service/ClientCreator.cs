@@ -3,6 +3,7 @@ using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Api.Client;
+using RunJit.Cli.Services;
 using RunJit.Cli.Services.Endpoints;
 using RunJit.Cli.Services.Resharper;
 using Solution.Parser.CSharp;

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     [DebuggerDisplay("{" + nameof(Value) + "}")]
     public abstract class InfoBase(string value,

@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal class ResponseTypeNormalizer
     {
-        internal ResponseType GetResponseType(MethodInfo methodInfo,
+        internal ResponseType GetResponseType(System.Reflection.MethodInfo methodInfo,
                                               Method method,
                                               IImmutableList<DeclarationBase> declarationBases)
         {

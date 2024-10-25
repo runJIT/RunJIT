@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Extensions.Pack;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     [DebuggerDisplay("{" + nameof(Name) + "}")]
     internal sealed class CtorArgument(string type,

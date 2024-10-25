@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     [DebuggerDisplay("{" + nameof(InterfaceType) + "} - " + "{" + nameof(ImplementationType) + "}")]
     internal sealed class TypeToRegister(string interfaceType,

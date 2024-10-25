@@ -1,8 +1,6 @@
 ﻿using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Options;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.FileStructure
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class CreateOptionsStructure(IOptionInterfaceBuilder optionInterfaceBuilder,
                                                  IOptionImplementationBuilder optionImplementationBuilder,

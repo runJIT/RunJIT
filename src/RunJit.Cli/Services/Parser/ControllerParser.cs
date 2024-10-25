@@ -3,10 +3,11 @@ using System.Reflection;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.RunJit.Generate.Client;
 using RunJit.Cli.Services.Endpoints;
 using Solution.Parser.CSharp;
 
-namespace RunJit.Cli.RunJit.Generate.Client
+namespace RunJit.Cli.Services
 {
     internal static class AddControllerParserExtension
     {

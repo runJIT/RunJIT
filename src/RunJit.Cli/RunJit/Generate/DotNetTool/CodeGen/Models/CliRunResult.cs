@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     [DebuggerDisplay("ExitCode: '{" + nameof(ExitCode) + "}'")]
     internal sealed class CliRunResult(int exitCode,

@@ -1,8 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Commands
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class CommandHandlerWithArgsOrOptionBuilder : ICommandHandlerStringBuilder
     {
@@ -27,7 +26,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Commands
         {
             Throw.IfNull(() => parameterInfo);
 
-            return parameterInfo.Argument.IsNotNull() || parameterInfo.Options.Any();
+            return ObjectExtensions.IsNotNull((object?)parameterInfo.Argument) || parameterInfo.Options.Any();
         }
 
         private IEnumerable<CtorArgument> BuildCtorArguments(CommandInfo parameterInfo)
@@ -35,20 +34,20 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Commands
             Throw.IfNull(() => parameterInfo);
 
             var argumentInfo = parameterInfo.Argument;
-            if (argumentInfo.IsNotNull())
+            if (ObjectExtensions.IsNotNull((object?)argumentInfo))
             {
-                yield return new CtorArgument(argumentInfo.OptimizedType, argumentInfo.NormalizedName.FirstCharToLower());
+                yield return new CtorArgument(argumentInfo.OptimizedType, global::Extensions.Pack.StringExtensions.FirstCharToLower((string)argumentInfo.NormalizedName));
             }
 
             foreach (var optionInfo in parameterInfo.Options)
             {
-                if (optionInfo.Argument.IsNotNull())
+                if (ObjectExtensions.IsNotNull((object?)optionInfo.Argument))
                 {
-                    yield return new CtorArgument(optionInfo.Argument.OptimizedType, optionInfo.NormalizedName.FirstCharToLower());
+                    yield return new CtorArgument(optionInfo.Argument.OptimizedType, global::Extensions.Pack.StringExtensions.FirstCharToLower((string)optionInfo.NormalizedName));
                 }
                 else
                 {
-                    yield return new CtorArgument("bool", optionInfo.NormalizedName.FirstCharToLower());
+                    yield return new CtorArgument("bool", global::Extensions.Pack.StringExtensions.FirstCharToLower((string)optionInfo.NormalizedName));
                 }
             }
         }

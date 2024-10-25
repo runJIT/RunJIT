@@ -3,10 +3,11 @@ using System.Reflection;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
+using RunJit.Cli.RunJit.Generate.Client;
 using RunJit.Cli.Services.Endpoints;
 using Solution.Parser.CSharp;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.Services
 {
     internal static class AddMethodParserExtension
     {
@@ -22,12 +23,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class MethodParser(
-        DataTypeFinder dataTypeFinder,
-        UrlBuilder urlBuilder,
-        ModelNormalizer modelNormalizer,
-        ParameterNormalizer parameterNormalizer,
-        ResponseTypeNormalizer responseTypeNormalizer)
+    internal class MethodParser(DataTypeFinder dataTypeFinder,
+                                UrlBuilder urlBuilder,
+                                ModelNormalizer modelNormalizer,
+                                ParameterNormalizer parameterNormalizer,
+                                ResponseTypeNormalizer responseTypeNormalizer)
     {
         internal IImmutableList<MethodInfos> Parse(IImmutableList<Method> methods,
                                                    string baseUrl,
@@ -36,7 +36,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         {
             // Only methods which represents a http endpoint
             var publicMethods = methods.Where(m => m.Attributes.Any(attribute => attribute.Name.StartWith("Http"))).ToImmutableList();
-            return publicMethods.Select(method => Parse(method, baseUrl, reflectionTypes, syntaxTrees)).ToImmutableList();
+
+            return publicMethods.Select(method => Parse(method, baseUrl, reflectionTypes,
+                                                        syntaxTrees)).ToImmutableList();
         }
 
         private MethodInfos Parse(Method method,
@@ -72,41 +74,43 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var responseType = responseTypeNormalizer.GetResponseType(methodReflection, method, normalizeDataTypes);
 
             return new MethodInfos
-            {
-                Name = method.Name,
-                SwaggerOperationId = swaggerOperationId,
-                HttpAction = httpAction,
-                ProduceResponseTypes = produceResponseType,
-                RelativeUrl = relativeUrl,
-                Parameters = parameters,
-                ResponseType = responseType,
-                RequestType = null, // ToDo not sure how realy to detect ot many possibilities here,
-                Attributes = method.Attributes,
-                Models = normalizeDataTypes
-            };
+                   {
+                       Name = method.Name,
+                       SwaggerOperationId = swaggerOperationId,
+                       HttpAction = httpAction,
+                       ProduceResponseTypes = produceResponseType,
+                       RelativeUrl = relativeUrl,
+                       Parameters = parameters,
+                       ResponseType = responseType,
+                       RequestType = null, // ToDo not sure how realy to detect ot many possibilities here,
+                       Attributes = method.Attributes,
+                       Models = normalizeDataTypes
+                   };
         }
 
         private static IImmutableList<ProduceResponseTypes> GetProduceResponseType(Method method)
         {
             var produceResponseType = method.Attributes.Where(attribute => attribute.Name == "ProducesResponseType")
                                             .Select(produce =>
-                                            {
-                                                var type = produce.Arguments.FirstOrDefault() ?? string.Empty;
-                                                var code = produce.Arguments.LastOrDefault()?.ToIntOrDefault() ?? 0;
-                                                return new ProduceResponseTypes(type, code);
-                                            }).ToImmutableList();
+                                                    {
+                                                        var type = produce.Arguments.FirstOrDefault() ?? string.Empty;
+                                                        var code = produce.Arguments.LastOrDefault()?.ToIntOrDefault() ?? 0;
+
+                                                        return new ProduceResponseTypes(type, code);
+                                                    }).ToImmutableList();
+
             return produceResponseType;
         }
 
-
-        private IImmutableList<MethodInfo> FilterByReturnType(IImmutableList<MethodInfo> methods, Method method)
+        private IImmutableList<MethodInfo> FilterByReturnType(IImmutableList<MethodInfo> methods,
+                                                              Method method)
         {
             var filteredMethods = methods.Where(m =>
-            {
-                var returnTypes = m.ReturnType.GetAllGenericArguments();
-                return Enumerable.Any<Type>(returnTypes, t => method.ReturnParameter.Contains((string)t.Name));
-            }).ToImmutableList();
+                                                {
+                                                    var returnTypes = m.ReturnType.GetAllGenericArguments();
 
+                                                    return returnTypes.Any(t => method.ReturnParameter.Contains(t.Name));
+                                                }).ToImmutableList();
 
             return filteredMethods;
         }

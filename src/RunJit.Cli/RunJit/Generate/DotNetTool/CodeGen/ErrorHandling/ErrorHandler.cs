@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     public static class AddErrorHandlerCodeGenExtension
     {
@@ -70,7 +70,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
-                                        DotNetTool dotNetTool)
+                                        DotNetToolInfos dotNetTool)
         {
             // 1. Add ErrorHandling Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "ErrorHandling"));

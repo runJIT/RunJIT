@@ -1,7 +1,6 @@
 ﻿using Argument.Check;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Options
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class NewOptionExpressionService : INewOptionExpressionService
     {

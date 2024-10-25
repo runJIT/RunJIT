@@ -1,16 +1,14 @@
 ﻿using System.Diagnostics;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    [DebuggerDisplay("Project: {" + nameof(ProjectName) + "} ToolName: {" + nameof(Models.DotNetToolName.Name) + "}")]
-    internal sealed class DotNetTool(string projectName,
-                                     DotNetToolName dotNetToolName,
-                                     CommandInfo parameterInfo)
+    [DebuggerDisplay("Project: {" + nameof(ProjectName) + "} ToolName: {" + nameof(Generate.DotNetTool.DotNetToolName.Name) + "}")]
+    internal record DotNetToolInfos
     {
-        public string ProjectName { get; } = projectName;
+        public string ProjectName { get; init; } = string.Empty;
 
-        public DotNetToolName DotNetToolName { get; } = dotNetToolName;
+        public required DotNetToolName DotNetToolName { get; init; }
 
-        public CommandInfo ParameterInfo { get; } = parameterInfo;
+        public required CommandInfo CommandInfo { get; init; }
     }
 }

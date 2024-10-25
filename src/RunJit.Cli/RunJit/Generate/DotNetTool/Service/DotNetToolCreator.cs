@@ -4,8 +4,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit.Generate.Client;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Commands;
+using RunJit.Cli.Services;
 using RunJit.Cli.Services.Endpoints;
 using RunJit.Cli.Services.Net;
 using RunJit.Cli.Services.Resharper;
@@ -117,6 +116,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var dotnettoolBuilder = "DotNetTool.Builder";
 
             var dotnetToolBuilderExists = await dotnetTool.ExistsAsync(dotnettoolBuilder).ConfigureAwait(false);
+
             if (dotnetToolBuilderExists.IsNull())
             {
                 var installResult = await dotnetTool.InstallAsync(dotnettoolBuilder).ConfigureAwait(false);
@@ -126,8 +126,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                     throw new RunJitException($"Could not install {dotnettoolBuilder}");
                 }
             }
-
-           
 
             // 4. Create new project
             // 5. Add all helper classes
@@ -146,13 +144,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             //    Program.cs
             //    Startup.cs
 
-
             // 1. Build the target solution first
             //await dotNet.BuildAsync(clientSolution).ConfigureAwait(false);
 
             // 2. Parse the solution
             var parsedSolution = new SolutionFileInfo(clientSolution.FullName).Parse();
-
 
             // 3. Parse all C# files
             var allSyntaxTrees = parsedSolution.ProductiveProjects.SelectMany(p => p.CSharpFileInfos.Select(c => c.Parse())).ToImmutableList();
@@ -182,6 +178,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             // POC starts here
             // 1. Check if cli project already exists
             var dotNetToolProject = parsedSolution.ProductiveProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion == client.ProjectName);
+
             if (dotNetToolProject.IsNotNull())
             {
                 // 2. Remove project
@@ -192,11 +189,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             }
 
             var netToolFolder = new DirectoryInfo(Path.Combine(clientSolution.Directory!.FullName, client.ProjectName));
+
             if (netToolFolder.Exists)
             {
                 netToolFolder.Delete(true);
             }
-
 
             // 4. Create new project
             // dotnet new console --output folder1/folder2/myapp
@@ -204,6 +201,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             await dotNet.RunAsync("dotnet", $"new console --output {target}").ConfigureAwait(false);
 
             var dotnetToolProject = new FileInfo(Path.Combine(target, $"{client.ProjectName}.csproj"));
+
             if (dotnetToolProject.NotExists())
             {
                 throw new RunJitException($"Expected .NetTool project does not exists. {dotnetToolProject.FullName}");
@@ -212,11 +210,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             // 5. Code Gen
             await netToolGen.GenerateAsync(dotnetToolProject, dotnetToolStructure).ConfigureAwait(false);
 
-
             // Add new net tool project into solution
             // 2. Remove project
             await dotNet.AddProjectToSolutionAsync(clientSolution, dotnetToolProject).ConfigureAwait(false);
-            
+
             // ----------------------------------------------------------------------------------------------------------------------------------------
 
             // 9. Check that needed cli tool builder is installed
@@ -241,7 +238,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal interface IConvertControllerInfosToDotnetToolStructure
     {
         DotNetToolInfos ConvertTo(IImmutableList<EndpointGroup> endpointGroups,
-                                                                              DotNetTool client);
+                                  DotNetTool client);
     }
 
     internal class ConvertControllerInfosToDotnetToolStructure : IConvertControllerInfosToDotnetToolStructure
@@ -249,82 +246,100 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         public DotNetToolInfos ConvertTo(IImmutableList<EndpointGroup> endpointGroups,
                                          DotNetTool client)
         {
-            var projectname = client.ProjectName;
-            var parameterInfo = new ParameterInfo();
+            //var projectname = client.ProjectName;
+            //var parameterInfo = new CommandInfo(client.DotNetToolName.NormalizedName,
+            //                                    client.DotNetToolName.NormalizedName,
+            //                                    client.DotNetToolName.NormalizedName,
+            //                                    "First try to generate a dotnet tool from an api",
+            //                                    null,
+            //                                    ImmutableList<OptionInfo>.Empty,
 
-            parameterInfo.Value = client.DotNetToolName.NormalizedName;
-            parameterInfo.Name = client.DotNetToolName.NormalizedName;
-            parameterInfo.Description = "First try to generate a dotnet tool from an api";
-            parameterInfo.Options = new List<OptionInfoInfo>();
+            //                                    )
 
-            // convert controller infos into dotnet tool structure
-            // endpointGroups are grouped by version
-            foreach (var endpointGroup in endpointGroups)
-            {
-                var versionCommand = new SubCommand()
-                {
-                    Name = endpointGroup.Version.Normalized,
-                    Description = endpointGroup.Version.Normalized,
-                    Value = endpointGroup.Version.Normalized,
-                };
+            //parameterInfo.Value = client.DotNetToolName.NormalizedName;
+            //parameterInfo.Name = client.DotNetToolName.NormalizedName;
+            //parameterInfo.Description = "First try to generate a dotnet tool from an api";
+            //parameterInfo.Options = new List<OptionInfoInfo>();
 
-                var command = new SubCommand()
-                {
-                    Name = endpointGroup.GroupName,
-                    Description = endpointGroup.GroupName,
-                    Value = endpointGroup.GroupName,
-                };
+            //// convert controller infos into dotnet tool structure
+            //// endpointGroups are grouped by version
+            //foreach (var endpointGroup in endpointGroups)
+            //{
+            //    var versionCommand = new SubCommand()
+            //    {
+            //        Name = endpointGroup.Version.Normalized,
+            //        Description = endpointGroup.Version.Normalized,
+            //        Value = endpointGroup.Version.Normalized,
+            //    };
 
+            //    var command = new SubCommand()
+            //    {
+            //        Name = endpointGroup.GroupName,
+            //        Description = endpointGroup.GroupName,
+            //        Value = endpointGroup.GroupName,
+            //    };
 
-                command.SubCommands.Add(versionCommand);
+            //    command.SubCommands.Add(versionCommand);
 
-                // each domain is a command
-                foreach (var endoint in endpointGroup.Endpoints)
-                {
-                    // Temp tool build do not allow exceptions
-                    if (endoint.Name.Contains("Exception", StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
+            //    // each domain is a command
+            //    foreach (var endoint in endpointGroup.Endpoints)
+            //    {
+            //        // Temp tool build do not allow exceptions
+            //        if (endoint.Name.Contains("Exception", StringComparison.OrdinalIgnoreCase))
+            //        {
+            //            continue;
+            //        }
 
-                    var endpointCommand = new SubCommand()
-                    {
-                        Name = endoint.SwaggerOperationId,
-                        Description = endoint.SwaggerOperationId,
-                        Value = endoint.SwaggerOperationId,
-                    };
+            //        var endpointCommand = new SubCommand()
+            //        {
+            //            Name = endoint.SwaggerOperationId,
+            //            Description = endoint.SwaggerOperationId,
+            //            Value = endoint.SwaggerOperationId,
+            //        };
 
-                    //foreach (var parameter in method.Parameters)
-                    //{
-                    //    subCommand.OptionInfos.Add(new OptionInfo()
-                    //    {
-                    //        Name = parameter.Name,
-                    //        Description = parameter.Name,
-                    //        IsRequired = parameter.IsOptional,
-                    //        Value = parameter.Name,
-                    //        ArgumentInfo = new ArgumentInfo()
-                    //        {
-                    //            Name = parameter.Name,
-                    //            Description = parameter.Name,
-                    //            Type = parameter.Type
-                    //        }
-                    //    });
-                    //}
+            //        //foreach (var parameter in method.Parameters)
+            //        //{
+            //        //    subCommand.OptionInfos.Add(new OptionInfo()
+            //        //    {
+            //        //        Name = parameter.Name,
+            //        //        Description = parameter.Name,
+            //        //        IsRequired = parameter.IsOptional,
+            //        //        Value = parameter.Name,
+            //        //        ArgumentInfo = new ArgumentInfo()
+            //        //        {
+            //        //            Name = parameter.Name,
+            //        //            Description = parameter.Name,
+            //        //            Type = parameter.Type
+            //        //        }
+            //        //    });
+            //        //}
 
-                    versionCommand.SubCommands.Add(endpointCommand);
-                }
+            //        versionCommand.SubCommands.Add(endpointCommand);
+            //    }
 
-                parameterInfo.SubCommands.Add(command);
-            }
+            //    parameterInfo.SubCommands.Add(command);
+            //}
 
-            var dotnetToolInfos = new DotNetToolInfos()
-            {
-                ProjectName = projectname,
-                DotNetToolName = new DotNetToolName() { Name = client.DotNetToolName.NormalizedName },
-                ParameterInfo = parameterInfo
-            };
+            //var dotnetToolInfos = new DotNetToolInfos()
+            //{
+            //    ProjectName = projectname,
+            //    DotNetToolName = new DotNetToolName() { Name = client.DotNetToolName.NormalizedName },
+            //    ParameterInfo = parameterInfo
+            //};
 
-            return dotnetToolInfos;
+            return new DotNetToolInfos
+                   {
+                       CommandInfo = new CommandInfo("",
+                                                     "",
+                                                     "",
+                                                     "",
+                                                     new ArgumentInfo(string.Empty, string.Empty, string.Empty,
+                                                                      string.Empty, string.Empty, string.Empty),
+                                                     ImmutableList<OptionInfo>.Empty,
+                                                     ImmutableList<CommandInfo>.Empty),
+                       DotNetToolName = new DotNetToolName("", ""),
+                       ProjectName = "",
+                   };
         }
     }
 }

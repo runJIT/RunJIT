@@ -1,4 +1,4 @@
-﻿namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen
+﻿namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class NameSpaceCollector
     {

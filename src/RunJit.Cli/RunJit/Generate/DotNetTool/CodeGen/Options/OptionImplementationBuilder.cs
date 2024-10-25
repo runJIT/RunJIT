@@ -1,8 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Options
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class OptionImplementationBuilder : IOptionImplementationBuilder
     {

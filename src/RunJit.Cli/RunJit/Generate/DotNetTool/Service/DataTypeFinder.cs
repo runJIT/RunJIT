@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     public class DataTypeFinder
     {
-        internal IImmutableList<DeclarationToType> FindDataType(MethodInfo methodInfo, IImmutableList<CSharpSyntaxTree> syntaxTrees)
+        internal IImmutableList<DeclarationToType> FindDataType(System.Reflection.MethodInfo methodInfo, IImmutableList<CSharpSyntaxTree> syntaxTrees)
         {
             var parameters = methodInfo.GetParameters().Select(p => p.ParameterType);
             var declaredTypes = parameters.Concat(methodInfo.ReturnType).ToImmutableList();

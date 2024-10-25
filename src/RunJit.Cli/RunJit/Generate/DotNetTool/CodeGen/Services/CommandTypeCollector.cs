@@ -1,7 +1,6 @@
 ﻿using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
 
     // Hint, System.CommandLine.Experimental needs one root command with one sub command

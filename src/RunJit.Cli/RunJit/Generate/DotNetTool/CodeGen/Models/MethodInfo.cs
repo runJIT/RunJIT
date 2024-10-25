@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     [DebuggerDisplay("{" + nameof(MethodName) + "}")]
     internal sealed class MethodInfo(string methodName,

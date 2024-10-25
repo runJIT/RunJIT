@@ -1,6 +1,4 @@
-﻿using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
-
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Commands
+﻿namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal interface IRootCommandInterfaceBuilder
     {

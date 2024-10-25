@@ -1,8 +1,6 @@
 ﻿using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Argument;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.FileStructure
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class CreateArgumentStructure(IArgumentInterfaceBuilder argumentInterfaceBuilder,
                                                   IArgumentBuilder argumentBuilder,
@@ -11,7 +9,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.FileStructure
     {
         public void Create(string projectName, CommandInfo parameter, CommandTypeCollector commandTypeCollector, string currentPath, NameSpaceCollector namespaceCollector, DirectoryInfo subCommnandDirectoryInfo, CommandInfo subCommand)
         {
-            if (subCommand.Argument.IsNull())
+            if (ObjectExtensions.IsNull((object?)subCommand.Argument))
             {
                 return;
             }

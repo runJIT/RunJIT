@@ -1,12 +1,11 @@
 ﻿using Argument.Check;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Argument
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class ArgumentBuilder : IArgumentBuilder
     {
         private const string Template =
-@"
+            @"
 namespace $namespace$
 {    
     internal sealed class $command-name$ArgumentBuilder : I$command-name$ArgumentBuilder
@@ -24,19 +23,22 @@ namespace $namespace$
     }
 }";
 
-        public string Build(string projectName, CommandInfo parameterInfo, string nameSpace)
+        public string Build(string projectName,
+                            CommandInfo parameterInfo,
+                            string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);
             Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var currentNamespace = $"{nameSpace}.Arguments";
+
             var newTemplate = Template.Replace("$project-name$", projectName)
-                .Replace("$command-name$", parameterInfo.NormalizedName)
-                .Replace("$argument-name$", parameterInfo.Argument.Name)
-                .Replace("$namespace$", currentNamespace)
-                .Replace("$type$", parameterInfo.Argument.OptimizedType)
-                .Replace("$argument-description$", parameterInfo.Argument.Description);
+                                      .Replace("$command-name$", parameterInfo.NormalizedName)
+                                      .Replace("$argument-name$", parameterInfo.Argument.Name)
+                                      .Replace("$namespace$", currentNamespace)
+                                      .Replace("$type$", parameterInfo.Argument.OptimizedType)
+                                      .Replace("$argument-description$", parameterInfo.Argument.Description);
 
             return newTemplate;
         }

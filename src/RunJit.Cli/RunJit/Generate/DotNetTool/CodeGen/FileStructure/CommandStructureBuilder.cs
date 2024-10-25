@@ -1,8 +1,6 @@
 ﻿using Extensions.Pack;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Commands;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.FileStructure
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class CommandStructureBuilder(ICommandBuilderSimple commandBuilderSimple,
                                                   ICommandBuilderWithOptions commandBuilderWithOptions,
@@ -19,19 +17,19 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.FileStructure
             }
 
             string? command = null;
-            if (subCommand.Argument.IsNull() && subCommand.Options.IsEmpty())
+            if (ObjectExtensions.IsNull((object?)subCommand.Argument) && subCommand.Options.IsEmpty())
             {
                 command = commandBuilderSimple.Build(projectName, subCommand, parameter, currentPath);
             }
-            else if (subCommand.Argument.IsNull() && subCommand.Options.Any())
+            else if (ObjectExtensions.IsNull((object?)subCommand.Argument) && subCommand.Options.Any())
             {
                 command = commandBuilderWithOptions.Build(projectName, subCommand, parameter, currentPath);
             }
-            else if (subCommand.Argument.IsNotNull() && subCommand.Options.IsEmpty())
+            else if (ObjectExtensions.IsNotNull((object?)subCommand.Argument) && subCommand.Options.IsEmpty())
             {
                 command = commandBuilderWithArgument.Build(projectName, subCommand, parameter, currentPath);
             }
-            else if (subCommand.Argument.IsNotNull() && subCommand.Options.Any())
+            else if (ObjectExtensions.IsNotNull((object?)subCommand.Argument) && subCommand.Options.Any())
             {
                 command = commandBuilderWithArgumentAndOption.Build(projectName, subCommand, parameter, currentPath);
             }

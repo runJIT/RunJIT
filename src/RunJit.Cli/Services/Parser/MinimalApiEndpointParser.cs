@@ -2,11 +2,12 @@
 using System.Text.RegularExpressions;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.RunJit.Generate.Client;
 using RunJit.Cli.Services.Endpoints;
 using Solution.Parser.CSharp;
 using Attribute = Solution.Parser.CSharp.Attribute;
 
-namespace RunJit.Cli.RunJit.Generate.Client
+namespace RunJit.Cli.Services
 {
     internal static class AddMinimalApiEndpointParserExtension
     {

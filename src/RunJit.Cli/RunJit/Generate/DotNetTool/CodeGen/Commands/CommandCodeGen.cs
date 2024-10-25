@@ -1,9 +1,8 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.FileStructure;
 using RunJit.Cli.Services;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Commands
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     public static class AddCommandCodeGenExtension
     {

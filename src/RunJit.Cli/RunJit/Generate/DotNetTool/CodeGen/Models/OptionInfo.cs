@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 [assembly: InternalsVisibleTo("DotNetTool.Builder.Test")]
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.CodeGen.Models
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     [method: JsonConstructor]
     public class OptionInfo(string value,
