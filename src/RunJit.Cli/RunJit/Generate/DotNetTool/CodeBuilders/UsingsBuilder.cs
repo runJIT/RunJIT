@@ -30,13 +30,16 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     // using PulseCore.DotNetTool.Api.Filter;
     internal class UsingsBuilder
     {
-        internal string BuildFrom(IImmutableList<GeneratedFacade> facades, string projectName)
+        internal string BuildFrom(IImmutableList<GeneratedFacade> facades,
+                                  string projectName)
         {
             var usings = facades.Select(facade => $"using {projectName}.{ClientGenConstants.Api}.{facade.Domain};").Flatten(Environment.NewLine);
+
             return usings;
         }
 
-        internal string BuildFrom(GeneratedDotNetTool generatedDotNetTool, string projectName)
+        internal string BuildFrom(GeneratedDotNetTool generatedDotNetTool,
+                                  string projectName)
         {
             var usings = CollectUsings(generatedDotNetTool).Flatten(Environment.NewLine);
 

@@ -37,6 +37,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             if (parameters.Build)
             {
                 var dotnetBuildResult = await processService.RunAsync("dotnet", $"build {parameters.SolutionFile.FullName}").ConfigureAwait(false);
+
                 if (dotnetBuildResult.ExitCode != 0)
                 {
                     return dotnetBuildResult.ExitCode;
@@ -50,6 +51,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             await dotNetToolCreator.GenerateDotNetToolAsync(client, parameters.SolutionFile).ConfigureAwait(false);
 
             consoleService.WriteSuccess($"Enjoy your new generated: '{client.ProjectName}' .net tool");
+
             return 0;
         }
     }

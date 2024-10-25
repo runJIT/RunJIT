@@ -4,7 +4,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     internal sealed class CreateParameterClassStructure(IParameterClassBuilder parameterClassBuilder) : IBuildCommandFileStructure
     {
-        public void Create(string projectName, CommandInfo parameter, CommandTypeCollector commandTypeCollector, string currentPath, NameSpaceCollector namespaceCollector, DirectoryInfo subCommnandDirectoryInfo, CommandInfo subCommand)
+        public void Create(string projectName,
+                           CommandInfo parameter,
+                           CommandTypeCollector commandTypeCollector,
+                           string currentPath,
+                           NameSpaceCollector namespaceCollector,
+                           DirectoryInfo subCommnandDirectoryInfo,
+                           CommandInfo subCommand)
         {
             if (!ObjectExtensions.IsNotNull((object?)subCommand.Argument) && !subCommand.Options.Any() && !subCommand.SubCommands.IsNullOrEmpty())
             {

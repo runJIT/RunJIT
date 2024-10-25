@@ -40,6 +40,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             }
 
             var result = stringBuilder.ToString();
+
             return result;
         }
     }

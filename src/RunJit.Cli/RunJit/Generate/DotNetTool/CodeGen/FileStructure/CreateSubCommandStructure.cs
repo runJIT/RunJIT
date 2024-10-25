@@ -5,19 +5,29 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class CreateSubCommandStructure(ICommandBuilderForSubCommands commandBuilderForSubCommands,
                                                     ISubCommandInterfaceBuilder subCommandInterfaceBuilder) : IBuildCommandFileStructure
     {
-        public void Create(string projectName, CommandInfo parameter, CommandTypeCollector commandTypeCollector, string currentPath, NameSpaceCollector namespaceCollector, DirectoryInfo subCommnandDirectoryInfo, CommandInfo subCommand)
+        public void Create(string projectName,
+                           CommandInfo parameter,
+                           CommandTypeCollector commandTypeCollector,
+                           string currentPath,
+                           NameSpaceCollector namespaceCollector,
+                           DirectoryInfo subCommnandDirectoryInfo,
+                           CommandInfo subCommand)
         {
             if (!subCommand.SubCommands.IsNotNull() || !subCommand.SubCommands.Any())
             {
                 return;
             }
 
-            var result = commandBuilderForSubCommands.Build(projectName, subCommand, parameter, currentPath);
+            var result = commandBuilderForSubCommands.Build(projectName, subCommand, parameter,
+                                                            currentPath);
+
             var filePath0 = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"{subCommand.NormalizedName}CommandBuilder.cs"));
 
             File.WriteAllText(filePath0.FullName, result);
 
-            var subCommandBuilder = subCommandInterfaceBuilder.Build(projectName, subCommand, parameter, currentPath);
+            var subCommandBuilder = subCommandInterfaceBuilder.Build(projectName, subCommand, parameter,
+                                                                     currentPath);
+
             var filePath1 = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"I{subCommand.NormalizedName}SubCommandBuilder.cs"));
 
             File.WriteAllText(filePath1.FullName, subCommandBuilder);

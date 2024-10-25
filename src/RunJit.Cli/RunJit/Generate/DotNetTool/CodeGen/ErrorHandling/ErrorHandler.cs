@@ -20,7 +20,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         using System.Threading.Tasks;
                                         using DotNetTool.Builder.Services;
                                         using DotNetTool.Builder.ToolBuilder.FromConsole.Services;
-                                        
+
                                         namespace DotNetTool.Builder.ErrorHandling
                                         {
                                             internal sealed class ErrorHandler(IConsoleService consoleService) : IErrorHandler
@@ -66,7 +66,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         }
-                                        
+
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
@@ -74,6 +74,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         {
             // 1. Add ErrorHandling Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "ErrorHandling"));
+
             if (appFolder.NotExists())
             {
                 appFolder.Create();

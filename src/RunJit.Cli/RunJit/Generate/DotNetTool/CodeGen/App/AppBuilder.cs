@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         private const string template = """
                                         using Microsoft.Extensions.DependencyInjection;
-                                        
+
                                         namespace DotNetTool.Builder.App
                                         {
                                             internal sealed class AppBuilder
@@ -39,6 +39,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         {
             // 1. Add App Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "App"));
+
             if (appFolder.NotExists())
             {
                 appFolder.Create();

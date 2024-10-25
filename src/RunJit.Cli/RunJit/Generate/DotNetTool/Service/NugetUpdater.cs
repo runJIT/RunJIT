@@ -17,11 +17,15 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal class NugetUpdater
     {
-        internal async Task UpdateAsync(SolutionFile solutionFile, ProjectFile project)
+        internal async Task UpdateAsync(SolutionFile solutionFile,
+                                        ProjectFile project)
         {
             // 1. Get all nuget packages in solution
-            var allNugetPackagesInSolution = solutionFile.Projects.SelectMany(p => p.PackageReferences).Select(p => new { Package = p, NugetVersion = NuGetVersion.Parse(p.PackageVersion.Value) }).ToImmutableList();
-
+            var allNugetPackagesInSolution = solutionFile.Projects.SelectMany(p => p.PackageReferences).Select(p => new
+                                                                                                                    {
+                                                                                                                        Package = p,
+                                                                                                                        NugetVersion = NuGetVersion.Parse(p.PackageVersion.Value)
+                                                                                                                    }).ToImmutableList();
 
             // 2. Read csproj first, we do not want write continuously the same file, just once if needed
             var csprojContent = await File.ReadAllTextAsync(project.ProjectFileInfo.Value.FullName).ConfigureAwait(false);
@@ -32,6 +36,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             {
                 // If package not included in the client csproj go next.
                 var otherPackages = allNugetPackagesInSolution.Where(p => p.Package.Include == package.Include).ToImmutableList();
+
                 if (otherPackages.IsEmpty)
                 {
                     continue;
@@ -42,6 +47,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
                 // Detect highest nuget version
                 var maxVersion = otherPackages.MaxBy(p => p.NugetVersion.Version);
+
                 if (maxVersion.IsNull())
                 {
                     continue;
@@ -52,7 +58,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                 {
                     // Important unique reference is Include + Version. Do not just replace a version can go wrong
                     newCsprojContent = newCsprojContent.Replace($@"Include=""{package.Include}"" Version=""{package.PackageVersion.Value}""",
-                        $@"Include=""{package.Include}"" Version=""{maxVersion.NugetVersion.OriginalVersion}""");
+                                                                $@"Include=""{package.Include}"" Version=""{maxVersion.NugetVersion.OriginalVersion}""");
                 }
             }
 

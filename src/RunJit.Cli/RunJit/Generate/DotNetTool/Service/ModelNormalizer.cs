@@ -24,6 +24,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             {
                 var newDeclarationType = declarationToType.Declaration;
                 var properties = declarationToType.Type.GetProperties();
+
                 foreach (var property in properties)
                 {
                     // Important generic types, and crazy types like T<T1<T2<T3>>> can be declared 
@@ -42,7 +43,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                         {
                             continue;
                         }
-
 
                         // If property type is matching data model use simplified version :) 
                         if (declarationToTypes.Any(declaratonToType => declaratonToType.Declaration.FullQualifiedName == type.FullName))
@@ -67,7 +67,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-
     internal static class StringExtensions
     {
         internal static string ReplaceWholeWord(this string sourceString,
@@ -76,7 +75,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 RegexOptions regexOptions = RegexOptions.IgnoreCase)
         {
             var pattern = $"\\b{wordToFind}\\b";
-            return Regex.Replace(sourceString, pattern, replacement, regexOptions);
+
+            return Regex.Replace(sourceString, pattern, replacement,
+                                 regexOptions);
         }
     }
 }

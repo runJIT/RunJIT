@@ -31,12 +31,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         internal string BuildFrom(Method method)
         {
             var queryParams = CollectQueryParam(method).ToImmutableList();
+
             if (queryParams.IsEmpty())
             {
                 return string.Empty;
             }
 
             var queryParamsFlatten = queryParams.Flatten("&");
+
             return $"?{queryParamsFlatten}";
         }
 
@@ -57,6 +59,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                 {
                     // {resourceTypeIds.ToQueryParams("resourceTypeId")}
                     yield return @$"{{{parameter.Name}.ToQueryParams(""{parameterName}"")}}";
+
                     continue;
                 }
 

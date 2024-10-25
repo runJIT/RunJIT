@@ -14,11 +14,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal record DeclarationToType(DeclarationBase Declaration, Type Type);
+    internal record DeclarationToType(DeclarationBase Declaration,
+                                      Type Type);
 
     public class DataTypeFinder
     {
-        internal IImmutableList<DeclarationToType> FindDataType(System.Reflection.MethodInfo methodInfo, IImmutableList<CSharpSyntaxTree> syntaxTrees)
+        internal IImmutableList<DeclarationToType> FindDataType(System.Reflection.MethodInfo methodInfo,
+                                                                IImmutableList<CSharpSyntaxTree> syntaxTrees)
         {
             var parameters = methodInfo.GetParameters().Select(p => p.ParameterType);
             var declaredTypes = parameters.Concat(methodInfo.ReturnType).ToImmutableList();
@@ -36,8 +38,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             return allModels;
         }
 
-
-        private IEnumerable<Type> GetAllSubTypes(IImmutableList<Type> types, List<string> alreadyFound)
+        private IEnumerable<Type> GetAllSubTypes(IImmutableList<Type> types,
+                                                 List<string> alreadyFound)
         {
             foreach (var type in types)
             {
@@ -66,17 +68,18 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
                 var properties = type.GetProperties().Select(p => p.PropertyType).ToImmutableList();
                 var genericArguments = properties.SelectMany<Type, Type>(p => p.GetAllGenericArguments()).ToImmutableList();
+
                 var allPropertyTypes = properties.Concat(genericArguments)
                                                  .Where(p => p.FullName.NotEqualsTo(type.FullName)).ToImmutableList();
 
                 allPropertyTypes = type.BaseType.IsNotNull() ? allPropertyTypes.Add(type.BaseType) : allPropertyTypes;
-
 
                 var subTypes = GetAllSubTypes(allPropertyTypes, alreadyFound).ToImmutableList();
 
                 foreach (var subType in subTypes)
                 {
                     alreadyFound.Add(subType.FullName!);
+
                     yield return subType;
                 }
 

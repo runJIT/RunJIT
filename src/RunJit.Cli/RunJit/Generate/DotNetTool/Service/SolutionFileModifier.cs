@@ -26,13 +26,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             var dotnetTool = DotNetToolFactory.Create();
             var addDotNetToolProjectResult = await dotnetTool.RunAsync("dotnet", $"sln {solutionFile.FullName} add {clientProject.FullName} --in-root");
+
             if (addDotNetToolProjectResult.ExitCode != 0)
             {
                 throw new Exception($"Error while adding client project to solution: {addDotNetToolProjectResult.Output}");
             }
 
-
             var addDotNetToolTestProjectResult = await dotnetTool.RunAsync("dotnet", $"sln {solutionFile.FullName} add {clientTestProject.FullName} --in-root");
+
             if (addDotNetToolTestProjectResult.ExitCode != 0)
             {
                 throw new Exception($"Error while adding client test project to solution: {addDotNetToolTestProjectResult.Output}");

@@ -18,6 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             Throw.IfNull(() => optionInfo);
 
             var builder = _newOptionExpressionBuilders.Single(b => b.IsBuilderFor(optionInfo));
+
             return builder.Build(optionInfo);
         }
     }

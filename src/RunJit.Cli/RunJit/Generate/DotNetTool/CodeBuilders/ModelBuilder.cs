@@ -40,6 +40,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                 string clientName)
         {
             var @namespace = $"{projectName}.{ClientGenConstants.Api}.{controller.ControllerInfo.DomainName}.{controller.ControllerInfo.Version.Normalized}";
+
             var model = _modelTemplate.Replace("$projectName$", projectName)
                                       .Replace("$clientName$", clientName)
                                       .Replace("$namespace$", @namespace)

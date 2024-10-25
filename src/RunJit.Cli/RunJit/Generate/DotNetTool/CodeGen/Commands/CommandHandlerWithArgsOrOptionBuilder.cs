@@ -19,6 +19,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                       .Replace("$command-name$", parameterInfo.NormalizedName)
                                       .Replace("$command-argument-name$", parameterInfo.NormalizedName.FirstCharToLower())
                                       .Replace("$argument-names$", argNames);
+
             return newTemplate;
         }
 
@@ -34,6 +35,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             Throw.IfNull(() => parameterInfo);
 
             var argumentInfo = parameterInfo.Argument;
+
             if (ObjectExtensions.IsNotNull((object?)argumentInfo))
             {
                 yield return new CtorArgument(argumentInfo.OptimizedType, global::Extensions.Pack.StringExtensions.FirstCharToLower((string)argumentInfo.NormalizedName));

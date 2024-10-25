@@ -3,6 +3,7 @@
     internal interface ICommandHandlerStringBuilder
     {
         string Build(CommandInfo parameterInfo);
+
         bool IsThisBuilderFor(CommandInfo parameterInfo);
     }
 }

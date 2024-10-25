@@ -2,6 +2,8 @@
 {
     internal interface IRootCommandBuilder
     {
-        string Build(string project, CommandInfo parameterInfo, string nameSpace);
+        string Build(string project,
+                     CommandInfo parameterInfo,
+                     string nameSpace);
     }
 }

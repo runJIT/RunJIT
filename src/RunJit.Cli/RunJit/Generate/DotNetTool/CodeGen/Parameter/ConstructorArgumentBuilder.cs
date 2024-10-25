@@ -7,6 +7,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         public IEnumerable<CtorArgument> Build(CommandInfo parameterInfo)
         {
             var argumentInfo = parameterInfo.Argument;
+
             if (ObjectExtensions.IsNotNull((object?)argumentInfo))
             {
                 yield return new CtorArgument(argumentInfo.OptimizedType, global::Extensions.Pack.StringExtensions.FirstCharToLower((string)argumentInfo.NormalizedName));

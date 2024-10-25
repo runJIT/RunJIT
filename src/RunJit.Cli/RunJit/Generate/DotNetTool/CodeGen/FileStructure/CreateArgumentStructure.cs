@@ -7,7 +7,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                   ITypeService typeService)
         : IBuildCommandFileStructure
     {
-        public void Create(string projectName, CommandInfo parameter, CommandTypeCollector commandTypeCollector, string currentPath, NameSpaceCollector namespaceCollector, DirectoryInfo subCommnandDirectoryInfo, CommandInfo subCommand)
+        public void Create(string projectName,
+                           CommandInfo parameter,
+                           CommandTypeCollector commandTypeCollector,
+                           string currentPath,
+                           NameSpaceCollector namespaceCollector,
+                           DirectoryInfo subCommnandDirectoryInfo,
+                           CommandInfo subCommand)
         {
             if (ObjectExtensions.IsNull((object?)subCommand.Argument))
             {

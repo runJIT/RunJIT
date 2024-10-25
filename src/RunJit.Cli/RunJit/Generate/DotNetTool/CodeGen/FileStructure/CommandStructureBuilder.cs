@@ -9,7 +9,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                   ITypeService typeService)
         : IBuildCommandFileStructure
     {
-        public void Create(string projectName, CommandInfo parameter, CommandTypeCollector commandTypeCollector, string currentPath, NameSpaceCollector namespaceCollector, DirectoryInfo subCommnandDirectoryInfo, CommandInfo subCommand)
+        public void Create(string projectName,
+                           CommandInfo parameter,
+                           CommandTypeCollector commandTypeCollector,
+                           string currentPath,
+                           NameSpaceCollector namespaceCollector,
+                           DirectoryInfo subCommnandDirectoryInfo,
+                           CommandInfo subCommand)
         {
             if (subCommand.SubCommands.IsNotNull() && subCommand.SubCommands.Any())
             {
@@ -17,21 +23,26 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             }
 
             string? command = null;
+
             if (ObjectExtensions.IsNull((object?)subCommand.Argument) && subCommand.Options.IsEmpty())
             {
-                command = commandBuilderSimple.Build(projectName, subCommand, parameter, currentPath);
+                command = commandBuilderSimple.Build(projectName, subCommand, parameter,
+                                                     currentPath);
             }
             else if (ObjectExtensions.IsNull((object?)subCommand.Argument) && subCommand.Options.Any())
             {
-                command = commandBuilderWithOptions.Build(projectName, subCommand, parameter, currentPath);
+                command = commandBuilderWithOptions.Build(projectName, subCommand, parameter,
+                                                          currentPath);
             }
             else if (ObjectExtensions.IsNotNull((object?)subCommand.Argument) && subCommand.Options.IsEmpty())
             {
-                command = commandBuilderWithArgument.Build(projectName, subCommand, parameter, currentPath);
+                command = commandBuilderWithArgument.Build(projectName, subCommand, parameter,
+                                                           currentPath);
             }
             else if (ObjectExtensions.IsNotNull((object?)subCommand.Argument) && subCommand.Options.Any())
             {
-                command = commandBuilderWithArgumentAndOption.Build(projectName, subCommand, parameter, currentPath);
+                command = commandBuilderWithArgumentAndOption.Build(projectName, subCommand, parameter,
+                                                                    currentPath);
             }
 
             var fileInfo = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"{subCommand.NormalizedName}CommandBuilder.cs"));
@@ -43,7 +54,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             var interfaceName = $"{newNamespaceForInterface}.I{parameter.NormalizedName}SubCommandBuilder";
             var implementationToRegister = typeService.GetFullQualifiedName(projectName, fileInfo);
-
 
             commandTypeCollector.Add(subCommand, new TypeToRegister(interfaceName, implementationToRegister));
         }

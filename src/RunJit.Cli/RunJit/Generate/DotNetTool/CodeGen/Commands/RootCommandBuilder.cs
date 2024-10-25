@@ -6,7 +6,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class RootCommandBuilder : IRootCommandBuilder
     {
         private const string Template =
-@"using System.CommandLine;    
+            @"using System.CommandLine;    
 
 namespace $namespace$
 {    
@@ -37,7 +37,9 @@ namespace $namespace$
             _commandHandlerStringBuilder = commandHandlerStringBuilder;
         }
 
-        public string Build(string project, CommandInfo parameterInfo, string nameSpace)
+        public string Build(string project,
+                            CommandInfo parameterInfo,
+                            string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
             Throw.IfNull(() => parameterInfo);
@@ -46,11 +48,11 @@ namespace $namespace$
             var commandHandler = _commandHandlerStringBuilder.Build(parameterInfo);
 
             var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)
-                .Replace("$command-argument-name$", parameterInfo.NormalizedName.FirstCharToLower())
-                .Replace("$namespace$", nameSpace)
-                .Replace("$command-description$", parameterInfo.Description)
-                .Replace("$command-handler$", commandHandler)
-                .Replace("$project-name$", project);
+                                      .Replace("$command-argument-name$", parameterInfo.NormalizedName.FirstCharToLower())
+                                      .Replace("$namespace$", nameSpace)
+                                      .Replace("$command-description$", parameterInfo.Description)
+                                      .Replace("$command-handler$", commandHandler)
+                                      .Replace("$project-name$", project);
 
             return newTemplate;
         }

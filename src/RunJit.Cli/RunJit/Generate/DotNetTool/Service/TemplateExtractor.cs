@@ -15,12 +15,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal interface ITemplateExtractor
     {
-        void ExtractTo(DirectoryInfo directoryInfo, DotNetToolParameters clientGenParameters);
+        void ExtractTo(DirectoryInfo directoryInfo,
+                       DotNetToolParameters clientGenParameters);
     }
 
     internal class TemplateExtractor : ITemplateExtractor
     {
-        public void ExtractTo(DirectoryInfo directoryInfo, DotNetToolParameters clientGenParameters)
+        public void ExtractTo(DirectoryInfo directoryInfo,
+                              DotNetToolParameters clientGenParameters)
         {
             var assembly = GetType().Assembly;
             var resourceNames = assembly.GetManifestResourceNames();

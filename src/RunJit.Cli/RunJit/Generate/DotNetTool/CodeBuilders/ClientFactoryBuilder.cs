@@ -19,13 +19,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     ///     - We are just replace parameters from the Pulse.Generate.DotNetTool.Templates.client.factory.rps template to create the
     ///     client factory
     /// </summary>
-    internal class DotNetToolFactoryBuilder(
-        UsingsBuilder usingsBuilder,
-        DependencyBuilder dependencyBuilder)
+    internal class DotNetToolFactoryBuilder(UsingsBuilder usingsBuilder,
+                                            DependencyBuilder dependencyBuilder)
     {
         private readonly string _clientFactoryTemplate = EmbeddedFile.GetFileContentFrom("Pulse.Generate.DotNetTool.Templates.client.factory.rps");
 
-        public string BuildFor(string projectName, string clientName, GeneratedDotNetTool generatedDotNetTool)
+        public string BuildFor(string projectName,
+                               string clientName,
+                               GeneratedDotNetTool generatedDotNetTool)
         {
             var dependencies = dependencyBuilder.BuildFrom(generatedDotNetTool);
             var usings = usingsBuilder.BuildFrom(generatedDotNetTool, projectName);
@@ -34,6 +35,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                       .Replace("$clientName$", clientName)
                                                       .Replace("$dependencies$", dependencies)
                                                       .Replace("$usings$", usings);
+
             return clientFactory;
         }
     }

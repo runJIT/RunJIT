@@ -6,7 +6,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class CommandBuilderForSubCommands : ICommandBuilderForSubCommands
     {
         private const string Template =
-@"using System.CommandLine;
+            @"using System.CommandLine;
 using System.CommandLine.Invocation;  
 
 namespace $namespace$
@@ -38,7 +38,10 @@ namespace $namespace$
             _commandHandlerBuilder = commandHandlerBuilder;
         }
 
-        public string Build(string project, CommandInfo parameterInfo, CommandInfo parent, string nameSpace)
+        public string Build(string project,
+                            CommandInfo parameterInfo,
+                            CommandInfo parent,
+                            string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
             Throw.IfNull(() => parameterInfo);
@@ -46,13 +49,14 @@ namespace $namespace$
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var commandHandler = _commandHandlerBuilder.Build(parameterInfo);
+
             var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)
-                .Replace("$command-argument-name$", parameterInfo.NormalizedName.FirstCharToLower())
-                .Replace("$namespace$", nameSpace)
-                .Replace("$command-description$", parameterInfo.Description)
-                .Replace("$command-handler$", commandHandler)
-                .Replace("$parent-command-name$", parent.NormalizedName)
-                .Replace("$project-name$", project);
+                                      .Replace("$command-argument-name$", parameterInfo.NormalizedName.FirstCharToLower())
+                                      .Replace("$namespace$", nameSpace)
+                                      .Replace("$command-description$", parameterInfo.Description)
+                                      .Replace("$command-handler$", commandHandler)
+                                      .Replace("$parent-command-name$", parent.NormalizedName)
+                                      .Replace("$project-name$", project);
 
             return newTemplate;
         }

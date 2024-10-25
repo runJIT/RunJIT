@@ -5,7 +5,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class CommandBuilderWithOptions : ICommandBuilderWithOptions
     {
         private const string Template =
-@"using System.CommandLine;
+            @"using System.CommandLine;
 using System.CommandLine.Invocation;    
 using $namespace$.Options;
 using $namespace$.Service;
@@ -42,7 +42,10 @@ namespace $namespace$
             _commandHandlerBuilder = commandHandlerBuilder;
         }
 
-        public string Build(string project, CommandInfo parameterInfo, CommandInfo parent, string nameSpace)
+        public string Build(string project,
+                            CommandInfo parameterInfo,
+                            CommandInfo parent,
+                            string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
             Throw.IfNull(() => parameterInfo);
@@ -52,13 +55,13 @@ namespace $namespace$
             var commandHandler = _commandHandlerBuilder.Build(parameterInfo);
 
             var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)
-                .Replace("$parent-command-name$", parent.NormalizedName)
-                .Replace("$command-description$", parameterInfo.Description)
-                .Replace("$command-argument-name$", parameterInfo.Name)
-                .Replace("$command-service-argument-name$", parameterInfo.Name)
-                .Replace("$command-handler$", commandHandler)
-                .Replace("$namespace$", nameSpace)
-                .Replace("$project-name$", project);
+                                      .Replace("$parent-command-name$", parent.NormalizedName)
+                                      .Replace("$command-description$", parameterInfo.Description)
+                                      .Replace("$command-argument-name$", parameterInfo.Name)
+                                      .Replace("$command-service-argument-name$", parameterInfo.Name)
+                                      .Replace("$command-handler$", commandHandler)
+                                      .Replace("$namespace$", nameSpace)
+                                      .Replace("$project-name$", project);
 
             return newTemplate;
         }

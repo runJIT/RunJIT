@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddSingletonIfNotExists<INetToolCodeGen, StartupCodeGen>();
         }
     }
-    
+
     internal class StartupCodeGen(IConsoleService consoleService) : INetToolCodeGen
     {
         private const string template = """
@@ -28,7 +28,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         using RunJit.Cli.Auth0;
                                         using RunJit.Cli.ErrorHandling;
                                         using RunJit.Cli.RunJit;
-                                        
+
                                         namespace RunJit.Cli
                                         {
                                             internal class Startup

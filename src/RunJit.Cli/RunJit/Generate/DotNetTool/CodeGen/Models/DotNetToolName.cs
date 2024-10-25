@@ -4,7 +4,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     public class DotNetToolName
     {
-        public DotNetToolName(string name, string normalizedName)
+        public DotNetToolName(string name,
+                              string normalizedName)
         {
             Throw.IfNullOrWhiteSpace(name);
 

@@ -13,13 +13,16 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             _parameterSpecificClassBuilders = parameterSpecificClassBuilders;
         }
 
-        public string Build(string projectName, CommandInfo parameterInfo, string nameSpace)
+        public string Build(string projectName,
+                            CommandInfo parameterInfo,
+                            string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);
             Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var builder = _parameterSpecificClassBuilders.Single(b => b.IsThisBuilderFor(parameterInfo));
+
             return builder.Build(projectName, parameterInfo, nameSpace);
         }
     }

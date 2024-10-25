@@ -28,6 +28,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                 var newOptionStatement = _newOptionExpressionService.Build(option);
                 var newMethod = OptionMethodTemplate.Replace("$option$", newOptionStatement).Replace("$option-name$", option.NormalizedName);
                 var methodName = $"Build{option.NormalizedName}Option";
+
                 yield return new MethodInfo(methodName, newMethod);
             }
         }

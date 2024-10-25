@@ -2,6 +2,8 @@
 {
     internal interface IArgumentInterfaceBuilder
     {
-        string Build(string projectName, CommandInfo parameterInfo, string nameSpace);
+        string Build(string projectName,
+                     CommandInfo parameterInfo,
+                     string nameSpace);
     }
 }

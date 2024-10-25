@@ -2,6 +2,8 @@
 {
     internal interface IOptionInterfaceBuilder
     {
-        string Build(string projectName, CommandInfo parameterInfo, string nameSpace);
+        string Build(string projectName,
+                     CommandInfo parameterInfo,
+                     string nameSpace);
     }
 }

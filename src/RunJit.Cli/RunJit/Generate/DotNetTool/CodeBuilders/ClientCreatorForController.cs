@@ -16,7 +16,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-
     // What we are creating here:
     // - We are creating a specific client class per controller in the api
     // - The code template Pulse.Generate.DotNetTool.Templates.version.class.rps contains most predefined stuff which have to be replaced only
@@ -31,7 +30,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     //     }
     // }
 
-
     // public class AccountsV1  <-- DomainName -> Controller name shorten without controller postfix
     // {
     //     private readonly IHttpCallHandler _httpCallHandler;
@@ -40,7 +38,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     //     {
     //         _httpCallHandler = httpCallHandler;
     //     }
-
 
     //     public Task<AddAccountResponse> AddAccountAsync(AddAccountPayload addAccountPayload)  <-- MethodBuilder creates all methods
     //     {
@@ -51,14 +48,16 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         private readonly string _versionClass = EmbeddedFile.GetFileContentFrom("Pulse.Generate.DotNetTool.Templates.version.class.rps");
 
-
-        internal IImmutableList<GeneratedDotNetToolCodeForController> Create(IImmutableList<ControllerInfo> controllerInfos, string projectName, string clientName)
+        internal IImmutableList<GeneratedDotNetToolCodeForController> Create(IImmutableList<ControllerInfo> controllerInfos,
+                                                                             string projectName,
+                                                                             string clientName)
         {
             return controllerInfos.Select(controller => Create(controller, projectName, clientName)).ToImmutableList();
         }
 
-
-        internal GeneratedDotNetToolCodeForController Create(ControllerInfo controllerInfo, string projectName, string clientName)
+        internal GeneratedDotNetToolCodeForController Create(ControllerInfo controllerInfo,
+                                                             string projectName,
+                                                             string clientName)
         {
             var domainName = $"{controllerInfo.Name.Replace("Controller", string.Empty)}";
             var domainNameWithVersion = $"{domainName}{controllerInfo.Version.Normalized}";
@@ -71,7 +70,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var attributes = controllerObsoleteAttribute.IsNotNull() ? controllerObsoleteAttribute.SyntaxTree : string.Empty;
 
             var methodSyntax = methods.Flatten($"{Environment.NewLine}{Environment.NewLine}");
-
 
             var syntaxTree = _versionClass.Replace("$name$", domainName)
                                           .Replace("$version$", controllerInfo.Version.Normalized)

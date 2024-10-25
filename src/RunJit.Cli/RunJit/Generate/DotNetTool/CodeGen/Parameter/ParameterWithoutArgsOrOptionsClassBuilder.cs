@@ -6,7 +6,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class ParameterWithoutArgsOrOptionsClassBuilder : IParameterSpecificClassBuilder
     {
         private const string Template =
-@"
+            @"
 namespace $namespace$
 {    
     internal sealed class $command-name$Parameters
@@ -17,15 +17,17 @@ namespace $namespace$
     }
 }";
 
-        public string Build(string projectName, CommandInfo parameterInfo, string nameSpace)
+        public string Build(string projectName,
+                            CommandInfo parameterInfo,
+                            string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);
             Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var newTemplate = Template.Replace("$projectName$", projectName)
-                .Replace("$namespace$", nameSpace)
-                .Replace("$command-name$", parameterInfo.NormalizedName);
+                                      .Replace("$namespace$", nameSpace)
+                                      .Replace("$command-name$", parameterInfo.NormalizedName);
 
             return newTemplate;
         }

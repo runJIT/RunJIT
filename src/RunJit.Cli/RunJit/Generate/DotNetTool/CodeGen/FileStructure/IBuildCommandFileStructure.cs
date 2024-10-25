@@ -2,6 +2,12 @@
 {
     internal interface IBuildCommandFileStructure
     {
-        void Create(string projectName, CommandInfo parameter, CommandTypeCollector commandTypeCollector, string currentPath, NameSpaceCollector namespaceCollector, DirectoryInfo subCommnandDirectoryInfo, CommandInfo subCommand);
+        void Create(string projectName,
+                    CommandInfo parameter,
+                    CommandTypeCollector commandTypeCollector,
+                    string currentPath,
+                    NameSpaceCollector namespaceCollector,
+                    DirectoryInfo subCommnandDirectoryInfo,
+                    CommandInfo subCommand);
     }
 }

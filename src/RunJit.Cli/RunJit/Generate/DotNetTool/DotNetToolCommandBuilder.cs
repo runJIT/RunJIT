@@ -28,7 +28,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                                                    build,
                                                                                    solution,
                                                                                    toolName) => clientGen.HandleAsync(new DotNetToolParameters(usevisualstudio, build, solution,
-                                                                                                                                                toolName)));
+                                                                                                                                               toolName)));
 
             return command;
         }

@@ -27,7 +27,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         using DotNetTool.Builder.Services.DotNet;
                                         using FileSystem.Abstraction;
                                         using Microsoft.Extensions.DependencyInjection;
-                                        
+
                                         namespace DotNetTool.Builder.App
                                         {
                                             internal sealed class App(IServiceProvider serviceProvider)
@@ -57,17 +57,15 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         }
-                                        
+
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
                                         DotNetToolInfos dotNetTool)
         {
-
-
-
             // 1. Add App Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "App"));
+
             if (appFolder.NotExists())
             {
                 appFolder.Create();

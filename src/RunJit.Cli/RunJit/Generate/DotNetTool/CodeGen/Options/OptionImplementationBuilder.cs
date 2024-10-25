@@ -6,7 +6,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class OptionImplementationBuilder : IOptionImplementationBuilder
     {
         private const string Template =
-@"using System.CommandLine; 
+            @"using System.CommandLine; 
 
 namespace $namespace$
 {    
@@ -30,7 +30,9 @@ $build-option-method$
             _optionMethodsBuilder = optionMethodsBuilder;
         }
 
-        public string Build(string projectName, CommandInfo parameterInfo, string nameSpace)
+        public string Build(string projectName,
+                            CommandInfo parameterInfo,
+                            string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);
             Throw.IfNull(() => parameterInfo);
@@ -42,10 +44,10 @@ $build-option-method$
             var yieldStatements = optionsMethods.Select(m => $"            yield return {m.MethodName}();").Flatten(Environment.NewLine);
 
             var newTemplate = Template.Replace("$project-name$", projectName)
-                .Replace("$command-name$", parameterInfo.NormalizedName)
-                .Replace("$yield-option$", yieldStatements)
-                .Replace("$namespace$", currentNamespace)
-                .Replace("$build-option-method$", optionsMethodAsString);
+                                      .Replace("$command-name$", parameterInfo.NormalizedName)
+                                      .Replace("$yield-option$", yieldStatements)
+                                      .Replace("$namespace$", currentNamespace)
+                                      .Replace("$build-option-method$", optionsMethodAsString);
 
             return newTemplate;
         }

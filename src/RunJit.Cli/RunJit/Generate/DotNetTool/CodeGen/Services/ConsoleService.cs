@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         private const string template = """
                                         using Extensions.Pack;
                                         using Microsoft.Extensions.DependencyInjection;
-                                        
+
                                         namespace RunJit.Cli.Services
                                         {
                                             internal static class AddConsoleServiceExtension
@@ -83,7 +83,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         }
-                                        
+
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
@@ -91,6 +91,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         {
             // 1. Add Services Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "Services"));
+
             if (appFolder.NotExists())
             {
                 appFolder.Create();

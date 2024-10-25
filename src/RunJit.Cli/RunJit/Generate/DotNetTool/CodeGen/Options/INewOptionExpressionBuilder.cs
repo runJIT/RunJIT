@@ -3,6 +3,7 @@
     internal interface INewOptionExpressionBuilder
     {
         string Build(OptionInfo optionInfo);
+
         bool IsBuilderFor(OptionInfo optionInfo);
     }
 }

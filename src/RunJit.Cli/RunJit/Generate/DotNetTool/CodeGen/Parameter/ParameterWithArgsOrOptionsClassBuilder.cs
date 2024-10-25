@@ -6,7 +6,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class ParameterWithArgsOrOptionsClassBuilder : IParameterSpecificClassBuilder
     {
         private const string Template =
-@"
+            @"
 namespace $namespace$
 {    
     internal sealed class $command-name$Parameters
@@ -21,6 +21,7 @@ $properties$
 }";
 
         private const string CtorArgument = @"$type$ $argName$";
+
         private readonly IConstructorArgumentBuilder _constructorArgumentBuilder;
 
         public ParameterWithArgsOrOptionsClassBuilder(IConstructorArgumentBuilder constructorArgumentBuilder)
@@ -30,7 +31,9 @@ $properties$
             _constructorArgumentBuilder = constructorArgumentBuilder;
         }
 
-        public string Build(string projectName, CommandInfo parameterInfo, string nameSpace)
+        public string Build(string projectName,
+                            CommandInfo parameterInfo,
+                            string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);
             Throw.IfNull(() => parameterInfo);
@@ -44,11 +47,11 @@ $properties$
             var propertyInitializer = BuildPropertyInitializerString(ctorArguments, properties);
 
             var newTemplate = Template.Replace("$ctor-arguments$", argumentString)
-                .Replace("$agrument-to-properties$", propertyInitializer)
-                .Replace("$properties$", propertyString)
-                .Replace("$projectName$", projectName)
-                .Replace("$namespace$", nameSpace)
-                .Replace("$command-name$", parameterInfo.NormalizedName);
+                                      .Replace("$agrument-to-properties$", propertyInitializer)
+                                      .Replace("$properties$", propertyString)
+                                      .Replace("$projectName$", projectName)
+                                      .Replace("$namespace$", nameSpace)
+                                      .Replace("$command-name$", parameterInfo.NormalizedName);
 
             return newTemplate;
         }
@@ -63,21 +66,25 @@ $properties$
         private string BuildPropertyString(IEnumerable<Property> properties)
         {
             var result = properties.Select(p => $"        public {p.Type} {p.Name} {{ get; }}").Flatten(Environment.NewLine);
+
             return result;
         }
 
         private string BuildPropertyInitializerString(IEnumerable<CtorArgument> arguments,
-            IEnumerable<Property> properties)
+                                                      IEnumerable<Property> properties)
         {
             var result = BuildPropertyInitializer(arguments, properties);
+
             return result.Flatten(Environment.NewLine);
         }
 
-        private IEnumerable<string> BuildPropertyInitializer(IEnumerable<CtorArgument> arguments, IEnumerable<Property> properties)
+        private IEnumerable<string> BuildPropertyInitializer(IEnumerable<CtorArgument> arguments,
+                                                             IEnumerable<Property> properties)
         {
             foreach (var property in properties)
             {
                 var argument = arguments.Single(a => a.Name.ToLower().EqualsTo(property.Name.ToLower()));
+
                 yield return $"            {property.Name} = {argument.Name};";
             }
         }
@@ -85,6 +92,7 @@ $properties$
         private string BuildArguments(IEnumerable<CtorArgument> ctorArguments)
         {
             var result = ctorArguments.Select(arg => CtorArgument.Replace("$type$", arg.Type).Replace("$argName$", arg.Name)).Flatten(", ");
+
             return result;
         }
 

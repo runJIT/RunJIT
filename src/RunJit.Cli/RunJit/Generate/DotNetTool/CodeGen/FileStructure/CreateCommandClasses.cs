@@ -31,10 +31,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                 var closure = currentPath;
 
                 commandFileStructures.ForEach(structure => structure.Create(projectName, parameter, commandTypeCollector,
-                                                                             closure, namespaceCollector, subCommnandDirectoryInfo,
-                                                                             subCommand));
+                                                                            closure, namespaceCollector, subCommnandDirectoryInfo,
+                                                                            subCommand));
 
-                Invoke(projectName, subCommand, subCommnandDirectoryInfo, commandTypeCollector, currentRootPath, namespaceCollector);
+                Invoke(projectName, subCommand, subCommnandDirectoryInfo,
+                       commandTypeCollector, currentRootPath, namespaceCollector);
             }
         }
     }

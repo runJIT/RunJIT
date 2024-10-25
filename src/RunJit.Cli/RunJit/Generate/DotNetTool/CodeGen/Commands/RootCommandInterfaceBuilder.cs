@@ -5,7 +5,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class RootCommandInterfaceBuilder : IRootCommandInterfaceBuilder
     {
         private const string Template =
-@"using System.CommandLine;
+            @"using System.CommandLine;
 
 namespace $namespace$
 {    
@@ -15,15 +15,17 @@ namespace $namespace$
     }
 }";
 
-        public string Build(string project, CommandInfo parameterInfo, string nameSpace)
+        public string Build(string project,
+                            CommandInfo parameterInfo,
+                            string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
             Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)
-                .Replace("$namespace$", nameSpace)
-                .Replace("$project-name$", project);
+                                      .Replace("$namespace$", nameSpace)
+                                      .Replace("$project-name$", project);
 
             return newTemplate;
         }

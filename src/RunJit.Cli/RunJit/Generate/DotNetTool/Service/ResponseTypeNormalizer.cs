@@ -40,6 +40,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             // 3. External type we need full qualified name
             // Sample: Pulse.Common.Data.V1.User then we need full qualified names !
             var returnTypeWithTask = method.ReturnParameter.Contains(returnType.FullName!) ? method.ReturnParameter : method.ReturnParameter.Replace(returnType.Name, returnType.FullName);
+
             return new ResponseType(returnTypeWithTask, returnType.FullName!);
         }
     }
