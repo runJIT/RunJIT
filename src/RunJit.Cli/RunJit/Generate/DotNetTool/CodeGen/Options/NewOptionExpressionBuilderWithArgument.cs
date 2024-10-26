@@ -33,8 +33,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     .Replace("$option-argument-name$", global::Extensions.Pack.StringExtensions.FirstCharToLower((string)optionInfo.NormalizedName))
                                                     .Replace("$option-description$", optionInfo.Description)
                                                     .Replace("$required-value$", optionInfo.IsIsRequired.ToString().ToLower())
-                                                    .Replace("$type$", optionInfo.Argument.OptimizedType)
-                                                    .Replace("$argument-description$", optionInfo.Argument.Description);
+                                                    .Replace("$type$", optionInfo.Argument?.OptimizedType)
+                                                    .Replace("$argument-description$", optionInfo.Argument?.Description);
 
             return newTemplate;
         }

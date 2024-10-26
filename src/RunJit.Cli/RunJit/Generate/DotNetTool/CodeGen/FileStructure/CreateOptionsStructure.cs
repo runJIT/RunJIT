@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddOptionImplementationBuilder();
             services.AddTypeService();
 
-            services.AddSingletonIfNotExists<CreateOptionsStructure>();
+            services.AddSingletonIfNotExists<IBuildCommandFileStructure, CreateOptionsStructure>();
         }
     }
 

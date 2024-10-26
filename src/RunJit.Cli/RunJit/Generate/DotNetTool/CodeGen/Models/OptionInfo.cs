@@ -1,25 +1,19 @@
-﻿using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
-[assembly: InternalsVisibleTo("DotNetTool.Builder.Test")]
-
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+﻿namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    [method: JsonConstructor]
-    public class OptionInfo(string value,
-                            string name,
-                            string alias,
-                            string description,
-                            bool isRequired,
-                            ArgumentInfo argument,
-                            string normalizedValue)
-        : InfoBase(value, name, normalizedValue)
+    public record OptionInfo
     {
-        public string Alias { get; } = alias;
+        public string Alias { get; init; } = string.Empty;
 
-        public string Description { get; } = description;
+        public string Description { get; init; } = string.Empty;
 
-        public bool IsIsRequired { get; } = isRequired;
+        public bool IsIsRequired { get; init; }
 
-        public ArgumentInfo Argument { get; } = argument;
+        public ArgumentInfo? Argument { get; init; }
+
+        public string Value { get; init; } = string.Empty;
+
+        public string Name { get; init; } = string.Empty;
+
+        public string NormalizedName { get; init; } = string.Empty;
     }
 }

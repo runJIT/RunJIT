@@ -45,10 +45,10 @@ namespace $namespace$
 
             var newTemplate = Template.Replace("$project-name$", projectName)
                                       .Replace("$command-name$", parameterInfo.NormalizedName)
-                                      .Replace("$argument-name$", parameterInfo.Argument.Name)
+                                      .Replace("$argument-name$", parameterInfo.Argument?.Name)
                                       .Replace("$namespace$", currentNamespace)
-                                      .Replace("$type$", parameterInfo.Argument.OptimizedType)
-                                      .Replace("$argument-description$", parameterInfo.Argument.Description);
+                                      .Replace("$type$", parameterInfo.Argument?.OptimizedType)
+                                      .Replace("$argument-description$", parameterInfo.Argument?.Description);
 
             return newTemplate;
         }

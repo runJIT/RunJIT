@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddCommandServiceInterfaceBuilder();
             services.AddTypeService();
 
-            services.AddSingletonIfNotExists<CommandServiceStructureBuilder>();
+            services.AddSingletonIfNotExists<IBuildCommandFileStructure, CommandServiceStructureBuilder>();
         }
     }
 

@@ -55,11 +55,6 @@ namespace $namespace$
                             CommandInfo parent,
                             string nameSpace)
         {
-            Throw.IfNullOrWhiteSpace(project);
-            Throw.IfNull(() => parameterInfo);
-            Throw.IfNull(() => parent);
-            Throw.IfNullOrWhiteSpace(nameSpace);
-
             var commandHandler = _commandHandlerBuilder.Build(parameterInfo);
 
             var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)

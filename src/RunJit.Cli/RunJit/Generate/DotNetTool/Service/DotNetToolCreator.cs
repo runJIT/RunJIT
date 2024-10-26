@@ -172,7 +172,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             // NEW !! TEST POC
             var mappedToEndpoints = organizedEndpoints.Any() ? organizedEndpoints : controllerInfos.ToEndpointInfos();
 
-            var dotnetToolStructure = convertControllerInfos.ConvertTo(mappedToEndpoints, client);
+            // We wan to have them grouped by domain to get correct tree like:
+            // - Users (1x)
+            //   - V1  (1x)
+            //   - V2  (1x)
+            var domainGrouped = mappedToEndpoints.GroupBy(e => e.GroupName).Distinct().ToImmutableList();
+
+            var dotnetToolStructure = convertControllerInfos.ConvertTo(domainGrouped, client);
 
             // ----------------------------------------------------------------------------------------------------------------------------------------
             // POC starts here
@@ -213,17 +219,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             // Add new net tool project into solution
             // 2. Remove project
             await dotNet.AddProjectToSolutionAsync(clientSolution, dotnetToolProject).ConfigureAwait(false);
-
-            // ----------------------------------------------------------------------------------------------------------------------------------------
-
-            // 9. Check that needed cli tool builder is installed
-            var json = dotnetToolStructure.ToJson();
-            var file = Path.Combine(Environment.CurrentDirectory, $"{Guid.NewGuid()}.json");
-            await File.WriteAllTextAsync(file, json).ConfigureAwait(false);
-
-            await dotNet.RunAsync("dotnet", $"newtool --from-file {file}").ConfigureAwait(false);
-
-            await Task.CompletedTask;
         }
     }
 
@@ -237,109 +232,125 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal interface IConvertControllerInfosToDotnetToolStructure
     {
-        DotNetToolInfos ConvertTo(IImmutableList<EndpointGroup> endpointGroups,
+        DotNetToolInfos ConvertTo(ImmutableList<IGrouping<string, EndpointGroup>> domainGroupedByVersion,
                                   DotNetTool client);
     }
 
     internal class ConvertControllerInfosToDotnetToolStructure : IConvertControllerInfosToDotnetToolStructure
     {
-        public DotNetToolInfos ConvertTo(IImmutableList<EndpointGroup> endpointGroups,
+        public DotNetToolInfos ConvertTo(ImmutableList<IGrouping<string, EndpointGroup>> domainGroupedByVersion,
                                          DotNetTool client)
         {
-            //var projectname = client.ProjectName;
-            //var parameterInfo = new CommandInfo(client.DotNetToolName.NormalizedName,
-            //                                    client.DotNetToolName.NormalizedName,
-            //                                    client.DotNetToolName.NormalizedName,
-            //                                    "First try to generate a dotnet tool from an api",
-            //                                    null,
-            //                                    ImmutableList<OptionInfo>.Empty,
+            var projectname = client.ProjectName;
 
-            //                                    )
+            // Root command is the first command
+            // Sample:
+            // - dotnet tool install (dotnet is root command)
+            // - pulse core resources v1 (pulse is the root command)
+            var rootCommand = new CommandInfo
+            {
+                NormalizedName = client.DotNetToolName.NormalizedName,
+                Value = client.DotNetToolName.Name,
+                Name = client.DotNetToolName.Name,
+                Description = client.DotNetToolName.Name,
+            };
 
-            //parameterInfo.Value = client.DotNetToolName.NormalizedName;
-            //parameterInfo.Name = client.DotNetToolName.NormalizedName;
-            //parameterInfo.Description = "First try to generate a dotnet tool from an api";
-            //parameterInfo.Options = new List<OptionInfoInfo>();
 
-            //// convert controller infos into dotnet tool structure
-            //// endpointGroups are grouped by version
-            //foreach (var endpointGroup in endpointGroups)
-            //{
-            //    var versionCommand = new SubCommand()
-            //    {
-            //        Name = endpointGroup.Version.Normalized,
-            //        Description = endpointGroup.Version.Normalized,
-            //        Value = endpointGroup.Version.Normalized,
-            //    };
+            // convert controller infos into dotnet tool structure
+            // endpointGroups are grouped by version
+            foreach (var domainGroupByVersion in domainGroupedByVersion)
+            {
+                // Domain command like
+                // Users
+                // Resources
+                var domainCommand = new CommandInfo()
+                {
+                    Name = domainGroupByVersion.Key,
+                    NormalizedName = domainGroupByVersion.Key,
+                    Description = domainGroupByVersion.Key,
+                    Value = domainGroupByVersion.Key,
+                };
 
-            //    var command = new SubCommand()
-            //    {
-            //        Name = endpointGroup.GroupName,
-            //        Description = endpointGroup.GroupName,
-            //        Value = endpointGroup.GroupName,
-            //    };
+                foreach (var version in domainGroupByVersion)
+                {
+                    // Domain command like
+                    // Users
+                    //  - V1
+                    // Resources
+                    //  - V1
+                    var versionCommand = new CommandInfo()
+                    {
+                        Name = version.Version.Normalized,
+                        NormalizedName = version.Version.Normalized,
+                        Description = version.Version.Normalized,
+                        Value = version.Version.Normalized,
+                    };
 
-            //    command.SubCommands.Add(versionCommand);
+                    domainCommand.SubCommands.Add(versionCommand);
 
-            //    // each domain is a command
-            //    foreach (var endoint in endpointGroup.Endpoints)
-            //    {
-            //        // Temp tool build do not allow exceptions
-            //        if (endoint.Name.Contains("Exception", StringComparison.OrdinalIgnoreCase))
-            //        {
-            //            continue;
-            //        }
 
-            //        var endpointCommand = new SubCommand()
-            //        {
-            //            Name = endoint.SwaggerOperationId,
-            //            Description = endoint.SwaggerOperationId,
-            //            Value = endoint.SwaggerOperationId,
-            //        };
+                    // each domain is a command
+                    foreach (var endoint in version.Endpoints)
+                    {
+                        // Domain command like
+                        // Users
+                        //  - V1
+                        //    - AddUser
+                        // Resources
+                        //  - V1
+                        //    - AddResource
+                        // Temp tool build do not allow exceptions
+                        var endpointCommand = new CommandInfo()
+                        {
+                            Name = endoint.SwaggerOperationId,
+                            NormalizedName = endoint.SwaggerOperationId,
+                            Description = endoint.SwaggerOperationId,
+                            Value = endoint.SwaggerOperationId,
+                            Options = new List<OptionInfo>()
+                                      {
+                                          new OptionInfo()
+                                          {
+                                              Alias = "-t",
+                                              NormalizedName = "token",
+                                              Argument = new ArgumentInfo("token", "Bearer token for authentication", "<token>[string]", "string", "string", "Token"),
+                                              IsIsRequired = false,
+                                              Name = "token"
+                                          }
+                                      }
+                        };
 
-            //        //foreach (var parameter in method.Parameters)
-            //        //{
-            //        //    subCommand.OptionInfos.Add(new OptionInfo()
-            //        //    {
-            //        //        Name = parameter.Name,
-            //        //        Description = parameter.Name,
-            //        //        IsRequired = parameter.IsOptional,
-            //        //        Value = parameter.Name,
-            //        //        ArgumentInfo = new ArgumentInfo()
-            //        //        {
-            //        //            Name = parameter.Name,
-            //        //            Description = parameter.Name,
-            //        //            Type = parameter.Type
-            //        //        }
-            //        //    });
-            //        //}
+                        //foreach (var parameter in method.Parameters)
+                        //{
+                        //    subCommand.OptionInfos.Add(new OptionInfo()
+                        //    {
+                        //        Name = parameter.Name,
+                        //        Description = parameter.Name,
+                        //        IsRequired = parameter.IsOptional,
+                        //        Value = parameter.Name,
+                        //        ArgumentInfo = new ArgumentInfo()
+                        //        {
+                        //            Name = parameter.Name,
+                        //            Description = parameter.Name,
+                        //            Type = parameter.Type
+                        //        }
+                        //    });
+                        //}
 
-            //        versionCommand.SubCommands.Add(endpointCommand);
-            //    }
+                        versionCommand.SubCommands.Add(endpointCommand);
+                    }
+                }
 
-            //    parameterInfo.SubCommands.Add(command);
-            //}
+                rootCommand.SubCommands.Add(domainCommand);
+            }
 
-            //var dotnetToolInfos = new DotNetToolInfos()
-            //{
-            //    ProjectName = projectname,
-            //    DotNetToolName = new DotNetToolName() { Name = client.DotNetToolName.NormalizedName },
-            //    ParameterInfo = parameterInfo
-            //};
+            var dotnetToolInfos = new DotNetToolInfos()
+            {
+                ProjectName = projectname,
+                DotNetToolName = client.DotNetToolName,
+                CommandInfo = rootCommand
+            };
 
-            return new DotNetToolInfos
-                   {
-                       CommandInfo = new CommandInfo("",
-                                                     "",
-                                                     "",
-                                                     "",
-                                                     new ArgumentInfo(string.Empty, string.Empty, string.Empty,
-                                                                      string.Empty, string.Empty, string.Empty),
-                                                     ImmutableList<OptionInfo>.Empty,
-                                                     ImmutableList<CommandInfo>.Empty),
-                       DotNetToolName = new DotNetToolName("", ""),
-                       ProjectName = "",
-                   };
+            return dotnetToolInfos;
         }
     }
 }

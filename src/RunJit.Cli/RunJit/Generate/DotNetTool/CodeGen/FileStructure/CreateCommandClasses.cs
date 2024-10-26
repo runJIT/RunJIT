@@ -22,37 +22,29 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class CreateCommandClasses(IEnumerable<IBuildCommandFileStructure> commandFileStructures)
     {
         public void Invoke(string projectName,
-                           CommandInfo parameter,
+                           CommandInfo commandInfo,
                            DirectoryInfo rootDirectory,
                            CommandTypeCollector commandTypeCollector,
                            string currentPath,
                            NameSpaceCollector namespaceCollector)
         {
-            var subCommands = parameter.SubCommands;
+            var currentRootPath = $"{currentPath}";
 
-            if (subCommands.IsNull())
+            currentPath = $"{currentRootPath}.{commandInfo.NormalizedName}";
+
+            namespaceCollector.Add(currentPath);
+            var subCommnandDirectoryInfo = new DirectoryInfo(Path.Combine(rootDirectory.FullName, commandInfo.NormalizedName));
+            subCommnandDirectoryInfo.Create();
+
+            commandFileStructures.ForEach(structure => structure.Create(projectName, commandInfo, commandTypeCollector,
+                                                                        currentPath, namespaceCollector, subCommnandDirectoryInfo,
+                                                                        commandInfo));
+
+
+            foreach (var commandInfoSubCommand in commandInfo.SubCommands)
             {
-                return;
-            }
-
-            var currentRootPath = $"{currentPath}.{parameter.NormalizedName}";
-
-            foreach (var subCommand in subCommands)
-            {
-                currentPath = $"{currentRootPath}.{subCommand.NormalizedName}";
-
-                namespaceCollector.Add(currentPath);
-                var subCommnandDirectoryInfo = new DirectoryInfo(Path.Combine(rootDirectory.FullName, subCommand.NormalizedName));
-                subCommnandDirectoryInfo.Create();
-
-                var closure = currentPath;
-
-                commandFileStructures.ForEach(structure => structure.Create(projectName, parameter, commandTypeCollector,
-                                                                            closure, namespaceCollector, subCommnandDirectoryInfo,
-                                                                            subCommand));
-
-                Invoke(projectName, subCommand, subCommnandDirectoryInfo,
-                       commandTypeCollector, currentRootPath, namespaceCollector);
+                Invoke(projectName, commandInfoSubCommand, subCommnandDirectoryInfo,
+                       commandTypeCollector, currentPath, namespaceCollector);
             }
         }
     }

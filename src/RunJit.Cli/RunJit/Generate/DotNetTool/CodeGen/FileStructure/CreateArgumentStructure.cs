@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddArgumentBuilder();
             services.AddTypeService();
 
-            services.AddSingletonIfNotExists<CreateArgumentStructure>();
+            services.AddSingletonIfNotExists<IBuildCommandFileStructure, CreateArgumentStructure>();
         }
     }
 

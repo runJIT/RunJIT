@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddCommandBuilderWithArgumentAndOption();
             services.AddTypeService();
 
-            services.AddSingletonIfNotExists<CommandStructureBuilder>();
+            services.AddSingletonIfNotExists<IBuildCommandFileStructure, CommandStructureBuilder>();
         }
     }
 

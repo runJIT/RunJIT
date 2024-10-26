@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 [assembly: InternalsVisibleTo("DotNetTool.Builder.Test")]
@@ -6,22 +7,19 @@ using Newtonsoft.Json;
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
     [DebuggerDisplay("{" + nameof(Name) + "}")]
-    [method: JsonConstructor]
-    public class CommandInfo(string value,
-                             string name,
-                             string normalizedName,
-                             string description,
-                             ArgumentInfo argumentInfo,
-                             IEnumerable<OptionInfo> options,
-                             IEnumerable<CommandInfo> subCommands)
-        : InfoBase(value, name, normalizedName)
+    public record CommandInfo
     {
-        public IEnumerable<CommandInfo> SubCommands { get; } = subCommands;
+        public List<CommandInfo> SubCommands { get; init; } = new List<CommandInfo>();
 
-        public IEnumerable<OptionInfo> Options { get; } = options;
+        public List<OptionInfo> Options { get; init; } = new List<OptionInfo>();
 
-        public ArgumentInfo Argument { get; set; } = argumentInfo;
+        public ArgumentInfo? Argument { get; init; }
 
-        public string Description { get; } = description;
+        public string Description { get; init; } = string.Empty;
+        public string Value { get; init; } = string.Empty;
+
+        public string Name { get; init; } = string.Empty;
+
+        public string NormalizedName { get; init; } = string.Empty;
     }
 }
