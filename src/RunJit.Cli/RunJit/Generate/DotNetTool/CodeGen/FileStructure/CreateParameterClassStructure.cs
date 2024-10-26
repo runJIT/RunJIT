@@ -1,8 +1,19 @@
 ﻿using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class CreateParameterClassStructure(IParameterClassBuilder parameterClassBuilder) : IBuildCommandFileStructure
+    public static class AddCreateParameterClassStructureExtension
+    {
+        public static void AddCreateParameterClassStructure(this IServiceCollection services)
+        {
+            services.AddParameterClassBuilder();
+
+            services.AddSingletonIfNotExists<IBuildCommandFileStructure, CreateParameterClassStructure>();
+        }
+    }
+
+    internal sealed class CreateParameterClassStructure(ParameterClassBuilder parameterClassBuilder) : IBuildCommandFileStructure
     {
         public void Create(string projectName,
                            CommandInfo parameter,
@@ -12,7 +23,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                            DirectoryInfo subCommnandDirectoryInfo,
                            CommandInfo subCommand)
         {
-            if (!ObjectExtensions.IsNotNull((object?)subCommand.Argument) && !subCommand.Options.Any() && !subCommand.SubCommands.IsNullOrEmpty())
+            if (!subCommand.Argument.IsNotNull() && !subCommand.Options.Any() && !subCommand.SubCommands.IsNullOrEmpty())
             {
                 return;
             }

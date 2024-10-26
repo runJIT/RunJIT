@@ -1,10 +1,23 @@
 ﻿using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class CreateOptionsStructure(IOptionInterfaceBuilder optionInterfaceBuilder,
-                                                 IOptionImplementationBuilder optionImplementationBuilder,
-                                                 ITypeService typeService)
+    public static class AddCreateOptionsStructureExtension
+    {
+        public static void AddCreateOptionsStructure(this IServiceCollection services)
+        {
+            services.AddOptionInterfaceBuilder();
+            services.AddOptionImplementationBuilder();
+            services.AddTypeService();
+
+            services.AddSingletonIfNotExists<CreateOptionsStructure>();
+        }
+    }
+
+    internal sealed class CreateOptionsStructure(OptionInterfaceBuilder optionInterfaceBuilder,
+                                                 OptionImplementationBuilder optionImplementationBuilder,
+                                                 TypeService typeService)
         : IBuildCommandFileStructure
     {
         public void Create(string projectName,

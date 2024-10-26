@@ -1,9 +1,21 @@
 ﻿using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class CreateSubCommandStructure(ICommandBuilderForSubCommands commandBuilderForSubCommands,
-                                                    ISubCommandInterfaceBuilder subCommandInterfaceBuilder) : IBuildCommandFileStructure
+    public static class AddCreateSubCommandStructureExtension
+    {
+        public static void AddCreateSubCommandStructure(this IServiceCollection services)
+        {
+            services.AddCommandBuilderForSubCommands();
+            services.AddSubCommandInterfaceBuilder();
+
+            services.AddSingletonIfNotExists<IBuildCommandFileStructure, CreateSubCommandStructure>();
+        }
+    }
+
+    internal sealed class CreateSubCommandStructure(CommandBuilderForSubCommands commandBuilderForSubCommands,
+                                                    SubCommandInterfaceBuilder subCommandInterfaceBuilder) : IBuildCommandFileStructure
     {
         public void Create(string projectName,
                            CommandInfo parameter,

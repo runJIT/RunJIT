@@ -1,9 +1,18 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class RootCommandBuilder : IRootCommandBuilder
+    public static class AddRootCommandBuilderExtension
+    {
+        public static void AddRootCommandBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<RootCommandBuilder>();
+        }
+    }
+
+    internal sealed class RootCommandBuilder
     {
         private const string Template =
             @"using System.CommandLine;    

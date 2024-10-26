@@ -1,8 +1,18 @@
 ﻿using Argument.Check;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class SubCommandInterfaceBuilder : ISubCommandInterfaceBuilder
+    public static class AddSubCommandInterfaceBuilderExtension
+    {
+        public static void AddSubCommandInterfaceBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<SubCommandInterfaceBuilder>();
+        }
+    }
+
+    internal sealed class SubCommandInterfaceBuilder 
     {
         private const string Template =
             @"using System.CommandLine;

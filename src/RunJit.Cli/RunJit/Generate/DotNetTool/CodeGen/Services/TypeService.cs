@@ -1,0 +1,48 @@
+﻿using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
+{
+    public static class AddTypeServiceExtension
+    {
+        public static void AddTypeService(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<TypeService>();
+        }
+    }
+
+    internal sealed class TypeService 
+    {
+        public string GetFullQualifiedName(string projectName, FileInfo fileInfo)
+        {
+            var path = CollectPath(fileInfo.Directory, projectName).Reverse().ToList();
+            var fullQualifiedName = $"{projectName}.{path.Flatten(".")}.{fileInfo.NameWithoutExtension}";
+            return fullQualifiedName;
+        }
+
+        private static IEnumerable<string> CollectPath(DirectoryInfo? startDirectoryInfo, string name)
+        {
+            if (startDirectoryInfo == null)
+            {
+                yield break;
+            }
+
+            if (startDirectoryInfo.Name != name)
+            {
+                // Hint: Structure in the solutions all was normalized, that first char is to upper.
+                yield return startDirectoryInfo.Name.FirstCharToUpper();
+            }
+            else
+            {
+                yield break;
+            }
+
+            var result = CollectPath(startDirectoryInfo.Parent, name).ToList();
+            foreach (var value in result)
+            {
+                // Hint: Structure in the solutions all was normalized, that first char is to upper.
+                yield return value.FirstCharToUpper();
+            }
+        }
+    }
+}

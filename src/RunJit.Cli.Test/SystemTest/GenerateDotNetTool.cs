@@ -42,7 +42,6 @@ namespace RunJit.Cli.Test.SystemTest
 
         [Ignore("Only DEV tests")]
         [TestMethod]
-        //
         public async Task Generate_Cli_For_Web_Api_Dev_Only()
         {
             // 1. Create new Web Api

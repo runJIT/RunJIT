@@ -1,8 +1,21 @@
 ﻿using Argument.Check;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class NewOptionExpressionService : INewOptionExpressionService
+    public static class AddNewOptionExpressionServiceExtension
+    {
+        public static void AddNewOptionExpressionService(this IServiceCollection services)
+        {
+            services.AddNewOptionExpressionBuilderWithArgument();
+            services.AddNewOptionExpressionBuilderWithoutArgument();
+
+            services.AddSingletonIfNotExists<NewOptionExpressionService>();
+        }
+    }
+
+    internal sealed class NewOptionExpressionService
     {
         private readonly IEnumerable<INewOptionExpressionBuilder> _newOptionExpressionBuilders;
 

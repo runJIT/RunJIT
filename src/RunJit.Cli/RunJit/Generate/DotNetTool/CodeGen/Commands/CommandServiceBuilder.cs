@@ -1,8 +1,18 @@
 ﻿using Argument.Check;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class CommandServiceBuilder : ICommandServiceBuilder
+    public static class AddCommandServiceBuilderExtension
+    {
+        public static void AddCommandServiceBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<CommandServiceBuilder>();
+        }
+    }
+
+    internal sealed class CommandServiceBuilder
     {
         private const string Template =
             @"

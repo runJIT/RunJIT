@@ -8,6 +8,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         public static void AddAppCodeGen(this IServiceCollection services)
         {
+            services.AddConsoleService();
+
             services.AddSingletonIfNotExists<INetToolCodeGen, AppCodeGen>();
         }
     }

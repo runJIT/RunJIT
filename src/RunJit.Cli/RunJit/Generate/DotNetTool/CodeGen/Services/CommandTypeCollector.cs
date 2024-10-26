@@ -1,7 +1,16 @@
 ﻿using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
+    public static class AddCommandTypeCollectorExtension
+    {
+        public static void AddCommandTypeCollector(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<CommandTypeCollector>();
+        }
+    }
+
     // Hint, System.CommandLine.Experimental needs one root command with one sub command
     // But we want to use https://docs.microsoft.com/de-de/dotnet/core/tools/extensibility
     // to reuse the 'dotnet' root command. So that it feels like this command comes direct

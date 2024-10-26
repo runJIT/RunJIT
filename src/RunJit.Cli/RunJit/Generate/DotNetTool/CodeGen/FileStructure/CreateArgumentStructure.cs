@@ -1,10 +1,23 @@
 ﻿using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class CreateArgumentStructure(IArgumentInterfaceBuilder argumentInterfaceBuilder,
-                                                  IArgumentBuilder argumentBuilder,
-                                                  ITypeService typeService)
+    public static class AddCreateArgumentStructureExtension
+    {
+        public static void AddCreateArgumentStructure(this IServiceCollection services)
+        {
+            services.AddArgumentInterfaceBuilder();
+            services.AddArgumentBuilder();
+            services.AddTypeService();
+
+            services.AddSingletonIfNotExists<CreateArgumentStructure>();
+        }
+    }
+
+    internal sealed class CreateArgumentStructure(ArgumentInterfaceBuilder argumentInterfaceBuilder,
+                                                  ArgumentBuilder argumentBuilder,
+                                                  TypeService typeService)
         : IBuildCommandFileStructure
     {
         public void Create(string projectName,
@@ -15,7 +28,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                            DirectoryInfo subCommnandDirectoryInfo,
                            CommandInfo subCommand)
         {
-            if (ObjectExtensions.IsNull((object?)subCommand.Argument))
+            if (subCommand.Argument.IsNull())
             {
                 return;
             }

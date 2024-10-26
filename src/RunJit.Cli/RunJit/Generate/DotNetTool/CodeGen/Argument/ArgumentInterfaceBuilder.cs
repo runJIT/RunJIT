@@ -1,8 +1,18 @@
 ﻿using Argument.Check;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class ArgumentInterfaceBuilder : IArgumentInterfaceBuilder
+    public static class AddArgumentInterfaceBuilderExtension
+    {
+        public static void AddArgumentInterfaceBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<ArgumentInterfaceBuilder>();
+        }
+    }
+
+    internal sealed class ArgumentInterfaceBuilder 
     {
         private const string Template =
             @"

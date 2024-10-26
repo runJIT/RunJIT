@@ -1,8 +1,20 @@
 ﻿using Argument.Check;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class CommandBuilderWithOptions : ICommandBuilderWithOptions
+    public static class AddCommandBuilderWithOptionsExtension
+    {
+        public static void AddCommandBuilderWithOptions(this IServiceCollection services)
+        {
+            services.AddCommandHandlerBuilder();
+
+            services.AddSingletonIfNotExists<CommandBuilderWithOptions>();
+        }
+    }
+
+    internal sealed class CommandBuilderWithOptions
     {
         private const string Template =
             @"using System.CommandLine;
@@ -33,9 +45,9 @@ namespace $namespace$
     }
 }";
 
-        private readonly ICommandHandlerBuilder _commandHandlerBuilder;
+        private readonly CommandHandlerBuilder _commandHandlerBuilder;
 
-        public CommandBuilderWithOptions(ICommandHandlerBuilder commandHandlerBuilder)
+        public CommandBuilderWithOptions(CommandHandlerBuilder commandHandlerBuilder)
         {
             Throw.IfNull(() => commandHandlerBuilder);
 

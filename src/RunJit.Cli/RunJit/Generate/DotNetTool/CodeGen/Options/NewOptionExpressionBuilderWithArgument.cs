@@ -1,8 +1,17 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
+    public static class AddNewOptionExpressionBuilderWithArgumentExtension
+    {
+        public static void AddNewOptionExpressionBuilderWithArgument(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<INewOptionExpressionBuilder, NewOptionExpressionBuilderWithArgument>();
+        }
+    }
+
     internal sealed class NewOptionExpressionBuilderWithArgument : INewOptionExpressionBuilder
     {
         private const string OptionArgumentTemplate =

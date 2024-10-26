@@ -8,6 +8,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         public static void AddCommandCodeGen(this IServiceCollection services)
         {
+            services.AddCommandTypeCollector();
+            services.AddNameSpaceCollector();
+            services.AddCreateCommandClasses();
+
             services.AddSingletonIfNotExists<INetToolCodeGen, CommandCodeGen>();
         }
     }

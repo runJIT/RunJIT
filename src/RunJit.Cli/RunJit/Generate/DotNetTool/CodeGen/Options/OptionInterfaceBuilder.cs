@@ -1,8 +1,18 @@
 ﻿using Argument.Check;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class OptionInterfaceBuilder : IOptionInterfaceBuilder
+    public static class AddOptionInterfaceBuilderExtension
+    {
+        public static void AddOptionInterfaceBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<OptionInterfaceBuilder>();
+        }
+    }
+
+    internal sealed class OptionInterfaceBuilder
     {
         private const string Template =
             @"using System.CommandLine;

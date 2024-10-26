@@ -1,16 +1,23 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
+    public static class AddCommandHandlerWithArgsOrOptionBuilderExtension
+    {
+        public static void AddCommandHandlerWithArgsOrOptionBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<ICommandHandlerStringBuilder, CommandHandlerWithArgsOrOptionBuilder>();
+        }
+    }
+
     internal sealed class CommandHandlerWithArgsOrOptionBuilder : ICommandHandlerStringBuilder
     {
         private const string Template = "CommandHandler.Create<$types$>(($argument-names$) => _$command-argument-name$Service.HandleAsync(new $command-name$Parameters($argument-names$)))";
 
         public string Build(CommandInfo parameterInfo)
         {
-            Throw.IfNull(() => parameterInfo);
-
             var arguments = BuildCtorArguments(parameterInfo).ToList();
             var types = arguments.Select(arg => arg.Type).Flatten(", ");
             var argNames = arguments.Select(arg => arg.Name).Flatten(", ");

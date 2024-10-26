@@ -1,9 +1,20 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class OptionImplementationBuilder : IOptionImplementationBuilder
+    public static class AddOptionImplementationBuilderExtension
+    {
+        public static void AddOptionImplementationBuilder(this IServiceCollection services)
+        {
+            services.AddOptionMethodsBuilder();
+
+            services.AddSingletonIfNotExists<OptionImplementationBuilder>();
+        }
+    }
+
+    internal sealed class OptionImplementationBuilder
     {
         private const string Template =
             @"using System.CommandLine; 
@@ -21,9 +32,9 @@ $build-option-method$
     }
 }";
 
-        private readonly IOptionMethodsBuilder _optionMethodsBuilder;
+        private readonly OptionMethodsBuilder _optionMethodsBuilder;
 
-        public OptionImplementationBuilder(IOptionMethodsBuilder optionMethodsBuilder)
+        public OptionImplementationBuilder(OptionMethodsBuilder optionMethodsBuilder)
         {
             Throw.IfNull(() => optionMethodsBuilder);
 

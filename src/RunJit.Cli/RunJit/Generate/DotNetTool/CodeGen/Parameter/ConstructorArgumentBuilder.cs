@@ -1,8 +1,17 @@
 ﻿using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class ConstructorArgumentBuilder : IConstructorArgumentBuilder
+    public static class AddConstructorArgumentBuilderExtension
+    {
+        public static void AddConstructorArgumentBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<ConstructorArgumentBuilder>();
+        }
+    }
+
+    internal sealed class ConstructorArgumentBuilder
     {
         public IEnumerable<CtorArgument> Build(CommandInfo parameterInfo)
         {

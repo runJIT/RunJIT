@@ -1,8 +1,21 @@
 ﻿using Argument.Check;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    internal sealed class ParameterClassBuilder : IParameterClassBuilder
+    public static class AddParameterClassBuilderExtension
+    {
+        public static void AddParameterClassBuilder(this IServiceCollection services)
+        {
+            services.AddParameterWithArgsOrOptionsClassBuilder();
+            services.AddParameterWithoutArgsOrOptionsClassBuilder();
+
+            services.AddSingletonIfNotExists<ParameterClassBuilder>();
+        }
+    }
+
+    internal sealed class ParameterClassBuilder 
     {
         private readonly IEnumerable<IParameterSpecificClassBuilder> _parameterSpecificClassBuilders;
 

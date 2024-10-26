@@ -1,8 +1,19 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
+    public static class AddParameterWithArgsOrOptionsClassBuilderExtension
+    {
+        public static void AddParameterWithArgsOrOptionsClassBuilder(this IServiceCollection services)
+        {
+            services.AddConstructorArgumentBuilder();
+
+            services.AddSingletonIfNotExists<IParameterSpecificClassBuilder, ParameterWithArgsOrOptionsClassBuilder>();
+        }
+    }
+
     internal sealed class ParameterWithArgsOrOptionsClassBuilder : IParameterSpecificClassBuilder
     {
         private const string Template =
@@ -22,9 +33,9 @@ $properties$
 
         private const string CtorArgument = @"$type$ $argName$";
 
-        private readonly IConstructorArgumentBuilder _constructorArgumentBuilder;
+        private readonly ConstructorArgumentBuilder _constructorArgumentBuilder;
 
-        public ParameterWithArgsOrOptionsClassBuilder(IConstructorArgumentBuilder constructorArgumentBuilder)
+        public ParameterWithArgsOrOptionsClassBuilder(ConstructorArgumentBuilder constructorArgumentBuilder)
         {
             Throw.IfNull(() => constructorArgumentBuilder);
 
