@@ -7,7 +7,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         public static void AddCreateOptionsStructure(this IServiceCollection services)
         {
-            services.AddOptionInterfaceBuilder();
             services.AddOptionImplementationBuilder();
             services.AddTypeService();
 
@@ -15,20 +14,19 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal sealed class CreateOptionsStructure(OptionInterfaceBuilder optionInterfaceBuilder,
-                                                 OptionImplementationBuilder optionImplementationBuilder,
+    internal sealed class CreateOptionsStructure(OptionImplementationBuilder optionImplementationBuilder,
                                                  TypeService typeService)
         : IBuildCommandFileStructure
     {
         public void Create(string projectName,
-                           CommandInfo parameter,
+                           CommandInfo? parentCommandInfo,
                            CommandTypeCollector commandTypeCollector,
                            string currentPath,
                            NameSpaceCollector namespaceCollector,
                            DirectoryInfo subCommnandDirectoryInfo,
-                           CommandInfo subCommand)
+                           CommandInfo commandInfo)
         {
-            if (subCommand.Options.IsNullOrEmpty())
+            if (commandInfo.Options.IsNullOrEmpty())
             {
                 return;
             }
@@ -36,19 +34,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var optionFolderPath = Path.Combine(subCommnandDirectoryInfo.FullName, "Options");
             var optionFolder = Directory.CreateDirectory(optionFolderPath);
 
-            var optionsInterfaceSyntaxTree = optionInterfaceBuilder.Build(projectName, subCommand, currentPath);
-            var optionsInterfaceFilePath = new FileInfo(Path.Combine(optionFolder.FullName, $"I{subCommand.NormalizedName}OptionsBuilder.cs"));
-
-            File.WriteAllText(optionsInterfaceFilePath.FullName, optionsInterfaceSyntaxTree);
-
-            var optionsImplementationSyntaxTree = optionImplementationBuilder.Build(projectName, subCommand, currentPath);
-            var optionsImplementationFilePath = new FileInfo(Path.Combine(optionFolder.FullName, $"{subCommand.NormalizedName}OptionsBuilder.cs"));
+            var optionsImplementationSyntaxTree = optionImplementationBuilder.Build(projectName, commandInfo, currentPath);
+            var optionsImplementationFilePath = new FileInfo(Path.Combine(optionFolder.FullName, $"{commandInfo.NormalizedName}OptionsBuilder.cs"));
             File.WriteAllText(optionsImplementationFilePath.FullName, optionsImplementationSyntaxTree);
 
-            var interfaceToRegister = typeService.GetFullQualifiedName(projectName, optionsInterfaceFilePath);
             var implementationToRegister = typeService.GetFullQualifiedName(projectName, optionsImplementationFilePath);
 
-            commandTypeCollector.Add(subCommand, new TypeToRegister(interfaceToRegister, implementationToRegister));
+            commandTypeCollector.Add(commandInfo, new TypeToRegister(implementationToRegister, implementationToRegister));
 
             namespaceCollector.Add($"{currentPath}.Options");
         }

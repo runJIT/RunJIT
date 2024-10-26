@@ -302,10 +302,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                         // Temp tool build do not allow exceptions
                         var endpointCommand = new CommandInfo()
                         {
-                            Name = endoint.SwaggerOperationId,
-                            NormalizedName = endoint.SwaggerOperationId,
-                            Description = endoint.SwaggerOperationId,
-                            Value = endoint.SwaggerOperationId,
+                            Name = endoint.SwaggerOperationId.FirstCharToUpper(),
+                            NormalizedName = endoint.SwaggerOperationId.FirstCharToUpper(),
+                            Description = endoint.SwaggerOperationId.FirstCharToUpper(),
+                            Value = endoint.SwaggerOperationId.FirstCharToUpper(),
                             Options = new List<OptionInfo>()
                                       {
                                           new OptionInfo()

@@ -18,12 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             @"
 namespace $namespace$
 {    
-    internal sealed class $command-name$Parameters
-    {
-        public $command-name$Parameters()
-        {
-        }
-    }
+    internal sealed record $command-name$Parameters();
 }";
 
         public string Build(string projectName,
@@ -31,7 +26,6 @@ namespace $namespace$
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);
-            Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var newTemplate = Template.Replace("$projectName$", projectName)
@@ -45,7 +39,7 @@ namespace $namespace$
         {
             Throw.IfNull(() => parameterInfo);
 
-            return ObjectExtensions.IsNull((object?)parameterInfo.Argument) && parameterInfo.Options.IsNullOrEmpty();
+            return parameterInfo.Argument.IsNull() && parameterInfo.Options.IsNullOrEmpty();
         }
     }
 }

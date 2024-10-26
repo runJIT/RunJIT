@@ -20,26 +20,18 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             @"
 namespace $namespace$
 {    
-    internal sealed class $command-name$Parameters
-    {
-        public $command-name$Parameters($ctor-arguments$)
-        {
-$agrument-to-properties$
-        }
-
-$properties$
-    }
+    internal sealed record $command-name$Parameters($ctor-arguments$);
 }";
 
         private const string CtorArgument = @"$type$ $argName$";
 
-        private readonly ConstructorArgumentBuilder _constructorArgumentBuilder;
+        private readonly PrimaryConstructorArgumentBuilder _primaryConstructorArgumentBuilder;
 
-        public ParameterWithArgsOrOptionsClassBuilder(ConstructorArgumentBuilder constructorArgumentBuilder)
+        public ParameterWithArgsOrOptionsClassBuilder(PrimaryConstructorArgumentBuilder primaryConstructorArgumentBuilder)
         {
-            Throw.IfNull(() => constructorArgumentBuilder);
+            Throw.IfNull(() => primaryConstructorArgumentBuilder);
 
-            _constructorArgumentBuilder = constructorArgumentBuilder;
+            _primaryConstructorArgumentBuilder = primaryConstructorArgumentBuilder;
         }
 
         public string Build(string projectName,
@@ -50,7 +42,7 @@ $properties$
             Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
-            var ctorArguments = _constructorArgumentBuilder.Build(parameterInfo).ToList();
+            var ctorArguments = _primaryConstructorArgumentBuilder.Build(parameterInfo).ToList();
             var properties = BuildProperties(ctorArguments).ToList();
             var propertyString = BuildPropertyString(properties);
 
@@ -71,7 +63,7 @@ $properties$
         {
             Throw.IfNull(() => parameterInfo);
 
-            return ObjectExtensions.IsNotNull((object?)parameterInfo.Argument) || parameterInfo.Options.Any();
+            return parameterInfo.Argument.IsNotNull() || parameterInfo.Options.Any();
         }
 
         private string BuildPropertyString(IEnumerable<Property> properties)

@@ -27,12 +27,10 @@ namespace $namespace$
 
         public string Build(string project,
                             CommandInfo parameterInfo,
-                            CommandInfo parent,
+                            CommandInfo? parent,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
-            Throw.IfNull(parameterInfo);
-            Throw.IfNull(parent);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)

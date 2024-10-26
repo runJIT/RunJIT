@@ -18,39 +18,41 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     SubCommandInterfaceBuilder subCommandInterfaceBuilder) : IBuildCommandFileStructure
     {
         public void Create(string projectName,
-                           CommandInfo parameter,
+                           CommandInfo? parentCommandInfo,
                            CommandTypeCollector commandTypeCollector,
                            string currentPath,
                            NameSpaceCollector namespaceCollector,
                            DirectoryInfo subCommnandDirectoryInfo,
-                           CommandInfo subCommand)
+                           CommandInfo commandInfo)
         {
-            if (!subCommand.SubCommands.IsNotNull() || !subCommand.SubCommands.Any())
+            if (!commandInfo.SubCommands.IsNotNull() || !commandInfo.SubCommands.Any())
             {
                 return;
             }
 
-            var result = commandBuilderForSubCommands.Build(projectName, subCommand, parameter,
+            var result = commandBuilderForSubCommands.Build(projectName, commandInfo, parentCommandInfo,
                                                             currentPath);
 
-            var filePath0 = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"{subCommand.NormalizedName}CommandBuilder.cs"));
+            var filePath0 = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"{commandInfo.NormalizedName}CommandBuilder.cs"));
 
             File.WriteAllText(filePath0.FullName, result);
 
-            var subCommandBuilder = subCommandInterfaceBuilder.Build(projectName, subCommand, parameter,
+            var subCommandBuilder = subCommandInterfaceBuilder.Build(projectName, commandInfo, parentCommandInfo,
                                                                      currentPath);
 
-            var filePath1 = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"I{subCommand.NormalizedName}SubCommandBuilder.cs"));
+            var filePath1 = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"I{commandInfo.NormalizedName}SubCommandBuilder.cs"));
 
             File.WriteAllText(filePath1.FullName, subCommandBuilder);
 
             var splittedNamespace = currentPath.Split(".").ToList();
             splittedNamespace.Remove(splittedNamespace.Last());
             var newNamespaceForInterface = splittedNamespace.Flatten(".");
-            var interfaceType = $"{newNamespaceForInterface}.I{parameter.NormalizedName}SubCommandBuilder";
-            var implementation = $"{currentPath}.{filePath0.NameWithoutExtension}";
 
-            commandTypeCollector.Add(subCommand, new TypeToRegister(interfaceType, implementation));
+            var implementation = $"{currentPath}.{filePath0.NameWithoutExtension()}";
+            var interfaceType = parentCommandInfo.IsNull() ? implementation : $"{newNamespaceForInterface}.I{parentCommandInfo?.NormalizedName}SubCommandBuilder";
+            
+
+            commandTypeCollector.Add(commandInfo, new TypeToRegister(interfaceType, implementation));
         }
     }
 }

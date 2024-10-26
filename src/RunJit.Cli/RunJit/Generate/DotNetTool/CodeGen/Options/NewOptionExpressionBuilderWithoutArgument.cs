@@ -36,7 +36,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         {
             Throw.IfNull(() => optionInfo);
 
-            return ObjectExtensions.IsNull((object?)optionInfo.Argument);
+            return optionInfo.Argument.IsNull();
         }
     }
 }

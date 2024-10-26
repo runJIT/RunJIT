@@ -3,11 +3,11 @@
     internal interface IBuildCommandFileStructure
     {
         void Create(string projectName,
-                    CommandInfo parameter,
+                    CommandInfo? parentCommandInfo,
                     CommandTypeCollector commandTypeCollector,
                     string currentPath,
                     NameSpaceCollector namespaceCollector,
                     DirectoryInfo subCommnandDirectoryInfo,
-                    CommandInfo subCommand);
+                    CommandInfo commandInfo);
     }
 }

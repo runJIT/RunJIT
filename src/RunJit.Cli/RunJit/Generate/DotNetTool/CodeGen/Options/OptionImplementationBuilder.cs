@@ -21,7 +21,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
 namespace $namespace$
 {    
-    internal sealed class $command-name$OptionsBuilder : I$command-name$OptionsBuilder
+    internal sealed class $command-name$OptionsBuilder
     {
         public IEnumerable<Option> Build()
         {   

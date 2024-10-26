@@ -26,7 +26,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                            DirectoryInfo rootDirectory,
                            CommandTypeCollector commandTypeCollector,
                            string currentPath,
-                           NameSpaceCollector namespaceCollector)
+                           NameSpaceCollector namespaceCollector,
+                           CommandInfo? parentCommand = null)
         {
             var currentRootPath = $"{currentPath}";
 
@@ -36,15 +37,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var subCommnandDirectoryInfo = new DirectoryInfo(Path.Combine(rootDirectory.FullName, commandInfo.NormalizedName));
             subCommnandDirectoryInfo.Create();
 
-            commandFileStructures.ForEach(structure => structure.Create(projectName, commandInfo, commandTypeCollector,
+            commandFileStructures.ForEach(structure => structure.Create(projectName, parentCommand, commandTypeCollector,
                                                                         currentPath, namespaceCollector, subCommnandDirectoryInfo,
                                                                         commandInfo));
 
 
             foreach (var commandInfoSubCommand in commandInfo.SubCommands)
             {
-                Invoke(projectName, commandInfoSubCommand, subCommnandDirectoryInfo,
-                       commandTypeCollector, currentPath, namespaceCollector);
+                Invoke(projectName, commandInfoSubCommand, subCommnandDirectoryInfo, commandTypeCollector, currentPath, namespaceCollector, commandInfo);
             }
         }
     }

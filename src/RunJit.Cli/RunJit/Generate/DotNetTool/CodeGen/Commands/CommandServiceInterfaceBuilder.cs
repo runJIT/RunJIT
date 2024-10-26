@@ -29,7 +29,6 @@ namespace $namespace$
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
-            Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var currentNamespace = $"{nameSpace}.Service";

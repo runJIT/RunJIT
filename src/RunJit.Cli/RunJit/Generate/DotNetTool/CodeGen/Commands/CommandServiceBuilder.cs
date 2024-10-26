@@ -19,7 +19,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
 namespace $namespace$
 {    
-    internal sealed class $command-name$Service : I$command-name$Service
+    internal sealed class $command-name$Service
     {       
         public Task HandleAsync($command-name$Parameters parameters)
         {
@@ -33,7 +33,6 @@ namespace $namespace$
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
-            Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var currentNamespace = $"{nameSpace}.Service";

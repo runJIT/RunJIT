@@ -16,20 +16,20 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class CreateParameterClassStructure(ParameterClassBuilder parameterClassBuilder) : IBuildCommandFileStructure
     {
         public void Create(string projectName,
-                           CommandInfo parameter,
+                           CommandInfo? parentCommandInfo,
                            CommandTypeCollector commandTypeCollector,
                            string currentPath,
                            NameSpaceCollector namespaceCollector,
                            DirectoryInfo subCommnandDirectoryInfo,
-                           CommandInfo subCommand)
+                           CommandInfo commandInfo)
         {
-            if (!subCommand.Argument.IsNotNull() && !subCommand.Options.Any() && !subCommand.SubCommands.IsNullOrEmpty())
+            if (!commandInfo.Argument.IsNotNull() && !commandInfo.Options.Any() && !commandInfo.SubCommands.IsNullOrEmpty())
             {
                 return;
             }
 
-            var parameterModelClass = parameterClassBuilder.Build(projectName, subCommand, currentPath);
-            var parameterClassFileInfo = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"{subCommand.NormalizedName}Parameters.cs"));
+            var parameterModelClass = parameterClassBuilder.Build(projectName, commandInfo, currentPath);
+            var parameterClassFileInfo = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"{commandInfo.NormalizedName}Parameters.cs"));
             File.WriteAllText(parameterClassFileInfo.FullName, parameterModelClass);
             namespaceCollector.Add($"{currentPath}.Service");
         }

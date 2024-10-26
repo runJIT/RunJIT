@@ -25,19 +25,10 @@ using $namespace$.Service;
 
 namespace $namespace$
 {                    
-    internal sealed class $command-name$CommandBuilder : I$parent-command-name$SubCommandBuilder
-    {
-        private readonly I$command-name$Service _$command-service-argument-name$Service;
-        private readonly I$command-name$OptionsBuilder _optionsBuilder;
-        private readonly I$command-name$ArgumentBuilder _argumentBuilder;
-
-        public $command-name$CommandBuilder(I$command-name$Service $command-service-argument-name$Service, I$command-name$OptionsBuilder optionsBuilder, I$command-name$ArgumentBuilder argumentBuilder)
-        {                    
-            _$command-service-argument-name$Service = $command-service-argument-name$Service;
-            _optionsBuilder = optionsBuilder;
-            _argumentBuilder = argumentBuilder;
-        }
-
+    internal sealed class $command-name$CommandBuilder(I$command-name$Service $command-service-argument-name$Service, 
+                                                       I$command-name$OptionsBuilder optionsBuilder, 
+                                                       I$command-name$ArgumentBuilder argumentBuilder)$interface$
+    {      
         public Command Build()
         {
             var command = new Command(""$command-argument-name$"", ""$command-description$"");
@@ -53,31 +44,31 @@ namespace $namespace$
 
         public CommandBuilderWithArgumentAndOption(CommandHandlerBuilder commandHandlerBuilder)
         {
-            Throw.IfNull(() => commandHandlerBuilder);
+            
 
             _commandHandlerBuilder = commandHandlerBuilder;
         }
 
         public string Build(string project,
-                            CommandInfo parameterInfo,
-                            CommandInfo parent,
+                            CommandInfo commandInfo,
+                            CommandInfo? parentCommandInfo,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
-            Throw.IfNull(() => parameterInfo);
-            Throw.IfNull(() => parent);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
-            var commandHandler = _commandHandlerBuilder.Build(parameterInfo);
+            var commandHandler = _commandHandlerBuilder.Build(commandInfo);
 
-            var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)
-                                      .Replace("$parent-command-name$", parent.NormalizedName)
-                                      .Replace("$command-description$", parameterInfo.Description)
-                                      .Replace("$command-service-argument-name$", parameterInfo.Name)
-                                      .Replace("$command-argument-name$", parameterInfo.Name)
+            var interfaceImplementation = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? string.Empty : $" : I{parentCommandInfo.NormalizedName}SubCommandBuilder";
+
+            var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
+                                      .Replace("$command-description$", commandInfo.Description)
+                                      .Replace("$command-service-argument-name$", commandInfo.Name)
+                                      .Replace("$command-argument-name$", commandInfo.Name)
                                       .Replace("$command-handler$", commandHandler)
                                       .Replace("$namespace$", nameSpace)
-                                      .Replace("$project-name$", project);
+                                      .Replace("$project-name$", project)
+                                      .Replace("$interface$", interfaceImplementation);
 
             return newTemplate;
         }

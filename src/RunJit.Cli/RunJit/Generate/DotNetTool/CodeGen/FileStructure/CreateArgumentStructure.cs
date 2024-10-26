@@ -7,7 +7,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         public static void AddCreateArgumentStructure(this IServiceCollection services)
         {
-            services.AddArgumentInterfaceBuilder();
             services.AddArgumentBuilder();
             services.AddTypeService();
 
@@ -15,20 +14,19 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal sealed class CreateArgumentStructure(ArgumentInterfaceBuilder argumentInterfaceBuilder,
-                                                  ArgumentBuilder argumentBuilder,
+    internal sealed class CreateArgumentStructure(ArgumentBuilder argumentBuilder,
                                                   TypeService typeService)
         : IBuildCommandFileStructure
     {
         public void Create(string projectName,
-                           CommandInfo parameter,
+                           CommandInfo? parentCommandInfo,
                            CommandTypeCollector commandTypeCollector,
                            string currentPath,
                            NameSpaceCollector namespaceCollector,
                            DirectoryInfo subCommnandDirectoryInfo,
-                           CommandInfo subCommand)
+                           CommandInfo commandInfo)
         {
-            if (subCommand.Argument.IsNull())
+            if (commandInfo.Argument.IsNull())
             {
                 return;
             }
@@ -36,18 +34,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var argumentFolder = new DirectoryInfo(Path.Combine(subCommnandDirectoryInfo.FullName, "Arguments"));
             argumentFolder.Create();
 
-            var argumentInterfaceSyntaxTree = argumentInterfaceBuilder.Build(projectName, subCommand, currentPath);
-            var argumentInterfaceFilePath = new FileInfo(Path.Combine(argumentFolder.FullName, $"I{subCommand.NormalizedName}ArgumentBuilder.cs"));
-            File.WriteAllText(argumentInterfaceFilePath.FullName, argumentInterfaceSyntaxTree);
-
-            var argumentImplementationSyntaxTree = argumentBuilder.Build(projectName, subCommand, currentPath);
-            var argumentImplementationFilePath = new FileInfo(Path.Combine(argumentFolder.FullName, $"{subCommand.NormalizedName}ArgumentBuilder.cs"));
+            var argumentImplementationSyntaxTree = argumentBuilder.Build(projectName, commandInfo, currentPath);
+            var argumentImplementationFilePath = new FileInfo(Path.Combine(argumentFolder.FullName, $"{commandInfo.NormalizedName}ArgumentBuilder.cs"));
             File.WriteAllText(argumentImplementationFilePath.FullName, argumentImplementationSyntaxTree);
 
-            var interfaceToRegister = typeService.GetFullQualifiedName(projectName, argumentInterfaceFilePath);
             var implementationToRegister = typeService.GetFullQualifiedName(projectName, argumentImplementationFilePath);
 
-            commandTypeCollector.Add(subCommand, new TypeToRegister(interfaceToRegister, implementationToRegister));
+            commandTypeCollector.Add(commandInfo, new TypeToRegister(implementationToRegister, implementationToRegister));
 
             namespaceCollector.Add($"{currentPath}.Arguments");
         }

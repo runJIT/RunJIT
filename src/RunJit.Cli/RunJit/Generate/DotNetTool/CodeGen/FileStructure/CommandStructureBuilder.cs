@@ -21,56 +21,53 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                   CommandBuilderWithOptions commandBuilderWithOptions,
                                                   CommandBuilderWithArgument commandBuilderWithArgument,
                                                   CommandBuilderWithArgumentAndOption commandBuilderWithArgumentAndOption,
-                                                  TypeService typeService)
-        : IBuildCommandFileStructure
+                                                  TypeService typeService) : IBuildCommandFileStructure
     {
         public void Create(string projectName,
-                           CommandInfo parameter,
+                           CommandInfo? parentCommandInfo,
                            CommandTypeCollector commandTypeCollector,
                            string currentPath,
                            NameSpaceCollector namespaceCollector,
                            DirectoryInfo subCommnandDirectoryInfo,
-                           CommandInfo subCommand)
+                           CommandInfo commandInfo)
         {
-            if (subCommand.SubCommands.IsNotNull() && subCommand.SubCommands.Any())
+            if (commandInfo.SubCommands.IsNotNull() && commandInfo.SubCommands.Any())
             {
                 return;
             }
 
             string? command = null;
 
-            if (ObjectExtensions.IsNull((object?)subCommand.Argument) && subCommand.Options.IsEmpty())
+            if (commandInfo.Argument.IsNull() && commandInfo.Options.IsEmpty())
             {
-                command = commandBuilderSimple.Build(projectName, subCommand, parameter,
-                                                     currentPath);
+                command = commandBuilderSimple.Build(projectName, commandInfo, parentCommandInfo, currentPath);
             }
-            else if (ObjectExtensions.IsNull((object?)subCommand.Argument) && subCommand.Options.Any())
+            else if (commandInfo.Argument.IsNull() && commandInfo.Options.Any())
             {
-                command = commandBuilderWithOptions.Build(projectName, subCommand, parameter,
+                command = commandBuilderWithOptions.Build(projectName, commandInfo, parentCommandInfo,
                                                           currentPath);
             }
-            else if (ObjectExtensions.IsNotNull((object?)subCommand.Argument) && subCommand.Options.IsEmpty())
+            else if (commandInfo.Argument.IsNotNull() && commandInfo.Options.IsEmpty())
             {
-                command = commandBuilderWithArgument.Build(projectName, subCommand, parameter,
+                command = commandBuilderWithArgument.Build(projectName, commandInfo, parentCommandInfo,
                                                            currentPath);
             }
-            else if (ObjectExtensions.IsNotNull((object?)subCommand.Argument) && subCommand.Options.Any())
+            else if (commandInfo.Argument.IsNotNull() && commandInfo.Options.Any())
             {
-                command = commandBuilderWithArgumentAndOption.Build(projectName, subCommand, parameter,
-                                                                    currentPath);
+                command = commandBuilderWithArgumentAndOption.Build(projectName, commandInfo, parentCommandInfo, currentPath);
             }
 
-            var fileInfo = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"{subCommand.NormalizedName}CommandBuilder.cs"));
+            var fileInfo = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"{commandInfo.NormalizedName}CommandBuilder.cs"));
             File.WriteAllText(fileInfo.FullName, command);
 
             var splittedNamespace = currentPath.Split(".").ToList();
             splittedNamespace.Remove(splittedNamespace.Last());
             var newNamespaceForInterface = splittedNamespace.Flatten(".");
 
-            var interfaceName = $"{newNamespaceForInterface}.I{parameter.NormalizedName}SubCommandBuilder";
+            var interfaceName = $"{newNamespaceForInterface}.I{parentCommandInfo?.NormalizedName}SubCommandBuilder";
             var implementationToRegister = typeService.GetFullQualifiedName(projectName, fileInfo);
 
-            commandTypeCollector.Add(subCommand, new TypeToRegister(interfaceName, implementationToRegister));
+            commandTypeCollector.Add(commandInfo, new TypeToRegister(interfaceName, implementationToRegister));
         }
     }
 }

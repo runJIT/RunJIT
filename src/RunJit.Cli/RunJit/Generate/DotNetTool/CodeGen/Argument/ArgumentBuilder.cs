@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             @"
 namespace $namespace$
 {    
-    internal sealed class $command-name$ArgumentBuilder : I$command-name$ArgumentBuilder
+    internal sealed class $command-name$ArgumentBuilder
     {                                        
         public System.CommandLine.Argument Build()
         {

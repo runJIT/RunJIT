@@ -16,22 +16,15 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal sealed class CommandBuilderSimple
     {
-        private const string Template =
-            @"using System.CommandLine;
+        private const string Template = @"
+using System.CommandLine;
 using System.CommandLine.Invocation;
 using $namespace$.Service;
 
 namespace $namespace$
 {                
-    internal sealed class $command-name$CommandBuilder : I$parent-command-name$SubCommandBuilder
-    {
-        private readonly I$command-name$Service _$command-service-argument-name$Service;        
-       
-        public $command-name$CommandBuilder(I$command-name$Service $command-service-argument-name$Service)
-        {                    
-            _$command-service-argument-name$Service = $command-service-argument-name$Service;                   
-        }
-
+    internal sealed class $command-name$CommandBuilder(I$command-name$Service $command-service-argument-name$Service)$interface$
+    {   
         public Command Build()
         {
             var command = new Command(""$command-argument-name$"", ""$command-description$"");            
@@ -45,26 +38,29 @@ namespace $namespace$
 
         public CommandBuilderSimple(CommandHandlerBuilder commandHandlerBuilder)
         {
-            Throw.IfNull(() => commandHandlerBuilder);
-
             _commandHandlerBuilder = commandHandlerBuilder;
         }
 
         public string Build(string project,
-                            CommandInfo parameterInfo,
-                            CommandInfo parent,
+                            CommandInfo commandInfo,
+                            CommandInfo? parentCommandInfo,
                             string nameSpace)
         {
-            var commandHandler = _commandHandlerBuilder.Build(parameterInfo);
+            Throw.IfNullOrWhiteSpace(project);
+            Throw.IfNullOrWhiteSpace(nameSpace);
 
-            var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)
-                                      .Replace("$parent-command-name$", parent.NormalizedName)
-                                      .Replace("$command-description$", parameterInfo.Description)
-                                      .Replace("$command-argument-name$", parameterInfo.Name)
-                                      .Replace("$command-service-argument-name$", parameterInfo.NormalizedName.FirstCharToLower())
+            var commandHandler = _commandHandlerBuilder.Build(commandInfo);
+
+            var interfaceImplementation = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? string.Empty : $" : I{parentCommandInfo.NormalizedName}SubCommandBuilder";
+
+            var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
+                                      .Replace("$command-description$", commandInfo.Description)
+                                      .Replace("$command-argument-name$", commandInfo.Name)
+                                      .Replace("$command-service-argument-name$", commandInfo.NormalizedName.FirstCharToLower())
                                       .Replace("$command-handler$", commandHandler)
                                       .Replace("$namespace$", nameSpace)
-                                      .Replace("$project-name$", project);
+                                      .Replace("$project-name$", project)
+                                      .Replace("$interface$", interfaceImplementation);
 
             return newTemplate;
         }
