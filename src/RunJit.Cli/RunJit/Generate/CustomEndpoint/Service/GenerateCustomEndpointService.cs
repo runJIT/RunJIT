@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.CustomEndpoint
         }
     }
 
-    internal class GenerateCustomEndpointService(IConsoleService consoleService)
+    internal class GenerateCustomEndpointService(ConsoleService consoleService)
     {
         public async Task GenerateAsync(GenerateCustomEndpointParameters parameters)
         {

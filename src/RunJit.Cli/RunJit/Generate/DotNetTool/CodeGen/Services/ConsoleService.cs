@@ -1,6 +1,7 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -12,13 +13,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ConsoleServiceCodeGen(IConsoleService consoleService) : INetToolCodeGen
+    internal class ConsoleServiceCodeGen(ConsoleService consoleService,
+                                         NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
-        private const string template = """
+        private const string Template = """
                                         using Extensions.Pack;
                                         using Microsoft.Extensions.DependencyInjection;
 
-                                        namespace RunJit.Cli.Services
+                                        namespace $namespace$
                                         {
                                             internal static class AddConsoleServiceExtension
                                             {
@@ -99,9 +101,18 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             // 2. Add ConsoleService.cs
             var file = Path.Combine(appFolder.FullName, "ConsoleService.cs");
-            await File.WriteAllTextAsync(file, template).ConfigureAwait(false);
 
-            // 3. Print success message
+            var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetToolInfos.DotNetToolName.NormalizedName);
+
+            var formattedTemplate = newTemplate.FormatSyntaxTree();
+
+            await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
+
+            // 3. Adjust namespace provider
+            namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetToolInfos.ProjectName}.Services", true);
+
+            // 4. Print success message
             consoleService.WriteSuccess($"Successfully created {file}");
         }
     }

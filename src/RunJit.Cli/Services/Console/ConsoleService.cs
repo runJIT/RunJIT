@@ -7,28 +7,11 @@ namespace RunJit.Cli.Services
     {
         internal static void AddConsoleService(this IServiceCollection services)
         {
-            services.AddSingletonIfNotExists<IConsoleService, ConsoleService>();
+            services.AddSingletonIfNotExists<ConsoleService>();
         }
     }
 
-    public interface IConsoleService
-    {
-        string ReadLine();
-
-        void WriteInput(string value);
-
-        void WriteSample(string value);
-
-        void WriteError(string value);
-
-        void WriteSuccess(string value);
-
-        void WriteInfo(string value);
-
-        void WriteLine();
-    }
-
-    internal class ConsoleService : IConsoleService
+    internal class ConsoleService
     {
         public void WriteLine()
         {

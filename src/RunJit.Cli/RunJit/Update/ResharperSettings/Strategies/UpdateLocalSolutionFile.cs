@@ -24,7 +24,7 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
         }
     }
 
-    internal class UpdateLocalSolutionFile(IConsoleService consoleService,
+    internal class UpdateLocalSolutionFile(ConsoleService consoleService,
                                            IGitService git,
                                            IAwsCodeCommit awsCodeCommit,
                                            FindSolutionFile findSolutionFile) : IUpdateResharperSettingsStrategy

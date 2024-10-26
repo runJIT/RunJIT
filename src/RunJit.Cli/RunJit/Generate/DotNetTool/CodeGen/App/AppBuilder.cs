@@ -1,6 +1,8 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.RunJit.Generate.CustomEndpoint;
 using RunJit.Cli.Services;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -14,23 +16,28 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class AppBuilderCodeGen(IConsoleService consoleService) : INetToolCodeGen
+    internal class AppBuilderCodeGen(ConsoleService consoleService) : INetToolCodeGen
     {
-        private const string template = """
+        private const string Template = """
+                                        using Microsoft.Extensions.Configuration;
                                         using Microsoft.Extensions.DependencyInjection;
 
-                                        namespace DotNetTool.Builder.App
+                                        namespace $namespace$
                                         {
                                             internal sealed class AppBuilder
                                             {
                                                 internal App Build()
                                                 {
-                                                    var services = new ServiceCollection();
                                                     var startup = new Startup();
-                                        
-                                                    startup.ConfigureServices(services);
-                                        
-                                                    return new App(services.BuildServiceProvider());
+                                                    var services = new ServiceCollection();
+                                                    var configurationBuilder = new ConfigurationBuilder();
+                                                    var configuration = configurationBuilder.Build();
+                                            
+                                                    startup.ConfigureServices(services, configuration);
+                                            
+                                                    var buildServiceProvider = services.BuildServiceProvider();
+                                            
+                                                    return new App(buildServiceProvider);
                                                 }
                                             }
                                         }
@@ -49,7 +56,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             // 2. Add AppBuilder.cs
             var file = Path.Combine(appFolder.FullName, "AppBuilder.cs");
-            await File.WriteAllTextAsync(file, template).ConfigureAwait(false);
+
+            var newTemplate = Template.Replace("$namespace$", dotNetTool.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetTool.DotNetToolName.NormalizedName);
+
+            var formattedTemplate = newTemplate.FormatSyntaxTree();
+
+            await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
 
             // 3. Print success message
             consoleService.WriteSuccess($"Successfully created {file}");

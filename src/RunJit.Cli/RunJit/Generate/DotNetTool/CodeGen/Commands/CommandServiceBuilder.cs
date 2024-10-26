@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -41,7 +42,7 @@ namespace $namespace$
                                       .Replace("$namespace$", currentNamespace)
                                       .Replace("$project-name$", project);
 
-            return newTemplate;
+            return newTemplate.FormatSyntaxTree();
         }
     }
 }

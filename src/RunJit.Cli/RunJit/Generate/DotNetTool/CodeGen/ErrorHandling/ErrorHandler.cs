@@ -1,6 +1,8 @@
-﻿using Extensions.Pack;
+﻿using DotNetTool.Service;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -12,20 +14,29 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ErrorHandlerCodeGen(IConsoleService consoleService) : INetToolCodeGen
+    internal class ErrorHandlerCodeGen(ConsoleService consoleService,
+                                       NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
-        private const string template = """
-                                        using System;
+        private const string Template = """
                                         using System.CommandLine.Invocation;
-                                        using System.Threading.Tasks;
-                                        using DotNetTool.Builder.Services;
-                                        using DotNetTool.Builder.ToolBuilder.FromConsole.Services;
+                                        using Extensions.Pack;
+                                        using Microsoft.Extensions.DependencyInjection;
 
-                                        namespace DotNetTool.Builder.ErrorHandling
+                                        namespace $namespace$
                                         {
-                                            internal sealed class ErrorHandler(IConsoleService consoleService) : IErrorHandler
+                                            internal static class AddErrorHandlerExtension
                                             {
-                                                public async Task HandleErrors(InvocationContext context, Func<InvocationContext, Task> next)
+                                                internal static void AddErrorHandler(this IServiceCollection services)
+                                                {
+                                                    services.AddConsoleService();
+                                            
+                                                    services.AddSingletonIfNotExists<ErrorHandler>();
+                                                }
+                                            }
+                                        
+                                            internal sealed class ErrorHandler(ConsoleService consoleService)
+                                            {
+                                                public async Task HandleErrorsAsync(InvocationContext context, Func<InvocationContext, Task> next)
                                                 {
                                                     try
                                                     {
@@ -35,7 +46,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     {
                                                         var ex = FindMostSuitableException(e);
                                         
-                                                        if (ex is DotNetToolBuilderException)
+                                                        if (ex is $dotNetToolName$Exception)
                                                         {
                                                             consoleService.WriteError(ex.Message);
                                                         }
@@ -52,7 +63,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         
                                                 private static Exception FindMostSuitableException(Exception exception)
                                                 {
-                                                    if (exception is DotNetToolBuilderException)
+                                                    if (exception is $dotNetToolName$Exception)
                                                     {
                                                         return exception;
                                                     }
@@ -70,7 +81,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
-                                        DotNetToolInfos dotNetTool)
+                                        DotNetToolInfos dotNetToolInfos)
         {
             // 1. Add ErrorHandling Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "ErrorHandling"));
@@ -82,9 +93,18 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             // 2. Add ErrorHandler.cs
             var file = Path.Combine(appFolder.FullName, "ErrorHandler.cs");
-            await File.WriteAllTextAsync(file, template).ConfigureAwait(false);
 
-            // 3. Print success message
+            var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetToolInfos.DotNetToolName.NormalizedName);
+
+            var formattedTemplate = newTemplate.FormatSyntaxTree();
+
+            await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
+
+            // 3. Adjust namespace provider
+            namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetToolInfos.ProjectName}.ErrorHandling", true);
+
+            // 4. Print success message
             consoleService.WriteSuccess($"Successfully created {file}");
         }
     }

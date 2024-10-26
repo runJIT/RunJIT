@@ -28,7 +28,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
 
     internal partial class LambdaService(TemplateExtractor templateExtractor,
                                          TemplateService templateService,
-                                         IConsoleService consoleService,
+                                         ConsoleService consoleService,
                                          IDotNet dotNet) : ILambdaService
     {
         public async Task HandleAsync(LambdaParameters parameters)

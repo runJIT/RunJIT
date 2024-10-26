@@ -33,16 +33,11 @@ namespace RunJit.Cli.RunJit
             services.AddCleanupCommandBuilder();
             services.AddLocalizeCommandBuilder();
 
-            services.AddSingletonIfNotExists<IRunJitCommandBuilder, RunJitCommandBuilder>();
+            services.AddSingletonIfNotExists<RunJitCommandBuilder>();
         }
     }
 
-    internal interface IRunJitCommandBuilder
-    {
-        RootCommand Build();
-    }
-
-    internal class RunJitCommandBuilder(IEnumerable<IRunJitSubCommandBuilder> dotnetSubCommandBuilders) : IRunJitCommandBuilder
+    internal class RunJitCommandBuilder(IEnumerable<IRunJitSubCommandBuilder> dotnetSubCommandBuilders)
     {
         public RootCommand Build()
         {

@@ -26,7 +26,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     internal class DotNetToolGen(IProcessService processService,
-                                 IConsoleService consoleService,
+                                 ConsoleService consoleService,
                                  DotNetToolCreator dotNetToolCreator,
                                  DotNetToolGeneratorBuilder clientGeneratorBuilder) : IDotNetToolGen
     {

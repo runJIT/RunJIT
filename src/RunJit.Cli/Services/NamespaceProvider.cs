@@ -1,7 +1,6 @@
 ﻿using System.Xml.Linq;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using Solution.Parser.Project;
 
 namespace RunJit.Cli.Services
 {
@@ -15,18 +14,26 @@ namespace RunJit.Cli.Services
 
     internal class NamespaceProvider
     {
-        internal void SetNamespaceProviderAsync(ProjectFile projectFile,
+        private const string Template = """
+                                <wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                                        xmlns:s="clr-namespace:System;assembly=mscorlib"
+                                                        xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml"
+                                                        xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                                </wpf:ResourceDictionary>
+                                """;
+
+        internal void SetNamespaceProviderAsync(FileInfo projectFile,
                                                 string @namespace,
                                                 bool value)
         {
-            var normalizedNamespace = @namespace.Replace($"{projectFile.ProjectFileInfo.FileNameWithoutExtenion}.", string.Empty);
+            var normalizedNamespace = @namespace.Replace($"{projectFile.NameWithoutExtension()}.", string.Empty);
 
             // runjit_005Cgenerate_005Cclient_005Cbuilders
             var resharperIgnoreEntry = normalizedNamespace.Split('.').Select(part => part.ToLower()).Flatten("_005C");
 
             var xDocument = GetXDocument(projectFile);
 
-            if (xDocument.ToString().Contains(@namespace))
+            if (xDocument.ToString().Contains($"/={normalizedNamespace.ToLower()}/"))
             {
                 return;
             }
@@ -41,19 +48,20 @@ namespace RunJit.Cli.Services
             xDocument.XDocument.Save(xDocument.Path);
         }
 
-        private (XDocument XDocument, string Path) GetXDocument(ProjectFile projectFile)
+        private (XDocument XDocument, string Path) GetXDocument(FileInfo projectFile)
         {
-            var dotSetttings = projectFile.ProjectFileInfo.Value.Directory!.EnumerateFiles($"{projectFile.ProjectFileInfo.Value.Name}.DotSettings").FirstOrDefault();
+            var dotSetttings = projectFile.Directory!.EnumerateFiles($"{projectFile.Name}.DotSettings").FirstOrDefault();
 
             if (dotSetttings.IsNotNull())
             {
                 return (XDocument.Load(dotSetttings.FullName), dotSetttings.FullName);
             }
 
-            var path = $"{projectFile.ProjectFileInfo.Value.FullName}.DotSettings";
-            var dotSettingsTemplate = GetType().Assembly.GetEmbeddedFileAsStream("Generate.RestControllerNew.Code.NamespaceProvider.Template.DotSettings.xml");
+            var path = $"{projectFile.FullName}.DotSettings";
 
-            return (XDocument.Load(dotSettingsTemplate), path);
+            var xDocument = XDocument.Parse(Template);
+
+            return (xDocument, path);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
         }
     }
 
-    internal class CloneReposAndUpdateAll(IConsoleService consoleService,
+    internal class CloneReposAndUpdateAll(ConsoleService consoleService,
                                           IGitService git,
                                           IDotNet dotNet,
                                           IUpdateNugetPackageService updateNugetPackageService,

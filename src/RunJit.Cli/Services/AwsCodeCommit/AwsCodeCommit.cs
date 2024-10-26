@@ -28,7 +28,7 @@ namespace RunJit.Cli.Services.AwsCodeCommit
                                     string targetBranchName = "master");
     }
 
-    internal class AwsCodeCommit(IConsoleService consoleService,
+    internal class AwsCodeCommit(ConsoleService consoleService,
                                  IGitService git) : IAwsCodeCommit
     {
         public async Task CreatePullRequestAsync(string title,

@@ -11,17 +11,11 @@ namespace RunJit.Cli.ErrorHandling
         {
             services.AddConsoleService();
 
-            services.AddSingletonIfNotExists<IErrorHandler, ErrorHandler>();
+            services.AddSingletonIfNotExists<ErrorHandler>();
         }
     }
 
-    internal interface IErrorHandler
-    {
-        Task HandleErrorsAsync(InvocationContext context,
-                               Func<InvocationContext, Task> next);
-    }
-
-    internal class ErrorHandler(IConsoleService consoleService) : IErrorHandler
+    internal class ErrorHandler(ConsoleService consoleService)
     {
         public async Task HandleErrorsAsync(InvocationContext context,
                                             Func<InvocationContext, Task> next)

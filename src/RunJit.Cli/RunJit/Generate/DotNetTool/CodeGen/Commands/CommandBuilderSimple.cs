@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -23,7 +24,7 @@ using $namespace$.Service;
 
 namespace $namespace$
 {                
-    internal sealed class $command-name$CommandBuilder(I$command-name$Service $command-service-argument-name$Service)$interface$
+    internal sealed class $command-name$CommandBuilder($command-name$Service $command-service-argument-name$Service)$interface$
     {   
         public Command Build()
         {
@@ -62,7 +63,7 @@ namespace $namespace$
                                       .Replace("$project-name$", project)
                                       .Replace("$interface$", interfaceImplementation);
 
-            return newTemplate;
+            return newTemplate.FormatSyntaxTree();
         }
     }
 }

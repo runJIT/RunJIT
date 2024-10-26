@@ -2,6 +2,7 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using Pipelines.Sockets.Unofficial.Arenas;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -63,7 +64,7 @@ namespace $namespace$
                                       .Replace("$project-name$", project)
                                       .Replace("$interface$", interfaceImplementation);
 
-            return newTemplate;
+            return newTemplate.FormatSyntaxTree();
         }
     }
 }

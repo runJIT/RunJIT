@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -36,7 +37,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     .Replace("$type$", optionInfo.Argument?.OptimizedType)
                                                     .Replace("$argument-description$", optionInfo.Argument?.Description);
 
-            return newTemplate;
+            return newTemplate.FormatSyntaxTree();
         }
 
         public bool IsBuilderFor(OptionInfo optionInfo)

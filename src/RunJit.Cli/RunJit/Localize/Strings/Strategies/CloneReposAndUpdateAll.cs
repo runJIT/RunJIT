@@ -24,7 +24,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         }
     }
 
-    internal class CloneReposAndUpdateAll(IConsoleService consoleService,
+    internal class CloneReposAndUpdateAll(ConsoleService consoleService,
                                           IGitService git,
                                           IDotNet dotNet,
                                           IAwsCodeCommit awsCodeCommit,

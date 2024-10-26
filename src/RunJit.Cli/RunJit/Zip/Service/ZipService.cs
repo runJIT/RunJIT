@@ -19,7 +19,7 @@ namespace RunJit.Cli.RunJit.Zip
         Task ZipAsync(ZipParameters parameters);
     }
 
-    internal class ZipService(IConsoleService consoleService) : IZipService
+    internal class ZipService(ConsoleService consoleService) : IZipService
     {
         public Task ZipAsync(ZipParameters parameters)
         {

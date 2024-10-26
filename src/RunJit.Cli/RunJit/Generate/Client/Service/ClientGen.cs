@@ -33,7 +33,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                              ITemplateExtractor templateExtractor,
                              ITemplateService templateService,
                              IProcessService processService,
-                             IConsoleService consoleService,
+                             ConsoleService consoleService,
                              ClientGeneratorBuilder clientGeneratorBuilder,
                              ClientCreator clientCreator)
         : IClientGen

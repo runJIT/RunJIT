@@ -42,7 +42,7 @@ namespace RunJit.Cli.Services.Net
     internal record TryResult(bool WasSuccessful,
                               string Message);
 
-    internal class DotNet(IConsoleService consoleService) : IDotNet
+    internal class DotNet(ConsoleService consoleService) : IDotNet
     {
         public async Task<OutdatedNugetResponse> ListOutdatedPackagesAsync(FileInfo solutionFile)
         {

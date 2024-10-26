@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -29,7 +30,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                             .Replace("$option-description$", optionInfo.Description)
                                             .Replace("$required-value$", optionInfo.IsIsRequired.ToString().ToLower());
 
-            return newTemplate;
+            return newTemplate.FormatSyntaxTree();
         }
 
         public bool IsBuilderFor(OptionInfo optionInfo)

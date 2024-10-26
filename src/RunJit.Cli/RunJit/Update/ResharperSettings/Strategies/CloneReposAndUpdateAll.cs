@@ -24,7 +24,7 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
         }
     }
 
-    internal class CloneReposAndUpdateAll(IConsoleService consoleService,
+    internal class CloneReposAndUpdateAll(ConsoleService consoleService,
                                           IGitService git,
                                           IAwsCodeCommit awsCodeCommit,
                                           FindSolutionFile findSolutionFile) : IUpdateResharperSettingsStrategy

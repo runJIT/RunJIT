@@ -27,6 +27,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddProgramCodeGen();
             services.AddStartupCodeGen();
             services.AddCommandCodeGen();
+            services.AddArgumentFixerCodeGen();
         }
     }
 
@@ -207,17 +208,22 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             await dotNet.RunAsync("dotnet", $"new console --output {target}").ConfigureAwait(false);
 
             var dotnetToolProject = new FileInfo(Path.Combine(target, $"{client.ProjectName}.csproj"));
-
             if (dotnetToolProject.NotExists())
             {
                 throw new RunJitException($"Expected .NetTool project does not exists. {dotnetToolProject.FullName}");
             }
 
+            // Add required nuget packages into project
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "System.CommandLine", "0.3.0-alpha.20054.1").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "5.0.4").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.DependencyInjection", "8.0.1").ConfigureAwait(false);
+
+            // Microsoft.Extensions.DependencyInjection
+
             // 5. Code Gen
             await netToolGen.GenerateAsync(dotnetToolProject, dotnetToolStructure).ConfigureAwait(false);
 
             // Add new net tool project into solution
-            // 2. Remove project
             await dotNet.AddProjectToSolutionAsync(clientSolution, dotnetToolProject).ConfigureAwait(false);
         }
     }
@@ -314,7 +320,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                               NormalizedName = "token",
                                               Argument = new ArgumentInfo("token", "Bearer token for authentication", "<token>[string]", "string", "string", "Token"),
                                               IsIsRequired = false,
-                                              Name = "token"
+                                              Name = "token",
+                                              Value = "--token",
+                                              Description = "Bearer token for authentication"
                                           }
                                       }
                         };

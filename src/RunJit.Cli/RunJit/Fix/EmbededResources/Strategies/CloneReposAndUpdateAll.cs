@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
         }
     }
 
-    internal class CloneReposAndUpdateAll(IConsoleService consoleService,
+    internal class CloneReposAndUpdateAll(ConsoleService consoleService,
                                           IGitService git,
                                           IDotNet dotNet,
                                           IAwsCodeCommit awsCodeCommit,

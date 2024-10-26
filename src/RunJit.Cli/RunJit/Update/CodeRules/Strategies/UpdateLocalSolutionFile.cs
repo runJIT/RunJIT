@@ -46,7 +46,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
         }
     }
 
-    internal class UpdateLocalSolutionFile(IConsoleService consoleService,
+    internal class UpdateLocalSolutionFile(ConsoleService consoleService,
                                            IGitService git,
 
                                            //IAwsCodeCommit awsCodeCommit,

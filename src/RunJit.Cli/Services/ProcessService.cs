@@ -28,9 +28,9 @@ namespace RunJit.Cli.Services
 
     internal class ProcessService : IProcessService
     {
-        private readonly IConsoleService _consoleService;
+        private readonly ConsoleService _consoleService;
 
-        public ProcessService(IConsoleService consoleService)
+        public ProcessService(ConsoleService consoleService)
         {
             Throw.IfNull(consoleService);
 

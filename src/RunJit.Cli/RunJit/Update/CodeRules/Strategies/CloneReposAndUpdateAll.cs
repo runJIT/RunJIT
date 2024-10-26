@@ -29,7 +29,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
         }
     }
 
-    internal class CloneReposAndUpdateAll(IConsoleService consoleService,
+    internal class CloneReposAndUpdateAll(ConsoleService consoleService,
                                           IGitService git,
                                           IDotNet dotNet,
                                           IRenameFilesAndFolders renameFilesAndFolders,

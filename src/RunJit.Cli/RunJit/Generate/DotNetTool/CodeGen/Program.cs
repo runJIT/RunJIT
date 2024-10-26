@@ -1,6 +1,7 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -12,10 +13,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ProgramCodeGen(IConsoleService consoleService) : INetToolCodeGen
+    internal class ProgramCodeGen(ConsoleService consoleService) : INetToolCodeGen
     {
-        private const string template = """
-                                        namespace RunJit.Cli
+        private const string Template = """
+                                        namespace $namespace$
                                         {
                                             public static class Program
                                             {
@@ -33,7 +34,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         {
             // 1. Add AppBuilder.cs
             var file = Path.Combine(projectFileInfo.Directory!.FullName, "Program.cs");
-            await File.WriteAllTextAsync(file, template).ConfigureAwait(false);
+            
+
+            var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetToolInfos.DotNetToolName.NormalizedName);
+
+            var formattedTemplate = newTemplate.FormatSyntaxTree();
+
+            await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
 
             // 2. Print success message
             consoleService.WriteSuccess($"Successfully created {file}");

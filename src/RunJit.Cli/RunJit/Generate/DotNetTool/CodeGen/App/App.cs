@@ -1,6 +1,10 @@
-﻿using Extensions.Pack;
+﻿using System.CommandLine.Invocation;
+using System.Reflection.Metadata;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.RunJit.Generate.CustomEndpoint;
 using RunJit.Cli.Services;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -9,56 +13,55 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         public static void AddAppCodeGen(this IServiceCollection services)
         {
             services.AddConsoleService();
+            services.AddNamespaceProvider();
 
             services.AddSingletonIfNotExists<INetToolCodeGen, AppCodeGen>();
         }
     }
 
-    internal class AppCodeGen(IConsoleService consoleService) : INetToolCodeGen
+    internal class AppCodeGen(ConsoleService consoleService,
+                              NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
-        private const string template = """
-                                        using System;
+        private const string Template = """
                                         using System.CommandLine;
                                         using System.CommandLine.Builder;
                                         using System.CommandLine.Invocation;
-                                        using System.Linq;
-                                        using System.Threading.Tasks;
-                                        using Argument.Check;
-                                        using DotNetTool.Builder.DotNet;
-                                        using DotNetTool.Builder.ErrorHandling;
-                                        using DotNetTool.Builder.Services.DotNet;
-                                        using FileSystem.Abstraction;
+                                        using $namespace$.$dotNetToolName$;
+                                        using Extensions.Pack;
                                         using Microsoft.Extensions.DependencyInjection;
 
-                                        namespace DotNetTool.Builder.App
+                                        namespace $namespace$
                                         {
-                                            internal sealed class App(IServiceProvider serviceProvider)
+                                            internal class App(IServiceProvider serviceProvider)
                                             {
-                                                public Task<int> RunAsync(string[] args)
+                                                public async Task<int> RunAsync(string[] args)
                                                 {
-                                                    Throw.IfNull(() => args);
+                                                    // Get needed service to invoke client generator. Important anything have to be handled by dependency injection
+                                                    var rootCommand = serviceProvider.GetRequiredService<$dotNetToolName$CommandBuilder>().Build();
+                                                    var errorHandler = serviceProvider.GetRequiredService<ErrorHandler>();
+                                                    var dotNetCliArgumentFixer = serviceProvider.GetRequiredService<$dotNetToolName$ArgumentFixer>();
                                         
-                                                    var rootCommand = serviceProvider.GetService<IDotnetCommandBuilder>().Build();
-                                                    var errorHandler = serviceProvider.GetService<IErrorHandler>();
-                                                    var dotNetCliArgumentFixer = serviceProvider.GetService<IDotNetCliArgumentFixer>();
-                                        
-                                                    var directoryService = serviceProvider.GetService<IDirectoryService>();
-                                                    var currentDirectory = directoryService.GetDirectoryInfo(Environment.CurrentDirectory);
-                                                    directoryService.SetCurrentDirectoryInfo(currentDirectory);
-                                        
+                                                    // Setup command line builder from microsoft cli sdk
                                                     var commandLineBuilder = new CommandLineBuilder(rootCommand);
-                                                    commandLineBuilder.UseMiddleware(errorHandler.HandleErrors);
+                                                    commandLineBuilder.UseMiddleware(errorHandler.HandleErrorsAsync);
                                                     commandLineBuilder.UseDefaults();
                                                     var parser = commandLineBuilder.Build();
                                         
-                                                    var option = parser.Configuration.RootCommand.Options.Single(o => o.Name == "version") as Option;
+                                                    // We automatically add a version command
+                                                    var option = parser.Configuration.RootCommand.Options.Single(o => o.Name == "version").As<Option?>();
                                                     option?.AddAlias("-v");
                                         
+                                                    // Fix or update command parameter
                                                     var fixedArgs = dotNetCliArgumentFixer.Fix(args);
-                                                    return parser.InvokeAsync(fixedArgs);
+                                        
+                                                    // Here the cli sdk of microsoft will be invoked and manage any command execution
+                                                    var result = await parser.InvokeAsync(fixedArgs).ConfigureAwait(false);
+                                        
+                                                    return result;
                                                 }
                                             }
                                         }
+
 
                                         """;
 
@@ -75,9 +78,19 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             // 2. Add App.cs
             var file = Path.Combine(appFolder.FullName, "App.cs");
-            await File.WriteAllTextAsync(file, template).ConfigureAwait(false);
 
-            // 3. Print success message
+            var newTemplate = Template.Replace("$namespace$", dotNetTool.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetTool.DotNetToolName.NormalizedName);
+
+            var formattedTemplate = newTemplate.FormatSyntaxTree();
+
+            await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
+
+
+            // 3. Adjust namespace provider
+            namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetTool.ProjectName}.App", true);
+
+            // 4. Print success message
             consoleService.WriteSuccess($"Successfully created {file}");
         }
     }

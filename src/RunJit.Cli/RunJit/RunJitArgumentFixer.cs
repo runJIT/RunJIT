@@ -7,16 +7,11 @@ namespace RunJit.Cli.RunJit
     {
         internal static void AddDotNetCliArgumentFixer(this IServiceCollection services)
         {
-            services.AddSingletonIfNotExists<IDotNetCliArgumentFixer, RunJitArgumentFixer>();
+            services.AddSingletonIfNotExists<RunJitArgumentFixer>();
         }
     }
 
-    internal interface IDotNetCliArgumentFixer
-    {
-        string[] Fix(string[] args);
-    }
-
-    internal class RunJitArgumentFixer : IDotNetCliArgumentFixer
+    internal class RunJitArgumentFixer
     {
         public string[] Fix(string[] args)
         {

@@ -24,7 +24,7 @@ namespace RunJit.Cli.Services
                                        Func<string, string> getErrorMessageForInput);
     }
 
-    internal class CollectTillInputCorrect(IConsoleService consoleService) : ICollectTillInputCorrect
+    internal class CollectTillInputCorrect(ConsoleService consoleService) : ICollectTillInputCorrect
     {
         public string CollectTillInputIsValid(string messageForUser,
                                               Predicate<string> inputValidation,

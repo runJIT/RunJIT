@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -16,6 +17,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         private const string Template =
             @"
+using System.CommandLine;
+using System.CommandLine.Invocation;
+
 namespace $namespace$
 {    
     internal sealed class $command-name$ArgumentBuilder
@@ -50,7 +54,7 @@ namespace $namespace$
                                       .Replace("$type$", parameterInfo.Argument?.OptimizedType)
                                       .Replace("$argument-description$", parameterInfo.Argument?.Description);
 
-            return newTemplate;
+            return newTemplate.FormatSyntaxTree();
         }
     }
 }

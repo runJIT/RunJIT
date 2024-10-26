@@ -22,7 +22,7 @@ namespace RunJit.Cli.RunJit.Update.Net
         Task HandleAsync(DotNetParameters parameters);
     }
 
-    internal class DotNetService(IConsoleService consoleService,
+    internal class DotNetService(ConsoleService consoleService,
                                  FindSolutionFile findSolutionFile) : IDotNetService
     {
         private readonly Regex _versionReplaceRegex = new(@"(\d+\.\d-+)", RegexOptions.Compiled);

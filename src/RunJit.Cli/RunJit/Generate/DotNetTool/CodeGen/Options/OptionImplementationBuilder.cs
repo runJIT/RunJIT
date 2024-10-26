@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -17,7 +18,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class OptionImplementationBuilder
     {
         private const string Template =
-            @"using System.CommandLine; 
+            @"using System.CommandLine;
+using System.CommandLine.Invocation;
 
 namespace $namespace$
 {    
@@ -60,7 +62,7 @@ $build-option-method$
                                       .Replace("$namespace$", currentNamespace)
                                       .Replace("$build-option-method$", optionsMethodAsString);
 
-            return newTemplate;
+            return newTemplate.FormatSyntaxTree();
         }
     }
 }
