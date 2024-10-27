@@ -28,6 +28,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddStartupCodeGen();
             services.AddCommandCodeGen();
             services.AddArgumentFixerCodeGen();
+            services.AddProjectSettingsCodeGen();
         }
     }
 
@@ -217,6 +218,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "System.CommandLine", "0.3.0-alpha.20054.1").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "5.0.4").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.DependencyInjection", "8.0.1").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "GitVersion.MsBuild", "6.0.3").ConfigureAwait(false);
 
             // 5. Code Gen
             await netToolGen.GenerateAsync(dotnetToolProject, dotnetToolStructure).ConfigureAwait(false);
@@ -271,7 +273,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                 {
                     Name = domainGroupByVersion.Key,
                     NormalizedName = domainGroupByVersion.Key,
-                    Description = domainGroupByVersion.Key,
+                    Description = $"Here comes the description for {domainGroupByVersion.Key}",
                     Value = domainGroupByVersion.Key,
                 };
 
@@ -286,7 +288,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                     {
                         Name = version.Version.Normalized,
                         NormalizedName = version.Version.Normalized,
-                        Description = version.Version.Normalized,
+                        Description = $"Here comes the description for {version.Version.Normalized}",
                         Value = version.Version.Normalized,
                     };
 
@@ -308,7 +310,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                         {
                             Name = endoint.SwaggerOperationId.FirstCharToUpper(),
                             NormalizedName = endoint.SwaggerOperationId.FirstCharToUpper(),
-                            Description = endoint.SwaggerOperationId.FirstCharToUpper(),
+                            Description = $"Here comes the description for {endoint.SwaggerOperationId.FirstCharToUpper()}",
                             Value = endoint.SwaggerOperationId.FirstCharToUpper(),
                             Options = new List<OptionInfo>()
                                       {
@@ -325,22 +327,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                       }
                         };
 
-                        //foreach (var parameter in method.Parameters)
-                        //{
-                        //    subCommand.OptionInfos.Add(new OptionInfo()
-                        //    {
-                        //        Name = parameter.Name,
-                        //        Description = parameter.Name,
-                        //        IsRequired = parameter.IsOptional,
-                        //        Value = parameter.Name,
-                        //        ArgumentInfo = new ArgumentInfo()
-                        //        {
-                        //            Name = parameter.Name,
-                        //            Description = parameter.Name,
-                        //            Type = parameter.Type
-                        //        }
-                        //    });
-                        //}
 
                         versionCommand.SubCommands.Add(endpointCommand);
                     }

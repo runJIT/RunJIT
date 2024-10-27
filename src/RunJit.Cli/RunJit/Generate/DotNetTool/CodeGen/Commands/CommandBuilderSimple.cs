@@ -67,7 +67,7 @@ namespace $namespace$
 
             var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
                                       .Replace("$command-description$", commandInfo.Description)
-                                      .Replace("$command-argument-name$", commandInfo.Name)
+                                      .Replace("$command-argument-name$", commandInfo.Name.ToLower())
                                       .Replace("$command-service-argument-name$", commandInfo.NormalizedName.FirstCharToLower())
                                       .Replace("$command-handler$", commandHandler)
                                       .Replace("$namespace$", nameSpace)

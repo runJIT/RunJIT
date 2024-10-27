@@ -34,7 +34,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                             {
                                                 public string[] Fix(string[] args)
                                                 {
-                                                    var defaultArgs = new[] { "runjit" };
+                                                    var defaultArgs = new[] { "$dotnettoolnamelower$" };
                                                     var newArgs = defaultArgs.Concat(args).Distinct().ToList();
                                         
                                                     return newArgs.ToArray();
@@ -59,7 +59,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var file = Path.Combine(appFolder.FullName, "ArgumentFixer.cs");
 
             var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
-                                      .Replace("$dotNetToolName$", dotNetToolInfos.DotNetToolName.NormalizedName);
+                                      .Replace("$dotNetToolName$", dotNetToolInfos.DotNetToolName.NormalizedName)
+                                      .Replace("$dotnettoolnamelower$", dotNetToolInfos.DotNetToolName.NormalizedName.ToLower());
 
             var formattedTemplate = newTemplate.FormatSyntaxTree();
 

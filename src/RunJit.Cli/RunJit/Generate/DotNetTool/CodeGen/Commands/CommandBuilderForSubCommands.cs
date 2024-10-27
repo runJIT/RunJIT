@@ -33,7 +33,7 @@ namespace $namespace$
         {
             $subCommandRegistration$
 
-            services.AddSingletonIfNotExists<$command-name$CommandBuilder>();
+            services.AddSingletonIfNotExists<$commandRegistration$>();
         }
     }
 
@@ -71,17 +71,18 @@ namespace $namespace$
 
             var subCommandRegistration = commandInfo.SubCommands.Select(command => $"services.Add{command.NormalizedName}CommandBuilder();").ToFlattenString(Environment.NewLine);
             var subCommandUsings  =commandInfo.SubCommands.Select(command => $"using {nameSpace}.{command.NormalizedName};").ToFlattenString(Environment.NewLine);
-
+            var commandRegistration = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? $"{commandInfo.NormalizedName}CommandBuilder" : $"I{parentCommandInfo.NormalizedName}SubCommandBuilder, {commandInfo.NormalizedName}CommandBuilder";
 
             var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
-                                      .Replace("$command-argument-name$", commandInfo.NormalizedName.FirstCharToLower())
+                                      .Replace("$command-argument-name$", commandInfo.NormalizedName.ToLowerInvariant())
                                       .Replace("$namespace$", nameSpace)
                                       .Replace("$command-description$", commandInfo.Description)
                                       .Replace("$command-handler$", commandHandler)
                                       .Replace("$project-name$", project)
                                       .Replace("$interface$", interfaceImplementation)
                                       .Replace("$subCommandRegistration$", subCommandRegistration)
-                                      .Replace("$usings$", subCommandUsings);
+                                      .Replace("$usings$", subCommandUsings)
+                                      .Replace("$commandRegistration$", commandRegistration);
 
             return newTemplate.FormatSyntaxTree();
         }

@@ -33,7 +33,7 @@ namespace $namespace$
             services.Add$command-name$Service();
             services.Add$command-name$OptionsBuilder();
 
-            services.AddSingletonIfNotExists<$command-name$CommandBuilder>();
+            services.AddSingletonIfNotExists<$commandRegistration$>();
         }
     }
 
@@ -70,15 +70,17 @@ namespace $namespace$
             var commandHandler = _commandHandlerBuilder.Build(commandInfo);
 
             var interfaceImplementation = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? string.Empty : $" : I{parentCommandInfo.NormalizedName}SubCommandBuilder";
+            var commandRegistration = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? $"{commandInfo.NormalizedName}CommandBuilder" : $"I{parentCommandInfo.NormalizedName}SubCommandBuilder, {commandInfo.NormalizedName}CommandBuilder";
 
             var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
                                       .Replace("$command-description$", commandInfo.Description)
-                                      .Replace("$command-argument-name$", commandInfo.Name)
+                                      .Replace("$command-argument-name$", commandInfo.NormalizedName.ToLowerInvariant())
                                       .Replace("$command-service-argument-name$", commandInfo.Name.FirstCharToLower())
                                       .Replace("$command-handler$", commandHandler)
                                       .Replace("$namespace$", nameSpace)
                                       .Replace("$project-name$", project)
-                                      .Replace("$interface$", interfaceImplementation);
+                                      .Replace("$interface$", interfaceImplementation)
+                                      .Replace("$commandRegistration$", commandRegistration);;
 
             return newTemplate.FormatSyntaxTree();
         }
