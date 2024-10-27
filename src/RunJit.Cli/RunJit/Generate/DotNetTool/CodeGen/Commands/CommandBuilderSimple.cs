@@ -29,13 +29,13 @@ namespace $namespace$
     {
         internal static void Add$command-name$CommandBuilder(this IServiceCollection services)
         {
-            services.Add$command-name$Service();
+            services.Add$command-name$Handler();
 
             services.AddSingletonIfNotExists<$command-name$CommandBuilder>();
         }
     }
 
-    internal sealed class $command-name$CommandBuilder($command-name$Service $command-service-argument-name$Service)$interface$
+    internal sealed class $command-name$CommandBuilder($command-name$Handler $command-service-argument-name$Handler)$interface$
     {   
         public Command Build()
         {

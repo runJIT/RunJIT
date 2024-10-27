@@ -19,7 +19,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             @"
 namespace $namespace$
 {    
-    internal interface I$command-name$Service
+    internal interface I$command-name$Handler
     {       
         Task HandleAsync($command-name$Parameters parameters);
     }

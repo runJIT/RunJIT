@@ -30,14 +30,14 @@ namespace $namespace$
     {
         internal static void Add$command-name$CommandBuilder(this IServiceCollection services)
         {
-            services.Add$command-name$Service();           
+            services.Add$command-name$Handler();           
             services.Add$command-name$ArgumentBuilder();
 
             services.AddSingletonIfNotExists<$commandRegistration$>();
         }
     }
 
-    internal sealed class $command-name$CommandBuilder($command-name$Service $command-service-argument-name$Service, 
+    internal sealed class $command-name$CommandBuilder($command-name$Handler $command-service-argument-name$Handler, 
                                                        $command-name$ArgumentBuilder argumentBuilder)$interface$
     {       
         public Command Build()
