@@ -2,7 +2,6 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using NuGet.Versioning;
-using Solution.Parser.Project;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
@@ -18,7 +17,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal class NugetUpdater
     {
         internal async Task UpdateAsync(SolutionFile solutionFile,
-                                        ProjectFile project)
+                                        Solution.Parser.Project.ProjectFile project)
         {
             // 1. Get all nuget packages in solution
             var allNugetPackagesInSolution = solutionFile.Projects.SelectMany(p => p.PackageReferences).Select(p => new

@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddArgumentBuilderExtension
+    public static class AddArgumentBuilderCodeExtension
     {
-        public static void AddArgumentBuilder(this IServiceCollection services)
+        public static void AddArgumentBuilderCodeGen(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<ArgumentBuilder>();
         }

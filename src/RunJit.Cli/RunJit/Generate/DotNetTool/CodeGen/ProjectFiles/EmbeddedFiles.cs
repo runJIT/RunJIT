@@ -2,8 +2,6 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
-using Solution.Parser.CSharp;
-using StackExchange.Redis;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {

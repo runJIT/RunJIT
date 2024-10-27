@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.RunJit.Generate.DotNetTool.AppSettings
 {
     public static class AddAppSettingsCodeGenExtension
     {

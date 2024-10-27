@@ -2,8 +2,10 @@
 using DotNetTool.Service;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Api.Client.RequestTypeHandling;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit.Generate.Client;
+using RunJit.Cli.RunJit.Generate.DotNetTool.AppSettings;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.Endpoints;
 using RunJit.Cli.Services.Net;
@@ -19,18 +21,47 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         {
             services.AddSingletonIfNotExists<NetToolGen>();
 
+            // App
             services.AddAppCodeGen();
             services.AddAppBuilderCodeGen();
+
+            // ErrorHandling
             services.AddErrorHandlerCodeGen();
             services.AddExceptionCodeGen();
+            services.AddProblemDetailsCodeGen();
+            services.AddProblemDetailsExceptionCodeGen();
+
+
+            // Appsettings
+            services.AddAppSettingsCodeGen();
+
+            // Argument
+            services.AddArgumentBuilderCodeGen();
+
             services.AddConsoleServiceCodeGen();
             services.AddProgramCodeGen();
             services.AddStartupCodeGen();
             services.AddCommandCodeGen();
             services.AddArgumentFixerCodeGen();
             services.AddProjectSettingsCodeGen();
-            services.AddAppSettingsCodeGen();
+            
             services.AddProjectEmbeddedFilesCodeGen();
+            services.AddProjectTypeCodeGen();
+
+            // HttpCallHandlers
+            services.AddHttpCallHandlerCodeGen();
+            services.AddHttpCallHandlerFactoryCodeGen();
+            services.AddHttpRequestMessageBuilderCodeGen();
+
+            // RequestTypeHandling
+            services.AddRequestTypeHandleStrategyCodeGen();
+
+            // ResponseTypeHandling
+            services.AddByteArrayResponseTypeHandlerCodeGen();
+            services.AddFileStreamResponseTypeHandlerCodeGen();
+            services.AddJsonResponseTypeHandlerCodeGen();
+            services.AddNotOkResponseTypeHandlerCodeGen();
+            services.AddResponseTypeHandleStrategyCodeGen();
         }
     }
 
@@ -224,6 +255,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration", "8.0.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.EnvironmentVariables", "8.0.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.UserSecrets", "8.0.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Siemens.AspNet.ErrorHandling.Contracts", "1.0.0").ConfigureAwait(false);
 
             // 5. Code Gen
             await netToolGen.GenerateAsync(dotnetToolProject, dotnetToolStructure).ConfigureAwait(false);

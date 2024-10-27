@@ -1,0 +1,91 @@
+﻿using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Services;
+using Solution.Parser.CSharp;
+
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
+{
+    public static class AddNotOkResponseTypeHandlerCodeGenExtension
+    {
+        public static void AddNotOkResponseTypeHandlerCodeGen(this IServiceCollection services)
+        {
+            services.AddConsoleService();
+            services.AddNamespaceProvider();
+
+            services.AddSingletonIfNotExists<INetToolCodeGen, NotOkResponseTypeHandlerCodeGen>();
+        }
+    }
+
+    internal class NotOkResponseTypeHandlerCodeGen(ConsoleService consoleService,
+                                                   NamespaceProvider namespaceProvider) : INetToolCodeGen
+    {
+        private const string Template = """
+                                        using Extensions.Pack;
+
+                                        namespace $namespace$
+                                        {
+                                            internal static class AddNotOkResponseTypeHandlerExtension
+                                            {
+                                                internal static void AddNotOkResponseTypeHandler(this IServiceCollection services)
+                                                {
+                                                    services.AddSingletonIfNotExists<ISpecificResponseTypeHandler, NotOkResponseTypeHandler>();
+                                                }
+                                            }
+                                        
+                                            internal sealed class NotOkResponseTypeHandler : ISpecificResponseTypeHandler
+                                            {
+                                                public bool CanHandle<TResult>(HttpResponseMessage responseMessage)
+                                                {
+                                                    return responseMessage.IsSuccessStatusCode.IsFalse();
+                                                }
+                                        
+                                                public async Task<TResult> HandleAsync<TResult>(HttpResponseMessage responseMessage,
+                                                                                                HttpMethod httpMethod,
+                                                                                                HttpClient httpClient,
+                                                                                                string url)
+                                                {
+                                                    // Safety first this method can be called without CanHandle check !
+                                                    CanHandle<TResult>(responseMessage);
+                                        
+                                                    var content = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                                    var absoluteUrl = $"{httpClient.BaseAddress}{url}";
+                                                    throw new ProblemDetailsException("Client call to endpoint was not successfull",
+                                                        $"The http call: {httpMethod.Method} {url} was not succesfull",
+                                                        ("HttpMethod", httpMethod.Method),
+                                                        ("Url", absoluteUrl),
+                                                        ("Error", content));
+                                                }
+                                            }
+                                        }
+
+                                        """;
+
+        public async Task GenerateAsync(FileInfo projectFileInfo,
+                                        DotNetToolInfos dotNetTool)
+        {
+            // 1. Add NotOkResponseTypeHandler Folder
+            var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "ResponseTypeHandling"));
+
+            if (appFolder.NotExists())
+            {
+                appFolder.Create();
+            }
+
+            // 2. Add NotOkResponseTypeHandler.cs
+            var file = Path.Combine(appFolder.FullName, "NotOkResponseTypeHandler.cs");
+
+            var newTemplate = Template.Replace("$namespace$", dotNetTool.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetTool.DotNetToolName.NormalizedName);
+
+            var formattedTemplate = newTemplate.FormatSyntaxTree();
+
+            await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
+
+            // 3. Adjust namespace provider
+            namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetTool.ProjectName}.ResponseTypeHandling", true);
+
+            // 4. Print success message
+            consoleService.WriteSuccess($"Successfully created {file}");
+        }
+    }
+}

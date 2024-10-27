@@ -38,7 +38,7 @@ namespace $namespace$
         }
     }
 
-    internal sealed class $command-name$CommandBuilder($command-name$Handler $command-service-argument-name$Handler, 
+    internal sealed class $command-name$CommandBuilder($command-name$Handler $command-handler-argument-name$Handler, 
                                                        $command-name$OptionsBuilder optionsBuilder, 
                                                        $command-name$ArgumentBuilder argumentBuilder)$interface$
     {      
@@ -77,7 +77,7 @@ namespace $namespace$
 
             var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
                                       .Replace("$command-description$", commandInfo.Description)
-                                      .Replace("$command-service-argument-name$", commandInfo.Name.FirstCharToLower())
+                                      .Replace("$command-handler-argument-name$", commandInfo.Name.FirstCharToLower())
                                       .Replace("$command-argument-name$", commandInfo.NormalizedName.ToLowerInvariant())
                                       .Replace("$command-handler$", commandHandler)
                                       .Replace("$namespace$", nameSpace)

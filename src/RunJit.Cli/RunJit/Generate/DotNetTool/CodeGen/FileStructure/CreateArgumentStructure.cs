@@ -7,7 +7,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         public static void AddCreateArgumentStructure(this IServiceCollection services)
         {
-            services.AddArgumentBuilder();
+            services.AddArgumentBuilderCodeGen();
             services.AddTypeService();
 
             services.AddSingletonIfNotExists<IBuildCommandFileStructure, CreateArgumentStructure>();

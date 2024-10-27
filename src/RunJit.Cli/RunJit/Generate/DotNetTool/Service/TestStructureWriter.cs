@@ -21,8 +21,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                        AppsettingsBuilder appsettingsBuilder)
     {
         public async Task WriteFileStructureAsync(SolutionFile solutionFile,
-                                                  ProjectFile clientProject,
-                                                  ProjectFile clientTestProject,
+                                                  Solution.Parser.Project.ProjectFile clientProject,
+                                                  Solution.Parser.Project.ProjectFile clientTestProject,
                                                   string projectName,
                                                   string clientName)
         {

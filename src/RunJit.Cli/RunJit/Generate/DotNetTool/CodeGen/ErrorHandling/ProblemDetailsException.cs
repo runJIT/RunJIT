@@ -1,0 +1,104 @@
+﻿using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Services;
+using Solution.Parser.CSharp;
+
+namespace RunJit.Cli.RunJit.Generate.DotNetTool
+{
+    public static class AddProblemDetailsExceptionCodeGenExtension
+    {
+        public static void AddProblemDetailsExceptionCodeGen(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<INetToolCodeGen, ProblemDetailsExceptionCodeGen>();
+        }
+    }
+
+    internal class ProblemDetailsExceptionCodeGen(ConsoleService consoleService,
+                                                  NamespaceProvider namespaceProvider) : INetToolCodeGen
+    {
+        private const string Template = """
+                                        using System.Collections.Immutable;
+                                        using System.Net;
+                                        using Extensions.Pack;
+                                        
+                                        namespace $namespace$
+                                        {
+                                            public sealed class ProblemDetailsException : Exception
+                                            {
+                                                public ProblemDetailsException(string title,
+                                                                               params (string key, object value)[] extensions) : this(HttpStatusCode.InternalServerError, title, string.Empty, extensions)
+                                                {
+                                                }
+                                        
+                                                public ProblemDetailsException(string title,
+                                                                               string details,
+                                                                               params (string key, object value)[] extensions) : this(HttpStatusCode.InternalServerError, title, details, extensions)
+                                                {
+                                                }
+                                        
+                                                public ProblemDetailsException(HttpStatusCode statusCode,
+                                                                               string title,
+                                                                               string details,
+                                                                               params (string key, object value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value))
+                                                {
+                                                }
+                                        
+                                                public ProblemDetailsException(int statusCode,
+                                                                               string title,
+                                                                               string details,
+                                                                               params (string key, object value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value))
+                                                {
+                                                }
+                                        
+                                                // i know this is evil with the conversion to immutable dictionary but a fast fix for now.
+                                        
+                                                public ProblemDetailsException(int statusCode,
+                                                                               string title,
+                                                                               string details,
+                                                                               IImmutableDictionary<string, object> errorDetails) : base(title)
+                                                {
+                                                    var problemDetails = new ProblemDetails { Title = title.IsEmpty() ? null : title, Detail = details.IsEmpty() ? null : details, Status = statusCode };
+                                        
+                                                    errorDetails.OrderBy(item => item.Key).ForEach(keyValue =>
+                                                    {
+                                                        var key = keyValue.Key.Split(" ").Select(value => value.FirstCharToUpper()).Flatten().FirstCharToLower();
+                                                        problemDetails.Extensions.Add(key, keyValue.Value);
+                                                    });
+                                        
+                                                    ProblemDetails = problemDetails;
+                                                }
+                                        
+                                                public ProblemDetails ProblemDetails { get; }
+                                            }
+                                        }
+                                        """;
+
+        public async Task GenerateAsync(FileInfo projectFileInfo,
+                                        DotNetToolInfos dotNetToolInfos)
+        {
+            // 1. Add ErrorHandling Folder
+            var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "ErrorHandling"));
+
+            if (appFolder.NotExists())
+            {
+                appFolder.Create();
+            }
+
+            // 2. Add ProblemDetailsException.cs
+            var file = Path.Combine(appFolder.FullName, "ProblemDetailsException.cs");
+
+            var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetToolInfos.DotNetToolName.NormalizedName);
+
+            var formattedTemplate = newTemplate;
+
+            await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
+
+            // 3. Adjust namespace provider
+            namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetToolInfos.ProjectName}.ErrorHandling", true);
+
+            // 4. Print success message
+            consoleService.WriteSuccess($"Successfully created {file}");
+        }
+    }
+}

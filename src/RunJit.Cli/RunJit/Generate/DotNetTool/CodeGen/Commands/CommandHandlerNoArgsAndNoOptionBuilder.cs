@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal sealed class CommandHandlerNoArgsAndNoOptionBuilder : ICommandHandlerStringBuilder
     {
-        private const string Template = "CommandHandler.Create(() => $command-argument-name$Service.HandleAsync(new $command-name$Parameters($argument-names$)))";
+        private const string Template = "CommandHandler.Create(() => $command-argument-name$Handler.HandleAsync(new $command-name$Parameters($argument-names$)))";
 
         public string Build(CommandInfo parameterInfo)
         {

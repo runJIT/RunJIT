@@ -1,8 +1,5 @@
-﻿using System.CommandLine.Invocation;
-using System.Reflection.Metadata;
-using Extensions.Pack;
+﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.RunJit.Generate.CustomEndpoint;
 using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
 
