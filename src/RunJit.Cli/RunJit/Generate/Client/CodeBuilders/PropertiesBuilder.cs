@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     // Sample:
     // 
     // public AdminV1 V1 { get; init; }
-    internal class PropertiesBuilder
+    internal sealed class PropertiesBuilder
     {
         private readonly string _propertyTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.property.rps");
 

@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class FileStreamResponseTypeHandlerCodeGen(ConsoleService consoleService,
+    internal sealed class FileStreamResponseTypeHandlerCodeGen(ConsoleService consoleService,
                               NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """

@@ -23,7 +23,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    internal class MethodParser(DataTypeFinder dataTypeFinder,
+    internal sealed class MethodParser(DataTypeFinder dataTypeFinder,
                                 UrlBuilder urlBuilder,
                                 ModelNormalizer modelNormalizer,
                                 ParameterNormalizer parameterNormalizer,

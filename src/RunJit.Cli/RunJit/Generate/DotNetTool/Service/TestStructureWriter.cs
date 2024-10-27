@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class TestStructureWriter(MsTestBaseClassBuilder msTestBaseClassBuilder,
+    internal sealed class TestStructureWriter(MsTestBaseClassBuilder msTestBaseClassBuilder,
                                        AppsettingsBuilder appsettingsBuilder)
     {
         public async Task WriteFileStructureAsync(SolutionFile solutionFile,

@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ResponseTypeNormalizer
+    internal sealed class ResponseTypeNormalizer
     {
         internal ResponseType GetResponseType(MethodInfo methodInfo,
                                               Method method,

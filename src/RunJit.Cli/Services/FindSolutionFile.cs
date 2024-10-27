@@ -13,7 +13,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    internal class FindSolutionFile
+    internal sealed class FindSolutionFile
     {
         internal FileInfo Find(string solutionFile)
         {

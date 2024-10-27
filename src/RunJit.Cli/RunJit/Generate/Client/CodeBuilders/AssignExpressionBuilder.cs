@@ -19,7 +19,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     // Admin = adminFacade;
     // Alive = aliveFacade;
     // BulkResources = bulkResourcesFacade;
-    internal class AssignExpressionBuilder
+    internal sealed class AssignExpressionBuilder
     {
         internal string BuildFrom(IImmutableList<GeneratedFacade> facades)
         {

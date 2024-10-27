@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class RestructureController
+    internal sealed class RestructureController
     {
         internal ImmutableList<ControllerInfo> Reorganize(ImmutableList<ControllerInfo> controllers)
         {

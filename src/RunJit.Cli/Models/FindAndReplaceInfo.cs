@@ -2,7 +2,7 @@
 
 namespace RunJit.Cli.Models
 {
-    internal class FindAndReplaceInfo
+    internal sealed class FindAndReplaceInfo
     {
         public FindAndReplaceInfo(string find,
                                   string replace)

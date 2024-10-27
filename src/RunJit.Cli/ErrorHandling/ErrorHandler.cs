@@ -15,7 +15,7 @@ namespace RunJit.Cli.ErrorHandling
         }
     }
 
-    internal class ErrorHandler(ConsoleService consoleService)
+    internal sealed class ErrorHandler(ConsoleService consoleService)
     {
         public async Task HandleErrorsAsync(InvocationContext context,
                                             Func<InvocationContext, Task> next)

@@ -43,7 +43,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     //         return _httpCallHandler.CallAsync<AddAccountResponse>(HttpMethod.Post, $"v1.0/accounts", addAccountPayload);
     //     }
     // }
-    internal class ClientCreatorForController(MethodBuilder methodBuilder)
+    internal sealed class ClientCreatorForController(MethodBuilder methodBuilder)
     {
         private readonly string _versionClass = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.version.class.rps");
 

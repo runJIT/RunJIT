@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         IEnumerable<Option> Build();
     }
 
-    internal class ClientGenOptionsBuilder : IClientGenOptionsBuilder
+    internal sealed class ClientGenOptionsBuilder : IClientGenOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

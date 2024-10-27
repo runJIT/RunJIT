@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
         }
     }
 
-    internal class TemplateExtractor(IMediator mediator,
+    internal sealed class TemplateExtractor(IMediator mediator,
                                      IHttpClientFactory httpClientFactory,
                                      IRunJitApiClientFactory runJitApiClientFactory,
                                      RunJitApiClientSettings runJitApiClientSettings)

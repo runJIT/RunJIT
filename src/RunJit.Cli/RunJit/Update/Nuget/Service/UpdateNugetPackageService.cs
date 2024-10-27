@@ -20,7 +20,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
                                      IImmutableList<string> packagesToIgnore);
     }
 
-    internal class UpdateNugetPackageService(ConsoleService consoleService,
+    internal sealed class UpdateNugetPackageService(ConsoleService consoleService,
                                              IDotNet dotnet) : IUpdateNugetPackageService
     {
         public async Task UpdateNugetPackageAsync(OutdatedNugetResponse outdatedNugetResponse,

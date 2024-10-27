@@ -44,7 +44,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     //         return _httpCallHandler.CallAsync<AddAccountResponse>(HttpMethod.Post, $"v1.0/accounts", addAccountPayload);
     //     }
     // }
-    internal class DotNetToolCreatorForController(MethodBuilder methodBuilder)
+    internal sealed class DotNetToolCreatorForController(MethodBuilder methodBuilder)
     {
         private readonly string _versionClass = EmbeddedFile.GetFileContentFrom("Pulse.Generate.DotNetTool.Templates.version.class.rps");
 

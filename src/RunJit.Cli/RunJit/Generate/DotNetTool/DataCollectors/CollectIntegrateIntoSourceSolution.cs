@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class CollectIntegrateIntoSourceSolution(IntegrateIntoSourceSolutionValidator inputValidator,
+    internal sealed class CollectIntegrateIntoSourceSolution(IntegrateIntoSourceSolutionValidator inputValidator,
                                                       ICollectTillInputCorrect collectTillInputCorrect)
     {
         private const string Title = @"Where would you like to create your client:

@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ParameterNormalizer
+    internal sealed class ParameterNormalizer
     {
         internal IImmutableList<Parameter> Normalize(Method method,
                                                      IImmutableList<ParameterInfo> reflectionParameters,

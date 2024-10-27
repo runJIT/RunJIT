@@ -16,7 +16,7 @@
 //        IEnumerable<System.CommandLine.Argument> Build();
 //    }
 
-//    internal class UpdateSwaggerTestsArgumentsBuilder : IUpdateSwaggerTestsArgumentsBuilder
+//    internal sealed class UpdateSwaggerTestsArgumentsBuilder : IUpdateSwaggerTestsArgumentsBuilder
 //    {
 //        public IEnumerable<System.CommandLine.Argument> Build()
 //        {

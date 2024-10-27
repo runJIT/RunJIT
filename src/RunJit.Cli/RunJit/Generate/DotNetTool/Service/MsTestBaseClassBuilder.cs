@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class MsTestBaseClassBuilder
+    internal sealed class MsTestBaseClassBuilder
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("Pulse.Generate.DotNetTool.Templates.mstestbase.rps");
 

@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class CommandCodeGen(ConsoleService consoleService,
+    internal sealed class CommandCodeGen(ConsoleService consoleService,
                                   CommandTypeCollector commandTypeCollector,
                                   NameSpaceCollector nameSpaceCollector,
                                   CreateCommandClasses createCommandClasses) : INetToolCodeGen

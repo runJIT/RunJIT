@@ -12,7 +12,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    internal class FindSourceFolder
+    internal sealed class FindSourceFolder
     {
         internal DirectoryInfo GetTargetSourceFolder(FileInfo solutionFileInfo)
         {

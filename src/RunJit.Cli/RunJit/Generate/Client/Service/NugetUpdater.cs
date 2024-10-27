@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class NugetUpdater
+    internal sealed class NugetUpdater
     {
         internal async Task UpdateAsync(SolutionFile solutionFile,
                                         ProjectFile project)

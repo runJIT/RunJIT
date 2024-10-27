@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
         IEnumerable<Option> Build();
     }
 
-    internal class UpdateResharperSettingsOptionsBuilder : IUpdateResharperSettingsOptionsBuilder
+    internal sealed class UpdateResharperSettingsOptionsBuilder : IUpdateResharperSettingsOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

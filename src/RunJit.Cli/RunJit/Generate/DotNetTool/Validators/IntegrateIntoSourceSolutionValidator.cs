@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class IntegrateIntoSourceSolutionValidator : IInputValidator
+    internal sealed class IntegrateIntoSourceSolutionValidator : IInputValidator
     {
         public ValidationResult Validate(string value)
         {

@@ -12,7 +12,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class CollectSwaggerPathValidator : IInputValidator
+    internal sealed class CollectSwaggerPathValidator : IInputValidator
     {
         public ValidationResult Validate(string value)
         {

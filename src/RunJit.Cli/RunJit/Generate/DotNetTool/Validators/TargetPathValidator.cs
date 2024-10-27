@@ -12,7 +12,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class TargetPathValidator : IInputValidator
+    internal sealed class TargetPathValidator : IInputValidator
     {
         public ValidationResult Validate(string value)
         {

@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
         Task HandleAsync(UpdateBuildConfigParameters parameters);
     }
 
-    internal class UpdateBuildConfigServiceService(IEnumerable<IUpdateBuildConfigStrategy> updateBuildConfigStrategies) : IUpdateBuildConfigService
+    internal sealed class UpdateBuildConfigServiceService(IEnumerable<IUpdateBuildConfigStrategy> updateBuildConfigStrategies) : IUpdateBuildConfigService
     {
         public Task HandleAsync(UpdateBuildConfigParameters parameters)
         {

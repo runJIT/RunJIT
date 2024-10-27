@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class HttpCallHandlerCodeGen(ConsoleService consoleService,
+    internal sealed class HttpCallHandlerCodeGen(ConsoleService consoleService,
                                           NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """
@@ -54,7 +54,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                                                  [CallerArgumentExpression(nameof(payload))] string payloadParameterName = "");
                                             }
                                         
-                                            internal class HttpCallHandler : IHttpCallHandler
+                                            internal sealed class HttpCallHandler : IHttpCallHandler
                                             {
                                                 private readonly HttpClient _httpClient;
                                                 private readonly HttpRequestMessageBuilder _httpRequestMessageBuilder;

@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
         IEnumerable<Option> Build();
     }
 
-    internal class CleanupCodeOptionsBuilder : ICleanupCodeOptionsBuilder
+    internal sealed class CleanupCodeOptionsBuilder : ICleanupCodeOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class AppsettingsBuilder
+    internal sealed class AppsettingsBuilder
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.appsettings.test.json");
 

@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class MsTestBaseClassBuilder
+    internal sealed class MsTestBaseClassBuilder
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.mstestbase.rps");
 

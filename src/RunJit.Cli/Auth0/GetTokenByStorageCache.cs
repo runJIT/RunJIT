@@ -23,7 +23,7 @@ namespace RunJit.Cli.Auth0
 
     internal record GetTokenByStorageCache() : IQuery<Auth0Token>;
 
-    internal class GetTokenByStorageCacheHandler(IMediator mediator,
+    internal sealed class GetTokenByStorageCacheHandler(IMediator mediator,
                                                  AspNetCore.Simple.Sdk.Authentication.Auth0.Auth0 authSettings) : IQueryHandler<GetTokenByStorageCache, Auth0Token>
     {
         public async Task<Auth0Token> Handle(GetTokenByStorageCache request,

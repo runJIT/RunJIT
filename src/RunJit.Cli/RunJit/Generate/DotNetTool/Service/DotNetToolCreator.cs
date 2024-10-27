@@ -65,7 +65,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class NetToolGen(IEnumerable<INetToolCodeGen> codeGenerators)
+    internal sealed class NetToolGen(IEnumerable<INetToolCodeGen> codeGenerators)
     {
         internal async Task GenerateAsync(FileInfo projectFileInfo,
                                           DotNetToolInfos dotNetToolInfos)
@@ -134,7 +134,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class DotNetToolCreator(ControllerParser controllerParser,
+    internal sealed class DotNetToolCreator(ControllerParser controllerParser,
                                      ApiTypeLoader apiTypeLoader,
                                      RestructureController restructureController,
                                      IDotNet dotNet,
@@ -279,7 +279,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                   DotNetTool client);
     }
 
-    internal class ConvertControllerInfosToDotnetToolStructure : IConvertControllerInfosToDotnetToolStructure
+    internal sealed class ConvertControllerInfosToDotnetToolStructure : IConvertControllerInfosToDotnetToolStructure
     {
         public DotNetToolInfos ConvertTo(ImmutableList<IGrouping<string, EndpointGroup>> domainGroupedByVersion,
                                          DotNetTool client)

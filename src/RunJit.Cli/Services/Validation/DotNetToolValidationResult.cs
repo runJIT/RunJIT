@@ -2,7 +2,7 @@
 
 //namespace RunJit.Cli.Services
 //{
-//    internal class DotNetToolValidationResult(IEnumerable<ValidationResult> result)
+//    internal sealed class DotNetToolValidationResult(IEnumerable<ValidationResult> result)
 //    {
 //        internal IEnumerable<ValidationResult> ValidationResults { get; } = result;
 

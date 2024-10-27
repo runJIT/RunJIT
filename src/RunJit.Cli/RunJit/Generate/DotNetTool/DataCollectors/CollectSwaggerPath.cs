@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class CollectSwaggerPath(CollectSwaggerPathValidator inputValidator,
+    internal sealed class CollectSwaggerPath(CollectSwaggerPathValidator inputValidator,
                                       ICollectTillInputCorrect collectTillInputCorrect)
     {
         private const string Title = @"Please enter your swagger location. Can be local file or uri. 

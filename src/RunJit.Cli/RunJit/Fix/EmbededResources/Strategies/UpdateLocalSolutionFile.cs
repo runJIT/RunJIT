@@ -26,7 +26,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
         }
     }
 
-    internal class UpdateLocalSolutionFile(FindSolutionFile findSolutionFile) : IFixEmbeddedResourcesStrategy
+    internal sealed class UpdateLocalSolutionFile(FindSolutionFile findSolutionFile) : IFixEmbeddedResourcesStrategy
     {
         public bool CanHandle(FixEmbeddedResourcesParameters parameters)
         {

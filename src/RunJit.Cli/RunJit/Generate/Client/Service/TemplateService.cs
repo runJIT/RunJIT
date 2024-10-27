@@ -20,7 +20,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                          Client client);
     }
 
-    internal class TemplateService(IRenameFilesAndFolders renameFilesAndFolders) : ITemplateService
+    internal sealed class TemplateService(IRenameFilesAndFolders renameFilesAndFolders) : ITemplateService
     {
         public void RenameAllIn(DirectoryInfo targetDirectory,
                                 Client client)

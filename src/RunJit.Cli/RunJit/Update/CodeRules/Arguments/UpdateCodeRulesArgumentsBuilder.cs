@@ -16,7 +16,7 @@
 //        IEnumerable<System.CommandLine.Argument> Build();
 //    }
 
-//    internal class UpdateCodeRulesArgumentsBuilder : IUpdateCodeRulesArgumentsBuilder
+//    internal sealed class UpdateCodeRulesArgumentsBuilder : IUpdateCodeRulesArgumentsBuilder
 //    {
 //        public IEnumerable<System.CommandLine.Argument> Build()
 //        {

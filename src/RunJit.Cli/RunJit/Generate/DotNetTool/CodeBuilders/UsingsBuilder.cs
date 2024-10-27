@@ -28,7 +28,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     // using PulseCore.DotNetTool.Api.ErrorLog;
     // using PulseCore.DotNetTool.Api.Files;
     // using PulseCore.DotNetTool.Api.Filter;
-    internal class UsingsBuilder
+    internal sealed class UsingsBuilder
     {
         internal string BuildFrom(IImmutableList<GeneratedFacade> facades,
                                   string projectName)

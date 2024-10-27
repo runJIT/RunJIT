@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
         }
     }
 
-    internal class UpdateLocalSolutionFile(FindSolutionFile findSolutionFile,
+    internal sealed class UpdateLocalSolutionFile(FindSolutionFile findSolutionFile,
                                            IDotNet dotNet) : ICleanupCodeStrategy
     {
         public bool CanHandle(CleanupCodeParameters parameters)

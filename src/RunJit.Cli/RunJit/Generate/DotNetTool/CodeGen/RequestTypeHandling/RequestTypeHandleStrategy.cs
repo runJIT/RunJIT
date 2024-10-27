@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class RequestTypeHandleStrategyCodeGen(ConsoleService consoleService,
+    internal sealed class RequestTypeHandleStrategyCodeGen(ConsoleService consoleService,
                               NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """

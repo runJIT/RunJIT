@@ -70,7 +70,7 @@ namespace RunJit.Cli.Services
     //    public ImmutableList<DeclarationBase> Models { get; init; } = ImmutableList<DeclarationBase>.Empty;
     //}
 
-    internal class MinimalApiEndpointParser(DataTypeFinder dataTypeFinder)
+    internal sealed class MinimalApiEndpointParser(DataTypeFinder dataTypeFinder)
     {
         private string[] mapActions = new string[]
                                       {

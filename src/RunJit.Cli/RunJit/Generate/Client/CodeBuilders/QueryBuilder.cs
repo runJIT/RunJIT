@@ -24,7 +24,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     // ?useCache={useCache}
     // ?useCache={useCache}&withSqlAnalytics={withSqlAnalytics}&parentId={parentId}
     // ?{resourceTypeIds.ToQueryParams("resourceTypeId")}&useCache={useCache}&offset={offset}&limit={limit}&search={search}
-    internal class QueryBuilder(IEnumerationTypes enumerationTypes)
+    internal sealed class QueryBuilder(IEnumerationTypes enumerationTypes)
     {
         private const string FromQuery = "FromQuery";
 

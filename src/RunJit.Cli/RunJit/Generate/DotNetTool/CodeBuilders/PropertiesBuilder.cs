@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     // Sample:
     // 
     // public AdminV1 V1 { get; init; }
-    internal class PropertiesBuilder
+    internal sealed class PropertiesBuilder
     {
         private readonly string _propertyTemplate = EmbeddedFile.GetFileContentFrom("Pulse.Generate.DotNetTool.Templates.property.rps");
 

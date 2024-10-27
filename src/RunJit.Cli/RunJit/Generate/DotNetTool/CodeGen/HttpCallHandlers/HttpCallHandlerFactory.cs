@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class HttpCallHandlerFactoryCodeGen(ConsoleService consoleService,
+    internal sealed class HttpCallHandlerFactoryCodeGen(ConsoleService consoleService,
                                                  NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """
@@ -36,7 +36,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            internal class HttpCallHandlerFactory
+                                            internal sealed class HttpCallHandlerFactory
                                             {
                                                 private readonly HttpRequestMessageBuilder _httpRequestMessageBuilder;
                                                 private readonly ResponseTypeHandleStrategy _responseTypeHandleStrategy;

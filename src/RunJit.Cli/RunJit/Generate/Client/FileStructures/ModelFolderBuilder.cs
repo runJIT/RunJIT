@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ModelFolderBuilder
+    internal sealed class ModelFolderBuilder
     {
         internal DirectoryInfo Build(DirectoryInfo versionFolder)
         {

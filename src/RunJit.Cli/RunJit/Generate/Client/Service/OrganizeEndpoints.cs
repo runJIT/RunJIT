@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class OrganizeMinimalEndpoints
+    internal sealed class OrganizeMinimalEndpoints
     {
         internal ImmutableList<EndpointGroup> Reorganize(ImmutableList<EndpointInfo> endpointInfos)
         {

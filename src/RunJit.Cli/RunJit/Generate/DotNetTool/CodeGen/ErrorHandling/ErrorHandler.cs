@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ErrorHandlerCodeGen(ConsoleService consoleService,
+    internal sealed class ErrorHandlerCodeGen(ConsoleService consoleService,
                                        NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """

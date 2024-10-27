@@ -17,7 +17,7 @@
 //        Task UpdateCodeRulesPackageAsync(OutdatedCodeRulesResponse outdatedCodeRulesResponse);
 //    }
 
-//    internal class UpdateCodeRulesPackageService(ConsoleService consoleService,
+//    internal sealed class UpdateCodeRulesPackageService(ConsoleService consoleService,
 //                                                 IDotNetTool dotNetTool) : IUpdateCodeRulesPackageService
 //    {
 //        public async Task UpdateCodeRulesPackageAsync(FileInfo solutionFileInfo)

@@ -26,7 +26,7 @@ namespace RunJit.Cli.Services
                                       string arguments);
     }
 
-    internal class ProcessService : IProcessService
+    internal sealed class ProcessService : IProcessService
     {
         private readonly ConsoleService _consoleService;
 

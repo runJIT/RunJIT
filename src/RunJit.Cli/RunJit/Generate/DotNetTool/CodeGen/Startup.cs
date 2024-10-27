@@ -20,7 +20,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class StartupCodeGen(ConsoleService consoleService) : INetToolCodeGen
+    internal sealed class StartupCodeGen(ConsoleService consoleService) : INetToolCodeGen
     {
         private const string Template = """
                                         using $namespace$.$dotNetToolName$;

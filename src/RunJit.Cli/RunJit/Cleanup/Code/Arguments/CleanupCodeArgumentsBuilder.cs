@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
         IEnumerable<System.CommandLine.Argument> Build();
     }
 
-    internal class CleanupCodeArgumentsBuilder : ICleanupCodeArgumentsBuilder
+    internal sealed class CleanupCodeArgumentsBuilder : ICleanupCodeArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {

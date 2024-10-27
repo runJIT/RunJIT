@@ -21,7 +21,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     // ToDo: DotNetToolGen Info collector
-    internal class DotNetToolInfoCollector(CollectSolutionPath collectSolutionPath) : IDotNetToolInfoCollector
+    internal sealed class DotNetToolInfoCollector(CollectSolutionPath collectSolutionPath) : IDotNetToolInfoCollector
     {
         public DotNetTool Collect(DotNetToolParameters clientGenParameters)
         {

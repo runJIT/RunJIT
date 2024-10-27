@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
         Task HandleAsync(UpdateResharperSettingsParameters parameters);
     }
 
-    internal class UpdateResharperSettings(IEnumerable<IUpdateResharperSettingsStrategy> updateSwaggerTestsStrategies) : IUpdateResharperSettings
+    internal sealed class UpdateResharperSettings(IEnumerable<IUpdateResharperSettingsStrategy> updateSwaggerTestsStrategies) : IUpdateResharperSettings
     {
         public Task HandleAsync(UpdateResharperSettingsParameters parameters)
         {

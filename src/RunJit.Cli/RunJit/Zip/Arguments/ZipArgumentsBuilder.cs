@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Zip
         IEnumerable<System.CommandLine.Argument> Build();
     }
 
-    internal class ZipArgumentsBuilder : IZipArgumentsBuilder
+    internal sealed class ZipArgumentsBuilder : IZipArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {

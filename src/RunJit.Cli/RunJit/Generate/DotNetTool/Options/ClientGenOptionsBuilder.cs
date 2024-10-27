@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         IEnumerable<Option> Build();
     }
 
-    internal class DotNetToolGenOptionsBuilder : IDotNetToolGenOptionsBuilder
+    internal sealed class DotNetToolGenOptionsBuilder : IDotNetToolGenOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

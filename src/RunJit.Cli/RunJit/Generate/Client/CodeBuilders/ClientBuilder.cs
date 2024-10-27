@@ -46,7 +46,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     //         public AccountsFacade Accounts { get; init; }  <-- PropertiesBuilder
     //     }
     // }
-    internal class ClientBuilder(UsingsBuilder usingsBuilder,
+    internal sealed class ClientBuilder(UsingsBuilder usingsBuilder,
                                  ParameterBuilder parameterBuilder,
                                  AssignExpressionBuilder assignExpressionBuilder,
                                  ServiceRegistrationBuilder serviceRegistrationBuilder,

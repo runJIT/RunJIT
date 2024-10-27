@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
         Task HandleAsync(FixEmbeddedResourcesParameters parameters);
     }
 
-    internal class FixEmbeddedResources(IEnumerable<IFixEmbeddedResourcesStrategy> fixServiceRegistrationsStrategies) : IFixEmbeddedResources
+    internal sealed class FixEmbeddedResources(IEnumerable<IFixEmbeddedResourcesStrategy> fixServiceRegistrationsStrategies) : IFixEmbeddedResources
     {
         public Task HandleAsync(FixEmbeddedResourcesParameters parameters)
         {

@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class DotNetToolCommandBuilder(IDotNetToolGen clientGen,
+    internal sealed class DotNetToolCommandBuilder(IDotNetToolGen clientGen,
                                             IDotNetToolGenOptionsBuilder optionsBuilder) : IGenerateSubCommandBuilder
     {
         public Command Build()

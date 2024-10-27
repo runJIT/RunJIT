@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class AssemblyTypeLoader
+    internal sealed class AssemblyTypeLoader
     {
         internal IImmutableList<Type> GetAllTypesFrom(FileInfo assemblyFile)
         {

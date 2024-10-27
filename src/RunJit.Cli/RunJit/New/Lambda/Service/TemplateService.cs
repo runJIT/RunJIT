@@ -12,7 +12,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
         }
     }
 
-    internal class TemplateService(RenameFilesAndFolders renameFilesAndFolders)
+    internal sealed class TemplateService(RenameFilesAndFolders renameFilesAndFolders)
     {
         public void RenameAllIn(DirectoryInfo targetDirectory,
                                 LambdaInfos lambdaInfos)

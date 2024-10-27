@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class CollectSolutionPath(SolutionFileValidator inputValidator,
+    internal sealed class CollectSolutionPath(SolutionFileValidator inputValidator,
                                        ICollectTillInputCorrect collectTillInputCorrect)
     {
         private const string Title = @"Please enter the full path to your backend solution. Sample: D:\Projetcs\DotNetToolGen\DotNetToolGen.sln";

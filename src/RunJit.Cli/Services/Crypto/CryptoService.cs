@@ -20,7 +20,7 @@ namespace RunJit.Cli.Services.Crypto
         Task<string> DecryptAsync(string encrypted);
     }
 
-    internal class CryptoService : ICryptoService
+    internal sealed class CryptoService : ICryptoService
     {
         public Task<string> EncryptAsync(string clearText)
         {

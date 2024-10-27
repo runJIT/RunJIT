@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
         }
     }
 
-    internal class EmbeddedFileService
+    internal sealed class EmbeddedFileService
     {
         internal void EmbedFile(ProjectFile projectFile,
                                 string namesapce,

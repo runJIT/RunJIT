@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
         IEnumerable<Option> Build();
     }
 
-    internal class UpdateSwaggerTestsOptionsBuilder : IUpdateSwaggerTestsOptionsBuilder
+    internal sealed class UpdateSwaggerTestsOptionsBuilder : IUpdateSwaggerTestsOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

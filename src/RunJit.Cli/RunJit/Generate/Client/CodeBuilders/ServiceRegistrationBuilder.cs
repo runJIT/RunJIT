@@ -23,7 +23,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     // services.AddBulkResourceTranslationsFacade();
     // services.AddCachingFacade();
     // services.AddCategoryFacade();
-    internal class ServiceRegistrationBuilder
+    internal sealed class ServiceRegistrationBuilder
     {
         internal string BuildFrom(IImmutableList<GeneratedFacade> facades)
         {

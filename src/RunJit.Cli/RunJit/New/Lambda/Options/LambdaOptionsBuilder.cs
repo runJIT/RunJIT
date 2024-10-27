@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
         IEnumerable<Option> Build();
     }
 
-    internal class LambdaOptionsBuilder : ILambdaOptionsBuilder
+    internal sealed class LambdaOptionsBuilder : ILambdaOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

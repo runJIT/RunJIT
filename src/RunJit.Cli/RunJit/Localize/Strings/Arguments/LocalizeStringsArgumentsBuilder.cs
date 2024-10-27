@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         IEnumerable<System.CommandLine.Argument> Build();
     }
 
-    internal class LocalizeStringsArgumentsBuilder : ILocalizeStringsArgumentsBuilder
+    internal sealed class LocalizeStringsArgumentsBuilder : ILocalizeStringsArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {

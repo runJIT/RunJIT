@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ModelNormalizer
+    internal sealed class ModelNormalizer
     {
         internal IEnumerable<DeclarationBase> Normalize(IImmutableList<DeclarationToType> declarationToTypes)
         {

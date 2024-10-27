@@ -12,7 +12,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ClientGeneratorBuilder(IEnumerable<IBuildClientGenerator> dotNetToolStrategies)
+    internal sealed class ClientGeneratorBuilder(IEnumerable<IBuildClientGenerator> dotNetToolStrategies)
     {
         internal Client BuildFrom(ClientParameters clientGenParameters)
         {

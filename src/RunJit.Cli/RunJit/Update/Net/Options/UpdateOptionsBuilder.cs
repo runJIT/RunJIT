@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Update.Net
         IEnumerable<Option> Build();
     }
 
-    internal class DotNetOptionsBuilder : IDotNetOptionsBuilder
+    internal sealed class DotNetOptionsBuilder : IDotNetOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
         Task HandleAsync(UpdateNugetParameters parameters);
     }
 
-    internal class UpdateNuget(IEnumerable<IUpdateNugetStrategy> updateNugetStrategies) : IUpdateNuget
+    internal sealed class UpdateNuget(IEnumerable<IUpdateNugetStrategy> updateNugetStrategies) : IUpdateNuget
     {
         public Task HandleAsync(UpdateNugetParameters parameters)
         {

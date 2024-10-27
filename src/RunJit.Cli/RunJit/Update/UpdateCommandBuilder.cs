@@ -31,7 +31,7 @@ namespace RunJit.Cli.RunJit.Update
         }
     }
 
-    internal class UpdateCommandBuilder(IEnumerable<IUpdateSubCommandBuilder> subCommandBuilders)
+    internal sealed class UpdateCommandBuilder(IEnumerable<IUpdateSubCommandBuilder> subCommandBuilders)
         : IRunJitSubCommandBuilder
     {
         public Command Build()

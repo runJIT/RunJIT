@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
         IEnumerable<Option> Build();
     }
 
-    internal class UpdateCodeRulesOptionsBuilder : IUpdateCodeRulesOptionsBuilder
+    internal sealed class UpdateCodeRulesOptionsBuilder : IUpdateCodeRulesOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

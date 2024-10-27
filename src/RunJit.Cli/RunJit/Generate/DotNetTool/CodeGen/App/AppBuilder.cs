@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class AppBuilderCodeGen(ConsoleService consoleService) : INetToolCodeGen
+    internal sealed class AppBuilderCodeGen(ConsoleService consoleService) : INetToolCodeGen
     {
         private const string Template = """
                                         using Extensions.Pack;

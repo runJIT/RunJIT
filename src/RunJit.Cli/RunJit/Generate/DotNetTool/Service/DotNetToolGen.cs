@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         Task<int> HandleAsync(DotNetToolParameters parameters);
     }
 
-    internal class DotNetToolGen(IProcessService processService,
+    internal sealed class DotNetToolGen(IProcessService processService,
                                  ConsoleService consoleService,
                                  DotNetToolCreator dotNetToolCreator,
                                  DotNetToolGeneratorBuilder clientGeneratorBuilder) : IDotNetToolGen

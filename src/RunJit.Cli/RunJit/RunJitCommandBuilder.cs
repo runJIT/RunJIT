@@ -37,7 +37,7 @@ namespace RunJit.Cli.RunJit
         }
     }
 
-    internal class RunJitCommandBuilder(IEnumerable<IRunJitSubCommandBuilder> dotnetSubCommandBuilders)
+    internal sealed class RunJitCommandBuilder(IEnumerable<IRunJitSubCommandBuilder> dotnetSubCommandBuilders)
     {
         public RootCommand Build()
         {

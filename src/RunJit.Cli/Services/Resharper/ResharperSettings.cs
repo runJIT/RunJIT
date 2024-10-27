@@ -23,7 +23,7 @@ namespace RunJit.Cli.Services.Resharper
     //     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=api_005Cadmin_005Cv1_005Crequests/@EntryIndexedValue">True</s:Boolean>
     //     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=api_005Cadmin_005Cv1_005Cresponses/@EntryIndexedValue">True</s:Boolean>
     // </wpf:ResourceDictionary>
-    internal class ResharperSettingsBuilder
+    internal sealed class ResharperSettingsBuilder
     {
         private readonly string _resharperSettingsEntry = "<s:Boolean x:Key=\"/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=$namespace$/@EntryIndexedValue\">True</s:Boolean>";
 

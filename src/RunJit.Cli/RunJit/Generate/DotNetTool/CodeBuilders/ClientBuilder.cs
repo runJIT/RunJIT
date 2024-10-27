@@ -46,7 +46,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     //         public AccountsFacade Accounts { get; init; }  <-- PropertiesBuilder
     //     }
     // }
-    internal class DotNetToolBuilder(UsingsBuilder usingsBuilder,
+    internal sealed class DotNetToolBuilder(UsingsBuilder usingsBuilder,
                                      ParameterBuilder parameterBuilder,
                                      AssignExpressionBuilder assignExpressionBuilder,
                                      ServiceRegistrationBuilder serviceRegistrationBuilder,

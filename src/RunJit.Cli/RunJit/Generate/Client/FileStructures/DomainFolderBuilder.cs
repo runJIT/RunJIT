@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class DomainFolderBuilder
+    internal sealed class DomainFolderBuilder
     {
         internal DirectoryInfo Build(DirectoryInfo apiFolder,
                                      GeneratedFacade generatedFacade)

@@ -27,7 +27,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
         Task HandleAsync(LambdaParameters parameters);
     }
 
-    internal class AddNewLambdaService(IEnumerable<IAddNewLambdaServiceStrategy> updateCodeRulesStrategies) : IAddNewLambdaService
+    internal sealed class AddNewLambdaService(IEnumerable<IAddNewLambdaServiceStrategy> updateCodeRulesStrategies) : IAddNewLambdaService
     {
         public Task HandleAsync(LambdaParameters parameters)
         {

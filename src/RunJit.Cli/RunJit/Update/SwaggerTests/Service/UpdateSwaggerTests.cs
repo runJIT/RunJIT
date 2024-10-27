@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
         Task HandleAsync(UpdateSwaggerTestsParameters parameters);
     }
 
-    internal class UpdateSwaggerTests(IEnumerable<IUpdateSwaggerTestsStrategy> updateSwaggerTestsStrategies) : IUpdateSwaggerTests
+    internal sealed class UpdateSwaggerTests(IEnumerable<IUpdateSwaggerTestsStrategy> updateSwaggerTestsStrategies) : IUpdateSwaggerTests
     {
         public Task HandleAsync(UpdateSwaggerTestsParameters parameters)
         {

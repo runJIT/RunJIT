@@ -11,7 +11,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    internal class ConsoleService
+    internal sealed class ConsoleService
     {
         public void WriteLine()
         {

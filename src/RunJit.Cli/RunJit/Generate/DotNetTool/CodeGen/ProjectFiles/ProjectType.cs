@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ProjectTypeCodeGen(ConsoleService consoleService) : INetToolCodeGen
+    internal sealed class ProjectTypeCodeGen(ConsoleService consoleService) : INetToolCodeGen
     {
         public Task GenerateAsync(FileInfo projectFileInfo,
                                   DotNetToolInfos dotNetToolInfos)

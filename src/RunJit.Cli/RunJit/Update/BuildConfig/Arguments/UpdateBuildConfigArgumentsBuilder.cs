@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
         IEnumerable<System.CommandLine.Argument> Build();
     }
     
-    internal class UpdateBuildConfigArgumentsBuilder : IUpdateBuildConfigArgumentsBuilder
+    internal sealed class UpdateBuildConfigArgumentsBuilder : IUpdateBuildConfigArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {

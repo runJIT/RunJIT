@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     // Sample:
     // 
     // AdminFacade adminFacade, AliveFacade aliveFacade
-    internal class ParameterBuilder
+    internal sealed class ParameterBuilder
     {
         internal string BuildFrom(IImmutableList<GeneratedFacade> facades)
         {

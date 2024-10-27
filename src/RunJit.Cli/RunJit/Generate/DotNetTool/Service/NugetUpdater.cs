@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class NugetUpdater
+    internal sealed class NugetUpdater
     {
         internal async Task UpdateAsync(SolutionFile solutionFile,
                                         Solution.Parser.Project.ProjectFile project)

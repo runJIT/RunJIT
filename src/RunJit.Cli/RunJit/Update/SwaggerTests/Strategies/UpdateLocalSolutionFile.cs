@@ -26,7 +26,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
         }
     }
 
-    internal class UpdateLocalSolutionFile(ConsoleService consoleService,
+    internal sealed class UpdateLocalSolutionFile(ConsoleService consoleService,
                                            IDotNet dotNet,
                                            EmbeddedFileService embeddedFileService,
                                            FindSolutionFile findSolutionFile) : IUpdateSwaggerTestsStrategy

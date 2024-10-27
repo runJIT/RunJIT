@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
         Task HandleAsync(CleanupCodeParameters parameters);
     }
 
-    internal class CleanupCode(IEnumerable<ICleanupCodeStrategy> fixServiceRegistrationsStrategies) : ICleanupCode
+    internal sealed class CleanupCode(IEnumerable<ICleanupCodeStrategy> fixServiceRegistrationsStrategies) : ICleanupCode
     {
         public Task HandleAsync(CleanupCodeParameters parameters)
         {

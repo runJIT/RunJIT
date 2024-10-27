@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
         IEnumerable<System.CommandLine.Argument> Build();
     }
 
-    internal class FixEmbeddedResourcesArgumentsBuilder : IFixEmbeddedResourcesArgumentsBuilder
+    internal sealed class FixEmbeddedResourcesArgumentsBuilder : IFixEmbeddedResourcesArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {

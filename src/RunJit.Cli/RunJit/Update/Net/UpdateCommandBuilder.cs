@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Update.Net
         }
     }
 
-    internal class DotNetCommandBuilder(IDotNetService updateService,
+    internal sealed class DotNetCommandBuilder(IDotNetService updateService,
                                         IDotNetArgumentsBuilder argumentsBuilder,
                                         IDotNetOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {

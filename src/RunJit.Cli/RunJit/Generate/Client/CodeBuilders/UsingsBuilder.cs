@@ -27,7 +27,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     // using Api.ErrorLog;
     // using Api.Files;
     // using Api.Filter;
-    internal class UsingsBuilder
+    internal sealed class UsingsBuilder
     {
         internal string BuildFrom(IImmutableList<GeneratedFacade> facades,
                                   string projectName)

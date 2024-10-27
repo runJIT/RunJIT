@@ -8,7 +8,7 @@ using RunJit.Cli.RunJit;
 
 namespace RunJit.Cli
 {
-    internal class App(IServiceProvider serviceProvider)
+    internal sealed class App(IServiceProvider serviceProvider)
     {
         public async Task<int> RunAsync(string[] args)
         {

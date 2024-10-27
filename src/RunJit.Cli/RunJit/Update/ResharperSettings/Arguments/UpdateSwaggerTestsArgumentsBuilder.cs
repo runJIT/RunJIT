@@ -16,7 +16,7 @@
 //        IEnumerable<System.CommandLine.Argument> Build();
 //    }
 
-//    internal class UpdateResharperSettingsArgumentsBuilder : IUpdateResharperSettingsArgumentsBuilder
+//    internal sealed class UpdateResharperSettingsArgumentsBuilder : IUpdateResharperSettingsArgumentsBuilder
 //    {
 //        public IEnumerable<System.CommandLine.Argument> Build()
 //        {

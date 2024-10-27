@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ArgumentFixerCodeGen(ConsoleService consoleService, 
+    internal sealed class ArgumentFixerCodeGen(ConsoleService consoleService, 
                                         NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """

@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class VersionFolderBuilder
+    internal sealed class VersionFolderBuilder
     {
         internal DirectoryInfo Build(DirectoryInfo apiFolder,
                                      GeneratedClientCodeForController generatedFacade)

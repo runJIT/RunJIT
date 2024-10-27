@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Cleanup
         }
     }
 
-    internal class CleanupCommandBuilder(IEnumerable<ICleanupSubCommandBuilder> subCommandBuilders) : IRunJitSubCommandBuilder
+    internal sealed class CleanupCommandBuilder(IEnumerable<ICleanupSubCommandBuilder> subCommandBuilders) : IRunJitSubCommandBuilder
     {
         public Command Build()
         {

@@ -23,7 +23,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
         }
     }
 
-    internal class UpdateLocalSolutionFile(ConsoleService consoleService,
+    internal sealed class UpdateLocalSolutionFile(ConsoleService consoleService,
                                            IGitService git,
                                            IAwsCodeCommit awsCodeCommit,
                                            IDotNet dotNet,

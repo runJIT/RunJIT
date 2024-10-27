@@ -24,7 +24,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     // 
     // v1.0/project/{projectId}/rowlevelsecurity/{rowLevelSecurityId}/user/{userId}?useCache={useCache}
     // v2.0/project/{projectId}/resource/{resourceId}/parent/{resourceParentId}?useCache={useCache}
-    internal class UrlBuilder(QueryBuilder queryBuilder)
+    internal sealed class UrlBuilder(QueryBuilder queryBuilder)
     {
         private readonly Regex _parameterRegEx = new("(?<=\\{).+?(?=\\})");
 

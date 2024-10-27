@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     // Sample:
     // - new AdminFacade(new AdminV1(httpDotNetToolHandler)), new AliveFacade(new AliveV1(httpDotNetToolHandler)),
     // </summary>
-    internal class DependencyBuilder
+    internal sealed class DependencyBuilder
     {
         internal string BuildFrom(GeneratedDotNetTool generatedDotNetTool)
         {

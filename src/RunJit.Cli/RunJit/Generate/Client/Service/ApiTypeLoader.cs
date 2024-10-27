@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ApiTypeLoader(AssemblyTypeLoader assemblyTypeLoader)
+    internal sealed class ApiTypeLoader(AssemblyTypeLoader assemblyTypeLoader)
     {
         internal IImmutableList<Type> GetAllTypesFrom(SolutionFile parsedSolution)
         {

@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Rename.Solution
         IEnumerable<System.CommandLine.Argument> Build();
     }
 
-    internal class BackendArgumentsBuilder : IBackendArgumentsBuilder
+    internal sealed class BackendArgumentsBuilder : IBackendArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {

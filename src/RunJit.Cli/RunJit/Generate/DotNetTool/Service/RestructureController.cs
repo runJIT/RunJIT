@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class RestructureController
+    internal sealed class RestructureController
     {
         internal IImmutableList<ControllerInfo> Reorganize(ImmutableList<ControllerInfo> controllers)
         {

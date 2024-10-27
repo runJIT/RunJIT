@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ClientStructureWriter(ApiFolderBuilder apiFolderBuilder,
+    internal sealed class ClientStructureWriter(ApiFolderBuilder apiFolderBuilder,
                                          FacadeStructureBuilder facadeStructureBuilder)
     {
         public async Task WriteFileStructureAsync(GeneratedClient client,

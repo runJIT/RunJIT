@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ModelsToFilesWriter(ModelBuilder modelBuilder)
+    internal sealed class ModelsToFilesWriter(ModelBuilder modelBuilder)
     {
         public async Task WriteAsync(DirectoryInfo modelsFolder,
                                      GeneratedClientCodeForController controller,

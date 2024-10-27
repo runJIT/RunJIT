@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     // Sample:
     // - new AdminFacade(new AdminV1(httpClientHandler)), new AliveFacade(new AliveV1(httpClientHandler)),
     // </summary>
-    internal class DependencyBuilder
+    internal sealed class DependencyBuilder
     {
         internal string BuildFrom(GeneratedClient generatedClient)
         {

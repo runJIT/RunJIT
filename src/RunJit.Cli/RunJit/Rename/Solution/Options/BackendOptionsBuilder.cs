@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Rename.Solution
         IEnumerable<Option> Build();
     }
 
-    internal class BackendOptionsBuilder : IBackendOptionsBuilder
+    internal sealed class BackendOptionsBuilder : IBackendOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

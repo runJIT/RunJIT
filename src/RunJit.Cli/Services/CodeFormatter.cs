@@ -13,7 +13,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    internal class CodeFormatter
+    internal sealed class CodeFormatter
     {
         internal string FormatCode(string code)
         {

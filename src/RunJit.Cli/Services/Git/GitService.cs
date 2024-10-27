@@ -72,7 +72,7 @@ namespace RunJit.Cli.Services.Git
     public record BranchInfo(string Name,
                              bool IsActiveBranch);
 
-    internal class GitService(ConsoleService consoleService) : IGitService
+    internal sealed class GitService(ConsoleService consoleService) : IGitService
     {
         public Task CloneAsync(string url,
                                string branchName = "")

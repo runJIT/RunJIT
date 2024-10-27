@@ -79,7 +79,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class ClientCreator(ControllerParser controllerParser,
+    internal sealed class ClientCreator(ControllerParser controllerParser,
                                  ClientCreatorForController endpointClientGenerator,
                                  DomainFacedBuilder domainFacedBuilder,
                                  ClientBuilder clientBuilder,

@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.AppSettings
         }
     }
 
-    internal class AppSettingsCodeGen(ConsoleService consoleService) : INetToolCodeGen
+    internal sealed class AppSettingsCodeGen(ConsoleService consoleService) : INetToolCodeGen
     {
         private const string Template = """
                                         {

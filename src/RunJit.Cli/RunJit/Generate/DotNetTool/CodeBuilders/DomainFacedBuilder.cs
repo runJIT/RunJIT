@@ -44,7 +44,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     //         public AdminV1 V1 { get; init; }     <-- PropertiesBuilder
     //     }
     // }
-    internal class DomainFacedBuilder(AssignExpressionBuilder assignExpressionBuilder,
+    internal sealed class DomainFacedBuilder(AssignExpressionBuilder assignExpressionBuilder,
                                       ParameterBuilder parameterBuilder,
                                       ServiceRegistrationBuilder serviceRegistrationBuilder,
                                       PropertiesBuilder propertiesBuilder)

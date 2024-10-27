@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
         IEnumerable<Option> Build();
     }
 
-    internal class CheckBackendBuildsOptionsBuilder : ICheckBackendBuildsOptionsBuilder
+    internal sealed class CheckBackendBuildsOptionsBuilder : ICheckBackendBuildsOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

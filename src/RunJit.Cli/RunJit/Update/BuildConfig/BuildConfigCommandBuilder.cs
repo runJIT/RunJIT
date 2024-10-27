@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
         }
     }
 
-    internal class UpdateBuildConfigCommandBuilder(IUpdateBuildConfigService updateService,
+    internal sealed class UpdateBuildConfigCommandBuilder(IUpdateBuildConfigService updateService,
                                              IUpdateBuildConfigArgumentsBuilder argumentsBuilder,
                                              IUpdateBuildConfigOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {

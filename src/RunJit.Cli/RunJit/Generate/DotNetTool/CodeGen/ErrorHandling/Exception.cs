@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ExceptionCodeGen(ConsoleService consoleService,
+    internal sealed class ExceptionCodeGen(ConsoleService consoleService,
                                     NamespaceProvider namespaceProvider) : INetToolCodeGen
 
 

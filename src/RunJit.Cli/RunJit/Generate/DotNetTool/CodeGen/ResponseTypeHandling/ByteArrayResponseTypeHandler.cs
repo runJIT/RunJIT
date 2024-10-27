@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ByteArrayResponseTypeHandlerCodeGen(ConsoleService consoleService,
+    internal sealed class ByteArrayResponseTypeHandlerCodeGen(ConsoleService consoleService,
                               NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """

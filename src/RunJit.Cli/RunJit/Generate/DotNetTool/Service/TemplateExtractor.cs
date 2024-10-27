@@ -19,7 +19,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                        DotNetToolParameters clientGenParameters);
     }
 
-    internal class TemplateExtractor : ITemplateExtractor
+    internal sealed class TemplateExtractor : ITemplateExtractor
     {
         public void ExtractTo(DirectoryInfo directoryInfo,
                               DotNetToolParameters clientGenParameters)

@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
         IEnumerable<Option> Build();
     }
 
-    internal class FixEmbeddedResourcesOptionsBuilder : IFixEmbeddedResourcesOptionsBuilder
+    internal sealed class FixEmbeddedResourcesOptionsBuilder : IFixEmbeddedResourcesOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

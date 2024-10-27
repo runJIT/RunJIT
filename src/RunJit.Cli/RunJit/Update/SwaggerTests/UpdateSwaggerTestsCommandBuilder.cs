@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
         }
     }
 
-    internal class UpdateSwaggerTestsCommandBuilder(IUpdateSwaggerTests updateService,
+    internal sealed class UpdateSwaggerTestsCommandBuilder(IUpdateSwaggerTests updateService,
 
                                                     // IUpdateSwaggerTestsArgumentsBuilder argumentsBuilder,
                                                     IUpdateSwaggerTestsOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder

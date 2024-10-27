@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Update.Net
         IEnumerable<System.CommandLine.Argument> Build();
     }
 
-    internal class DotNetArgumentsBuilder : IDotNetArgumentsBuilder
+    internal sealed class DotNetArgumentsBuilder : IDotNetArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {

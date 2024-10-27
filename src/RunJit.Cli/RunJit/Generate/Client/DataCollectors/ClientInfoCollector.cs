@@ -22,7 +22,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     // ToDo: ClientGen Info collector
-    internal class ClientInfoCollector(CollectSolutionPath collectSolutionPath,
+    internal sealed class ClientInfoCollector(CollectSolutionPath collectSolutionPath,
                                        CollectTargetPath collectTargetPath) : IClientInfoCollector
     {
         private readonly CollectTargetPath _collectTargetPath = collectTargetPath;

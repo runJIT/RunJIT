@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ProblemDetailsExceptionCodeGen(ConsoleService consoleService,
+    internal sealed class ProblemDetailsExceptionCodeGen(ConsoleService consoleService,
                                                   NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """

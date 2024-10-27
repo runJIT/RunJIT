@@ -29,7 +29,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         Task<int> HandleAsync(ClientParameters parameters);
     }
 
-    internal class ClientGen(ITargetFolderService targetFolderService,
+    internal sealed class ClientGen(ITargetFolderService targetFolderService,
                              ITemplateExtractor templateExtractor,
                              ITemplateService templateService,
                              IProcessService processService,

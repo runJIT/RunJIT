@@ -11,7 +11,7 @@ namespace RunJit.Cli.Services.Resharper
         }
     }
 
-    internal class SolutionCodeCleanup(DotNetTool.Service.DotNetTool dotnetTool,
+    internal sealed class SolutionCodeCleanup(DotNetTool.Service.DotNetTool dotnetTool,
                                        ConsoleService consoleService)
     {
         private const string ResharperToolName = "JetBrains.ReSharper.GlobalTools";

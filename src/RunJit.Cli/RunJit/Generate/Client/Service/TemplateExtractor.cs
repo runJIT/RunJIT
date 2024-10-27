@@ -26,7 +26,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                             ClientParameters clientGenParameters);
     }
 
-    internal class TemplateExtractor(IRunJitApiClientFactory runJitApiClientFactory,
+    internal sealed class TemplateExtractor(IRunJitApiClientFactory runJitApiClientFactory,
                                      IMediator mediator,
                                      IHttpClientFactory httpClientFactory,
                                      RunJitApiClientSettings runJitApiClientSettings) : ITemplateExtractor

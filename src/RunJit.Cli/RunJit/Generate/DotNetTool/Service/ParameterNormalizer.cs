@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class ParameterNormalizer
+    internal sealed class ParameterNormalizer
     {
         internal IImmutableList<Parameter> Normalize(Method method,
                                                      IImmutableList<System.Reflection.ParameterInfo> reflectionParameters,

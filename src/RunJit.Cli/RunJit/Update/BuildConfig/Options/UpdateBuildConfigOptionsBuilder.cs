@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
         IEnumerable<Option> Build();
     }
 
-    internal class UpdateBuildConfigOptionsBuilder : IUpdateBuildConfigOptionsBuilder
+    internal sealed class UpdateBuildConfigOptionsBuilder : IUpdateBuildConfigOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

@@ -24,7 +24,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
         }
     }
 
-    internal class CloneReposAndUpdateAll(ConsoleService consoleService,
+    internal sealed class CloneReposAndUpdateAll(ConsoleService consoleService,
                                           IGitService git,
                                           IDotNet dotNet,
                                           IAwsCodeCommit awsCodeCommit,

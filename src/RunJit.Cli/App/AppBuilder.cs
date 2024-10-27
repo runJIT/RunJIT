@@ -9,7 +9,7 @@ namespace RunJit.Cli
     /// <summary>
     ///     App builder needed to setup dependency injection and create the cli (dotnet-tool) application.
     /// </summary>
-    internal class AppBuilder
+    internal sealed class AppBuilder
     {
         internal App Build()
         {

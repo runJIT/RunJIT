@@ -19,7 +19,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    internal class ControllerParser(MethodParser methodParser)
+    internal sealed class ControllerParser(MethodParser methodParser)
     {
         public IImmutableList<ControllerInfo> ExtractFrom(IImmutableList<CSharpSyntaxTree> syntaxTrees,
                                                           IImmutableList<Type> reflectionTypes)

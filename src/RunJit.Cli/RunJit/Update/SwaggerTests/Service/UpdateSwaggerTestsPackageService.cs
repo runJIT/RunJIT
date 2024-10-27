@@ -17,7 +17,7 @@
 //        Task UpdateSwaggerTestsPackageAsync(OutdatedSwaggerTestsResponse outdatedSwaggerTestsResponse);
 //    }
 
-//    internal class UpdateSwaggerTestsPackageService(ConsoleService consoleService,
+//    internal sealed class UpdateSwaggerTestsPackageService(ConsoleService consoleService,
 //                                                 IDotNetTool dotNetTool) : IUpdateSwaggerTestsPackageService
 //    {
 //        public async Task UpdateSwaggerTestsPackageAsync(FileInfo solutionFileInfo)

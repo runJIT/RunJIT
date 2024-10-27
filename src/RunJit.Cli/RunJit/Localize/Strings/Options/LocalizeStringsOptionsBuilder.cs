@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         IEnumerable<Option> Build();
     }
 
-    internal class LocalizeStringsOptionsBuilder : ILocalizeStringsOptionsBuilder
+    internal sealed class LocalizeStringsOptionsBuilder : ILocalizeStringsOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

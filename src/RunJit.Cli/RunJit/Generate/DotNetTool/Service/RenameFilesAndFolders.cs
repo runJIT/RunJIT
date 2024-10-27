@@ -22,7 +22,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                      string newName);
     }
 
-    internal class RenameFilesAndFolders : IRenameFilesAndFolders
+    internal sealed class RenameFilesAndFolders : IRenameFilesAndFolders
     {
         public DirectoryInfo Rename(DirectoryInfo directoryInfo,
                                     string originalName,

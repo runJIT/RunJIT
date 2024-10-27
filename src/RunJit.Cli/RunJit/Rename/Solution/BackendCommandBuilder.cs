@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Rename.Solution
         }
     }
 
-    internal class BackendCommandBuilder(IBackendOptionsBuilder backendOptionsBuilder,
+    internal sealed class BackendCommandBuilder(IBackendOptionsBuilder backendOptionsBuilder,
                                          IBackendArgumentsBuilder backendArgumentsBuilder,
                                          IBackendService backendService) : IRenameSubCommandBuilder
     {

@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class JsonResponseTypeHandlerCodeGen(ConsoleService consoleService,
+    internal sealed class JsonResponseTypeHandlerCodeGen(ConsoleService consoleService,
                               NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """

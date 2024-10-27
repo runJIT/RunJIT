@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class NotOkResponseTypeHandlerCodeGen(ConsoleService consoleService,
+    internal sealed class NotOkResponseTypeHandlerCodeGen(ConsoleService consoleService,
                                                    NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """

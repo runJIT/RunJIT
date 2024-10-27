@@ -30,7 +30,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
         Task HandleAsync(UpdateCodeRulesParameters parameters);
     }
 
-    internal class UpdateCodeRules(IEnumerable<IUpdateCodeRulesStrategy> updateCodeRulesStrategies) : IUpdateCodeRules
+    internal sealed class UpdateCodeRules(IEnumerable<IUpdateCodeRulesStrategy> updateCodeRulesStrategies) : IUpdateCodeRules
     {
         public Task HandleAsync(UpdateCodeRulesParameters parameters)
         {

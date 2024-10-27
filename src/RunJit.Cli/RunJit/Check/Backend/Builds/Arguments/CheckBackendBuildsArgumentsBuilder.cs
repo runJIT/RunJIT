@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
         IEnumerable<System.CommandLine.Argument> Build();
     }
 
-    internal class CheckBackendBuildsArgumentsBuilder : ICheckBackendBuildsArgumentsBuilder
+    internal sealed class CheckBackendBuildsArgumentsBuilder : ICheckBackendBuildsArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {

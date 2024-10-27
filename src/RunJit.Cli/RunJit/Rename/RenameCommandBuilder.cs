@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Rename
         }
     }
 
-    internal class RenameCommandBuilder(IEnumerable<IRenameSubCommandBuilder> subCommandBuilders) : IRunJitSubCommandBuilder
+    internal sealed class RenameCommandBuilder(IEnumerable<IRenameSubCommandBuilder> subCommandBuilders) : IRunJitSubCommandBuilder
     {
         public Command Build()
         {

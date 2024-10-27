@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
         IEnumerable<Option> Build();
     }
 
-    internal class UpdateNugetOptionsBuilder : IUpdateNugetOptionsBuilder
+    internal sealed class UpdateNugetOptionsBuilder : IUpdateNugetOptionsBuilder
     {
         public IEnumerable<Option> Build()
         {

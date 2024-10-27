@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class HttpRequestMessageBuilderCodeGen(ConsoleService consoleService,
+    internal sealed class HttpRequestMessageBuilderCodeGen(ConsoleService consoleService,
                                                  NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """
@@ -37,7 +37,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            internal class HttpRequestMessageBuilder
+                                            internal sealed class HttpRequestMessageBuilder
                                             {
                                                 internal HttpRequestMessage BuildFrom(HttpMethod method,
                                                                                       string uri,

@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
         }
     }
 
-    internal class FixEmbeddedResourcesCommandBuilder(IFixEmbeddedResources updateService,
+    internal sealed class FixEmbeddedResourcesCommandBuilder(IFixEmbeddedResources updateService,
 
                                                       // IFixEmbeddedResourcesArgumentsBuilder argumentsBuilder,
                                                       IFixEmbeddedResourcesOptionsBuilder optionsBuilder) : IFixSubCommandBuilder

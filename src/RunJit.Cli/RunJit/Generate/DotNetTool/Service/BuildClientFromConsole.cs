@@ -13,7 +13,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class BuildDotNetToolFromConsole(IDotNetToolInfoCollector dotNetToolInfoCollector) : IBuildDotNetToolGenerator
+    internal sealed class BuildDotNetToolFromConsole(IDotNetToolInfoCollector dotNetToolInfoCollector) : IBuildDotNetToolGenerator
     {
         public DotNetTool BuildFrom(DotNetToolParameters clientGenParameters)
         {

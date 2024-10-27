@@ -12,7 +12,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    internal class NamespaceProvider
+    internal sealed class NamespaceProvider
     {
         private const string Template = """
                                 <wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

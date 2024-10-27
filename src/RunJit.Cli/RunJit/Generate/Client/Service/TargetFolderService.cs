@@ -26,7 +26,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                  DirectoryInfo targetDirectoryInfo);
     }
 
-    internal class TargetFolderService : ITargetFolderService
+    internal sealed class TargetFolderService : ITargetFolderService
     {
         public DirectoryInfo CreateTargetDirectory(Client client)
         {

@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit
         }
     }
 
-    internal class RunJitArgumentFixer
+    internal sealed class RunJitArgumentFixer
     {
         public string[] Fix(string[] args)
         {

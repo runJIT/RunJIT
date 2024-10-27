@@ -20,7 +20,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
         }
     }
 
-    internal class UpdateCodeRulesCommandBuilder(IUpdateCodeRules updateService,
+    internal sealed class UpdateCodeRulesCommandBuilder(IUpdateCodeRules updateService,
                                                  IUpdateCodeRulesOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {
         public Command Build()

@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Encrypt
         IEnumerable<System.CommandLine.Argument> Build();
     }
 
-    internal class EncryptArgumentsBuilder : IEncryptArgumentsBuilder
+    internal sealed class EncryptArgumentsBuilder : IEncryptArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {

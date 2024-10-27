@@ -23,7 +23,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         }
     }
 
-    internal class StringLocalizer(ExtractStringsToLocalize extractStringsToLocalize)
+    internal sealed class StringLocalizer(ExtractStringsToLocalize extractStringsToLocalize)
     {
         // Hint: This is a prototype to check if we are able to do a full automation of the localization process.
         //       
@@ -233,7 +233,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         }
     }
 
-    internal class ExtractStringsToLocalize
+    internal sealed class ExtractStringsToLocalize
     {
         // Hint: This is a prototype to check if we are able to do a full automation of the localization process.
         //       

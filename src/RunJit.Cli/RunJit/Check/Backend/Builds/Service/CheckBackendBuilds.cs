@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
         Task HandleAsync(CheckBackendBuildsParameters parameters);
     }
 
-    internal class CheckBackendBuilds(IEnumerable<ICheckBackendBuildsStrategy> fixServiceRegistrationsStrategies) : ICheckBackendBuilds
+    internal sealed class CheckBackendBuilds(IEnumerable<ICheckBackendBuildsStrategy> fixServiceRegistrationsStrategies) : ICheckBackendBuilds
     {
         public Task HandleAsync(CheckBackendBuildsParameters parameters)
         {

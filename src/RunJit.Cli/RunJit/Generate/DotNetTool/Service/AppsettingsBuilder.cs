@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal class AppsettingsBuilder
+    internal sealed class AppsettingsBuilder
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("Pulse.Generate.DotNetTool.Templates.appsettings.test.json");
 

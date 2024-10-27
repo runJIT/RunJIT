@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         Task HandleAsync(LocalizeStringsParameters parameters);
     }
 
-    internal class LocalizeStrings(IEnumerable<ILocalizeStringsStrategy> fixServiceRegistrationsStrategies) : ILocalizeStrings
+    internal sealed class LocalizeStrings(IEnumerable<ILocalizeStringsStrategy> fixServiceRegistrationsStrategies) : ILocalizeStrings
     {
         public Task HandleAsync(LocalizeStringsParameters parameters)
         {

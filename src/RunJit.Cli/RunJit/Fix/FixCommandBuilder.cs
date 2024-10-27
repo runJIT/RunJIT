@@ -15,7 +15,7 @@ namespace RunJit.Cli.RunJit.Fix
         }
     }
 
-    internal class FixCommandBuilder(IEnumerable<IFixSubCommandBuilder> subCommandBuilders)
+    internal sealed class FixCommandBuilder(IEnumerable<IFixSubCommandBuilder> subCommandBuilders)
         : IRunJitSubCommandBuilder
     {
         public Command Build()

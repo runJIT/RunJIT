@@ -17,7 +17,7 @@
 //        Task UpdateResharperSettingsPackageAsync(OutdatedSwaggerTestsResponse outdatedSwaggerTestsResponse);
 //    }
 
-//    internal class UpdateResharperSettingsPackageService(ConsoleService consoleService,
+//    internal sealed class UpdateResharperSettingsPackageService(ConsoleService consoleService,
 //                                                 IDotNetTool dotNetTool) : IUpdateResharperSettingsPackageService
 //    {
 //        public async Task UpdateResharperSettingsPackageAsync(FileInfo solutionFileInfo)

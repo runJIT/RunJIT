@@ -8,7 +8,7 @@ using RunJit.Cli.RunJit;
 
 namespace RunJit.Cli
 {
-    internal class Startup
+    internal sealed class Startup
     {
         internal void ConfigureServices(IServiceCollection services,
                                         IConfiguration configuration)

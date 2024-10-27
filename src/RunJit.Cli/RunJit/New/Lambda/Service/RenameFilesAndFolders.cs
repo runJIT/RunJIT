@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
         }
     }
 
-    internal class RenameFilesAndFolders
+    internal sealed class RenameFilesAndFolders
     {
         public void Rename(DirectoryInfo directoryInfo,
                            string originalName,
