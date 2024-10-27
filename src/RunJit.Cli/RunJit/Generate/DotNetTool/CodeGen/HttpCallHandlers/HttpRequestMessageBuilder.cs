@@ -44,25 +44,19 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                                                       object? payload,
                                                                                       string payloadParameterName)
                                                 {
-                                                    var content = payload.IsNotNull() ? GetContent() : null;
+                                                    var content = payload.IsNotNull() ? GetContent(payload, payloadParameterName) : null;
                                                     return new HttpRequestMessage(method, uri) { Version = HttpVersion.Version11, VersionPolicy = HttpVersionPolicy.RequestVersionOrLower, Content = content };
                                         
-                                                    HttpContent GetContent()
+                                                    static HttpContent GetContent(object? payload, string payloadParameterName)
                                                     {
-                                                        switch (payload)
+                                                        return payload switch
                                                         {
-                                                            case string stringContent:
-                                                                return new StringContent(stringContent);
-                                                            case InMemoryFileAsStream inMemoryFileAsStream:
-                                                                return inMemoryFileAsStream.ToMultipartFormDataContent(payloadParameterName);
-                                                            case byte[] byteArray:
-                                                                return new ByteArrayContent(byteArray);
-                                                            case Stream streamContent:
-                                                                return new StreamContent(streamContent);
-                                                            default:
-                                                                // Default any class or record converted to json string
-                                                                return new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
-                                                        }
+                                                            string stringContent => new StringContent(stringContent),
+                                                            InMemoryFileAsStream inMemoryFileAsStream => inMemoryFileAsStream.ToMultipartFormDataContent(payloadParameterName),
+                                                            byte[] byteArray => new ByteArrayContent(byteArray),
+                                                            Stream streamContent => new StreamContent(streamContent),
+                                                            _ => new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, MediaTypeNames.Application.Json), // Default any class or record converted to json string
+                                                        };
                                                     }
                                                 }
                                             }
