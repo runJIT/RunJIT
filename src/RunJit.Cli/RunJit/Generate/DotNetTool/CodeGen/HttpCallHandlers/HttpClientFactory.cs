@@ -28,9 +28,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         
                                         namespace $namespace$
                                         {
-                                            public static class Add$dotNetToolName$HttpClientFactoryExtension
+                                            internal static class Add$dotNetToolName$HttpClientFactoryExtension
                                             {
-                                                public static void Add$dotNetToolName$HttpClientFactory(this IServiceCollection services,
+                                                internal static void Add$dotNetToolName$HttpClientFactory(this IServiceCollection services,
                                                                                                            IConfiguration configuration)
                                                 {
                                                     services.AddHttpClient();
@@ -41,7 +41,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            internal class $dotNetToolName$HttpClientFactory(IHttpClientFactory httpClientFactory,
+                                            internal sealed class $dotNetToolName$HttpClientFactory(IHttpClientFactory httpClientFactory,
                                                                                                 $dotNetToolName$HttpClientSettings aspNetCoreMinimalApiSdkClientSettings,
                                                                                                 HttpCallHandlerFactory httpCallHandlerFactory)
                                             {

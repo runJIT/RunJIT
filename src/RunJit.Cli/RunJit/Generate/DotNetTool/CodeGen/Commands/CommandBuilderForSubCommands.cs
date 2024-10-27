@@ -29,7 +29,7 @@ namespace $namespace$
 {       
     internal static class Add$command-name$CommandBuilderExtension
     {
-        internal static void Add$command-name$CommandBuilder(this IServiceCollection services)
+        internal static void Add$command-name$CommandBuilder(this IServiceCollection services, IConfiguration configuration)
         {
             $subCommandRegistration$
 
@@ -69,7 +69,7 @@ namespace $namespace$
 
             var interfaceImplementation = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? string.Empty : $" : I{parentCommandInfo.NormalizedName}SubCommandBuilder";
 
-            var subCommandRegistration = commandInfo.SubCommands.Select(command => $"services.Add{command.NormalizedName}CommandBuilder();").ToFlattenString(Environment.NewLine);
+            var subCommandRegistration = commandInfo.SubCommands.Select(command => $"services.Add{command.NormalizedName}CommandBuilder(configuration);").ToFlattenString(Environment.NewLine);
             var subCommandUsings  =commandInfo.SubCommands.Select(command => $"using {nameSpace}.{command.NormalizedName};").ToFlattenString(Environment.NewLine);
             var commandRegistration = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? $"{commandInfo.NormalizedName}CommandBuilder" : $"I{parentCommandInfo.NormalizedName}SubCommandBuilder, {commandInfo.NormalizedName}CommandBuilder";
 

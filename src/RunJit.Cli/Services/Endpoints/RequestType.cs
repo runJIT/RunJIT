@@ -1,4 +1,7 @@
-﻿namespace RunJit.Cli.Services.Endpoints
+﻿using Solution.Parser.CSharp;
+
+namespace RunJit.Cli.Services.Endpoints
 {
-    public record RequestType;
+    public record RequestType(DeclarationBase Declaration,
+                              Type Type);
 }

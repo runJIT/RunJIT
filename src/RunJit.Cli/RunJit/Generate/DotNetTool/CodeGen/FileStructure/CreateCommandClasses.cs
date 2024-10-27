@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddSingletonIfNotExists<CreateCommandClasses>();
         }
     }
-    
+
     internal sealed class CreateCommandClasses(IEnumerable<IBuildCommandFileStructure> commandFileStructures)
     {
         public void Invoke(string projectName,
@@ -27,6 +27,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                            CommandTypeCollector commandTypeCollector,
                            string currentPath,
                            NameSpaceCollector namespaceCollector,
+                           DotNetToolName donNetToolName,
                            CommandInfo? parentCommand = null)
         {
             var currentRootPath = $"{currentPath}";
@@ -39,12 +40,12 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             commandFileStructures.ForEach(structure => structure.Create(projectName, parentCommand, commandTypeCollector,
                                                                         currentPath, namespaceCollector, subCommnandDirectoryInfo,
-                                                                        commandInfo));
+                                                                        commandInfo, donNetToolName));
 
 
             foreach (var commandInfoSubCommand in commandInfo.SubCommands)
             {
-                Invoke(projectName, commandInfoSubCommand, subCommnandDirectoryInfo, commandTypeCollector, currentPath, namespaceCollector, commandInfo);
+                Invoke(projectName, commandInfoSubCommand, subCommnandDirectoryInfo, commandTypeCollector, currentPath, namespaceCollector, donNetToolName, commandInfo);
             }
         }
     }

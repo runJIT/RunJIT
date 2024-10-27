@@ -22,9 +22,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
         public string NormalizedName { get; init; } = string.Empty;
 
-        // NEW POC
-        public string MethodBody { get; init; } = string.Empty;
-
         public EndpointInfo? EndpointInfo { get; init; }
     }
 }

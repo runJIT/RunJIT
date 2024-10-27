@@ -38,7 +38,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     services.AddErrorHandler();
                                         
                                                     // 2. Domains
-                                                    services.Add$dotNetToolName$CommandBuilder();
+                                                    services.Add$dotNetToolName$CommandBuilder(configuration);
                                                 }
                                             }
                                         }

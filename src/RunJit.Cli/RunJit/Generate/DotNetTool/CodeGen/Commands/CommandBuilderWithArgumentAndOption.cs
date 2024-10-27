@@ -28,9 +28,9 @@ namespace $namespace$
 {                    
     internal static class Add$command-name$CommandBuilderExtension
     {
-        internal static void Add$command-name$CommandBuilder(this IServiceCollection services)
+        internal static void Add$command-name$CommandBuilder(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Add$command-name$Handler();
+            services.Add$command-name$Handler(configuration);
             services.Add$command-name$OptionsBuilder();
             services.Add$command-name$ArgumentBuilder();
 
@@ -45,7 +45,7 @@ namespace $namespace$
         public Command Build()
         {
             var command = new Command(""$command-argument-name$"", ""$command-description$"");
-            _optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
+            optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
             command.AddArgument(argumentBuilder.Build());
             command.Handler = $command-handler$;
             return command;

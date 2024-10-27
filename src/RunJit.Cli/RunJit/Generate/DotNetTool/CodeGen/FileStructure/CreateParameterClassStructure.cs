@@ -21,7 +21,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                            string currentPath,
                            NameSpaceCollector namespaceCollector,
                            DirectoryInfo subCommnandDirectoryInfo,
-                           CommandInfo commandInfo)
+                           CommandInfo commandInfo,
+                           DotNetToolName dotNetToolName)
+
         {
             if (!commandInfo.Argument.IsNotNull() && !commandInfo.Options.Any() && !commandInfo.SubCommands.IsNullOrEmpty())
             {

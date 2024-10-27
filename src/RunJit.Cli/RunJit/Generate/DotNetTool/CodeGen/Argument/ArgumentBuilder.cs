@@ -17,8 +17,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         private const string Template =
             @"
-using System.CommandLine;
-using System.CommandLine.Invocation;
+using Extensions.Pack;
 
 namespace $namespace$
 {    

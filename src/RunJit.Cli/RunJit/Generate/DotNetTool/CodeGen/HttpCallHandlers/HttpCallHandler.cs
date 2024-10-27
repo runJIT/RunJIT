@@ -27,9 +27,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
                                         namespace $namespace$
                                         {
-                                            public static class AddHttpCallHandlerExtension
+                                            internal static class AddHttpCallHandlerExtension
                                             {
-                                                public static void AddHttpCallHandler(this IServiceCollection services)
+                                                internal static void AddHttpCallHandler(this IServiceCollection services)
                                                 {
                                                     services.AddResponseTypeHandleStrategy();
                                                     services.AddHttpRequestMessageBuilder();
@@ -39,7 +39,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            public interface IHttpCallHandler
+                                            internal interface IHttpCallHandler
                                             {
                                                 Task CallAsync(HttpMethod httpMethod,
                                                                string url,

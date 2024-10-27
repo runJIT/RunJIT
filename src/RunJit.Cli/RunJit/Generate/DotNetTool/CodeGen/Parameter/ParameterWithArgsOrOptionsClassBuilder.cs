@@ -21,7 +21,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             @"
 namespace $namespace$
 {    
-    internal sealed record $command-name$Parameters($ctor-arguments$);
+    internal sealed record $command-name$Parameters($primary-ctor-arguments$);
 }";
 
         private const string CtorArgument = @"$type$ $argName$";
@@ -47,10 +47,10 @@ namespace $namespace$
             var properties = BuildProperties(ctorArguments).ToList();
             var propertyString = BuildPropertyString(properties);
 
-            var argumentString = BuildArguments(ctorArguments);
+            var primaryCtroArguments = BuildArguments(ctorArguments);
             var propertyInitializer = BuildPropertyInitializerString(ctorArguments, properties);
 
-            var newTemplate = Template.Replace("$ctor-arguments$", argumentString)
+            var newTemplate = Template.Replace("$primary-ctor-arguments$", primaryCtroArguments)
                                       .Replace("$agrument-to-properties$", propertyInitializer)
                                       .Replace("$properties$", propertyString)
                                       .Replace("$projectName$", projectName)
@@ -95,7 +95,7 @@ namespace $namespace$
 
         private string BuildArguments(IEnumerable<CtorArgument> ctorArguments)
         {
-            var result = ctorArguments.Select(arg => CtorArgument.Replace("$type$", arg.Type).Replace("$argName$", arg.Name)).Flatten(", ");
+            var result = ctorArguments.Select(arg => CtorArgument.Replace("$type$", arg.Type).Replace("$argName$", arg.Name.FirstCharToUpper())).Flatten(", ");
 
             return result;
         }

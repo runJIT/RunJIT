@@ -25,9 +25,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         
                                         namespace $namespace$
                                         {
-                                            public static class AddHttpCallHandlerFactoryExtension
+                                            internal static class AddHttpCallHandlerFactoryExtension
                                             {
-                                                public static void AddHttpCallHandlerFactory(this IServiceCollection services)
+                                                internal static void AddHttpCallHandlerFactory(this IServiceCollection services)
                                                 {
                                                     services.AddResponseTypeHandleStrategy();
                                                     services.AddHttpRequestMessageBuilder();

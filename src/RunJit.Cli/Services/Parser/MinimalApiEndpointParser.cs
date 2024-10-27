@@ -154,10 +154,11 @@ namespace RunJit.Cli.Services
                                 {
                                     var version = ExtractVersion(methodStatement);
                                     var produceResponseTypes = ExtractProduceResponseTypes(methodStatement);
-                                    var payloads = ExtractPayload(methodStatement);
+                                    var payloads = ExtractPayload(methodStatement).ToList();
                                     var normalizedBasePath = basePath.Replace("{apiVersion:apiVersion}", version.Original);
                                     var relativeUrl = ExtractRelativeUrl(methodStatement);
                                     var url = $"{normalizedBasePath}/{relativeUrl}";
+                                    var allUsedModels = GetAllUsedModels(produceResponseTypes, syntaxTrees, reflectionTypes, version, payloads);
 
                                     var endpointInfo = new EndpointInfo
                                                        {
@@ -170,11 +171,10 @@ namespace RunJit.Cli.Services
                                                            HttpAction = ExtractHttpAction(methodStatement),
                                                            RelativeUrl = url,
                                                            Parameters = ExtractParameters(methodStatement),
-                                                           RequestType = ExtractRequestType(methodStatement),
+                                                           RequestType = ExtractRequestType(payloads, allUsedModels, reflectionTypes),
                                                            ResponseType = ExtractResponseType(produceResponseTypes),
                                                            ProduceResponseTypes = produceResponseTypes,
-                                                           Models = GetAllUsedModels(produceResponseTypes, syntaxTrees, reflectionTypes,
-                                                                                     version, payloads)
+                                                           Models = allUsedModels
                                                        };
 
                                     listStatements = listStatements.Add(endpointInfo);
@@ -334,28 +334,39 @@ namespace RunJit.Cli.Services
             }
         }
 
-        private RequestType? ExtractRequestType(string code)
+        private RequestType? ExtractRequestType(List<string> payloads,
+                                                IImmutableList<DeclarationBase> models,
+                                                IImmutableList<Type> reflectionTypes)
         {
             // Implement logic to extract request type
-            return null;
+            var match = models.FirstOrDefault(m => payloads.Contains(m.Name));
+
+            if (match.IsNull())
+            {
+                return null;
+            }
+
+            var reflectionType = reflectionTypes.First(item => item.FullName == match.FullQualifiedName);
+
+            return new RequestType(match, reflectionType);
         }
 
-        private ResponseType ExtractResponseType(string code,
-                                                 IImmutableList<CSharpSyntaxTree> syntaxTrees,
-                                                 IImmutableList<Type> reflectionTypes)
-        {
-            //return routeGroupBuilder.MapGet("todos", ([FromServices] GetAllToDosQuery getAllToDosQuery) =>
-            //                        {
-            //                            return Results.Ok(getAllToDosQuery.Execute());
-            //                        }).WithSummary("Get all ToDos")
+        //private ResponseType ExtractResponseType(string code,
+        //                                         IImmutableList<CSharpSyntaxTree> syntaxTrees,
+        //                                         IImmutableList<Type> reflectionTypes)
+        //{
+        //    //return routeGroupBuilder.MapGet("todos", ([FromServices] GetAllToDosQuery getAllToDosQuery) =>
+        //    //                        {
+        //    //                            return Results.Ok(getAllToDosQuery.Execute());
+        //    //                        }).WithSummary("Get all ToDos")
 
-            // We have to find out the return type which is hard here
+        //    // We have to find out the return type which is hard here
 
-            // 1. find the return Results.Ok
+        //    // 1. find the return Results.Ok
 
-            // Implement logic to extract response type
-            return new ResponseType("", "");
-        }
+        //    // Implement logic to extract response type
+        //    return new ResponseType("", "");
+        //}
 
         private IImmutableList<ProduceResponseTypes> ExtractProduceResponseTypes(string code)
         {

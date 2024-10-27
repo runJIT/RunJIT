@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Dynamic;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.Endpoints;
@@ -28,14 +29,25 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         private readonly string[] _httpActionWithPayloads = { "Post", "Patch", "Put" };
 
+        private const string callInfosTemplate = """
+                                                 // 2. Convert into target type
+                                                 var callInfos = parameters.Json.FromJsonStringAs<Dictionary<string, object?>>();
+                                                 
+                                                 // 3. Setup all needed variables
+                                                 """;
 
         // ToDo: Question how to communicate obsolete methods ?
         private readonly string _methodTemplate = """
+                                                  // 1. create client
                                                   var httpCallHandler = myApiHttpClientFactory.CreateFrom(parameters.Token);
-                                                  return httpCallHandler.CallAsync$returnTypeNoTask$(HttpMethod.$httpMethod$, $$url$, $payloadAsJson$, $cancellationToken$);                                                 
+                                                  
+                                                  $callInfos$
+                                                  $variables$
+                                                  
+                                                  return httpCallHandler.CallAsync(HttpMethod.$httpMethod$, $$url$, $payloadAsJson$, $cancellationToken$);                                                 
                                                   """;
 
-      
+
         internal string BuildFor(EndpointInfo endpointInfo)
         {
             // Any call to a http instance is never sync like like without a Task - we never do blocking API calls !!
@@ -57,7 +69,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var httpClientCall = _httpActionWithPayloads.Contains(endpointInfo.HttpAction) ? $"{endpointInfo.HttpAction}AsJson" : endpointInfo.HttpAction;
 
             // ToDo: detect which parameter is the payload !!
-            var fromBody = endpointInfo.Parameters.FirstOrDefault(p => p.Attributes.Any(a => a.Name == "FromBody"));
+            var fromBody = endpointInfo.Parameters.FirstOrDefault(p => p.Attributes.Any(a => a.Name.Contains("FromBody")));
 
             var parameterBody = endpointInfo.Parameters.FirstOrDefault(p => p.Attributes.IsEmpty() &&
                                                                             builtInTypeTableService.GetTypeFor(p.Type).IsNull());
@@ -87,6 +99,19 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var cancellationTokenParameter = endpointInfo.Parameters.FirstOrDefault(p => p.Type == nameof(CancellationToken));
             var cancellationToken = cancellationTokenParameter.IsNotNull() ? cancellationTokenParameter.Name : $"{nameof(CancellationToken)}.{nameof(CancellationToken.None)}";
 
+            var parameterAsVariables = endpointInfo.Parameters.Select(p =>
+                                                                      {
+                                                                          if (p.IsOptional)
+                                                                          {
+                                                                              return $$"""var {{p.Name}} = callInfos.GetValueOrDefault({{p.Name}}"); // Optional""";
+                                                                          }
+
+                                                                          return $$"""var {{p.Name}} = callInfos["{{p.Name}}"]; // Mandatory""";
+                                                                      }).ToFlattenString(Environment.NewLine);
+
+            var callInfos = endpointInfo.Parameters.IsEmpty() ? string.Empty : callInfosTemplate;
+
+
             var method = _methodTemplate.Replace("$returnType$", normalizedReturnType)
                                         .Replace("$name$", methodName)
                                         .Replace("$parameters$", parameters)
@@ -97,7 +122,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         .Replace("$payloadAsJson$", payloadParameter)
                                         .Replace("$httpClientCall$", httpClientCall)
                                         .Replace("$attributes$", attributes)
-                                        .Replace("$cancellationToken$", cancellationToken);
+                                        .Replace("$cancellationToken$", cancellationToken)
+                                        .Replace("$variables$", parameterAsVariables)
+                                        .Replace("$callInfos$", callInfos);
 
             return method;
         }

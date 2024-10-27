@@ -27,9 +27,9 @@ namespace $namespace$
 {                
     internal static class Add$command-name$CommandBuilderExtension
     {
-        internal static void Add$command-name$CommandBuilder(this IServiceCollection services)
+        internal static void Add$command-name$CommandBuilder(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Add$command-name$Handler();
+            services.Add$command-name$Handler(configuration);
 
             services.AddSingletonIfNotExists<$command-name$CommandBuilder>();
         }

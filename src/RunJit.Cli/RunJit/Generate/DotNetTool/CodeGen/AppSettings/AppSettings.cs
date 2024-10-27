@@ -19,7 +19,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.AppSettings
     {
         private const string Template = """
                                         {
-                                          "$clientName$ClientSettings": {
+                                          "$dotNetToolName$ClientSettings": {
                                             "BaseAddress": "http://staging/api/$dotNetToolName$/"
                                           }
                                         }

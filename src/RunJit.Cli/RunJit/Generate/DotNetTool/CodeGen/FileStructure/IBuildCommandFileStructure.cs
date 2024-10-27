@@ -8,6 +8,7 @@
                     string currentPath,
                     NameSpaceCollector namespaceCollector,
                     DirectoryInfo subCommnandDirectoryInfo,
-                    CommandInfo commandInfo);
+                    CommandInfo commandInfo,
+                    DotNetToolName dotNetToolName);
     }
 }
