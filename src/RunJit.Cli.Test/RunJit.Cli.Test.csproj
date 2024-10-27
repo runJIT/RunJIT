@@ -24,8 +24,6 @@
         <ProjectReference Include="..\RunJit.Cli\RunJit.Cli.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Include="**\*.txt" Exclude="bin\**\*;obj\**\*" />
-        <EmbeddedResource Include="**\*.rps" Exclude="bin\**\*;obj\**\*" />
         <EmbeddedResource Include="**\*.json" Exclude="bin\**\*;obj\**\*" />
     </ItemGroup>
 </Project>

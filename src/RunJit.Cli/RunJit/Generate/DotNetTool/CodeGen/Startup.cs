@@ -24,13 +24,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         private const string Template = """
                                         using $namespace$.$dotNetToolName$;
+                                        using Microsoft.Extensions.Configuration;
                                         using Microsoft.Extensions.DependencyInjection;
                                         
                                         namespace $namespace$
                                         {
                                             internal sealed class Startup
                                             {
-                                                internal void ConfigureServices(IServiceCollection services)
+                                                internal void ConfigureServices(IServiceCollection services, IConfiguration configuration)
                                                 {
                                                     // 1. Infrastructure
                                                     services.Add$dotNetToolName$ArgumentFixer();

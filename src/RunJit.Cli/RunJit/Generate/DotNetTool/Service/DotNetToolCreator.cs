@@ -29,6 +29,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddCommandCodeGen();
             services.AddArgumentFixerCodeGen();
             services.AddProjectSettingsCodeGen();
+            services.AddAppSettingsCodeGen();
+            services.AddProjectEmbeddedFilesCodeGen();
         }
     }
 
@@ -217,8 +219,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             // Add required nuget packages into project
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "System.CommandLine", "0.3.0-alpha.20054.1").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "5.0.4").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.DependencyInjection", "8.0.1").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "GitVersion.MsBuild", "6.0.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.DependencyInjection", "8.0.1").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration", "8.0.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.EnvironmentVariables", "8.0.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.UserSecrets", "8.0.0").ConfigureAwait(false);
 
             // 5. Code Gen
             await netToolGen.GenerateAsync(dotnetToolProject, dotnetToolStructure).ConfigureAwait(false);

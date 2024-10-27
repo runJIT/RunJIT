@@ -19,6 +19,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal class AppBuilderCodeGen(ConsoleService consoleService) : INetToolCodeGen
     {
         private const string Template = """
+                                        using Extensions.Pack;
+                                        using Microsoft.Extensions.Configuration;
+                                        using Microsoft.Extensions.Configuration.Json;
                                         using Microsoft.Extensions.DependencyInjection;
 
                                         namespace $namespace$
@@ -30,7 +33,16 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     var startup = new Startup();
                                                     var services = new ServiceCollection();
                                                     
-                                                    startup.ConfigureServices(services);
+                                                    var configurationBuilder = new ConfigurationBuilder();
+                                                    var appsettingsAsStream = typeof(AppBuilder).Assembly.GetEmbeddedFileAsStream("appsettings.json");
+                                                    var jsonStreamConfigurationSource = new JsonStreamConfigurationSource { Stream = appsettingsAsStream };
+                                                    
+                                                    configurationBuilder.Add(jsonStreamConfigurationSource);
+                                                    configurationBuilder.AddEnvironmentVariables();
+                                                    configurationBuilder.AddUserSecrets(typeof(AppBuilder).Assembly);
+                                                    var configuration = configurationBuilder.Build();
+                                                    
+                                                    startup.ConfigureServices(services, configuration);
                                             
                                                     var buildServiceProvider = services.BuildServiceProvider();
                                             
