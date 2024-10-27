@@ -1,7 +1,6 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
+using RunJit.Cli.Services.Endpoints;
 [assembly: InternalsVisibleTo("DotNetTool.Builder.Test")]
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
@@ -25,5 +24,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
         // NEW POC
         public string MethodBody { get; init; } = string.Empty;
+
+        public EndpointInfo? EndpointInfo { get; init; }
     }
 }

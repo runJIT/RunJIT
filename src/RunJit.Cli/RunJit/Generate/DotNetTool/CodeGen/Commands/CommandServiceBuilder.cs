@@ -9,11 +9,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         public static void AddCommandServiceBuilder(this IServiceCollection services)
         {
+            services.AddCommandMethodBuilderBuilder();
+
             services.AddSingletonIfNotExists<CommandServiceBuilder>();
         }
     }
 
-    internal sealed class CommandServiceBuilder
+    internal sealed class CommandServiceBuilder(CommandMethodBuilder commandMethodBuilder)
     {
         private const string Template = """
                                         using Extensions.Pack;
@@ -40,15 +42,15 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public string Build(string project,
-                            CommandInfo parameterInfo,
+                            CommandInfo commandInfo,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
-            var methodBody = parameterInfo.MethodBody.IsNullOrWhiteSpace() ? "throw new NotImplementedException();" : parameterInfo.MethodBody;
+            var methodBody = commandInfo.EndpointInfo.IsNull() ? "throw new NotImplementedException();" : commandMethodBuilder.BuildFor(commandInfo.EndpointInfo);
 
-            var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)
+            var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
                                       .Replace("$namespace$", nameSpace)
                                       .Replace("$project-name$", project)
                                       .Replace("$methodBody$", methodBody);
