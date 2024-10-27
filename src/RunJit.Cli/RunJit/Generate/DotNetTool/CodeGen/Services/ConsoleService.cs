@@ -30,7 +30,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            internal class ConsoleService
+                                            internal sealed class ConsoleService
                                             {
                                                 public void WriteLine()
                                                 {

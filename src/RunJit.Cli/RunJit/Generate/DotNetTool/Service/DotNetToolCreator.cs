@@ -218,8 +218,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "5.0.4").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.DependencyInjection", "8.0.1").ConfigureAwait(false);
 
-            // Microsoft.Extensions.DependencyInjection
-
             // 5. Code Gen
             await netToolGen.GenerateAsync(dotnetToolProject, dotnetToolStructure).ConfigureAwait(false);
 

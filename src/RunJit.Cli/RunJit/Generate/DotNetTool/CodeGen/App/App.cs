@@ -32,9 +32,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
                                         namespace $namespace$
                                         {
-                                            internal class App(IServiceProvider serviceProvider)
+                                            internal sealed class App(IServiceProvider serviceProvider)
                                             {
-                                                public async Task<int> RunAsync(string[] args)
+                                                internal async Task<int> RunAsync(string[] args)
                                                 {
                                                     // Get needed service to invoke client generator. Important anything have to be handled by dependency injection
                                                     var rootCommand = serviceProvider.GetRequiredService<$dotNetToolName$CommandBuilder>().Build();

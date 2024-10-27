@@ -23,23 +23,21 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal class StartupCodeGen(ConsoleService consoleService) : INetToolCodeGen
     {
         private const string Template = """
-                                        using Extensions.Pack;
-                                        using Microsoft.Extensions.Configuration;
+                                        using $namespace$.$dotNetToolName$;
                                         using Microsoft.Extensions.DependencyInjection;
-
+                                        
                                         namespace $namespace$
                                         {
-                                            internal class Startup
+                                            internal sealed class Startup
                                             {
-                                                internal void ConfigureServices(IServiceCollection services,
-                                                                                IConfiguration configuration)
+                                                internal void ConfigureServices(IServiceCollection services)
                                                 {
                                                     // 1. Infrastructure
                                                     services.Add$dotNetToolName$ArgumentFixer();
                                                     services.AddErrorHandler();
                                         
                                                     // 2. Domains
-                                                    services.Add$dotNetToolName$CommandBuilder(configuration);
+                                                    services.Add$dotNetToolName$CommandBuilder();
                                                 }
                                             }
                                         }

@@ -22,6 +22,14 @@ using System.CommandLine.Invocation;
 
 namespace $namespace$
 {    
+    internal static class Add$command-name$ArgumentBuilderExtension
+    {
+        internal static void Add$command-name$ArgumentBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<$command-name$ArgumentBuilder>();
+        }
+    }
+
     internal sealed class $command-name$ArgumentBuilder
     {                                        
         public System.CommandLine.Argument Build()
@@ -45,12 +53,10 @@ namespace $namespace$
             Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
-            var currentNamespace = $"{nameSpace}.Arguments";
-
             var newTemplate = Template.Replace("$project-name$", projectName)
                                       .Replace("$command-name$", parameterInfo.NormalizedName)
                                       .Replace("$argument-name$", parameterInfo.Argument?.Name)
-                                      .Replace("$namespace$", currentNamespace)
+                                      .Replace("$namespace$", nameSpace)
                                       .Replace("$type$", parameterInfo.Argument?.OptimizedType)
                                       .Replace("$argument-description$", parameterInfo.Argument?.Description);
 

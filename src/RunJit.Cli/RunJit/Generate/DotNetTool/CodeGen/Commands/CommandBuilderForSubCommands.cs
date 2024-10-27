@@ -20,10 +20,23 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         private const string Template = @"
 using System.CommandLine;
-using System.CommandLine.Invocation;  
+using System.CommandLine.Invocation;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection; 
+$usings$
 
 namespace $namespace$
-{    
+{       
+    internal static class Add$command-name$CommandBuilderExtension
+    {
+        internal static void Add$command-name$CommandBuilder(this IServiceCollection services)
+        {
+            $subCommandRegistration$
+
+            services.AddSingletonIfNotExists<$command-name$CommandBuilder>();
+        }
+    }
+
     internal sealed class $command-name$CommandBuilder(IEnumerable<I$command-name$SubCommandBuilder> $command-argument-name$SubCommandBuilders)$interface$
     {     
         public Command Build()
@@ -56,13 +69,19 @@ namespace $namespace$
 
             var interfaceImplementation = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? string.Empty : $" : I{parentCommandInfo.NormalizedName}SubCommandBuilder";
 
+            var subCommandRegistration = commandInfo.SubCommands.Select(command => $"services.Add{command.NormalizedName}CommandBuilder();").ToFlattenString(Environment.NewLine);
+            var subCommandUsings  =commandInfo.SubCommands.Select(command => $"using {nameSpace}.{command.NormalizedName};").ToFlattenString(Environment.NewLine);
+
+
             var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
                                       .Replace("$command-argument-name$", commandInfo.NormalizedName.FirstCharToLower())
                                       .Replace("$namespace$", nameSpace)
                                       .Replace("$command-description$", commandInfo.Description)
                                       .Replace("$command-handler$", commandHandler)
                                       .Replace("$project-name$", project)
-                                      .Replace("$interface$", interfaceImplementation);
+                                      .Replace("$interface$", interfaceImplementation)
+                                      .Replace("$subCommandRegistration$", subCommandRegistration)
+                                      .Replace("$usings$", subCommandUsings);
 
             return newTemplate.FormatSyntaxTree();
         }

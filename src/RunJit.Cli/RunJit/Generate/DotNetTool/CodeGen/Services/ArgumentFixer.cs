@@ -30,7 +30,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            internal class $dotNetToolName$ArgumentFixer
+                                            internal sealed class $dotNetToolName$ArgumentFixer
                                             {
                                                 public string[] Fix(string[] args)
                                                 {

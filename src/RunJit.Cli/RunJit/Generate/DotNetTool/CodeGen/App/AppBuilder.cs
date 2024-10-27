@@ -19,7 +19,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal class AppBuilderCodeGen(ConsoleService consoleService) : INetToolCodeGen
     {
         private const string Template = """
-                                        using Microsoft.Extensions.Configuration;
                                         using Microsoft.Extensions.DependencyInjection;
 
                                         namespace $namespace$
@@ -30,10 +29,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 {
                                                     var startup = new Startup();
                                                     var services = new ServiceCollection();
-                                                    var configurationBuilder = new ConfigurationBuilder();
-                                                    var configuration = configurationBuilder.Build();
-                                            
-                                                    startup.ConfigureServices(services, configuration);
+                                                    
+                                                    startup.ConfigureServices(services);
                                             
                                                     var buildServiceProvider = services.BuildServiceProvider();
                                             

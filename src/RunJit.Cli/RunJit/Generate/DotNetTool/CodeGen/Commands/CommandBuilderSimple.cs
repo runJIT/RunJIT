@@ -20,10 +20,21 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         private const string Template = @"
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using $namespace$.Service;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace $namespace$
 {                
+    internal static class Add$command-name$CommandBuilderExtension
+    {
+        internal static void Add$command-name$CommandBuilder(this IServiceCollection services)
+        {
+            services.Add$command-name$Service();
+
+            services.AddSingletonIfNotExists<$command-name$CommandBuilder>();
+        }
+    }
+
     internal sealed class $command-name$CommandBuilder($command-name$Service $command-service-argument-name$Service)$interface$
     {   
         public Command Build()

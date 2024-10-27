@@ -18,13 +18,25 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class CommandBuilderWithArgument
     {
         private const string Template =
-            @"using System.CommandLine;
-using System.CommandLine.Invocation;    
-using $namespace$.Arguments;  
-using $namespace$.Service;
+            @"
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace $namespace$
 {                    
+    internal static class Add$command-name$CommandBuilderExtension
+    {
+        internal static void Add$command-name$CommandBuilder(this IServiceCollection services)
+        {
+            services.Add$command-name$Service();           
+            services.Add$command-name$ArgumentBuilder();
+
+            services.AddSingletonIfNotExists<$command-name$CommandBuilder>();
+        }
+    }
+
     internal sealed class $command-name$CommandBuilder($command-name$Service $command-service-argument-name$Service, 
                                                        $command-name$ArgumentBuilder argumentBuilder)$interface$
     {       

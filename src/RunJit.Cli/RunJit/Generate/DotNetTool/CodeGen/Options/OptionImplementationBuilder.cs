@@ -19,10 +19,20 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         private const string Template =
             @"using System.CommandLine;
-using System.CommandLine.Invocation;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace $namespace$
 {    
+
+    internal static class Add$command-name$OptionsBuilderExtension
+    {
+        internal static void Add$command-name$OptionsBuilder(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<$command-name$OptionsBuilder>();
+        }
+    }
+
     internal sealed class $command-name$OptionsBuilder
     {
         public IEnumerable<Option> Build()
@@ -51,7 +61,6 @@ $build-option-method$
             Throw.IfNull(() => parameterInfo);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
-            var currentNamespace = $"{nameSpace}.Options";
             var optionsMethods = _optionMethodsBuilder.Build(parameterInfo.Options).ToList();
             var optionsMethodAsString = optionsMethods.Select(m => m.MethodSyntax).Flatten(Environment.NewLine);
             var yieldStatements = optionsMethods.Select(m => $"            yield return {m.MethodName}();").Flatten(Environment.NewLine);
@@ -59,7 +68,7 @@ $build-option-method$
             var newTemplate = Template.Replace("$project-name$", projectName)
                                       .Replace("$command-name$", parameterInfo.NormalizedName)
                                       .Replace("$yield-option$", yieldStatements)
-                                      .Replace("$namespace$", currentNamespace)
+                                      .Replace("$namespace$", nameSpace)
                                       .Replace("$build-option-method$", optionsMethodAsString);
 
             return newTemplate.FormatSyntaxTree();
