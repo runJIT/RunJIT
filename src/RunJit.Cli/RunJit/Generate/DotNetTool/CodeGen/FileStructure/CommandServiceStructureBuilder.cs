@@ -33,9 +33,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             }
 
             var commandServiceResult = commandServiceBuilder.Build(projectName, commandInfo, currentPath);
-            var serviceFolder = new DirectoryInfo(Path.Combine(subCommnandDirectoryInfo.FullName, "Service"));
+            var serviceFolder = new DirectoryInfo(Path.Combine(subCommnandDirectoryInfo.FullName, "Handlers"));
             serviceFolder.Exists.IfFalseThen(() => serviceFolder.Create());
-            var commandService = new FileInfo(Path.Combine(serviceFolder.FullName, $"{commandInfo.NormalizedName}Service.cs"));
+            var commandService = new FileInfo(Path.Combine(serviceFolder.FullName, $"{commandInfo.NormalizedName}Handler.cs"));
 
             File.WriteAllText(commandService.FullName, commandServiceResult);
             

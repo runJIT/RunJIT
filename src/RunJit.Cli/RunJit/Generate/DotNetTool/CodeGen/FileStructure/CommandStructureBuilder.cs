@@ -37,7 +37,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             }
 
             string? command = null;
-
+            // ToDo: Better refactor take over code from .net tool builder > 7 years old
             if (commandInfo.Argument.IsNull() && commandInfo.Options.IsEmpty())
             {
                 command = commandBuilderSimple.Build(projectName, commandInfo, parentCommandInfo, currentPath);

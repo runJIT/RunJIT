@@ -16,10 +16,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         public ArgumentInfo? Argument { get; init; }
 
         public string Description { get; init; } = string.Empty;
+
         public string Value { get; init; } = string.Empty;
 
         public string Name { get; init; } = string.Empty;
 
         public string NormalizedName { get; init; } = string.Empty;
+
+        // NEW POC
+        public string MethodBody { get; init; } = string.Empty;
     }
 }

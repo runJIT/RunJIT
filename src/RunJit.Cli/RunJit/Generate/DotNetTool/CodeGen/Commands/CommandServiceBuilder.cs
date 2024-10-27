@@ -21,19 +21,19 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         
                                         namespace $namespace$
                                         {    
-                                            internal static class Add$command-name$ServiceExtension
+                                            internal static class Add$command-name$HandlerExtension
                                             {
-                                                internal static void Add$command-name$Service(this IServiceCollection services)
+                                                internal static void Add$command-name$Handler(this IServiceCollection services)
                                                 {
-                                                    services.AddSingletonIfNotExists<$command-name$Service>();
+                                                    services.AddSingletonIfNotExists<$command-name$Handler>();
                                                 }
                                             }
                                         
-                                            internal sealed class $command-name$Service
+                                            internal sealed class $command-name$Handler
                                             {       
                                                 public Task HandleAsync($command-name$Parameters parameters)
                                                 {
-                                                    throw new NotImplementedException();
+                                                    $methodBody$
                                                 }
                                             }
                                         }
@@ -46,9 +46,12 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             Throw.IfNullOrWhiteSpace(project);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
+            var methodBody = parameterInfo.MethodBody.IsNullOrWhiteSpace() ? "throw new NotImplementedException();" : parameterInfo.MethodBody;
+
             var newTemplate = Template.Replace("$command-name$", parameterInfo.NormalizedName)
                                       .Replace("$namespace$", nameSpace)
-                                      .Replace("$project-name$", project);
+                                      .Replace("$project-name$", project)
+                                      .Replace("$methodBody$", methodBody);
 
             return newTemplate.FormatSyntaxTree();
         }

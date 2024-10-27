@@ -317,6 +317,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                             NormalizedName = endoint.SwaggerOperationId.FirstCharToUpper(),
                             Description = $"Here comes the description for {endoint.SwaggerOperationId.FirstCharToUpper()}",
                             Value = endoint.SwaggerOperationId.FirstCharToUpper(),
+                            //MethodBody = """
+                            //             var result =  await _httpCallHandler.CallAsync<Todo>(HttpMethod.Post, "api/v1.0/todos", todo, CancellationToken.None).ConfigureAwait(false);
+                            //             consoleService.WriteSuccess(result);
+                            //             """,
                             Options = new List<OptionInfo>()
                                       {
                                           new OptionInfo()
