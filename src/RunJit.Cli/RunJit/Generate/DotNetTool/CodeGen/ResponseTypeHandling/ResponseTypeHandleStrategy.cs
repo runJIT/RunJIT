@@ -66,16 +66,16 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     if (responseHandlers.IsEmpty())
                                                     {
                                                         throw new ProblemDetailsException("No response handler was found to handle expected response",
-                                                            $"No response handler was found to handle expected response type: '{typeof(TResult).Name}'",
-                                                            ("Response type", typeof(TResult).Name));
+                                                                                          $"No response handler was found to handle expected response type: '{typeof(TResult).Name}'",
+                                                                                          ("Response type", typeof(TResult).Name));
                                                     }
                                         
                                                     if (responseHandlers.Count > 1)
                                                     {
                                                         throw new ProblemDetailsException("More than one reponse handlers was found for expected response type",
-                                                            $"For response type: '{typeof(TResult).Name}' {responseHandlers.Count} response handler was found",
-                                                            ("Response type", typeof(TResult).Name),
-                                                            ("ResponseHandlers", responseHandlers.Select(handler => handler.GetType().Name).ToImmutableList()));
+                                                                                          $"For response type: '{typeof(TResult).Name}' {responseHandlers.Count} response handler was found",
+                                                                                          ("Response type", typeof(TResult).Name),
+                                                                                          ("ResponseHandlers", responseHandlers.Select(handler => handler.GetType().Name).ToImmutableList()));
                                                     }
                                         
                                                     var result = responseHandlers[0].HandleAsync<TResult>(responseMessage, httpMethod, httpClient, url);

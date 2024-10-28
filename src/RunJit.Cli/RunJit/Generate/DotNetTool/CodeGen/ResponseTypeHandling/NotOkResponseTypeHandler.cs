@@ -45,15 +45,21 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                                                                 string url)
                                                 {
                                                     // Safety first this method can be called without CanHandle check !
-                                                    CanHandle<TResult>(responseMessage);
-                                        
+                                                    if (CanHandle<TResult>(responseMessage).IsFalse())
+                                                    {
+                                                        throw new ProblemDetailsException("NotOkResponseTypeHandler was called without checking CanHandle.",
+                                                                                          $"The response type handler for type: {typeof(TResult).Name} is not supported",
+                                                                                          ("SupportedTypes", "NotOk responses"));
+                                                    }
+                                                    
                                                     var content = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
                                                     var absoluteUrl = $"{httpClient.BaseAddress}{url}";
-                                                    throw new ProblemDetailsException("Client call to endpoint was not successfull",
-                                                        $"The http call: {httpMethod.Method} {url} was not succesfull",
-                                                        ("HttpMethod", httpMethod.Method),
-                                                        ("Url", absoluteUrl),
-                                                        ("Error", content));
+                                                    throw new ProblemDetailsException(responseMessage.StatusCode,
+                                                                                      "Client call to endpoint was not successfull",
+                                                                                      $"The http call: {httpMethod.Method} {url} was not succesfull",
+                                                                                      ("HttpMethod", httpMethod.Method),
+                                                                                      ("Url", absoluteUrl),
+                                                                                      ("Error", content));
                                                 }
                                             }
                                         }

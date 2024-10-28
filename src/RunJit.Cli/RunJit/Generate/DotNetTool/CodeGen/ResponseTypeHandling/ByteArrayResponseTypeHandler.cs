@@ -46,8 +46,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                                                                 string url)
                                                 {
                                                     // Safety first this method can be called without CanHandle check !
-                                                    CanHandle<TResult>(responseMessage);
-                                        
+                                                    if (CanHandle<TResult>(responseMessage).IsFalse())
+                                                    {
+                                                        throw new ProblemDetailsException("ByteArrayResponseTypeHandler was called without checking CanHandle.",
+                                                                                          $"The response type handler for type: {typeof(TResult).Name} is not supported",
+                                                                                          ("SupportedTypes", "byte[]"));
+                                                    }
+                                                    
                                                     var result = await responseMessage.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                                                     return (TResult)result.Cast<object>();
                                                 }
@@ -60,7 +65,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         DotNetToolInfos dotNetTool)
         {
             // 1. Add ByteArrayResponseTypeHandler Folder
-            var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "ByteArrayResponseTypeHandler"));
+            var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "ResponseTypeHandling"));
 
             if (appFolder.NotExists())
             {

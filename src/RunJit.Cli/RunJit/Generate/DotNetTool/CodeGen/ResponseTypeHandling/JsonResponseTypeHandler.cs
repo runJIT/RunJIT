@@ -51,15 +51,16 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                                                                 string url)
                                                 {
                                                     // Safety first this method can be called without CanHandle check !
-                                                    CanHandle<TResult>(responseMessage);
-                                        
-                                                    var content = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-                                                    var result = JsonSerializer.Deserialize<TResult>(content, _options);
-                                                    if (result.IsNull())
+                                                    if (CanHandle<TResult>(responseMessage).IsFalse())
                                                     {
-                                                        throw new JsonDeserializeException<TResult>(content);
+                                                        throw new ProblemDetailsException("JsonResponseTypeHandler was called without checking CanHandle.",
+                                                                                          $"The response type handler for type: {typeof(TResult).Name} is not supported",
+                                                                                          ("SupportedTypes", "Serializable content"));
                                                     }
-                                        
+                                                    
+                                                    var content = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                                    var result = jsonSerializer.Deserialize<TResult>(content);
+                                                    
                                                     return result;
                                                 }
                                             }
