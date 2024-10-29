@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {
-    public static class AddTemplateServiceExtension
+    internal static class AddTemplateServiceExtension
     {
-        public static void AddTemplateService(this IServiceCollection services)
+        internal static void AddTemplateService(this IServiceCollection services)
         {
             services.AddRenameFilesAndFolders();
             services.AddSingletonIfNotExists<TemplateService>();

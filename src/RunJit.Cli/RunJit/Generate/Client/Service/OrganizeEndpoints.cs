@@ -5,9 +5,9 @@ using RunJit.Cli.Services.Endpoints;
 
 namespace RunJit.Cli.RunJit.Generate.Client
 {
-    public static class AddOrganizeMinimalEndpointsExtension
+    internal static class AddOrganizeMinimalEndpointsExtension
     {
-        public static void AddOrganizeMinimalEndpoints(this IServiceCollection services)
+        internal static void AddOrganizeMinimalEndpoints(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<OrganizeMinimalEndpoints>();
         }

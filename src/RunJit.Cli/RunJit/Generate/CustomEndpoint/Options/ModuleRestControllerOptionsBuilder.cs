@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.CustomEndpoint
 {
-    public static class AddGenerateCustomEndpointOptionsBuilderExtension
+    internal static class AddGenerateCustomEndpointOptionsBuilderExtension
     {
-        public static void AddGenerateCustomEndpointOptionsBuilder(this IServiceCollection services)
+        internal static void AddGenerateCustomEndpointOptionsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IGenerateEndpointOptionsBuilder, GenerateCustomEndpointOptionsBuilder>();
         }

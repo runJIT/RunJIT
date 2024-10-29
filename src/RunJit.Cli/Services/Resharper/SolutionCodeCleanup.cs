@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.Services.Resharper
 {
-    public static class AddSolutionCodeCleanupExtension
+    internal static class AddSolutionCodeCleanupExtension
     {
-        public static void AddSolutionCodeCleanup(this IServiceCollection services)
+        internal static void AddSolutionCodeCleanup(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<SolutionCodeCleanup>();
         }

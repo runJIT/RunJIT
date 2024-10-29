@@ -6,9 +6,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.SwaggerTests
 {
-    public static class AddUpdateSwaggerTestsExtension
+    internal static class AddUpdateSwaggerTestsExtension
     {
-        public static void AddUpdateSwaggerTests(this IServiceCollection services)
+        internal static void AddUpdateSwaggerTests(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddUpdateSwaggerTestsParameters();

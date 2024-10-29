@@ -6,9 +6,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddErrorHandlerCodeGenExtension
+    internal static class AddErrorHandlerCodeGenExtension
     {
-        public static void AddErrorHandlerCodeGen(this IServiceCollection services)
+        internal static void AddErrorHandlerCodeGen(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<INetToolCodeGen, ErrorHandlerCodeGen>();
         }

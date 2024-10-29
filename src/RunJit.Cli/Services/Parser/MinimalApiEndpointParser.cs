@@ -19,7 +19,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    //public static class GetAllToDoEndpoints
+    //internal static class GetAllToDoEndpoints
     //{
     //    public static RouteHandlerBuilder MapGetAll(this IEndpointRouteBuilder routeGroupBuilder)
     //    {

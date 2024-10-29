@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddOptionImplementationBuilderExtension
+    internal static class AddOptionImplementationBuilderExtension
     {
-        public static void AddOptionImplementationBuilder(this IServiceCollection services)
+        internal static void AddOptionImplementationBuilder(this IServiceCollection services)
         {
             services.AddOptionMethodsBuilder();
 
@@ -34,7 +34,7 @@ namespace $namespace$
 
     internal sealed class $command-name$OptionsBuilder
     {
-        public IEnumerable<Option> Build()
+        internal IEnumerable<Option> Build()
         {   
 $yield-option$
         }

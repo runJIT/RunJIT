@@ -6,9 +6,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.ResharperSettings
 {
-    public static class AddUpdateResharperSettingsExtension
+    internal static class AddUpdateResharperSettingsExtension
     {
-        public static void AddUpdateResharperSettings(this IServiceCollection services)
+        internal static void AddUpdateResharperSettings(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddUpdateResharperSettingsParameters();

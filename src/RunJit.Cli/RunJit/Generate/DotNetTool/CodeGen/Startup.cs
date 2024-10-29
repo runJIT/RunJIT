@@ -12,9 +12,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                            DotNetToolInfos dotNetToolInfos);
     }
 
-    public static class AddStartupCodeGenExtension
+    internal static class AddStartupCodeGenExtension
     {
-        public static void AddStartupCodeGen(this IServiceCollection services)
+        internal static void AddStartupCodeGen(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<INetToolCodeGen, StartupCodeGen>();
         }

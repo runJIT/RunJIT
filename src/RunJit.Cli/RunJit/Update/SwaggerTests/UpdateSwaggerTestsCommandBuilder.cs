@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.SwaggerTests
 {
-    public static class AddUpdateSwaggerTestsCommandBuilderExtension
+    internal static class AddUpdateSwaggerTestsCommandBuilderExtension
     {
-        public static void AddUpdateSwaggerTestsCommandBuilder(this IServiceCollection services)
+        internal static void AddUpdateSwaggerTestsCommandBuilder(this IServiceCollection services)
         {
             services.AddUpdateSwaggerTestsOptionsBuilder();
 

@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddAppsettingsBuilderExtension
+    internal static class AddAppsettingsBuilderExtension
     {
-        public static void AddAppsettingsBuilder(this IServiceCollection services)
+        internal static void AddAppsettingsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<AppsettingsBuilder>();
         }

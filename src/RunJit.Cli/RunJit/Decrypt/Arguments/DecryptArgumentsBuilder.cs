@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Decrypt
 {
-    public static class AddDecryptArgumentsBuilderExtension
+    internal static class AddDecryptArgumentsBuilderExtension
     {
-        public static void AddDecryptArgumentsBuilder(this IServiceCollection services)
+        internal static void AddDecryptArgumentsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IDecryptArgumentsBuilder, DecryptArgumentsBuilder>();
         }

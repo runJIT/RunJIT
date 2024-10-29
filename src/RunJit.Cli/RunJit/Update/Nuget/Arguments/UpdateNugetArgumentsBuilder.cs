@@ -3,9 +3,9 @@
 
 //namespace RunJit.Cli.RunJit.Update.Nuget
 //{
-//    public static class AddUpdateNugetArgumentsBuilderExtension
+//    internal static class AddUpdateNugetArgumentsBuilderExtension
 //    {
-//        public static void AddUpdateNugetArgumentsBuilder(this IServiceCollection services)
+//        internal static void AddUpdateNugetArgumentsBuilder(this IServiceCollection services)
 //        {
 //            services.AddSingletonIfNotExists<IUpdateNugetArgumentsBuilder, UpdateNugetArgumentsBuilder>();
 //        }

@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.Nuget
 {
-    public static class AddUpdateNugetCommandBuilderExtension
+    internal static class AddUpdateNugetCommandBuilderExtension
     {
-        public static void AddUpdateNugetCommandBuilder(this IServiceCollection services)
+        internal static void AddUpdateNugetCommandBuilder(this IServiceCollection services)
         {
             services.AddUpdateNugetOptionsBuilder();
 

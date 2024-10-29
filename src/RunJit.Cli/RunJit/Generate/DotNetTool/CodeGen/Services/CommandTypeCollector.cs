@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddCommandTypeCollectorExtension
+    internal static class AddCommandTypeCollectorExtension
     {
-        public static void AddCommandTypeCollector(this IServiceCollection services)
+        internal static void AddCommandTypeCollector(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<CommandTypeCollector>();
         }

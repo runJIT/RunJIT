@@ -7,9 +7,9 @@ using RunJit.Cli.RunJit.Check.Backend;
 
 namespace RunJit.Cli.RunJit.Localize.Strings
 {
-    public static class AddLocalizeStringsCommandBuilderExtension
+    internal static class AddLocalizeStringsCommandBuilderExtension
     {
-        public static void AddLocalizeStringsCommandBuilder(this IServiceCollection services)
+        internal static void AddLocalizeStringsCommandBuilder(this IServiceCollection services)
         {
             services.AddLocalizeStringsArgumentsBuilder();
             services.AddLocalizeStringsOptionsBuilder();

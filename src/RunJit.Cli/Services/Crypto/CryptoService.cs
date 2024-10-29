@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.Services.Crypto
 {
-    public static class AddCryptoServiceExtension
+    internal static class AddCryptoServiceExtension
     {
-        public static void AddCryptoService(this IServiceCollection services)
+        internal static void AddCryptoService(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<ICryptoService, CryptoService>();
         }

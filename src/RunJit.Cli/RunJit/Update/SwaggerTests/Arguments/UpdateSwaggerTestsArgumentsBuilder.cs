@@ -3,9 +3,9 @@
 
 //namespace RunJit.Cli.RunJit.Update.SwaggerTests
 //{
-//    public static class AddUpdateSwaggerTestsArgumentsBuilderExtension
+//    internal static class AddUpdateSwaggerTestsArgumentsBuilderExtension
 //    {
-//        public static void AddUpdateSwaggerTestsArgumentsBuilder(this IServiceCollection services)
+//        internal static void AddUpdateSwaggerTestsArgumentsBuilder(this IServiceCollection services)
 //        {
 //            services.AddSingletonIfNotExists<IUpdateSwaggerTestsArgumentsBuilder, UpdateSwaggerTestsArgumentsBuilder>();
 //        }

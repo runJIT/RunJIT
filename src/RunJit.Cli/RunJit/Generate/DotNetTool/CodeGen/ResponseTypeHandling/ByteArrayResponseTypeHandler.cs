@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddByteArrayResponseTypeHandlerCodeGenExtension
+    internal static class AddByteArrayResponseTypeHandlerCodeGenExtension
     {
-        public static void AddByteArrayResponseTypeHandlerCodeGen(this IServiceCollection services)
+        internal static void AddByteArrayResponseTypeHandlerCodeGen(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddNamespaceProvider();

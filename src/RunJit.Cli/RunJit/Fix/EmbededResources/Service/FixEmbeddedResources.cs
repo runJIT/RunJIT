@@ -6,9 +6,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Fix.EmbededResources
 {
-    public static class AddFixEmbeddedResourcesExtension
+    internal static class AddFixEmbeddedResourcesExtension
     {
-        public static void AddFixEmbeddedResources(this IServiceCollection services)
+        internal static void AddFixEmbeddedResources(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddFixEmbeddedResourcesParameters();

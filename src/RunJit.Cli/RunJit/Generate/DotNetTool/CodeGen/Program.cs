@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddProgramCodeGenExtension
+    internal static class AddProgramCodeGenExtension
     {
-        public static void AddProgramCodeGen(this IServiceCollection services)
+        internal static void AddProgramCodeGen(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<INetToolCodeGen, ProgramCodeGen>();
         }
@@ -18,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         private const string Template = """
                                         namespace $namespace$
                                         {
-                                            public static class Program
+                                            internal static class Program
                                             {
                                                 public static Task<int> Main(string[] args)
                                                 {

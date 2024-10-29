@@ -5,9 +5,9 @@ using RunJit.Cli.RunJit.Cleanup.Code;
 
 namespace RunJit.Cli.RunJit.Cleanup
 {
-    public static class AddCleanupCommandBuilderExtension
+    internal static class AddCleanupCommandBuilderExtension
     {
-        public static void AddCleanupCommandBuilder(this IServiceCollection services)
+        internal static void AddCleanupCommandBuilder(this IServiceCollection services)
         {
             services.AddCleanupCodeCommandBuilder();
 

@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.CodeRules
 {
-    public static class AddUpdateCodeRulesCommandBuilderExtension
+    internal static class AddUpdateCodeRulesCommandBuilderExtension
     {
-        public static void AddUpdateCodeRulesCommandBuilder(this IServiceCollection services,
+        internal static void AddUpdateCodeRulesCommandBuilder(this IServiceCollection services,
                                                             IConfiguration configuration)
         {
             services.AddUpdateCodeRulesOptionsBuilder();

@@ -6,9 +6,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.Nuget
 {
-    public static class AddUpdateNugetExtension
+    internal static class AddUpdateNugetExtension
     {
-        public static void AddUpdateNuget(this IServiceCollection services)
+        internal static void AddUpdateNuget(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddUpdateNugetParameters();

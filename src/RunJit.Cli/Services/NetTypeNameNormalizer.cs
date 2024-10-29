@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.Services
 {
-    public static class AddNetTypeNameNormalizerExtension
+    internal static class AddNetTypeNameNormalizerExtension
     {
-        public static void AddNetTypeNameNormalizer(this IServiceCollection services)
+        internal static void AddNetTypeNameNormalizer(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<NetTypeNameNormalizer>();
         }

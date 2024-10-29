@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddRequestTypeHandleStrategyCodeGenExtension
+    internal static class AddRequestTypeHandleStrategyCodeGenExtension
     {
-        public static void AddRequestTypeHandleStrategyCodeGen(this IServiceCollection services)
+        internal static void AddRequestTypeHandleStrategyCodeGen(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddNamespaceProvider();

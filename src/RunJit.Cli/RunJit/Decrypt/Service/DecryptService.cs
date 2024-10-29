@@ -5,9 +5,9 @@ using RunJit.Cli.Services.Crypto;
 
 namespace RunJit.Cli.RunJit.Decrypt
 {
-    public static class AddDecryptServiceExtension
+    internal static class AddDecryptServiceExtension
     {
-        public static void AddDecryptService(this IServiceCollection services)
+        internal static void AddDecryptService(this IServiceCollection services)
         {
             services.AddCryptoService();
 

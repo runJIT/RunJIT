@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Rename.Solution
 {
-    public static class AddBackendOptionsBuilderExtension
+    internal static class AddBackendOptionsBuilderExtension
     {
-        public static void AddBackendOptionsBuilder(this IServiceCollection services)
+        internal static void AddBackendOptionsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IBackendOptionsBuilder, BackendOptionsBuilder>();
         }

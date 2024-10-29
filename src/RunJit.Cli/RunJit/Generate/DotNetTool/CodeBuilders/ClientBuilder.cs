@@ -28,9 +28,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     //
     // namespace Pulse.Sustainability.DotNetTool
     // {
-    //     public static class AddPulseSustainabilityDotNetToolExtension    <-- ServiceRegistrationBuilder
+    //     internal static class AddPulseSustainabilityDotNetToolExtension    <-- ServiceRegistrationBuilder
     //     {
-    //         public static void AddPulseSustainabilityDotNetTool(this IServiceCollection services)
+    //         internal static void AddPulseSustainabilityDotNetTool(this IServiceCollection services)
     //         {
     //             services.AddAccountsFacade();		
     //         }

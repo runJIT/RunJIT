@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddHttpClientFactoryCodeGenExtension
+    internal static class AddHttpClientFactoryCodeGenExtension
     {
-        public static void AddHttpClientFactoryCodeGen(this IServiceCollection services)
+        internal static void AddHttpClientFactoryCodeGen(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddNamespaceProvider();
@@ -91,9 +91,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            public static class Add$dotNetToolName$HttpClientSettingsExtension
+                                            internal static class Add$dotNetToolName$HttpClientSettingsExtension
                                             {
-                                                public static void Add$dotNetToolName$HttpClientSettings(this IServiceCollection services,
+                                                internal static void Add$dotNetToolName$HttpClientSettings(this IServiceCollection services,
                                                     IConfiguration configuration)
                                                 {
                                                     if (configuration.TryGetSettings<$dotNetToolName$HttpClientSettings>(out var clientSettings).IsFalse())

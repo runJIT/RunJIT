@@ -5,9 +5,9 @@ using RunJit.Cli.RunJit.Check.Backend;
 
 namespace RunJit.Cli.RunJit.Check
 {
-    public static class AddCheckCommandBuilderExtension
+    internal static class AddCheckCommandBuilderExtension
     {
-        public static void AddCheckCommandBuilder(this IServiceCollection services)
+        internal static void AddCheckCommandBuilder(this IServiceCollection services)
         {
             services.AddCheckBackendCommandBuilder();
 

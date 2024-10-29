@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddCommandStructureBuilderExtension
+    internal static class AddCommandStructureBuilderExtension
     {
-        public static void AddCommandStructureBuilder(this IServiceCollection services)
+        internal static void AddCommandStructureBuilder(this IServiceCollection services)
         {
             services.AddCommandBuilderSimple();
             services.AddCommandBuilderWithOptions();

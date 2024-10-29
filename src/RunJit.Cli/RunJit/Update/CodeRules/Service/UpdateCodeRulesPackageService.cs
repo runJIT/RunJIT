@@ -4,9 +4,9 @@
 
 //namespace RunJit.Cli.RunJit.Update.CodeRules
 //{
-//    public static class AddUpdateCodeRulesPackageServiceExtension
+//    internal static class AddUpdateCodeRulesPackageServiceExtension
 //    {
-//        public static void AddUpdateCodeRulesPackageService(this IServiceCollection services)
+//        internal static void AddUpdateCodeRulesPackageService(this IServiceCollection services)
 //        {
 //            services.AddSingletonIfNotExists<IUpdateCodeRulesPackageService, UpdateCodeRulesPackageService>();
 //        }

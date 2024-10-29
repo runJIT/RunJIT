@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddNewOptionExpressionServiceExtension
+    internal static class AddNewOptionExpressionServiceExtension
     {
-        public static void AddNewOptionExpressionService(this IServiceCollection services)
+        internal static void AddNewOptionExpressionService(this IServiceCollection services)
         {
             services.AddNewOptionExpressionBuilderWithArgument();
             services.AddNewOptionExpressionBuilderWithoutArgument();

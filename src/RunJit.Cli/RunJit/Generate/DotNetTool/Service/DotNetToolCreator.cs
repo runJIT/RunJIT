@@ -15,9 +15,9 @@ using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddDotnetToolGenExtension
+    internal static class AddDotnetToolGenExtension
     {
-        public static void AddDotnetToolGen(this IServiceCollection services)
+        internal static void AddDotnetToolGen(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<NetToolGen>();
 
@@ -265,9 +265,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    public static class AddConvertControllerInfosToDotnetToolStructureExtension
+    internal static class AddConvertControllerInfosToDotnetToolStructureExtension
     {
-        public static void AddConvertControllerInfosToDotnetToolStructure(this IServiceCollection services)
+        internal static void AddConvertControllerInfosToDotnetToolStructure(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IConvertControllerInfosToDotnetToolStructure, ConvertControllerInfosToDotnetToolStructure>();
         }
@@ -298,6 +298,37 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                 Description = client.DotNetToolName.Name,
             };
 
+
+            // For your tool we want to be able to manage the whole configuration
+            // So we need a command to get/set the configuration
+            var configCommand = new CommandInfo
+            {
+                NormalizedName = "config",
+                Value = "config",
+                Name = "config",
+                Description = "Command to handle the configuration for your dotnet tool. Known as appsettings",
+            };
+
+            // We need a command to read the whole config
+            var getConfigCommand = new CommandInfo()
+                                   {
+                                       NormalizedName = "get",
+                                       Value = "get",
+                                       Name = "get",
+                                       Description = "Command to read the whole configuration for your dotnet tool. Known as appsettings",
+                                   };
+
+            // We need a command to set/update the whole config
+            var setConfigCommand = new CommandInfo()
+                                   {
+                                       NormalizedName = "set",
+                                       Value = "set",
+                                       Name = "set",
+                                       Description = "Command to set the whole configuration for your dotnet tool. Known as appsettings. To set the configuration call 'configuration get' change the settings you want to change and call 'configuration set' to set the whole json back",
+                                   };
+
+            configCommand.SubCommands.Add(getConfigCommand);
+            configCommand.SubCommands.Add(setConfigCommand);
 
             // convert controller infos into dotnet tool structure
             // endpointGroups are grouped by version

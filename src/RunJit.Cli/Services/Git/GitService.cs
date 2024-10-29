@@ -8,9 +8,9 @@ using Process = DotNetTool.Service.Process;
 
 namespace RunJit.Cli.Services.Git
 {
-    public static class AddGitServiceExtension
+    internal static class AddGitServiceExtension
     {
-        public static void AddGitService(this IServiceCollection services)
+        internal static void AddGitService(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IGitService, GitService>();
         }

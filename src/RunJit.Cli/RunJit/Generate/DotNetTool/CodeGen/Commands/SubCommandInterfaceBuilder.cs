@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddSubCommandInterfaceBuilderExtension
+    internal static class AddSubCommandInterfaceBuilderExtension
     {
-        public static void AddSubCommandInterfaceBuilder(this IServiceCollection services)
+        internal static void AddSubCommandInterfaceBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<SubCommandInterfaceBuilder>();
         }

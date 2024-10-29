@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {
-    public static class AddLambdaCommandBuilderExtension
+    internal static class AddLambdaCommandBuilderExtension
     {
-        public static void AddLambdaCommandBuilder(this IServiceCollection services)
+        internal static void AddLambdaCommandBuilder(this IServiceCollection services)
         {
             services.AddLambdaOptionsBuilder();
             services.AddLambdaService();

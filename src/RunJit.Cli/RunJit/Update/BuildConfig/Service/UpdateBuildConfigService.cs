@@ -6,9 +6,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.BuildConfig
 {
-    public static class AddUUpdateBuildConfigServiceExtension
+    internal static class AddUUpdateBuildConfigServiceExtension
     {
-        public static void AddUpdateBuildConfigService(this IServiceCollection services)
+        internal static void AddUpdateBuildConfigService(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddUpdateBuildConfigParameters();

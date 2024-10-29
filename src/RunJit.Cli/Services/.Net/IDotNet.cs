@@ -7,9 +7,9 @@ using RunJit.Cli.RunJit.Update.Nuget;
 
 namespace RunJit.Cli.Services.Net
 {
-    public static class AddDotNetExtension
+    internal static class AddDotNetExtension
     {
-        public static void AddDotNet(this IServiceCollection services)
+        internal static void AddDotNet(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IDotNet, DotNet>();
         }

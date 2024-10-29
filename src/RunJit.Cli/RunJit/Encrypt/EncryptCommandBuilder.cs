@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Encrypt
 {
-    public static class AddEncryptCommandBuilderExtension
+    internal static class AddEncryptCommandBuilderExtension
     {
-        public static void AddEncryptCommandBuilder(this IServiceCollection services)
+        internal static void AddEncryptCommandBuilder(this IServiceCollection services)
         {
             services.AddEncryptArgumentsBuilder();
             services.AddEncryptService();

@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.BuildConfig
 {
-    public static class AddUpdateBuildConfigOptionsBuilderExtension
+    internal static class AddUpdateBuildConfigOptionsBuilderExtension
     {
-        public static void AddUpdateBuildConfigOptionsBuilder(this IServiceCollection services)
+        internal static void AddUpdateBuildConfigOptionsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IUpdateBuildConfigOptionsBuilder, UpdateBuildConfigOptionsBuilder>();
         }

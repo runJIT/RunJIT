@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Rename.Solution
 {
-    public static class AddBackendCommandBuilderExtension
+    internal static class AddBackendCommandBuilderExtension
     {
-        public static void AddBackendCommandBuilder(this IServiceCollection services)
+        internal static void AddBackendCommandBuilder(this IServiceCollection services)
         {
             services.AddBackendOptionsBuilder();
             services.AddBackendArgumentsBuilder();

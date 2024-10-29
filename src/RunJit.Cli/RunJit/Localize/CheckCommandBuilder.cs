@@ -5,9 +5,9 @@ using RunJit.Cli.RunJit.Localize.Strings;
 
 namespace RunJit.Cli.RunJit.Localize
 {
-    public static class AddLocalizeCommandBuilderExtension
+    internal static class AddLocalizeCommandBuilderExtension
     {
-        public static void AddLocalizeCommandBuilder(this IServiceCollection services)
+        internal static void AddLocalizeCommandBuilder(this IServiceCollection services)
         {
             services.AddLocalizeStringsCommandBuilder();
 

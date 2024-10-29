@@ -5,9 +5,9 @@ using RunJit.Cli.Services.Endpoints;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddRestructureControllerExtension
+    internal static class AddRestructureControllerExtension
     {
-        public static void AddRestructureController(this IServiceCollection services)
+        internal static void AddRestructureController(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<RestructureController>();
         }

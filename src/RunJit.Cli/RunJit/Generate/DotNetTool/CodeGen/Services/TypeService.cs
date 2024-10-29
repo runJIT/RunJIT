@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddTypeServiceExtension
+    internal static class AddTypeServiceExtension
     {
-        public static void AddTypeService(this IServiceCollection services)
+        internal static void AddTypeService(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<TypeService>();
         }

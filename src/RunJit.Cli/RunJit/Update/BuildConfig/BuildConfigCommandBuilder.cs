@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.BuildConfig
 {
-    public static class AddUpdateBuildConfigCommandBuilderExtension
+    internal static class AddUpdateBuildConfigCommandBuilderExtension
     {
-        public static void AddUpdateBuildConfigCommandBuilder(this IServiceCollection services)
+        internal static void AddUpdateBuildConfigCommandBuilder(this IServiceCollection services)
         {
             services.AddUpdateBuildConfigOptionsBuilder();
             services.AddUpdateBuildConfigArgumentsBuilder();

@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddCreateArgumentStructureExtension
+    internal static class AddCreateArgumentStructureExtension
     {
-        public static void AddCreateArgumentStructure(this IServiceCollection services)
+        internal static void AddCreateArgumentStructure(this IServiceCollection services)
         {
             services.AddArgumentBuilderCodeGen();
             services.AddTypeService();

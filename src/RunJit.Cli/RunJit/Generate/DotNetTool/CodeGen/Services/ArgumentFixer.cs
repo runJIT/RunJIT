@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddArgumentFixerCodeGenExtension
+    internal static class AddArgumentFixerCodeGenExtension
     {
-        public static void AddArgumentFixerCodeGen(this IServiceCollection services)
+        internal static void AddArgumentFixerCodeGen(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<INetToolCodeGen, ArgumentFixerCodeGen>();
         }

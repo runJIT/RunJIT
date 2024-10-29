@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {
-    public static class AddLambdaParametersExtension
+    internal static class AddLambdaParametersExtension
     {
-        public static void AddLambdaParameters(this IServiceCollection services)
+        internal static void AddLambdaParameters(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<LambdaParameters>();
         }

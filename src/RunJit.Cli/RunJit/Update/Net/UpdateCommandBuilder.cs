@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.Net
 {
-    public static class AddDotNetCommandBuilderExtension
+    internal static class AddDotNetCommandBuilderExtension
     {
-        public static void AddDotNetCommandBuilder(this IServiceCollection services)
+        internal static void AddDotNetCommandBuilder(this IServiceCollection services)
         {
             services.AddDotNetOptionsBuilder();
             services.AddDotNetArgumentsBuilder();

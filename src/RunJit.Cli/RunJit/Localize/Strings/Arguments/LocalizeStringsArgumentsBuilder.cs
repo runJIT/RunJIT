@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Localize.Strings
 {
-    public static class AddLocalizeStringsArgumentsBuilderExtension
+    internal static class AddLocalizeStringsArgumentsBuilderExtension
     {
-        public static void AddLocalizeStringsArgumentsBuilder(this IServiceCollection services)
+        internal static void AddLocalizeStringsArgumentsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<ILocalizeStringsArgumentsBuilder, LocalizeStringsArgumentsBuilder>();
         }

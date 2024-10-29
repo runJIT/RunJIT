@@ -99,7 +99,7 @@
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=440A76404BCB9C41A73564348CE78AEF/Shortcut/@EntryValue">request-validator</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=440A76404BCB9C41A73564348CE78AEF/Text/@EntryValue">public static class Add$validator$Extension&#xD;
 {&#xD;
-    public static void Add$validator$(this IServiceCollection services)&#xD;
+    internal static void Add$validator$(this IServiceCollection services)&#xD;
     {&#xD;
         services.AddSingletonIfNotExists&lt;IRequestValidator&lt;$request$&gt;, $validator$&gt;();&#xD;
     }&#xD;
@@ -191,7 +191,7 @@ public Task Should_Not_Be_Able_To_Get_$entity$_By_Id_Without_Authentication()&#x
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A9CD96273781A7498704638741B82AB4/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A9CD96273781A7498704638741B82AB4/Text/@EntryValue">internal static class $request$ValidatorExtension&#xD;
 {&#xD;
-    public static void $request$Validator(this IServiceCollection services)&#xD;
+    internal static void $request$Validator(this IServiceCollection services)&#xD;
     {&#xD;
         services.AddSingletonIfNotExists&lt;IRequestValidator&lt;$request$&gt;, $request$Validator&gt;();&#xD;
     }&#xD;
@@ -248,7 +248,7 @@ public class $testName$&#xD;
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FFF6886F70E2C345A7636A9CABE01DD1/Shortcut/@EntryValue">addconfigurationextension</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FFF6886F70E2C345A7636A9CABE01DD1/Text/@EntryValue">public static class Add$name$Extension&#xD;
 {&#xD;
-    public static void Add$name$(this IServiceCollection services, IConfiguration configuration)&#xD;
+    internal static void Add$name$(this IServiceCollection services, IConfiguration configuration)&#xD;
     {&#xD;
 		services.AddSingletonOption&lt;$name$&gt;(configuration);&#xD;
     }&#xD;
@@ -265,7 +265,7 @@ public class $testName$&#xD;
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=89498DE7E7B6F245BB5446935389B1C5/Shortcut/@EntryValue">addserviceextension</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=89498DE7E7B6F245BB5446935389B1C5/Text/@EntryValue">public static class Add$Name$Extension&#xD;
 {&#xD;
-    public static void Add$Name$(this IServiceCollection services)&#xD;
+    internal static void Add$Name$(this IServiceCollection services)&#xD;
     {&#xD;
 		services.AddSingletonIfNotExists&lt;I$Name$, $Name$&gt;();&#xD;
     }&#xD;
@@ -569,7 +569,7 @@ public Task Should_Not_Be_Possible_To_Add_$entity$_Without_Authentication()&#xD;
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1977368ACEFFAE4E9DCB17D517539A3B/Text/@EntryValue">public static readonly $dependencyProperty$ $propertyName$Property = $dependencyProperty$.RegisterAttached(&#xD;
   "$propertyName$", typeof($propertyType$), typeof($containingType$), new PropertyMetadata(default($propertyType$)));&#xD;
 &#xD;
-public static void Set$propertyName$(DependencyObject $element$, $propertyType$ value)&#xD;
+internal static void Set$propertyName$(DependencyObject $element$, $propertyType$ value)&#xD;
 {&#xD;
   $element$.SetValue($propertyName$Property, value);&#xD;
 }&#xD;
@@ -1092,7 +1092,7 @@ public class ProblemDetailsException : Exception&#xD;
     <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4844543B88F8814EAF0499F226CEAEA1/Field/=method/Order/@EntryValue">1</s:Int64>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DACC672DB86C8D408E2B8DFBEBE56C98/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DACC672DB86C8D408E2B8DFBEBE56C98/Shortcut/@EntryValue">extensionmethod</s:String>
-    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DACC672DB86C8D408E2B8DFBEBE56C98/Text/@EntryValue">public static void $name$(this $type$ source)&#xD;
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DACC672DB86C8D408E2B8DFBEBE56C98/Text/@EntryValue">internal static void $name$(this $type$ source)&#xD;
 {&#xD;
 }</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DACC672DB86C8D408E2B8DFBEBE56C98/Reformat/@EntryValue">True</s:Boolean>
@@ -1663,7 +1663,7 @@ public class  $classname$ : TcMarkupExtensionMultiValueConverterOneWay&lt; $clas
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=73D7E5D505C60F43BFFE979F74B533B9/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=73D7E5D505C60F43BFFE979F74B533B9/Shortcut/@EntryValue">ltmExtension</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=73D7E5D505C60F43BFFE979F74B533B9/Description/@EntryValue">Represents an extension method</s:String>
-    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=73D7E5D505C60F43BFFE979F74B533B9/Text/@EntryValue">public static void $Name$(this $Type$ $argument$)&#xD;
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=73D7E5D505C60F43BFFE979F74B533B9/Text/@EntryValue">internal static void $Name$(this $Type$ $argument$)&#xD;
 {&#xD;
 }</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=73D7E5D505C60F43BFFE979F74B533B9/Reformat/@EntryValue">True</s:Boolean>
@@ -2226,12 +2226,12 @@ public void TestInitialize()&#xD;
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DEE0B1B74081024485601BADDE06E5C6/Shortcut/@EntryValue">middleware</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DEE0B1B74081024485601BADDE06E5C6/Text/@EntryValue">public static class Add$name$Extension&#xD;
 {&#xD;
-    public static void Add$name$(this IServiceCollection services)&#xD;
+    internal static void Add$name$(this IServiceCollection services)&#xD;
     {       &#xD;
         services.AddSingletonIfNotExists&lt;$name$&gt;();&#xD;
     }&#xD;
 	&#xD;
-	public static void Use$name$(this IApplicationBuilder applicationBuilder)&#xD;
+	internal static void Use$name$(this IApplicationBuilder applicationBuilder)&#xD;
 	{&#xD;
 		applicationBuilder.UseMiddleware&lt;$name$&gt;();&#xD;
 	}&#xD;
@@ -2267,7 +2267,7 @@ public abstract class MsTestBase : IntegrationTestBase&lt;Startup&gt;&#xD;
     }&#xD;
 &#xD;
     [AssemblyCleanup]&#xD;
-    public static void Cleanup() =&gt; AssemblyCleanup();&#xD;
+    internal static void Cleanup() =&gt; AssemblyCleanup();&#xD;
 }&#xD;
 &#xD;
 public abstract class IntegrationTestBase&lt;TStartup&gt; where TStartup : class&#xD;
@@ -2311,7 +2311,7 @@ public abstract class IntegrationTestBase&lt;TStartup&gt; where TStartup : class
     protected static HttpClient Client { get; private set; } = null!;&#xD;
 &#xD;
     [AssemblyCleanup]&#xD;
-    public static void AssemblyCleanup()&#xD;
+    internal static void AssemblyCleanup()&#xD;
     {&#xD;
         WebApplicationFactory?.Dispose();&#xD;
         Client?.Dispose();&#xD;
@@ -2641,7 +2641,7 @@ public class OpportunitiesController : ControllerBase&#xD;
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B5ED4A77E881D043AEDC3FF3CE40B3A0/Shortcut/@EntryValue">pipelinebehavior</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B5ED4A77E881D043AEDC3FF3CE40B3A0/Text/@EntryValue">public static class Add$name$BehaviorExtension&#xD;
 {&#xD;
-    public static void Add$name$Behavior(this IServiceCollection services)&#xD;
+    internal static void Add$name$Behavior(this IServiceCollection services)&#xD;
     {&#xD;
         services.AddTransient(typeof(IPipelineBehavior&lt;,&gt;), typeof($name$Behavior&lt;,&gt;));&#xD;
     }&#xD;
@@ -2688,7 +2688,7 @@ public class $name$Behavior&lt;TRequest, TResponse&gt; : IPipelineBehavior&lt;TR
 {&#xD;
     public static class Program&#xD;
     {&#xD;
-        public static void Main(string[] args)&#xD;
+        internal static void Main(string[] args)&#xD;
         {&#xD;
             CreateHostBuilder(args).Build().Run();&#xD;
         }&#xD;
@@ -2755,7 +2755,7 @@ public class $name$Behavior&lt;TRequest, TResponse&gt; : IPipelineBehavior&lt;TR
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F43AC10E6088D842B8077AD12A18E35C/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F43AC10E6088D842B8077AD12A18E35C/Shortcut/@EntryValue">psvm</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F43AC10E6088D842B8077AD12A18E35C/Description/@EntryValue">The "Main" method declaration</s:String>
-    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F43AC10E6088D842B8077AD12A18E35C/Text/@EntryValue">public static void Main( string[] args )
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F43AC10E6088D842B8077AD12A18E35C/Text/@EntryValue">internal static void Main( string[] args )
 {
   $END$
 }</s:String>
@@ -2987,7 +2987,7 @@ internal sealed class $query$Handler : IQueryHandler&lt;$query$, $response$&gt;&
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D92D2969132854AAF0BAD54B678F95E/Shortcut/@EntryValue">requestvalidator</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D92D2969132854AAF0BAD54B678F95E/Text/@EntryValue">internal static class $request$ValidatorExtension&#xD;
 {&#xD;
-    public static void $request$Validator(this IServiceCollection services)&#xD;
+    internal static void $request$Validator(this IServiceCollection services)&#xD;
     {&#xD;
         services.AddSingletonIfNotExists&lt;IRequestValidator&lt;$request$&gt;, $request$Validator&gt;();&#xD;
     }&#xD;
@@ -3262,7 +3262,7 @@ if ($VAR$ != null)
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=14D96BDE901FCA45A705B5014F666794/Shortcut/@EntryValue">simple-in-memory-db-context</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=14D96BDE901FCA45A705B5014F666794/Text/@EntryValue">public static class Add$Domain$DbContextExtension&#xD;
 {&#xD;
-    public static void Add$Domain$DbContext(this IServiceCollection services)&#xD;
+    internal static void Add$Domain$DbContext(this IServiceCollection services)&#xD;
     {&#xD;
         services.AddSingletonIfNotExists&lt;$Domain$DbContext&gt;();&#xD;
     }&#xD;

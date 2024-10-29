@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Rename.Solution
 {
-    public static class AddBackendParametersExtension
+    internal static class AddBackendParametersExtension
     {
-        public static void AddBackendParameters(this IServiceCollection services)
+        internal static void AddBackendParameters(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<BackendParameters>();
         }

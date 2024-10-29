@@ -5,9 +5,9 @@ using RunJit.Cli.ErrorHandling;
 
 namespace RunJit.Cli.Services
 {
-    public static class AddFindSolutionFileExtension
+    internal static class AddFindSolutionFileExtension
     {
-        public static void AddFindSolutionFile(this IServiceCollection services)
+        internal static void AddFindSolutionFile(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<FindSolutionFile>();
         }

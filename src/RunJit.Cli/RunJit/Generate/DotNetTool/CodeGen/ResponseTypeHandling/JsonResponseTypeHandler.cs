@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddJsonResponseTypeHandlerCodeGenExtension
+    internal static class AddJsonResponseTypeHandlerCodeGenExtension
     {
-        public static void AddJsonResponseTypeHandlerCodeGen(this IServiceCollection services)
+        internal static void AddJsonResponseTypeHandlerCodeGen(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddNamespaceProvider();

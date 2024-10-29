@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Fix.EmbededResources
 {
-    public static class AddFixEmbeddedResourcesArgumentsBuilderExtension
+    internal static class AddFixEmbeddedResourcesArgumentsBuilderExtension
     {
-        public static void AddFixEmbeddedResourcesArgumentsBuilder(this IServiceCollection services)
+        internal static void AddFixEmbeddedResourcesArgumentsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IFixEmbeddedResourcesArgumentsBuilder, FixEmbeddedResourcesArgumentsBuilder>();
         }

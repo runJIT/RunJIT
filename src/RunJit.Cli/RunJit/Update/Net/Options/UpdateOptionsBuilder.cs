@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.Net
 {
-    public static class AddDotNetOptionsBuilderExtension
+    internal static class AddDotNetOptionsBuilderExtension
     {
-        public static void AddDotNetOptionsBuilder(this IServiceCollection services)
+        internal static void AddDotNetOptionsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IDotNetOptionsBuilder, DotNetOptionsBuilder>();
         }

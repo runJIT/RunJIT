@@ -13,9 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace RunJit.Cli.RunJit.Localize.Strings
 {
-    public static class AddStringLocalizerExtension
+    internal static class AddStringLocalizerExtension
     {
-        public static void AddStringLocalizer(this IServiceCollection services)
+        internal static void AddStringLocalizer(this IServiceCollection services)
         {
             services.AddExtractStringsToLocalize();
             
@@ -225,9 +225,9 @@ namespace RunJit.Cli.RunJit.Localize.Strings
     }
 
 
-    public static class AddExtractStringsToLocalizeExtension
+    internal static class AddExtractStringsToLocalizeExtension
     {
-        public static void AddExtractStringsToLocalize(this IServiceCollection services)
+        internal static void AddExtractStringsToLocalize(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<ExtractStringsToLocalize>();
         }

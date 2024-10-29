@@ -6,9 +6,9 @@ using RunJit.Cli.RunJit.New.Lambda;
 
 namespace RunJit.Cli.RunJit.New
 {
-    public static class AddNewCommandBuilderExtension
+    internal static class AddNewCommandBuilderExtension
     {
-        public static void AddNewCommandBuilder(this IServiceCollection services,
+        internal static void AddNewCommandBuilder(this IServiceCollection services,
                                                 IConfiguration configuration)
         {
             services.AddLambdaCommandBuilder();

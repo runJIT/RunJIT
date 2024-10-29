@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.Services
 {
-    public static class AddCodeFormatterExtension
+    internal static class AddCodeFormatterExtension
     {
-        public static void AddCodeFormatter(this IServiceCollection services)
+        internal static void AddCodeFormatter(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<CodeFormatter>();
         }

@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.SwaggerTests
 {
-    public static class AddUpdateSwaggerTestsOptionsBuilderExtension
+    internal static class AddUpdateSwaggerTestsOptionsBuilderExtension
     {
-        public static void AddUpdateSwaggerTestsOptionsBuilder(this IServiceCollection services)
+        internal static void AddUpdateSwaggerTestsOptionsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IUpdateSwaggerTestsOptionsBuilder, UpdateSwaggerTestsOptionsBuilder>();
         }

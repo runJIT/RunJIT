@@ -5,9 +5,9 @@ using RunJit.Cli.RunJit.Rename.Solution;
 
 namespace RunJit.Cli.RunJit.Rename
 {
-    public static class AddRenameCommandBuilderExtension
+    internal static class AddRenameCommandBuilderExtension
     {
-        public static void AddRenameCommandBuilder(this IServiceCollection services)
+        internal static void AddRenameCommandBuilder(this IServiceCollection services)
         {
             services.AddBackendCommandBuilder();
 

@@ -25,9 +25,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     // 
     // namespace PulseCore.DotNetTool.Api.Admin
     // {
-    //     public static class AddAdminFacadeExtension      <-- ServiceRegistrationBuilder
+    //     internal static class AddAdminFacadeExtension      <-- ServiceRegistrationBuilder
     //     {
-    //         public static void AddAdminFacade(this IServiceCollection services)
+    //         internal static void AddAdminFacade(this IServiceCollection services)
     //         {
     //             services.AddAdminV1();  
     //         }

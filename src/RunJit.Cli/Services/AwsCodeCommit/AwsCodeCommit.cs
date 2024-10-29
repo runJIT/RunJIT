@@ -6,9 +6,9 @@ using Process = DotNetTool.Service.Process;
 
 namespace RunJit.Cli.Services.AwsCodeCommit
 {
-    public static class AddAwsCodeCommitExtension
+    internal static class AddAwsCodeCommitExtension
     {
-        public static void AddAwsCodeCommit(this IServiceCollection services)
+        internal static void AddAwsCodeCommit(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IAwsCodeCommit, AwsCodeCommit>();
         }

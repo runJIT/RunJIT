@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddCommandServiceBuilderExtension
+    internal static class AddCommandServiceBuilderExtension
     {
-        public static void AddCommandServiceBuilder(this IServiceCollection services)
+        internal static void AddCommandServiceBuilder(this IServiceCollection services)
         {
             services.AddCommandMethodBuilderBuilder();
 

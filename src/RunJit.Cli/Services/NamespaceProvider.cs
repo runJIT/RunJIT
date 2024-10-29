@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.Services
 {
-    public static class AddNamespaceProviderExtension
+    internal static class AddNamespaceProviderExtension
     {
-        public static void AddNamespaceProvider(this IServiceCollection services)
+        internal static void AddNamespaceProvider(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<NamespaceProvider>();
         }

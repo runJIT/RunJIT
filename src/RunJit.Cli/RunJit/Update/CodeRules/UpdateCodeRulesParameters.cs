@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.CodeRules
 {
-    public static class AddUpdateCodeRulesParametersExtension
+    internal static class AddUpdateCodeRulesParametersExtension
     {
-        public static void AddUpdateCodeRulesParameters(this IServiceCollection services)
+        internal static void AddUpdateCodeRulesParameters(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<UpdateCodeRulesParameters>();
         }

@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Fix.EmbededResources
 {
-    public static class AddFixEmbeddedResourcesCommandBuilderExtension
+    internal static class AddFixEmbeddedResourcesCommandBuilderExtension
     {
-        public static void AddFixEmbeddedResourcesCommandBuilder(this IServiceCollection services)
+        internal static void AddFixEmbeddedResourcesCommandBuilder(this IServiceCollection services)
         {
             services.AddFixEmbeddedResourcesOptionsBuilder();
 

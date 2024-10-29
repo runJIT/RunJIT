@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.Services
 {
-    public static class AddFindSourceFolderExtension
+    internal static class AddFindSourceFolderExtension
     {
-        public static void AddFindSourceFolder(this IServiceCollection services)
+        internal static void AddFindSourceFolder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<FindSourceFolder>();
         }

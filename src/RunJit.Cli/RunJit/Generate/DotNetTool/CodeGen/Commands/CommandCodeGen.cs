@@ -4,9 +4,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddCommandCodeGenExtension
+    internal static class AddCommandCodeGenExtension
     {
-        public static void AddCommandCodeGen(this IServiceCollection services)
+        internal static void AddCommandCodeGen(this IServiceCollection services)
         {
             services.AddCommandTypeCollector();
             services.AddNameSpaceCollector();

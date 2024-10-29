@@ -8,9 +8,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.CodeRules
 {
-    public static class AddUpdateCodeRulesExtension
+    internal static class AddUpdateCodeRulesExtension
     {
-        public static void AddUpdateCodeRules(this IServiceCollection services,
+        internal static void AddUpdateCodeRules(this IServiceCollection services,
                                               IConfiguration configuration)
         {
             services.AddConsoleService();

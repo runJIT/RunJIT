@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddNotOkResponseTypeHandlerCodeGenExtension
+    internal static class AddNotOkResponseTypeHandlerCodeGenExtension
     {
-        public static void AddNotOkResponseTypeHandlerCodeGen(this IServiceCollection services)
+        internal static void AddNotOkResponseTypeHandlerCodeGen(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddNamespaceProvider();

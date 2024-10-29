@@ -5,16 +5,16 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddConsoleServiceCodeGenExtension
+    internal static class AddConsoleServiceCodeGenExtension
     {
-        public static void AddConsoleServiceCodeGen(this IServiceCollection services)
+        internal static void AddConsoleServiceCodeGen(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<INetToolCodeGen, ConsoleServiceCodeGen>();
         }
     }
 
     internal sealed class ConsoleServiceCodeGen(ConsoleService consoleService,
-                                         NamespaceProvider namespaceProvider) : INetToolCodeGen
+                                                NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """
                                         using Extensions.Pack;
@@ -31,31 +31,31 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         
                                             internal sealed class ConsoleService
                                             {
-                                                public void WriteLine()
+                                                internal void WriteLine()
                                                 {
                                                     Console.WriteLine();
                                                 }
                                         
-                                                public void WriteInfo(string value)
+                                                internal void WriteInfo(string value)
                                                 {
                                                     WriteLine(value);
                                                 }
                                         
-                                                public void WriteInput(string value)
-                                                {
-                                                    Console.ForegroundColor = ConsoleColor.Green;
-                                                    WriteLine(value);
-                                                    Console.ForegroundColor = ConsoleColor.White;
-                                                }
-                                        
-                                                public void WriteSuccess(string value)
+                                                internal void WriteInput(string value)
                                                 {
                                                     Console.ForegroundColor = ConsoleColor.Green;
                                                     WriteLine(value);
                                                     Console.ForegroundColor = ConsoleColor.White;
                                                 }
                                         
-                                                public string ReadLine()
+                                                internal void WriteSuccess(string value)
+                                                {
+                                                    Console.ForegroundColor = ConsoleColor.Green;
+                                                    WriteLine(value);
+                                                    Console.ForegroundColor = ConsoleColor.White;
+                                                }
+                                        
+                                                internal string ReadLine()
                                                 {
                                                     var result = Console.ReadLine();
                                                     Console.WriteLine();
@@ -63,7 +63,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     return result ?? string.Empty;
                                                 }
                                         
-                                                public void WriteSample(string value)
+                                                internal void WriteSample(string value)
                                                 {
                                                     Console.ForegroundColor = ConsoleColor.Gray;
                                                     Console.WriteLine(value);
@@ -71,7 +71,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     Console.ForegroundColor = ConsoleColor.White;
                                                 }
                                         
-                                                public void WriteError(string value)
+                                                internal void WriteError(string value)
                                                 {
                                                     Console.ForegroundColor = ConsoleColor.Red;
                                                     WriteLine(value);

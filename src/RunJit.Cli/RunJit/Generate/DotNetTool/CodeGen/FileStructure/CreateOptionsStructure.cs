@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddCreateOptionsStructureExtension
+    internal static class AddCreateOptionsStructureExtension
     {
-        public static void AddCreateOptionsStructure(this IServiceCollection services)
+        internal static void AddCreateOptionsStructure(this IServiceCollection services)
         {
             services.AddOptionImplementationBuilder();
             services.AddTypeService();

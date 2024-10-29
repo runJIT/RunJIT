@@ -6,9 +6,9 @@ using RunJit.Cli.Services.Net;
 
 namespace RunJit.Cli.RunJit.Update.Nuget
 {
-    public static class AddUpdateNugetPackageServiceExtension
+    internal static class AddUpdateNugetPackageServiceExtension
     {
-        public static void AddUpdateNugetPackageService(this IServiceCollection services)
+        internal static void AddUpdateNugetPackageService(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IUpdateNugetPackageService, UpdateNugetPackageService>();
         }

@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update
 {
-    public static class AddUpdateParametersExtension
+    internal static class AddUpdateParametersExtension
     {
-        public static void AddUpdateParameters(this IServiceCollection services)
+        internal static void AddUpdateParameters(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<UpdateParameters>();
         }

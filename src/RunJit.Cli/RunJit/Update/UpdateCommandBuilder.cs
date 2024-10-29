@@ -12,9 +12,9 @@ using RunJit.Cli.RunJit.Update.SwaggerTests;
 
 namespace RunJit.Cli.RunJit.Update
 {
-    public static class AddUpdateCommandBuilderExtension
+    internal static class AddUpdateCommandBuilderExtension
     {
-        public static void AddUpdateCommandBuilder(this IServiceCollection services,
+        internal static void AddUpdateCommandBuilder(this IServiceCollection services,
                                                    IConfiguration configuration)
         {
             services.AddBackendCommandBuilder();

@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddNewOptionExpressionBuilderWithoutArgumentExtension
+    internal static class AddNewOptionExpressionBuilderWithoutArgumentExtension
     {
-        public static void AddNewOptionExpressionBuilderWithoutArgument(this IServiceCollection services)
+        internal static void AddNewOptionExpressionBuilderWithoutArgument(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<INewOptionExpressionBuilder, NewOptionExpressionBuilderWithoutArgument>();
         }

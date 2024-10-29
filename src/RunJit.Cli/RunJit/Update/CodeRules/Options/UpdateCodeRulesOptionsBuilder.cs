@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.CodeRules
 {
-    public static class AddUpdateCodeRulesOptionsBuilderExtension
+    internal static class AddUpdateCodeRulesOptionsBuilderExtension
     {
-        public static void AddUpdateCodeRulesOptionsBuilder(this IServiceCollection services)
+        internal static void AddUpdateCodeRulesOptionsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IUpdateCodeRulesOptionsBuilder, UpdateCodeRulesOptionsBuilder>();
         }

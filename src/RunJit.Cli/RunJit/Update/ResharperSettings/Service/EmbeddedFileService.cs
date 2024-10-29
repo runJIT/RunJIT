@@ -5,9 +5,9 @@ using Solution.Parser.Project;
 
 namespace RunJit.Cli.RunJit.Update.ResharperSettings
 {
-    public static class AddEmbeddedFileServiceExtension
+    internal static class AddEmbeddedFileServiceExtension
     {
-        public static void AddEmbeddedFileService(this IServiceCollection services)
+        internal static void AddEmbeddedFileService(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<EmbeddedFileService>();
         }

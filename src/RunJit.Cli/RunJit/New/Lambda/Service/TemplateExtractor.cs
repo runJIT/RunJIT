@@ -10,9 +10,9 @@ using DirectoryInfo = System.IO.DirectoryInfo;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {
-    public static class AddTemplateExtractorExtension
+    internal static class AddTemplateExtractorExtension
     {
-        public static void AddTemplateExtractor(this IServiceCollection services)
+        internal static void AddTemplateExtractor(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<TemplateExtractor>();
         }

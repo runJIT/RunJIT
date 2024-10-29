@@ -6,9 +6,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Generate.CustomEndpoint
 {
-    public static class AddGenerateCustomEndointServiceExtension
+    internal static class AddGenerateCustomEndointServiceExtension
     {
-        public static void AddGenerateCustomEndointService(this IServiceCollection services)
+        internal static void AddGenerateCustomEndointService(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<GenerateCustomEndpointService>();
         }

@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddCommandHandlerNoArgsAndNoOptionBuilderExtension
+    internal static class AddCommandHandlerNoArgsAndNoOptionBuilderExtension
     {
-        public static void AddCommandHandlerNoArgsAndNoOptionBuilder(this IServiceCollection services)
+        internal static void AddCommandHandlerNoArgsAndNoOptionBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<ICommandHandlerStringBuilder, CommandHandlerNoArgsAndNoOptionBuilder>();
         }

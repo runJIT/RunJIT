@@ -6,9 +6,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Zip
 {
-    public static class AddZipServiceExtension
+    internal static class AddZipServiceExtension
     {
-        public static void AddZipService(this IServiceCollection services)
+        internal static void AddZipService(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IZipService, ZipService>();
         }

@@ -5,9 +5,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Rename.Solution
 {
-    public static class AddBackendServiceExtension
+    internal static class AddBackendServiceExtension
     {
-        public static void AddBackendService(this IServiceCollection services)
+        internal static void AddBackendService(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddBackendParameters();

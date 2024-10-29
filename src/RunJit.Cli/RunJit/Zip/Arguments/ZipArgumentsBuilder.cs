@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Zip
 {
-    public static class AddZipArgumentsBuilderExtension
+    internal static class AddZipArgumentsBuilderExtension
     {
-        public static void AddZipArgumentsBuilder(this IServiceCollection services)
+        internal static void AddZipArgumentsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IZipArgumentsBuilder, ZipArgumentsBuilder>();
         }

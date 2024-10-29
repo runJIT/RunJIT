@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Cleanup.Code
 {
-    public static class AddCleanupCodeOptionsBuilderExtension
+    internal static class AddCleanupCodeOptionsBuilderExtension
     {
-        public static void AddCleanupCodeOptionsBuilder(this IServiceCollection services)
+        internal static void AddCleanupCodeOptionsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<ICleanupCodeOptionsBuilder, CleanupCodeOptionsBuilder>();
         }

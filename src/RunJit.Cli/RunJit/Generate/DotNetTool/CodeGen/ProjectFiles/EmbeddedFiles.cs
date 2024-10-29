@@ -5,9 +5,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddProjectEmbeddedFilesCodeGenExtension
+    internal static class AddProjectEmbeddedFilesCodeGenExtension
     {
-        public static void AddProjectEmbeddedFilesCodeGen(this IServiceCollection services)
+        internal static void AddProjectEmbeddedFilesCodeGen(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<INetToolCodeGen, ProjectEmbeddedFilesCodeGen>();
         }

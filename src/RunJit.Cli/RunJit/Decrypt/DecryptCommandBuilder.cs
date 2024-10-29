@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Decrypt
 {
-    public static class AddDecryptCommandBuilderExtension
+    internal static class AddDecryptCommandBuilderExtension
     {
-        public static void AddDecryptCommandBuilder(this IServiceCollection services)
+        internal static void AddDecryptCommandBuilder(this IServiceCollection services)
         {
             services.AddDecryptArgumentsBuilder();
             services.AddDecryptService();

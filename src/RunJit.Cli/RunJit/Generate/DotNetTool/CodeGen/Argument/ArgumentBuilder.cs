@@ -5,9 +5,9 @@ using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddArgumentBuilderCodeExtension
+    internal static class AddArgumentBuilderCodeExtension
     {
-        public static void AddArgumentBuilderCodeGen(this IServiceCollection services)
+        internal static void AddArgumentBuilderCodeGen(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<ArgumentBuilder>();
         }
@@ -31,7 +31,7 @@ namespace $namespace$
 
     internal sealed class $command-name$ArgumentBuilder
     {                                        
-        public System.CommandLine.Argument Build()
+        internal System.CommandLine.Argument Build()
         {
             var argument = new System.CommandLine.Argument<$type$>()
             {

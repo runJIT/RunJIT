@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Check.Backend.Builds
 {
-    public static class AddCheckBackendBuildsArgumentsBuilderExtension
+    internal static class AddCheckBackendBuildsArgumentsBuilderExtension
     {
-        public static void AddCheckBackendBuildsArgumentsBuilder(this IServiceCollection services)
+        internal static void AddCheckBackendBuildsArgumentsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<ICheckBackendBuildsArgumentsBuilder, CheckBackendBuildsArgumentsBuilder>();
         }

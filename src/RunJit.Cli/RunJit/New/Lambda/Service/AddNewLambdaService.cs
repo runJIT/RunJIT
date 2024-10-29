@@ -8,9 +8,9 @@ using RunJit.Cli.RunJit.Update.CodeRules;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {
-    public static class AddNewLambdaServiceExtension
+    internal static class AddNewLambdaServiceExtension
     {
-        public static void AddNewLambdaService(this IServiceCollection services,
+        internal static void AddNewLambdaService(this IServiceCollection services,
                                                IConfiguration configuration)
         {
             services.AddUpdateLocalSolutionFile(configuration);

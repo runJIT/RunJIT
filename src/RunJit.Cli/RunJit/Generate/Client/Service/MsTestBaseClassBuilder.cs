@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.Client
 {
-    public static class AddMsTestBaseClassBuilderExtension
+    internal static class AddMsTestBaseClassBuilderExtension
     {
-        public static void AddMsTestBaseClassBuilder(this IServiceCollection services)
+        internal static void AddMsTestBaseClassBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<MsTestBaseClassBuilder>();
         }

@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Update.ResharperSettings
 {
-    public static class AddUpdateResharperSettingsCommandBuilderExtension
+    internal static class AddUpdateResharperSettingsCommandBuilderExtension
     {
-        public static void AddUpdateResharperSettingsCommandBuilder(this IServiceCollection services)
+        internal static void AddUpdateResharperSettingsCommandBuilder(this IServiceCollection services)
         {
             services.AddUpdateResharperSettingsOptionsBuilder();
 

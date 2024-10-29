@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Check.Backend.Builds
 {
-    public static class AddCheckBackendBuildsCommandBuilderExtension
+    internal static class AddCheckBackendBuildsCommandBuilderExtension
     {
-        public static void AddCheckBackendBuildsCommandBuilder(this IServiceCollection services)
+        internal static void AddCheckBackendBuildsCommandBuilder(this IServiceCollection services)
         {
             services.AddCheckBackendBuildsArgumentsBuilder();
             services.AddCheckBackendBuildsOptionsBuilder();

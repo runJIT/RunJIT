@@ -28,9 +28,9 @@ namespace RunJit.Cli.RunJit.Generate.Client
     //
     // namespace Api.Client
     // {
-    //     public static class AddPulseSustainabilityClientExtension    <-- ServiceRegistrationBuilder
+    //     internal static class AddPulseSustainabilityClientExtension    <-- ServiceRegistrationBuilder
     //     {
-    //         public static void AddPulseSustainabilityClient(this IServiceCollection services)
+    //         internal static void AddPulseSustainabilityClient(this IServiceCollection services)
     //         {
     //             services.AddAccountsFacade();		
     //         }

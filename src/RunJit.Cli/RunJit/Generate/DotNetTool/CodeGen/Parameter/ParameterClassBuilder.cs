@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddParameterClassBuilderExtension
+    internal static class AddParameterClassBuilderExtension
     {
-        public static void AddParameterClassBuilder(this IServiceCollection services)
+        internal static void AddParameterClassBuilder(this IServiceCollection services)
         {
             services.AddParameterWithArgsOrOptionsClassBuilder();
             services.AddParameterWithoutArgsOrOptionsClassBuilder();

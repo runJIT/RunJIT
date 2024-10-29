@@ -8,9 +8,9 @@ using RunJit.Cli.RunJit.Generate.DotNetTool;
 
 namespace RunJit.Cli.RunJit.Generate
 {
-    public static class AddGenerateCommandBuilderExtension
+    internal static class AddGenerateCommandBuilderExtension
     {
-        public static void AddGenerateCommandBuilder(this IServiceCollection services,
+        internal static void AddGenerateCommandBuilder(this IServiceCollection services,
                                                      IConfiguration configuration)
         {
             services.AddClientCommandBuilder(configuration);

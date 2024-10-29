@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Encrypt
 {
-    public static class AddEncryptArgumentsBuilderExtension
+    internal static class AddEncryptArgumentsBuilderExtension
     {
-        public static void AddEncryptArgumentsBuilder(this IServiceCollection services)
+        internal static void AddEncryptArgumentsBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<IEncryptArgumentsBuilder, EncryptArgumentsBuilder>();
         }

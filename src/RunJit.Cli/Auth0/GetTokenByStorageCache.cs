@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.Auth0
 {
-    public static class AddAuth0Extension
+    internal static class AddAuth0Extension
     {
-        public static void AddAuth0(this IServiceCollection services,
+        internal static void AddAuth0(this IServiceCollection services,
                                     IConfiguration configuration)
         {
             services.AddAuth0Settings(configuration);

@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddDependencyBuilderExtension
+    internal static class AddDependencyBuilderExtension
     {
-        public static void AddDependencyBuilder(this IServiceCollection services)
+        internal static void AddDependencyBuilder(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<DependencyBuilder>();
         }

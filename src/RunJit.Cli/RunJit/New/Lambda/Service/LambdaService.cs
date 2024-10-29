@@ -9,9 +9,9 @@ using RunJit.Cli.Services.Net;
 
 namespace RunJit.Cli.RunJit.New.Lambda
 {
-    public static class AddLambdaServiceExtension
+    internal static class AddLambdaServiceExtension
     {
-        public static void AddLambdaService(this IServiceCollection services)
+        internal static void AddLambdaService(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddLambdaParameters();

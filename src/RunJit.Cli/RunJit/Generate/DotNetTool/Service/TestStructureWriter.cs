@@ -6,9 +6,9 @@ using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddTestStructureWriterExtension
+    internal static class AddTestStructureWriterExtension
     {
-        public static void AddTestStructureWriter(this IServiceCollection services)
+        internal static void AddTestStructureWriter(this IServiceCollection services)
         {
             services.AddMsTestBaseClassBuilder();
             services.AddAppsettingsBuilder();

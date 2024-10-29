@@ -3,9 +3,9 @@
 
 //namespace RunJit.Cli.RunJit.Update.SwaggerTests
 //{
-//    public static class AddUpdateResharperSettingsArgumentsBuilderExtension
+//    internal static class AddUpdateResharperSettingsArgumentsBuilderExtension
 //    {
-//        public static void AddUpdateResharperSettingsArgumentsBuilder(this IServiceCollection services)
+//        internal static void AddUpdateResharperSettingsArgumentsBuilder(this IServiceCollection services)
 //        {
 //            services.AddSingletonIfNotExists<IUpdateResharperSettingsArgumentsBuilder, UpdateResharperSettingsArgumentsBuilder>();
 //        }

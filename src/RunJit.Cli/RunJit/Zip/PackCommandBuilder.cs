@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Zip
 {
-    public static class AddZipCommandBuilderExtension
+    internal static class AddZipCommandBuilderExtension
     {
-        public static void AddZipCommandBuilder(this IServiceCollection services)
+        internal static void AddZipCommandBuilder(this IServiceCollection services)
         {
             services.AddZipOptionsBuilder();
             services.AddZipArgumentsBuilder();

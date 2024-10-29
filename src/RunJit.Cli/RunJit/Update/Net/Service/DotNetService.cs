@@ -5,9 +5,9 @@ using RunJit.Cli.Services;
 
 namespace RunJit.Cli.RunJit.Update.Net
 {
-    public static class AddDotNetServiceExtension
+    internal static class AddDotNetServiceExtension
     {
-        public static void AddDotNetService(this IServiceCollection services)
+        internal static void AddDotNetService(this IServiceCollection services)
         {
             services.AddConsoleService();
             services.AddDotNetParameters();

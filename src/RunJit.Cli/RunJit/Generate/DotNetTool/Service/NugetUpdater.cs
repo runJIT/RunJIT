@@ -6,9 +6,9 @@ using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
-    public static class AddNugetUpdaterExtension
+    internal static class AddNugetUpdaterExtension
     {
-        public static void AddNugetUpdater(this IServiceCollection services)
+        internal static void AddNugetUpdater(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<NugetUpdater>();
         }
