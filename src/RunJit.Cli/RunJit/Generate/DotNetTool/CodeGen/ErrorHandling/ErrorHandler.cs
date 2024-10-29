@@ -45,25 +45,22 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     catch (Exception e)
                                                     {
                                                         var ex = FindMostSuitableException(e);
-                                        
-                                                        if (ex is $dotNetToolName$Exception)
+                                                        if (ex is ProblemDetailsException problemDetailsException)
                                                         {
-                                                            consoleService.WriteError(ex.Message);
+                                                            consoleService.WriteError(problemDetailsException.ProblemDetails.ToJsonIntended());
                                                         }
                                                         else
                                                         {
-                                                            consoleService.WriteError("An unhandled Error occurred:");
-                                                            consoleService.WriteLine();
                                                             consoleService.WriteError(ex.ToString());
                                                         }
-                                        
+                                                        
                                                         context.ResultCode = 1;
                                                     }
                                                 }
                                         
                                                 private static Exception FindMostSuitableException(Exception exception)
                                                 {
-                                                    if (exception is $dotNetToolName$Exception)
+                                                    if (exception is ProblemDetailsException)
                                                     {
                                                         return exception;
                                                     }

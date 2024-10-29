@@ -44,7 +44,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                   $callInfos$
                                                   $variables$
                                                   
-                                                  return httpCallHandler.CallAsync(HttpMethod.$httpMethod$, $$url$, $payloadAsJson$, $cancellationToken$);                                                 
+                                                  // Get the response as string -> only OK responses are provided here, error will be handled as exception
+                                                  var stringResponse = await httpCallHandler.CallAsync(HttpMethod.$httpMethod$, $$url$, $payloadAsJson$, $cancellationToken$).ConfigureAwait(false);
+                                                  
+                                                  consoleService.WriteSuccess(stringResponse);
                                                   """;
 
 

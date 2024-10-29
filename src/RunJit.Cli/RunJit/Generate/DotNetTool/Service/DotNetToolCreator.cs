@@ -27,7 +27,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             // ErrorHandling
             services.AddErrorHandlerCodeGen();
-            services.AddExceptionCodeGen();
             services.AddProblemDetailsCodeGen();
             services.AddProblemDetailsExceptionCodeGen();
 

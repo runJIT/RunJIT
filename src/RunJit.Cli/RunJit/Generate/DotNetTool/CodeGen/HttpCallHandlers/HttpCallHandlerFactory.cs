@@ -36,21 +36,12 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            internal sealed class HttpCallHandlerFactory
+                                            internal sealed class HttpCallHandlerFactory(ResponseTypeHandleStrategy responseTypeHandleStrategy,
+                                                                                         HttpRequestMessageBuilder httpRequestMessageBuilder)
                                             {
-                                                private readonly HttpRequestMessageBuilder _httpRequestMessageBuilder;
-                                                private readonly ResponseTypeHandleStrategy _responseTypeHandleStrategy;
-                                        
-                                                public HttpCallHandlerFactory(ResponseTypeHandleStrategy responseTypeHandleStrategy,
-                                                                              HttpRequestMessageBuilder httpRequestMessageBuilder)
-                                                {
-                                                    _responseTypeHandleStrategy = responseTypeHandleStrategy;
-                                                    _httpRequestMessageBuilder = httpRequestMessageBuilder;
-                                                }
-                                        
                                                 internal HttpCallHandler CreateFrom(HttpClient client)
                                                 {
-                                                    return new HttpCallHandler(client, _responseTypeHandleStrategy, _httpRequestMessageBuilder);
+                                                    return new HttpCallHandler(client, responseTypeHandleStrategy, httpRequestMessageBuilder);
                                                 }
                                             }
                                         }

@@ -32,27 +32,28 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                             {
                                                 internal async Task<int> RunAsync(string[] args)
                                                 {
-                                                    // Get needed service to invoke client generator. Important anything have to be handled by dependency injection
+                                                    // 1. Get needed service to invoke client generator. Important anything have to be handled by dependency injection
                                                     var rootCommand = serviceProvider.GetRequiredService<$dotNetToolName$CommandBuilder>().Build();
                                                     var errorHandler = serviceProvider.GetRequiredService<ErrorHandler>();
                                                     var dotNetCliArgumentFixer = serviceProvider.GetRequiredService<$dotNetToolName$ArgumentFixer>();
                                         
-                                                    // Setup command line builder from microsoft cli sdk
+                                                    // 2. Setup command line builder from microsoft cli sdk
                                                     var commandLineBuilder = new CommandLineBuilder(rootCommand);
                                                     commandLineBuilder.UseMiddleware(errorHandler.HandleErrorsAsync);
                                                     commandLineBuilder.UseDefaults();
                                                     var parser = commandLineBuilder.Build();
                                         
-                                                    // We automatically add a version command
+                                                    // 3. We automatically add a version command
                                                     var option = parser.Configuration.RootCommand.Options.Single(o => o.Name == "version").As<Option?>();
                                                     option?.AddAlias("-v");
                                         
-                                                    // Fix or update command parameter
+                                                    // 4. Fix or update command parameter
                                                     var fixedArgs = dotNetCliArgumentFixer.Fix(args);
                                         
-                                                    // Here the cli sdk of microsoft will be invoked and manage any command execution
+                                                    // 5. Here the cli sdk of microsoft will be invoked and manage any command execution
                                                     var result = await parser.InvokeAsync(fixedArgs).ConfigureAwait(false);
                                         
+                                                    // 6. Return the result of the command execution
                                                     return result;
                                                 }
                                             }
@@ -77,7 +78,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var newTemplate = Template.Replace("$namespace$", dotNetTool.ProjectName)
                                       .Replace("$dotNetToolName$", dotNetTool.DotNetToolName.NormalizedName);
 
-            var formattedTemplate = newTemplate.FormatSyntaxTree();
+            var formattedTemplate = newTemplate;
 
             await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
 

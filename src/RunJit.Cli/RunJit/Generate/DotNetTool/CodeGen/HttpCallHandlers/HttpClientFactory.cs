@@ -33,6 +33,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 internal static void Add$dotNetToolName$HttpClientFactory(this IServiceCollection services,
                                                                                                            IConfiguration configuration)
                                                 {
+                                                    if (services.IsAlreadyRegistered<$dotNetToolName$HttpClientFactory>())
+                                                    {
+                                                        return;
+                                                    }
+                                                
                                                     services.AddHttpClient();
                                                     services.Add$dotNetToolName$HttpClientSettings(configuration);
                                                     services.AddResponseTypeHandleStrategy();

@@ -23,39 +23,39 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         
                                         namespace $namespace$
                                         {
-                                            public sealed class ProblemDetailsException : Exception
+                                            internal sealed class ProblemDetailsException : Exception
                                             {
-                                                public ProblemDetailsException(string title,
-                                                                               params (string key, object value)[] extensions) : this(HttpStatusCode.InternalServerError, title, string.Empty, extensions)
+                                                internal ProblemDetailsException(string title,
+                                                                                 params (string key, object value)[] extensions) : this(HttpStatusCode.InternalServerError, title, string.Empty, extensions)
                                                 {
                                                 }
                                         
-                                                public ProblemDetailsException(string title,
-                                                                               string details,
-                                                                               params (string key, object value)[] extensions) : this(HttpStatusCode.InternalServerError, title, details, extensions)
+                                                internal ProblemDetailsException(string title,
+                                                                                 string details,
+                                                                                 params (string key, object value)[] extensions) : this(HttpStatusCode.InternalServerError, title, details, extensions)
                                                 {
                                                 }
                                         
-                                                public ProblemDetailsException(HttpStatusCode statusCode,
-                                                                               string title,
-                                                                               string details,
-                                                                               params (string key, object value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value))
+                                                internal ProblemDetailsException(HttpStatusCode statusCode,
+                                                                                 string title,
+                                                                                 string details,
+                                                                                 params (string key, object value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value))
                                                 {
                                                 }
                                         
-                                                public ProblemDetailsException(int statusCode,
-                                                                               string title,
-                                                                               string details,
-                                                                               params (string key, object value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value))
+                                                internal ProblemDetailsException(int statusCode,
+                                                                                 string title,
+                                                                                 string details,
+                                                                                 params (string key, object value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value))
                                                 {
                                                 }
                                         
                                                 // i know this is evil with the conversion to immutable dictionary but a fast fix for now.
                                         
-                                                public ProblemDetailsException(int statusCode,
-                                                                               string title,
-                                                                               string details,
-                                                                               IImmutableDictionary<string, object> errorDetails) : base(title)
+                                                internal ProblemDetailsException(int statusCode,
+                                                                                 string title,
+                                                                                 string details,
+                                                                                 IImmutableDictionary<string, object> errorDetails) : base(title)
                                                 {
                                                     var problemDetails = new ProblemDetails { Title = title.IsEmpty() ? null : title, Detail = details.IsEmpty() ? null : details, Status = statusCode };
                                         

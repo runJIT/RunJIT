@@ -36,8 +36,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         
                                             internal sealed class JsonResponseTypeHandler : ISpecificResponseTypeHandler
                                             {
-                                                private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-                                        
                                                 public bool CanHandle<TResult>(HttpResponseMessage responseMessage)
                                                 {
                                                     return responseMessage.IsSuccessStatusCode &&
@@ -59,7 +57,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     }
                                                     
                                                     var content = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-                                                    var result = jsonSerializer.Deserialize<TResult>(content);
+                                                    var result = content.FromJsonStringAs<TResult>();
                                                     
                                                     return result;
                                                 }

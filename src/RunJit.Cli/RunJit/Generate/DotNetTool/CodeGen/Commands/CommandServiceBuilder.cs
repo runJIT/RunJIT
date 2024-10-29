@@ -33,9 +33,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            internal sealed class $command-name$Handler$dependencies$
+                                            internal sealed class $command-name$Handler(ConsoleService consoleService$dependencies$)
                                             {       
-                                                public Task HandleAsync($command-name$Parameters parameters)
+                                                public async Task HandleAsync($command-name$Parameters parameters)
                                                 {
                                                     $methodBody$
                                                 }
@@ -51,7 +51,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             Throw.IfNullOrWhiteSpace(project);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
-            var dependencies = commandInfo.EndpointInfo.IsNull() ? string.Empty : $"({dotNetToolName.NormalizedName}HttpClientFactory {dotNetToolName.NormalizedName.FirstCharToLower()}HttpClientFactory)";
+            var dependencies = commandInfo.EndpointInfo.IsNull() ? string.Empty : $", {dotNetToolName.NormalizedName}HttpClientFactory {dotNetToolName.NormalizedName.FirstCharToLower()}HttpClientFactory";
             var methodBody = commandInfo.EndpointInfo.IsNull() ? "throw new NotImplementedException();" : commandMethodBuilder.BuildFor(commandInfo.EndpointInfo);
 
             var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
