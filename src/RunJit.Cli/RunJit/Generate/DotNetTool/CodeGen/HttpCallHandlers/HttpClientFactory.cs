@@ -47,15 +47,15 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                                                                 $dotNetToolName$HttpClientSettings aspNetCoreMinimalApiSdkClientSettings,
                                                                                                 HttpCallHandlerFactory httpCallHandlerFactory)
                                             {
-                                                private readonly string[] _allowedHeadersToCopy = 
-                                                { 
-                                                    "User-Agent", 
-                                                    "Authorization", 
-                                                    "x-", 
-                                                    "Referer" 
-                                                };
+                                                private readonly string[] _allowedHeadersToCopy =
+                                                [
+                                                    "User-Agent",
+                                                    "Authorization",
+                                                    "x-",
+                                                    "Referer"
+                                                ];
                                         
-                                                public HttpCallHandler CreateFrom(HttpRequest httpRequest)
+                                                internal HttpCallHandler CreateFrom(HttpRequest httpRequest)
                                                 {
                                                     var httpClient = httpClientFactory.CreateClient();
                                                     httpRequest.Headers.ForEach(headerEntry =>
@@ -74,12 +74,12 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     return httpClientHandler;
                                                 }
                                         
-                                                public HttpCallHandler CreateFrom(string schema, string token)
+                                                internal HttpCallHandler CreateFrom(string schema, string token)
                                                 {
                                                     return CreateFrom($"{schema} {token}");
                                                 }
                                                 
-                                                public HttpCallHandler CreateFrom(string token)
+                                                internal HttpCallHandler CreateFrom(string token)
                                                 {
                                                     var httpClient = httpClientFactory.CreateClient();
                                                     httpClient.BaseAddress = new Uri(aspNetCoreMinimalApiSdkClientSettings.BaseAddress);
@@ -105,7 +105,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            public record $dotNetToolName$HttpClientSettings
+                                            internal sealed record $dotNetToolName$HttpClientSettings
                                             {
                                                 public string BaseAddress { get; init; } = "http://staging/api/$dotNetToolName$/";
                                             }

@@ -1,8 +1,6 @@
-﻿using DotNetTool.Service;
-using Extensions.Pack;
+﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
-using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
 {
@@ -24,14 +22,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         private const string Template = """
                                         using $namespace$.$dotNetToolName$;
-                                        using Microsoft.Extensions.Configuration;
-                                        using Microsoft.Extensions.DependencyInjection;
                                         
                                         namespace $namespace$
                                         {
                                             internal sealed class Startup
                                             {
-                                                internal void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+                                                internal void ConfigureServices(IServiceCollection services, 
+                                                                                IConfiguration configuration)
                                                 {
                                                     // 1. Infrastructure
                                                     services.Add$dotNetToolName$ArgumentFixer();
@@ -52,7 +49,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
                                       .Replace("$dotNetToolName$", dotNetToolInfos.DotNetToolName.NormalizedName);
 
-            var formattedTemplate = newTemplate.FormatSyntaxTree();
+            var formattedTemplate = newTemplate;
 
             await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
 

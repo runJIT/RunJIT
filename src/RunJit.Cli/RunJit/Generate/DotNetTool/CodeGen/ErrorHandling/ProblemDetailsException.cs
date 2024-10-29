@@ -68,7 +68,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     ProblemDetails = problemDetails;
                                                 }
                                         
-                                                public ProblemDetails ProblemDetails { get; }
+                                                internal ProblemDetails ProblemDetails { get; }
                                             }
                                         }
                                         """;

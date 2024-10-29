@@ -48,37 +48,30 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                                                    string url);
                                             }
                                         
-                                            internal sealed class ResponseTypeHandleStrategy
+                                            internal sealed class ResponseTypeHandleStrategy(IEnumerable<ISpecificResponseTypeHandler> responseHandlers)
                                             {
-                                                private readonly IEnumerable<ISpecificResponseTypeHandler> _responseHandlers;
-                                        
-                                                public ResponseTypeHandleStrategy(IEnumerable<ISpecificResponseTypeHandler> responseHandlers)
-                                                {
-                                                    _responseHandlers = responseHandlers;
-                                                }
-                                        
                                                 public Task<TResult> HandleAsync<TResult>(HttpResponseMessage responseMessage,
                                                                                           HttpMethod httpMethod,
                                                                                           HttpClient httpClient,
                                                                                           string url)
                                                 {
-                                                    var responseHandlers = _responseHandlers.Where(handler => handler.CanHandle<TResult>(responseMessage)).ToImmutableList();
-                                                    if (responseHandlers.IsEmpty())
+                                                    var matchingResponseHandlers = responseHandlers.Where(handler => handler.CanHandle<TResult>(responseMessage)).ToImmutableList();
+                                                    if (matchingResponseHandlers.IsEmpty())
                                                     {
                                                         throw new ProblemDetailsException("No response handler was found to handle expected response",
                                                                                           $"No response handler was found to handle expected response type: '{typeof(TResult).Name}'",
                                                                                           ("Response type", typeof(TResult).Name));
                                                     }
                                         
-                                                    if (responseHandlers.Count > 1)
+                                                    if (matchingResponseHandlers.Count > 1)
                                                     {
                                                         throw new ProblemDetailsException("More than one reponse handlers was found for expected response type",
-                                                                                          $"For response type: '{typeof(TResult).Name}' {responseHandlers.Count} response handler was found",
+                                                                                          $"For response type: '{typeof(TResult).Name}' {matchingResponseHandlers.Count} response handler was found",
                                                                                           ("Response type", typeof(TResult).Name),
-                                                                                          ("ResponseHandlers", responseHandlers.Select(handler => handler.GetType().Name).ToImmutableList()));
+                                                                                          ("ResponseHandlers", matchingResponseHandlers.Select(handler => handler.GetType().Name).ToImmutableList()));
                                                     }
                                         
-                                                    var result = responseHandlers[0].HandleAsync<TResult>(responseMessage, httpMethod, httpClient, url);
+                                                    var result = matchingResponseHandlers[0].HandleAsync<TResult>(responseMessage, httpMethod, httpClient, url);
                                                     return result;
                                                 }
                                             }
@@ -102,7 +95,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var newTemplate = Template.Replace("$namespace$", dotNetTool.ProjectName)
                                       .Replace("$dotNetToolName$", dotNetTool.DotNetToolName.NormalizedName);
 
-            var formattedTemplate = newTemplate.FormatSyntaxTree();
+            var formattedTemplate = newTemplate;
 
             await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
 

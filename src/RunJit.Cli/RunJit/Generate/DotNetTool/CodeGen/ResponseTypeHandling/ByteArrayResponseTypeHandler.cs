@@ -78,7 +78,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var newTemplate = Template.Replace("$namespace$", dotNetTool.ProjectName)
                                       .Replace("$dotNetToolName$", dotNetTool.DotNetToolName.NormalizedName);
 
-            var formattedTemplate = newTemplate.FormatSyntaxTree();
+            var formattedTemplate = newTemplate;
 
             await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
 

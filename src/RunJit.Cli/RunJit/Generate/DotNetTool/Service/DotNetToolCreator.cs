@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using DotNetTool.Service;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,12 +31,16 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddProblemDetailsCodeGen();
             services.AddProblemDetailsExceptionCodeGen();
 
-
             // Appsettings
             services.AddAppSettingsCodeGen();
 
             // Argument
             services.AddArgumentBuilderCodeGen();
+
+            // Services
+            services.AddOutputFormatterCodeGen();
+            services.AddOutputServiceCodeGen();
+            services.AddOutputWriterCodeGen();
 
             services.AddConsoleServiceCodeGen();
             services.AddProgramCodeGen();
@@ -43,7 +48,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             services.AddCommandCodeGen();
             services.AddArgumentFixerCodeGen();
             services.AddProjectSettingsCodeGen();
-            
+
             services.AddProjectEmbeddedFilesCodeGen();
             services.AddProjectTypeCodeGen();
 
@@ -135,13 +140,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     internal sealed class DotNetToolCreator(ControllerParser controllerParser,
-                                     ApiTypeLoader apiTypeLoader,
-                                     RestructureController restructureController,
-                                     IDotNet dotNet,
-                                     IConvertControllerInfosToDotnetToolStructure convertControllerInfos,
-                                     MinimalApiEndpointParser minimalApiEndpointParser,
-                                     OrganizeMinimalEndpoints organizeMinimalEndpoints,
-                                     NetToolGen netToolGen)
+                                            ApiTypeLoader apiTypeLoader,
+                                            RestructureController restructureController,
+                                            IDotNet dotNet,
+                                            IConvertControllerInfosToDotnetToolStructure convertControllerInfos,
+                                            MinimalApiEndpointParser minimalApiEndpointParser,
+                                            OrganizeMinimalEndpoints organizeMinimalEndpoints,
+                                            NetToolGen netToolGen)
     {
         internal async Task GenerateDotNetToolAsync(DotNetTool client,
                                                     FileInfo clientSolution)
@@ -242,6 +247,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             await dotNet.RunAsync("dotnet", $"new console --output {target}").ConfigureAwait(false);
 
             var dotnetToolProject = new FileInfo(Path.Combine(target, $"{client.ProjectName}.csproj"));
+
             if (dotnetToolProject.NotExists())
             {
                 throw new RunJitException($"Expected .NetTool project does not exists. {dotnetToolProject.FullName}");
@@ -281,6 +287,69 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
     internal sealed class ConvertControllerInfosToDotnetToolStructure : IConvertControllerInfosToDotnetToolStructure
     {
+        private const string GetConfigTemplate = """
+                                                 using Extensions.Pack;
+
+                                                 namespace $namespace$
+                                                 {
+                                                     internal static class Add$command-name$HandlerExtension
+                                                     {
+                                                         internal static void Add$command-name$Handler(this IServiceCollection services)
+                                                         {
+                                                             services.AddOutputService();
+                                                 
+                                                             services.AddSingletonIfNotExists<$command-name$Handler>();
+                                                         }
+                                                     }
+                                                 
+                                                     internal sealed class $command-name$Handler(OutputService outputService)
+                                                     {
+                                                         internal async Task HandleAsync($command-name$Parameters getParameters)
+                                                         {
+                                                             // 1. If not provide the embedded version
+                                                             var appsettings = EmbeddedFile.$command-name$FileContentFrom("appsettings.json");
+                                                 
+                                                             // 2. Check if an appsettings.json exists on file
+                                                             var appsettingsOnDisk = new FileInfo(Path.Combine(Environment.CurrentDirectory, "appsettings.json"));
+                                                             if (appsettingsOnDisk.Exists)
+                                                             {
+                                                                 appsettings = await File.ReadAllTextAsync(appsettingsOnDisk.FullName).ConfigureAwait(false);
+                                                             }
+                                                 
+                                                             // 3. Write the formatted string to the output
+                                                             await outputService.WriteAsync(appsettings, getParameters.Output, getParameters.Format).ConfigureAwait(false);
+                                                         }
+                                                     }
+                                                 }
+                                                 """;
+
+        private const string SetConfigTemplate = """
+                                                 using Extensions.Pack;
+
+                                                 namespace $namespace$
+                                                 {
+                                                     internal static class Add$command-name$HandlerExtension
+                                                     {
+                                                         internal static void Add$command-name$Handler(this IServiceCollection services)
+                                                         {
+                                                             services.AddSingletonIfNotExists<$command-name$Handler>();
+                                                         }
+                                                     }
+                                                 
+                                                     internal sealed class $command-name$Handler(OutputService outputService)
+                                                     {
+                                                         internal async Task HandleAsync($command-name$Parameters setParameters)
+                                                         {
+                                                             // 1. Define target file
+                                                             var appsettingsOnDisk = new FileInfo(Path.Combine(Environment.CurrentDirectory, "appsettings.json"));
+                                                 
+                                                             // 2. Write output
+                                                             await outputService.WriteAsync(setParameters.Json, appsettingsOnDisk, FormatType.JsonIndented).ConfigureAwait(false);
+                                                         }
+                                                     }
+                                                 }
+                                                 """;
+
         public DotNetToolInfos ConvertTo(ImmutableList<IGrouping<string, EndpointGroup>> domainGroupedByVersion,
                                          DotNetTool client)
         {
@@ -298,12 +367,35 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                 Description = client.DotNetToolName.Name,
             };
 
+            // New options for output and formating !
+            var options = ImmutableList.Create<OptionInfo>(new OptionInfo()
+            {
+                Alias = "-f",
+                NormalizedName = "format",
+                Argument = new ArgumentInfo("format", "Provide the format in which type the output should be created. Choose an an available option", "<format>[FormatType]",
+                                                                                           "FormatType", "FormatType", "Format"),
+                IsIsRequired = false,
+                Name = "format",
+                Value = "--format",
+                Description = "Provide the format in which type the output should be created. Choose an an available option"
+            },
+                                                           new OptionInfo()
+                                                           {
+                                                               Alias = "-o",
+                                                               NormalizedName = "Output",
+                                                               Argument = new ArgumentInfo("output", "Writes the output in your provided file. Sample: 'D:/Documents/MyFile.txt'", "<output>[FileInfo?]",
+                                                                                           "FileInfo?", "FileInfo?", "Output"),
+                                                               IsIsRequired = false,
+                                                               Name = "output",
+                                                               Value = "--output",
+                                                               Description = "Writes the output in your provided file. Sample: 'D:/Documents/MyFile.txt'"
+                                                           });
 
             // For your tool we want to be able to manage the whole configuration
             // So we need a command to get/set the configuration
             var configCommand = new CommandInfo
             {
-                NormalizedName = "config",
+                NormalizedName = "Config",
                 Value = "config",
                 Name = "config",
                 Description = "Command to handle the configuration for your dotnet tool. Known as appsettings",
@@ -311,24 +403,33 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             // We need a command to read the whole config
             var getConfigCommand = new CommandInfo()
-                                   {
-                                       NormalizedName = "get",
-                                       Value = "get",
-                                       Name = "get",
-                                       Description = "Command to read the whole configuration for your dotnet tool. Known as appsettings",
-                                   };
+            {
+                NormalizedName = "Get",
+                Value = "get",
+                Name = "get",
+                Description = "Command to read the whole configuration for your dotnet tool. Known as appsettings",
+                Options = options.ToList(),
+                CodeTemplate = GetConfigTemplate,
+                NoSyntaxTreeFormatting = true,
+            };
 
             // We need a command to set/update the whole config
             var setConfigCommand = new CommandInfo()
-                                   {
-                                       NormalizedName = "set",
-                                       Value = "set",
-                                       Name = "set",
-                                       Description = "Command to set the whole configuration for your dotnet tool. Known as appsettings. To set the configuration call 'configuration get' change the settings you want to change and call 'configuration set' to set the whole json back",
-                                   };
+            {
+                NormalizedName = "Set",
+                Value = "set",
+                Name = "set",
+                Description = "Command to set the whole configuration for your dotnet tool. Known as appsettings. To set the configuration call 'configuration get' change the settings you want to change and call 'configuration set' to set the whole json back",
+                Options = options.ToList(),
+                CodeTemplate = SetConfigTemplate,
+                NoSyntaxTreeFormatting = true,
+                Argument = new ArgumentInfo("json", "Provide the new config json which is known as appsettings.json", "<json>[string]", "string", "string", "Json")
+            };
 
             configCommand.SubCommands.Add(getConfigCommand);
             configCommand.SubCommands.Add(setConfigCommand);
+
+            rootCommand.SubCommands.Add(configCommand);
 
             // convert controller infos into dotnet tool structure
             // endpointGroups are grouped by version
@@ -362,7 +463,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
                     domainCommand.SubCommands.Add(versionCommand);
 
-
                     // each domain is a command
                     foreach (var endoint in version.Endpoints)
                     {
@@ -374,34 +474,33 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                         //  - V1
                         //    - AddResource
                         // Temp tool build do not allow exceptions
+                        var optionInfo = new OptionInfo()
+                        {
+                            Alias = "-t",
+                            NormalizedName = "token",
+                            Argument = new ArgumentInfo("token", "Bearer token for authentication", "<token>[string]",
+                                                                         "string", "string", "Token"),
+                            IsIsRequired = false,
+                            Name = "token",
+                            Value = "--token",
+                            Description = "Bearer token for authentication"
+                        };
+
+                        var optionsForEndpoints = options.Add(optionInfo).ToList();
+
                         var endpointCommand = new CommandInfo()
                         {
                             Name = endoint.SwaggerOperationId.FirstCharToUpper(),
                             NormalizedName = endoint.SwaggerOperationId.FirstCharToUpper(),
                             Description = $"Here comes the description for {endoint.SwaggerOperationId.FirstCharToUpper()}",
                             Value = endoint.SwaggerOperationId.FirstCharToUpper(),
-                            Argument = endoint.Parameters.IsEmpty() ? null : new ArgumentInfo("json", "Call info as json which contains url- and query parameters as well the payload if needed", "<callInfos>[string]", "string", "string", "Json"),
+                            Argument = endoint.Parameters.IsEmpty()
+                                                                 ? null
+                                                                 : new ArgumentInfo("json", "Call info as json which contains url- and query parameters as well the payload if needed", "<callInfos>[string]",
+                                                                                    "string", "string", "Json"),
                             EndpointInfo = endoint,
-                            //MethodBody = """
-                            //             var result =  await _httpCallHandler.CallAsync<Todo>(HttpMethod.Post, "api/v1.0/todos", todo, CancellationToken.None).ConfigureAwait(false);
-                            //             consoleService.WriteSuccess(result);
-                            //             """,
-                            Options = new List<OptionInfo>()
-                                      {
-                                          new OptionInfo()
-                                          {
-                                              Alias = "-t",
-                                              NormalizedName = "token",
-                                              Argument = new ArgumentInfo("token", "Bearer token for authentication", "<token>[string]", "string", "string", "Token"),
-                                              IsIsRequired = false,
-                                              Name = "token",
-                                              Value = "--token",
-                                              Description = "Bearer token for authentication"
-                                          }
-                                      }
-                            
+                            Options = optionsForEndpoints
                         };
-
 
                         versionCommand.SubCommands.Add(endpointCommand);
                     }

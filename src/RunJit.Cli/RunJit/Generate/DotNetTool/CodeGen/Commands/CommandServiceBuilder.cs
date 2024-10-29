@@ -32,7 +32,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         
-                                            internal sealed class $command-name$Handler(ConsoleService consoleService$dependencies$)
+                                            internal sealed class $command-name$Handler(OutputService outputService$dependencies$)
                                             {       
                                                 public async Task HandleAsync($command-name$Parameters parameters)
                                                 {
@@ -53,13 +53,19 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var dependencies = commandInfo.EndpointInfo.IsNull() ? string.Empty : $", {dotNetToolName.NormalizedName}HttpClientFactory {dotNetToolName.NormalizedName.FirstCharToLower()}HttpClientFactory";
             var methodBody = commandInfo.EndpointInfo.IsNull() ? "throw new NotImplementedException();" : commandMethodBuilder.BuildFor(commandInfo.EndpointInfo, dotNetToolName);
 
-            var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
-                                      .Replace("$namespace$", nameSpace)
-                                      .Replace("$project-name$", project)
-                                      .Replace("$methodBody$", methodBody)
-                                      .Replace("$dependencies$", dependencies)
-                                      .Replace("$dotNetToolName$", dotNetToolName.NormalizedName);
+            var templateToUse = commandInfo.CodeTemplate.IsNullOrWhiteSpace() ? Template : commandInfo.CodeTemplate;
 
+            var newTemplate = templateToUse.Replace("$command-name$", commandInfo.NormalizedName)
+                                           .Replace("$namespace$", nameSpace)
+                                           .Replace("$project-name$", project)
+                                           .Replace("$methodBody$", methodBody)
+                                           .Replace("$dependencies$", dependencies)
+                                           .Replace("$dotNetToolName$", dotNetToolName.NormalizedName);
+
+            if (commandInfo.NoSyntaxTreeFormatting)
+            {
+                return newTemplate;
+            }
             return newTemplate.FormatSyntaxTree();
         }
     }

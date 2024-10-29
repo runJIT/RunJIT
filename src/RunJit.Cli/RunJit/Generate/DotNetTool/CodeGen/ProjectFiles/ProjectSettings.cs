@@ -27,12 +27,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             //        <PackAsTool>true</PackAsTool>
             //        <IsPackable>true</IsPackable>
             //        <ToolCommandName>mytool</ToolCommandName>
+            //        <ImplicitUsings>enable</ImplicitUsings>
             //    </PropertyGroup>
             var toolSettingsComment = new XComment(".NET tool specific settings");
             var toolPropertyGroup = new XElement("PropertyGroup",
                                                  new XElement("OutputType", "Exe"),
                                                  new XElement("PackAsTool", "true"),
                                                  new XElement("IsPackable", "true"),
+                                                 new XElement("ImplicitUsings", "enable"),
                                                  new XElement("ToolCommandName", dotNetToolInfos.DotNetToolName.NormalizedName.ToLower()));
 
             // 3. Add the comment and new PropertyGroup to the root of the project file

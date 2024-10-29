@@ -35,7 +35,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         
                                             internal sealed class ErrorHandler(ConsoleService consoleService)
                                             {
-                                                public async Task HandleErrorsAsync(InvocationContext context, Func<InvocationContext, Task> next)
+                                                internal async Task HandleErrorsAsync(InvocationContext context, Func<InvocationContext, Task> next)
                                                 {
                                                     try
                                                     {

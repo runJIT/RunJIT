@@ -46,10 +46,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                     // 3.2 Add json stream configuration source
                                                     configurationBuilder.Add(jsonStreamConfigurationSource);
                                         
-                                                    // 3.3 Add environment variables. With this we can overwrite all used settings :)
+                                                    // 3.3 Add optional possibility to overwrite settings with appsettings.json in 
+                                                    //     current directory / Manual post config after installation
+                                                    configurationBuilder.AddJsonFile(Path.Combine(Environment.CurrentDirectory, "appsettings.json"), optional: true);
+                                        
+                                                    // 3.4 Add environment variables. With this we can overwrite all used settings :)
                                                     configurationBuilder.AddEnvironmentVariables();
                                         
-                                                    // 3.4 Add user secrets. With this we can overwrite all used settings :)
+                                                    // 3.5 Add user secrets. With this we can overwrite all used settings :)
                                                     configurationBuilder.AddUserSecrets(typeof(AppBuilder).Assembly);
                                         
                                                     // 4. Build configuration
@@ -66,7 +70,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         }
-                                        
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,

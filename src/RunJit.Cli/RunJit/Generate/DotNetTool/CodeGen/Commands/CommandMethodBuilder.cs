@@ -47,7 +47,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                   // Get the response as string -> only OK responses are provided here, error will be handled as exception
                                                   var stringResponse = await httpCallHandler.CallAsync(HttpMethod.$httpMethod$, $$url$, $payloadAsJson$, $cancellationToken$).ConfigureAwait(false);
                                                   
-                                                  consoleService.WriteSuccess(stringResponse);
+                                                  // 3. Write the formatted string to the output
+                                                  await outputService.WriteAsync(stringResponse, parameters.Output, parameters.Format).ConfigureAwait(false);
                                                   """;
 
 

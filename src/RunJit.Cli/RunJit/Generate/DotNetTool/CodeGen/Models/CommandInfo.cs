@@ -23,5 +23,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         public string NormalizedName { get; init; } = string.Empty;
 
         public EndpointInfo? EndpointInfo { get; init; }
+
+        public string CodeTemplate { get; init; } = string.Empty;
+
+        public bool NoSyntaxTreeFormatting { get; init; }
     }
 }

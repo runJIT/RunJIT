@@ -26,7 +26,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         }
-
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
