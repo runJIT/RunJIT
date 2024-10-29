@@ -20,7 +20,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                               NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """
-                                        using System.Text.Json;
                                         using Extensions.Pack;
                                         using Microsoft.AspNetCore.Mvc;
                                         

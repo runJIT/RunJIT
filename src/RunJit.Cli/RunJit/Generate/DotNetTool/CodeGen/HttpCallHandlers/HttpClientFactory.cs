@@ -22,9 +22,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         private const string Template = """
                                         using System.Net.Http.Headers;
                                         using Extensions.Pack;
-                                        using Microsoft.AspNetCore.Http;
-                                        using Microsoft.Extensions.Configuration;
-                                        using Microsoft.Extensions.DependencyInjection;
                                         
                                         namespace $namespace$
                                         {
