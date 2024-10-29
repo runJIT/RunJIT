@@ -39,7 +39,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         // ToDo: Question how to communicate obsolete methods ?
         private readonly string _methodTemplate = """
                                                   // 1. create client
-                                                  var httpCallHandler = myApiHttpClientFactory.CreateFrom(parameters.Token);
+                                                  var httpCallHandler = $dotNetToolName$HttpClientFactory.CreateFrom(parameters.Token);
                                                   
                                                   $callInfos$
                                                   $variables$
@@ -51,7 +51,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                   """;
 
 
-        internal string BuildFor(EndpointInfo endpointInfo)
+        internal string BuildFor(EndpointInfo endpointInfo,
+                                 DotNetToolName dotNetToolName)
         {
             // Any call to a http instance is never sync like like without a Task - we never do blocking API calls !!
             var normalizedReturnType = endpointInfo.ResponseType.Original == "Task<ActionResult>" ||
@@ -127,7 +128,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         .Replace("$attributes$", attributes)
                                         .Replace("$cancellationToken$", cancellationToken)
                                         .Replace("$variables$", parameterAsVariables)
-                                        .Replace("$callInfos$", callInfos);
+                                        .Replace("$callInfos$", callInfos)
+                                        .Replace("$dotNetToolName$", dotNetToolName.NormalizedName.FirstCharToLower());
 
             return method;
         }

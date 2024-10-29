@@ -51,7 +51,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             Throw.IfNullOrWhiteSpace(nameSpace);
 
             var dependencies = commandInfo.EndpointInfo.IsNull() ? string.Empty : $", {dotNetToolName.NormalizedName}HttpClientFactory {dotNetToolName.NormalizedName.FirstCharToLower()}HttpClientFactory";
-            var methodBody = commandInfo.EndpointInfo.IsNull() ? "throw new NotImplementedException();" : commandMethodBuilder.BuildFor(commandInfo.EndpointInfo);
+            var methodBody = commandInfo.EndpointInfo.IsNull() ? "throw new NotImplementedException();" : commandMethodBuilder.BuildFor(commandInfo.EndpointInfo, dotNetToolName);
 
             var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)
                                       .Replace("$namespace$", nameSpace)

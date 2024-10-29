@@ -83,7 +83,7 @@ namespace RunJit.Cli.Test.SystemTest
             yield return "--solution";
             yield return request.Solution.FullName;
             yield return "--tool-name";
-            yield return "MyApi";
+            yield return "Survey";
             yield return "--from-api";
 
         }
