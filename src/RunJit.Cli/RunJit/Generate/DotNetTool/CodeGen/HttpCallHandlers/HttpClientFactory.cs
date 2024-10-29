@@ -40,7 +40,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 
                                                     services.AddHttpClient();
                                                     services.Add$dotNetToolName$HttpClientSettings(configuration);
-                                                    services.AddResponseTypeHandleStrategy();
+                                                    services.AddHttpCallHandlerFactory();
                                         
                                                     services.AddSingletonIfNotExists<$dotNetToolName$HttpClientFactory>();
                                                 }

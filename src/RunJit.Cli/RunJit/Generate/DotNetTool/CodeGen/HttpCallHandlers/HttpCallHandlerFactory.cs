@@ -17,12 +17,12 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     internal sealed class HttpCallHandlerFactoryCodeGen(ConsoleService consoleService,
-                                                 NamespaceProvider namespaceProvider) : INetToolCodeGen
+                                                        NamespaceProvider namespaceProvider) : INetToolCodeGen
     {
         private const string Template = """
                                         using Extensions.Pack;
                                         using Microsoft.Extensions.DependencyInjection;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal static class AddHttpCallHandlerFactoryExtension
@@ -67,7 +67,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             var formattedTemplate = newTemplate.FormatSyntaxTree();
 
             await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
-
 
             // 3. Adjust namespace provider
             namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetTool.ProjectName}.HttpCallHandlerFactory", true);

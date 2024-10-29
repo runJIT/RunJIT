@@ -29,9 +29,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         
                                         namespace $namespace$
                                         {
-                                            public static class AddHttpRequestMessageBuilderExtension
+                                            internal static class AddHttpRequestMessageBuilderExtension
                                             {
-                                                public static void AddHttpRequestMessageBuilder(this IServiceCollection services)
+                                                internal static void AddHttpRequestMessageBuilder(this IServiceCollection services)
                                                 {
                                                     services.AddSingletonIfNotExists<HttpRequestMessageBuilder>();
                                                 }

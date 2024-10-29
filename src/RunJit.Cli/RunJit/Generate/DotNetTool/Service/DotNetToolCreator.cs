@@ -349,7 +349,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                             NormalizedName = endoint.SwaggerOperationId.FirstCharToUpper(),
                             Description = $"Here comes the description for {endoint.SwaggerOperationId.FirstCharToUpper()}",
                             Value = endoint.SwaggerOperationId.FirstCharToUpper(),
-                            Argument = new ArgumentInfo("json", "Call info as json which contains url- and query parameters as well the payload if needed", "<callInfos>[string]", "string", "string", "Json"),
+                            Argument = endoint.Parameters.IsEmpty() ? null : new ArgumentInfo("json", "Call info as json which contains url- and query parameters as well the payload if needed", "<callInfos>[string]", "string", "string", "Json"),
                             EndpointInfo = endoint,
                             //MethodBody = """
                             //             var result =  await _httpCallHandler.CallAsync<Todo>(HttpMethod.Post, "api/v1.0/todos", todo, CancellationToken.None).ConfigureAwait(false);

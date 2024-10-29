@@ -20,7 +20,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.AppSettings
         private const string Template = """
                                         {
                                           "$dotNetToolName$HttpClientSettings": {
-                                            "BaseAddress": "http://staging/api/$dotNetToolName$/"
+                                            "BaseAddress": "https://localhost:7221/"
                                           }
                                         }
                                         """;

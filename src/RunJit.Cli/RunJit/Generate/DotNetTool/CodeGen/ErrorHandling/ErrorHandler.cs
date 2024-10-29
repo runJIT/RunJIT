@@ -51,7 +51,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                         }
                                                         else
                                                         {
-                                                            consoleService.WriteError(ex.ToString());
+                                                            var problemDetails = new ProblemDetails
+                                                            {
+                                                                Title = $"Unexpected {ex.GetType().Name} occured",
+                                                                Detail = ex.Message,
+                                                                Status = 500
+                                                            };
+                                                            
+                                                            consoleService.WriteError(problemDetails.ToJsonIntended());
                                                         }
                                                         
                                                         context.ResultCode = 1;
