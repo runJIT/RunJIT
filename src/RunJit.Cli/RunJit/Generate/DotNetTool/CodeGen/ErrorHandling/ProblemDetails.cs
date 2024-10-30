@@ -150,7 +150,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                             [JsonConverter(typeof(ProblemDetailsJsonConverter))]
-                                            public sealed class ProblemDetails
+                                            internal sealed class ProblemDetails
                                             {
                                                 /// <summary>
                                                 /// A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
@@ -202,9 +202,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 internal IDictionary<string, object?> Extensions { get; } = new Dictionary<string, object?>(StringComparer.Ordinal);
                                             }
                                         }
-                                        
-                                        
-                                        
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
