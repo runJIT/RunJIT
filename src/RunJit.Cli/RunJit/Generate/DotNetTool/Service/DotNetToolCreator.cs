@@ -1,16 +1,10 @@
 ﻿using System.Collections.Immutable;
-using System.Runtime.CompilerServices;
-using DotNetTool.Service;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Api.Client.RequestTypeHandling;
-using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit.Generate.Client;
-using RunJit.Cli.RunJit.Generate.DotNetTool.AppSettings;
+using RunJit.Cli.RunJit.Generate.DotNetTool.Models;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.Endpoints;
-using RunJit.Cli.Services.Net;
-using RunJit.Cli.Services.Resharper;
 using Solution.Parser.CSharp;
 using Solution.Parser.Solution;
 
@@ -20,8 +14,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         internal static void AddDotnetToolGen(this IServiceCollection services)
         {
-            services.AddSingletonIfNotExists<NetToolGen>();
-
             // App
             services.AddAppCodeGen();
             services.AddAppBuilderCodeGen();
@@ -70,70 +62,17 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal sealed class NetToolGen(IEnumerable<INetToolCodeGen> codeGenerators)
-    {
-        internal async Task GenerateAsync(FileInfo projectFileInfo,
-                                          DotNetToolInfos dotNetToolInfos)
-        {
-            foreach (var codeGenerator in codeGenerators)
-            {
-                await codeGenerator.GenerateAsync(projectFileInfo, dotNetToolInfos).ConfigureAwait(false);
-            }
-        }
-    }
-
-    // Pulse.Sustainability.DotNetTool
-    // -> Api
-    //    -> Projects 
-    //      -> V1
-    //        -> Models
-    //          -> GetAllProjectsResponse.cs
-    //        -> ProjectV1.cs
-    //    -> Users
-    //      -> V1
-    //        -> Models
-    //          -> GetUserResponse.cs
-    //        -> UserV1.cs
-    //      -> V2
-    //        -> Models
-    //          -> GetUserResponse.cs
-    //        -> UserV1.cs
-    // -> PulseSustainabilityDotNetTool.cs
-    // -> PulseSustainabilityDotNetToolFactory.cs
-    public record GeneratedDotNetTool(IImmutableList<GeneratedFacade> Facades,
-                                      string SyntaxTree);
-
-    public record GeneratedFacade(IImmutableList<GeneratedDotNetToolCodeForController> Endpoints,
-                                  string SyntaxTree,
-                                  string Domain,
-                                  string FacadeName);
-
-    public record GeneratedDotNetToolCodeForController(ControllerInfo ControllerInfo,
-                                                       string SyntaxTree,
-                                                       string Domain);
-
     internal static class AddDotNetToolCreatorExtension
     {
         internal static void AddDotNetToolCreator(this IServiceCollection services)
         {
-            services.AddApiVersionFinder();
             services.AddControllerParser();
-            services.AddDotNetToolCreatorForController();
-            services.AddDomainFacedBuilder();
-            services.AddDotNetToolBuilder();
-            services.AddDotNetToolFactoryBuilder();
-            services.AddModelBuilder();
-            services.AddSolutionFileModifier();
-            services.AddResharperSettingsBuilder();
-
-            services.AddNugetUpdater();
-            services.AddAssemblyTypeLoader();
             services.AddApiTypeLoader();
-            services.AddTestStructureWriter();
             services.AddRestructureController();
-            services.AddConvertControllerInfosToDotnetToolStructure();
-
-            services.AddDotnetToolGen();
+            services.AddEndpointsToCliCommandStructureConverter();
+            services.AddMinimalApiEndpointParser();
+            services.AddOrganizeMinimalEndpoints();
+            services.AddDotNetToolCodeGen();
 
             services.AddSingletonIfNotExists<DotNetToolCreator>();
         }
@@ -142,48 +81,16 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class DotNetToolCreator(ControllerParser controllerParser,
                                             ApiTypeLoader apiTypeLoader,
                                             RestructureController restructureController,
-                                            IDotNet dotNet,
-                                            IConvertControllerInfosToDotnetToolStructure convertControllerInfos,
+                                            EndpointsToCliCommandStructureConverter convertControllerInfos,
                                             MinimalApiEndpointParser minimalApiEndpointParser,
                                             OrganizeMinimalEndpoints organizeMinimalEndpoints,
-                                            NetToolGen netToolGen)
+                                            DotNetToolCodeGen dotNetToolCodeGen)
     {
-        internal async Task GenerateDotNetToolAsync(DotNetTool client,
+        internal async Task GenerateDotNetToolAsync(string projectName,
+                                                    string name,
+                                                    string normalizedName,
                                                     FileInfo clientSolution)
         {
-            // 0. Pre requirements
-            var dotnetTool = DotNetToolFactory.Create();
-            var dotnettoolBuilder = "DotNetTool.Builder";
-
-            var dotnetToolBuilderExists = await dotnetTool.ExistsAsync(dotnettoolBuilder).ConfigureAwait(false);
-
-            if (dotnetToolBuilderExists.IsNull())
-            {
-                var installResult = await dotnetTool.InstallAsync(dotnettoolBuilder).ConfigureAwait(false);
-
-                if (installResult.ExitCode != 0)
-                {
-                    throw new RunJitException($"Could not install {dotnettoolBuilder}");
-                }
-            }
-
-            // 4. Create new project
-            // 5. Add all helper classes
-            //    App
-            //    - App
-            //    - AppBuilder
-            //    ErrorHandling
-            //    - ErrorHandler
-            //    - Exception
-            //    Services
-            //    - ConsoleService
-            //    MyTool (The cli which have to be generated)
-            //    - Users
-            //      - V1
-            //        - Add
-            //    Program.cs
-            //    Startup.cs
-
             // 1. Build the target solution first
             //await dotNet.BuildAsync(clientSolution).ConfigureAwait(false);
 
@@ -196,95 +103,43 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             // 4. Get all types which are declared in the API assembly - Need to unique ident the types for client generation.
             var types = apiTypeLoader.GetAllTypesFrom(parsedSolution);
 
-            // 5.1 New to reorganize the controllers to get the correct domain name
-            // 5. Get all controllers
+            // 5. New to reorganize the controllers to get the correct domain name
             var controllerInfosOrg = controllerParser.ExtractFrom(allSyntaxTrees, types).OrderBy(controller => controller.Name).ToImmutableList();
 
-            // 6.1 New to reorganize the controllers to get the correct domain name
+            // 6. New to reorganize the controllers to get the correct domain name
             var controllerInfos = restructureController.Reorganize(controllerInfosOrg);
 
-            // 7.2 Get all minimal endpoints
+            // 7. Get all minimal endpoints
             var endpoints = minimalApiEndpointParser.ExtractFrom(allSyntaxTrees, types).OrderBy(controller => controller.Name).ToImmutableList();
 
-            // 8.3 organize endpoints
+            // 8. organize endpoints
             var organizedEndpoints = organizeMinimalEndpoints.Reorganize(endpoints);
 
-            // NEW !! TEST POC
+            // 9. Covert to mapped endpoints
+            //    We want to have them grouped by domain to get correct tree like:
+            //    - Users 
+            //      - V1  
+            //      - V2
             var mappedToEndpoints = organizedEndpoints.Any() ? organizedEndpoints : controllerInfos.ToEndpointInfos();
-
-            // We wan to have them grouped by domain to get correct tree like:
-            // - Users (1x)
-            //   - V1  (1x)
-            //   - V2  (1x)
             var domainGrouped = mappedToEndpoints.GroupBy(e => e.GroupName).Distinct().ToImmutableList();
 
-            var dotnetToolStructure = convertControllerInfos.ConvertTo(domainGrouped, client);
+            // 10. Convert controller infos to dotnet tool structure -> commands, arguments and options
+            var dotnetToolStructure = convertControllerInfos.ConvertTo(domainGrouped, projectName, name, normalizedName);
 
-            // ----------------------------------------------------------------------------------------------------------------------------------------
-            // POC starts here
-            // 1. Check if cli project already exists
-            var dotNetToolProject = parsedSolution.ProductiveProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion == client.ProjectName);
-
-            if (dotNetToolProject.IsNotNull())
-            {
-                // 2. Remove project
-                await dotNet.RemoveProjectFromSolutionAsync(clientSolution, dotNetToolProject.ProjectFileInfo.Value).ConfigureAwait(false);
-
-                // 3. If exists remove all files
-                dotNetToolProject.ProjectFileInfo.Value.Directory?.Delete(true);
-            }
-
-            var netToolFolder = new DirectoryInfo(Path.Combine(clientSolution.Directory!.FullName, client.ProjectName));
-
-            if (netToolFolder.Exists)
-            {
-                netToolFolder.Delete(true);
-            }
-
-            // 4. Create new project
-            // dotnet new console --output folder1/folder2/myapp
-            var target = Path.Combine(clientSolution.Directory!.FullName, client.ProjectName);
-            await dotNet.RunAsync("dotnet", $"new console --output {target}").ConfigureAwait(false);
-
-            var dotnetToolProject = new FileInfo(Path.Combine(target, $"{client.ProjectName}.csproj"));
-
-            if (dotnetToolProject.NotExists())
-            {
-                throw new RunJitException($"Expected .NetTool project does not exists. {dotnetToolProject.FullName}");
-            }
-
-            // Add required nuget packages into project
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "System.CommandLine", "0.3.0-alpha.20054.1").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "5.0.4").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "GitVersion.MsBuild", "6.0.3").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.DependencyInjection", "8.0.1").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration", "8.0.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.EnvironmentVariables", "8.0.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.UserSecrets", "8.0.0").ConfigureAwait(false);
-
-            // 5. Code Gen
-            await netToolGen.GenerateAsync(dotnetToolProject, dotnetToolStructure).ConfigureAwait(false);
-
-            // Add new net tool project into solution
-            await dotNet.AddProjectToSolutionAsync(clientSolution, dotnetToolProject).ConfigureAwait(false);
+            // 11. Run all code generators
+            await dotNetToolCodeGen.GenerateAsync(parsedSolution, dotnetToolStructure).ConfigureAwait(false);
         }
     }
 
     internal static class AddConvertControllerInfosToDotnetToolStructureExtension
     {
-        internal static void AddConvertControllerInfosToDotnetToolStructure(this IServiceCollection services)
+        internal static void AddEndpointsToCliCommandStructureConverter(this IServiceCollection services)
         {
-            services.AddSingletonIfNotExists<IConvertControllerInfosToDotnetToolStructure, ConvertControllerInfosToDotnetToolStructure>();
+            services.AddSingletonIfNotExists<EndpointsToCliCommandStructureConverter>();
         }
     }
 
-    internal interface IConvertControllerInfosToDotnetToolStructure
-    {
-        DotNetToolInfos ConvertTo(ImmutableList<IGrouping<string, EndpointGroup>> domainGroupedByVersion,
-                                  DotNetTool client);
-    }
-
-    internal sealed class ConvertControllerInfosToDotnetToolStructure : IConvertControllerInfosToDotnetToolStructure
+    internal sealed class EndpointsToCliCommandStructureConverter
     {
         private const string GetConfigTemplate = """
                                                  using Extensions.Pack;
@@ -350,20 +205,20 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                  """;
 
         public DotNetToolInfos ConvertTo(ImmutableList<IGrouping<string, EndpointGroup>> domainGroupedByVersion,
-                                         DotNetTool client)
+                                         string projectName,
+                                         string name,
+                                         string normalizedName)
         {
-            var projectname = client.ProjectName;
-
             // Root command is the first command
             // Sample:
             // - dotnet tool install (dotnet is root command)
             // - pulse core resources v1 (pulse is the root command)
             var rootCommand = new CommandInfo
             {
-                NormalizedName = client.DotNetToolName.NormalizedName,
-                Value = client.DotNetToolName.Name,
-                Name = client.DotNetToolName.Name,
-                Description = client.DotNetToolName.Name,
+                NormalizedName = normalizedName,
+                Value = name,
+                Name = name,
+                Description = name,
             };
 
             // New options for output and formating !
@@ -510,8 +365,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             var dotnetToolInfos = new DotNetToolInfos()
             {
-                ProjectName = projectname,
-                DotNetToolName = client.DotNetToolName,
+                ProjectName = projectName,
+                Name = name,
+                NormalizedName = normalizedName,
                 CommandInfo = rootCommand
             };
 

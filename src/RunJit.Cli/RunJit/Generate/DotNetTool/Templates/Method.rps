@@ -1,5 +1,0 @@
-﻿        $attributes$
-        public $returnType$ $name$($parameters$)
-        {
-            return _httpCallHandler.CallAsync$returnTypeNoTask$(HttpMethod.$httpMethod$, $$url$, $payloadAsJson$, $cancellationToken$);
-        }

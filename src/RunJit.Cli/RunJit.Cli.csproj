@@ -62,6 +62,83 @@
         <PackageReference Include="System.CommandLine" Version="0.3.0-alpha.20054.1" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\AppSettings.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\App\App.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\App\AppBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Argument\ArgumentBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandBuilderForSubCommands.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandBuilderSimple.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandBuilderWithArgument.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandBuilderWithArgumentAndOption.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandBuilderWithOptions.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandSpecificCodeGen.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandHandlerBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandHandlerNoArgsAndNoOptionBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandHandlerWithArgsOrOptionBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandMethodBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandServiceBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\CommandServiceInterfaceBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\ICommandHandlerStringBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Commands\SubCommandInterfaceBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\DotNetToolGenerator.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ErrorHandling\ErrorHandler.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ErrorHandling\ProblemDetails.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ErrorHandling\ProblemDetailsException.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\FileStructure\CommandServiceStructureBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\FileStructure\CommandStructureBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\FileStructure\CreateArgumentStructure.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\FileStructure\CreateCommandClasses.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\FileStructure\CreateOptionsStructure.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\FileStructure\CreateParameterClassStructure.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\FileStructure\CreateSubCommandStructure.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\FileStructure\IBuildCommandFileStructure.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\HttpCallHandlers\HttpCallHandler.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\HttpCallHandlers\HttpCallHandlerFactory.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\HttpCallHandlers\HttpClientFactory.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\HttpCallHandlers\HttpRequestMessageBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\ArgumentInfo.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\CliRunResult.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\CommandInfo.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\CtorArgument.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\DisposableBase.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\DotNetToolInfos.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\FindAndReplaceInfo.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\InfoBase.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\MethodInfo.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\OptionInfo.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\Property.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\TypeToAlias.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\TypeToRegister.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Options\INewOptionExpressionBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Options\NewOptionExpressionBuilderWithArgument.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Options\NewOptionExpressionBuilderWithoutArgument.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Options\NewOptionExpressionService.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Options\OptionImplementationBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Options\OptionMethodsBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Parameter\IParameterSpecificClassBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Parameter\ParameterClassBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Parameter\ParameterWithArgsOrOptionsClassBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Parameter\ParameterWithoutArgsOrOptionsClassBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Parameter\PrimaryConstructorArgumentBuilder.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Program.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ProjectFiles\EmbeddedFiles.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ProjectFiles\ProjectSettings.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ProjectFiles\ProjectType.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\RequestTypeHandling\RequestTypeHandleStrategy.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ResponseTypeHandling\ByteArrayResponseTypeHandler.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ResponseTypeHandling\FileStreamResponseTypeHandler.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ResponseTypeHandling\JsonResponseTypeHandler.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ResponseTypeHandling\NotOkResponseTypeHandler.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\ResponseTypeHandling\ResponseTypeHandleStrategy.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\ArgumentFixer.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\CommandTypeCollector.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\ConsoleService.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\NamespaceCollector.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\OutputFormatter.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\OutputService.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\OutputWriter.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\TypeService.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Startup.cs" />
         <Compile Include="Services\.Net\IDotNet.cs" />
     </ItemGroup>
     <ItemGroup>
@@ -88,5 +165,8 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\RunJit.Api\src\RunJit.Api.Client\RunJit.Api.Client.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\" />
     </ItemGroup>
 </Project>

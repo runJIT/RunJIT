@@ -3,7 +3,6 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.RunJit.Check.Backend;
 
 namespace RunJit.Cli.RunJit.Localize.Strings
 {

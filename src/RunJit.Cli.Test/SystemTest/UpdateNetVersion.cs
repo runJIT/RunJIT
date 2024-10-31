@@ -2,7 +2,6 @@
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute.Core;
 using RunJit.Cli.Test.Commands;
 
 namespace RunJit.Cli.Test.SystemTest

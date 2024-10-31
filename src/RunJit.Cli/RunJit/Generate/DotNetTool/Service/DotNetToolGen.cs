@@ -9,12 +9,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         internal static void AddDotNetTool(this IServiceCollection services)
         {
             services.AddConsoleService();
-            services.AddDotNetToolToolBuildFromStrategy();
             services.AddDotNetToolCreator();
             services.AddProcessService();
-            services.AddTargetFolderService();
-            services.AddTemplateExtractor();
-            services.AddTemplateService();
 
             services.AddSingletonIfNotExists<IDotNetToolGen, DotNetToolGen>();
         }
@@ -26,9 +22,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     internal sealed class DotNetToolGen(IProcessService processService,
-                                 ConsoleService consoleService,
-                                 DotNetToolCreator dotNetToolCreator,
-                                 DotNetToolGeneratorBuilder clientGeneratorBuilder) : IDotNetToolGen
+                                        ConsoleService consoleService,
+                                        DotNetToolCreator dotNetToolCreator) : IDotNetToolGen
     {
         public async Task<int> HandleAsync(DotNetToolParameters parameters)
         {
@@ -45,12 +40,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             }
 
             // 1. Build client generator from parameters
-            var client = clientGeneratorBuilder.BuildFrom(parameters);
+            var projectName = $"{parameters.SolutionFile.NameWithoutExtension()}.DotNetTool";
 
-            //// 7. Generate client code
-            await dotNetToolCreator.GenerateDotNetToolAsync(client, parameters.SolutionFile).ConfigureAwait(false);
+            // 2. Generate the dotnet tool into solution
+            await dotNetToolCreator.GenerateDotNetToolAsync(projectName, $"dotnet-{parameters.ToolName}", parameters.ToolName, parameters.SolutionFile).ConfigureAwait(false);
 
-            consoleService.WriteSuccess($"Enjoy your new generated: '{client.ProjectName}' .net tool");
+            // 3. Write success message
+            consoleService.WriteSuccess($"Enjoy your new generated: '{projectName}' .net tool");
 
             return 0;
         }

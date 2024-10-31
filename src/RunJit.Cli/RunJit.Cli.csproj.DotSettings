@@ -2,6 +2,7 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=app/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=dotnet_005Cnewtool_005Coptions/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=dotnet_005Cnewtool_005Cservice/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=extensions_005Cextensions/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Ccheck_005Cbackend_005Cbuilds_005Carguments/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Ccheck_005Cbackend_005Cbuilds_005Coptions/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Ccheck_005Cbackend_005Cbuilds_005Cservice/@EntryIndexedValue">True</s:Boolean>
@@ -75,6 +76,31 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005Crequesttypehandling/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005Cresponsetypehandling/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005Cservices/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Capp/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Cargument/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Ccommands/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Cerrorhandling/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Cfilestructure/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Chttpcallhandlers/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Coptions/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Cparameter/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Cprojectfiles/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Crequesttypehandling/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Cresponsetypehandling/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Edotnettool_005Cservices/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Capp/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Cargument/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Ccommands/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Cerrorhandling/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Cfilestructure/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Chttpcallhandlers/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Coptions/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Cparameter/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Cprojectfiles/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Crequesttypehandling/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Cresponsetypehandling/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Ccodegen_005C_002Enettool_005Cservices/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Cdatacollectors/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Cextensions/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=runjit_005Cgenerate_005Cdotnettool_005Cfilestructures/@EntryIndexedValue">True</s:Boolean>

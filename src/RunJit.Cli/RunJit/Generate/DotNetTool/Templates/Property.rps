@@ -1,2 +1,0 @@
-﻿        $attributes$
-        public $name$ $version$ { get; init; }

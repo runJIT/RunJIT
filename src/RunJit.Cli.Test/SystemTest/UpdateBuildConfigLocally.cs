@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Globalization;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

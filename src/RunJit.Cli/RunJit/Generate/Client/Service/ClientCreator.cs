@@ -2,7 +2,6 @@
 using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Api.Client;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.Endpoints;
 using RunJit.Cli.Services.Resharper;
@@ -49,7 +48,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
         internal static void AddClientCreator(this IServiceCollection services)
         {
             services.AddHttpClient();
-            services.AddApiVersionFinder();
             services.AddControllerParser();
             services.AddClientCreatorForController();
             services.AddDomainFacedBuilder();

@@ -12,7 +12,7 @@ namespace RunJit.Cli.Test.SystemTest
     {
         private const string BasePath = "api/from-sql";
 
-        [TestMethod]       
+        [TestMethod]
         public async Task Generate_Cli_For_Web_Api()
         {
             // 1. Create new Web Api
@@ -25,7 +25,7 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new GenerateDotNetTool(solutionFile)).ConfigureAwait(false);
         }
 
-        [TestMethod]     
+        [TestMethod]
         public async Task Generate_Cli_For_Minimal_Web_Api()
         {
             //// 1. Create new Web Api
@@ -34,7 +34,7 @@ namespace RunJit.Cli.Test.SystemTest
             //// 2. Create Web-Api endpoints
             //await Mediator.SendAsync(new CreateSimpleRestController(solutionFile, "User", false)).ConfigureAwait(false);
 
-            var solutionFile =  new FileInfo(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln");
+            var solutionFile = new FileInfo(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln");
 
             // 3. Generate client for endpoint
             await Mediator.SendAsync(new GenerateDotNetTool(solutionFile)).ConfigureAwait(false);
@@ -84,8 +84,6 @@ namespace RunJit.Cli.Test.SystemTest
             yield return request.Solution.FullName;
             yield return "--tool-name";
             yield return "MyApi";
-            yield return "--from-api";
-
         }
     }
 }
