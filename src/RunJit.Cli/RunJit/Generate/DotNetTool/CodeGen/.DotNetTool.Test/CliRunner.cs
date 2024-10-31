@@ -9,11 +9,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
     {
         internal static void AddCliRunnerCodeGen(this IServiceCollection services)
         {
-            services.AddSingletonIfNotExists<IDotNetToolSpecificCodeGen, CliRunnerCodeGen>();
+            services.AddSingletonIfNotExists<IDotNetToolTestSpecificCodeGen, CliRunnerCodeGen>();
         }
     }
 
-    internal sealed class CliRunnerCodeGen(ConsoleService consoleService) : IDotNetToolSpecificCodeGen
+    internal sealed class CliRunnerCodeGen(ConsoleService consoleService) : IDotNetToolTestSpecificCodeGen
     {
         private const string Template = """
                                         using System.Runtime.CompilerServices;
@@ -238,7 +238,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
             // 1. CliRunner
             var file = Path.Combine(projectFileInfo.Directory!.FullName, "CliRunner.cs");
 
-            var newTemplate = Template.Replace("$namespace$.Test", dotNetToolInfos.ProjectName)
+            var newTemplate = Template.Replace("$namespace$", $"{dotNetToolInfos.ProjectName}.Test")
                                       .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName);
 
             var formattedTemplate = newTemplate.FormatSyntaxTree();

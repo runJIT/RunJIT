@@ -9,11 +9,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
     {
         internal static void AddGlobalSetupCodeGen(this IServiceCollection services)
         {
-            services.AddSingletonIfNotExists<IDotNetToolSpecificCodeGen, GlobalSetupCodeGen>();
+            services.AddSingletonIfNotExists<IDotNetToolTestSpecificCodeGen, GlobalSetupCodeGen>();
         }
     }
 
-    internal sealed class GlobalSetupCodeGen(ConsoleService consoleService) : IDotNetToolSpecificCodeGen
+    internal sealed class GlobalSetupCodeGen(ConsoleService consoleService) : IDotNetToolTestSpecificCodeGen
     {
         private const string Template = """
                                         using DotNetTool.Service;
@@ -72,7 +72,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
             // 1. GlobalSetup
             var file = Path.Combine(projectFileInfo.Directory!.FullName, "GlobalSetup.cs");
 
-            var newTemplate = Template.Replace("$namespace$.Test", dotNetToolInfos.ProjectName)
+            var newTemplate = Template.Replace("$namespace$", $"{dotNetToolInfos.ProjectName}.Test")
                                       .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName);
 
             var formattedTemplate = newTemplate.FormatSyntaxTree();

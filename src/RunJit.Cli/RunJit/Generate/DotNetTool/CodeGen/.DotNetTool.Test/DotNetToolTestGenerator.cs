@@ -10,6 +10,9 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
     {
         internal static void AddDotNetToolTestGenerator(this IServiceCollection services)
         {
+            services.AddCliRunnerCodeGen();
+            services.AddGlobalSetupCodeGen();
+
             services.AddSingletonIfNotExists<DotNetToolTestGenerator>();
         }
     }
@@ -24,11 +27,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
             // 1. Get the solution file info
             var solutionFileInfo = solutionFile.SolutionFileInfo.Value;
 
-            // 1. Expected test project
+            // 2. Expected test project
             var dotNetToolTestProjectName = $"{dotNetToolInfos.ProjectName}.Test";
-            var dotNetToolTestProjectFileInfo = new FileInfo(Path.Combine(solutionFileInfo.Directory!.FullName, dotNetToolTestProjectName));
+            var dotNetToolTestProjectFileInfo = new FileInfo(Path.Combine(solutionFileInfo.Directory!.FullName, dotNetToolTestProjectName, $"{dotNetToolTestProjectName}.csproj"));
 
-            // 2. Check if cli test project already exists
+            // 3. Check if cli test project already exists
             var dotNetToolTestProject = solutionFile.UnitTestProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion.ToLowerInvariant() == dotNetToolTestProjectName.ToLowerInvariant());
 
             // Important if a test project already exists we cant do a lot because some developers
@@ -37,7 +40,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
             {
                 // Create new net tool test project
                 // dotnet new mstest --output folder1/folder2/myapp
-                await dotNet.RunAsync("dotnet", $"new mstest --output {dotNetToolTestProjectFileInfo.FullName}").ConfigureAwait(false);
+                await dotNet.RunAsync("dotnet", $"new mstest --output {dotNetToolTestProjectFileInfo.Directory!.FullName}").ConfigureAwait(false);
             }
             else
             {
@@ -49,15 +52,14 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
                 await dotNet.RemoveProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
             }
 
-            // 3. Create the .net tool folder -> the name of the tool
+            // 4. Create the .net tool folder -> the name of the tool
             var netToolFolder = new DirectoryInfo(Path.Combine(dotNetToolTestProjectFileInfo.Directory!.FullName, dotNetToolInfos.NormalizedName));
-
             if (netToolFolder.Exists.IsFalse())
             {
                 netToolFolder.Create();
             }
 
-            // 4. Get the new created csproj
+            // 5. Get the new created csproj
             if (dotNetToolTestProjectFileInfo.NotExists())
             {
                 throw new RunJitException($"Expected .NetTool project does not exists. {dotNetToolTestProjectFileInfo.FullName}");
@@ -65,7 +67,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
 
             // 6. Add required nuget packages into project
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "4.0.10").ConfigureAwait(false);
-            
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "Microsoft.NET.Test.Sdk", "17.11.1").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestAdapter", "3.6.2").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestFramework", "3.6.2").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "coverlet.collector", "6.0.2").ConfigureAwait(false);
+
             // 7. Add needed project references
             await dotNet.AddProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
 
@@ -79,7 +85,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
                     await codeGenerator.GenerateAsync(dotNetToolTestProjectFileInfo, dotNetToolInfos).ConfigureAwait(false);
                 }
             }
-
 
             // 9. And at least we add this project into the solution because we want to avoid to many refreshes as possible
             await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotNetToolTestProjectFileInfo).ConfigureAwait(false);

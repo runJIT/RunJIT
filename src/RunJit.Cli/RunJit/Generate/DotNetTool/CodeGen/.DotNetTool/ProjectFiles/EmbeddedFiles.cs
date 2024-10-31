@@ -9,6 +9,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         internal static void AddProjectEmbeddedFilesCodeGen(this IServiceCollection services)
         {
+            services.AddRetryHelper();
+
             services.AddSingletonIfNotExists<IDotNetToolSpecificCodeGen, ProjectEmbeddedFilesCodeGen>();
         }
     }
@@ -41,7 +43,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
 
             // 4. Save the changes back to the .csproj file
             projectFile.Save(projectFileInfo.FullName);
-            
+
             // 5. Print success message
             consoleService.WriteSuccess($"Successfully modified {projectFileInfo.FullName} with .Net tool specific settings");
 
