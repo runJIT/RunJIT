@@ -30,7 +30,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
-                                        Models.DotNetToolInfos dotNetToolInfos)
+                                        DotNetToolInfos dotNetToolInfos)
         {
             // 1. Add AppBuilder.cs
             var file = Path.Combine(projectFileInfo.Directory!.FullName, "Program.cs");

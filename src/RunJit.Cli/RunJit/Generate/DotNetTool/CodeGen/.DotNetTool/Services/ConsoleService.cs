@@ -88,7 +88,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
-                                        Models.DotNetToolInfos dotNetToolInfos)
+                                        DotNetToolInfos dotNetToolInfos)
         {
             // 1. Add Services Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "Services"));

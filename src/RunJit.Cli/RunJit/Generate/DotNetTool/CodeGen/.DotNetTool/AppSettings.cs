@@ -26,7 +26,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
-                                        Models.DotNetToolInfos dotNetTool)
+                                        DotNetToolInfos dotNetTool)
         {
 
             // 1. Add AppSettings.cs

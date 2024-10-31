@@ -67,7 +67,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                        IEnumerable<IDotNetToolSpecificCodeGen> codeGenerators)
     {
         public async Task<FileInfo> GenerateAsync(SolutionFile solutionFile,
-                                                  Models.DotNetToolInfos dotNetToolInfos)
+                                                  DotNetToolInfos dotNetToolInfos)
         {
             var solutionFileInfo = solutionFile.SolutionFileInfo.Value;
 

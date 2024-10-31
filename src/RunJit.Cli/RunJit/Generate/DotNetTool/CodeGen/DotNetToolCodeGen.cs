@@ -1,5 +1,6 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test;
 using RunJit.Cli.RunJit.Generate.DotNetTool.Models;
 using Solution.Parser.Solution;
 
@@ -15,24 +16,6 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     {
         Task GenerateAsync(FileInfo projectFileInfo,
                            DotNetToolInfos dotNetToolInfos);
-    }
-
-    internal static class AddDotNetToolTestGeneratorExtension
-    {
-        internal static void AddDotNetToolTestGenerator(this IServiceCollection services)
-        {
-            services.AddSingletonIfNotExists<DotNetToolTestGenerator>();
-        }
-    }
-
-    internal class DotNetToolTestGenerator
-    {
-        internal Task GenerateAsync(SolutionFile solutionFile,
-                                    FileInfo netToolProject,
-                                    DotNetToolInfos dotNetToolInfos)
-        {
-            return Task.CompletedTask;
-        }
     }
 
     internal static class AddDotNetToolCodeGenExtension

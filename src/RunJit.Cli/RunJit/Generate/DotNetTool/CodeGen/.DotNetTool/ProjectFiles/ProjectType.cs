@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class ProjectTypeCodeGen(ConsoleService consoleService) : IDotNetToolSpecificCodeGen
     {
         public Task GenerateAsync(FileInfo projectFileInfo,
-                                  Models.DotNetToolInfos dotNetToolInfos)
+                                  DotNetToolInfos dotNetToolInfos)
         {
             // 1. Load csproj file
             var projectFile = XDocument.Load(projectFileInfo.FullName);

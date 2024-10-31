@@ -62,6 +62,9 @@
         <PackageReference Include="System.CommandLine" Version="0.3.0-alpha.20054.1" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\GlobalSetup.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\DotNetToolTestGenerator.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\CliRunner.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\AppSettings.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\App\App.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\App\AppBuilder.cs" />
@@ -101,7 +104,6 @@
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\CommandInfo.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\CtorArgument.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\DisposableBase.cs" />
-        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\DotNetToolInfos.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\FindAndReplaceInfo.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\InfoBase.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Models\MethodInfo.cs" />
@@ -165,8 +167,5 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\RunJit.Api\src\RunJit.Api.Client\RunJit.Api.Client.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\" />
     </ItemGroup>
 </Project>

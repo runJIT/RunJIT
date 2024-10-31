@@ -4,6 +4,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit.Update.Nuget;
+using Solution.Parser.Solution;
 
 namespace RunJit.Cli.Services.Net
 {
@@ -34,6 +35,12 @@ namespace RunJit.Cli.Services.Net
 
         Task RemoveProjectFromSolutionAsync(FileInfo solutionFileInfo,
                                             FileInfo projectFileInfo);
+
+        Task AddProjectReference(FileInfo projectReference,
+                                 FileInfo projectFileInfo);
+
+        Task RemoveProjectReference(FileInfo projectReference,
+                                    FileInfo projectFileInfo);
 
         Task RunAsync(string command,
                       string arguments);
@@ -98,7 +105,7 @@ namespace RunJit.Cli.Services.Net
             var stringBuilder0 = new StringBuilder();
             var stringBuilder1 = new StringBuilder();
 
-            var process = Process.StartProcess("dotnet", $"build {solutionFileOrProject.FullName}",null, item => stringBuilder0.AppendLine(item), item => stringBuilder1.AppendLine(item));
+            var process = Process.StartProcess("dotnet", $"build {solutionFileOrProject.FullName}", null, item => stringBuilder0.AppendLine(item), item => stringBuilder1.AppendLine(item));
             await process.WaitForExitAsync().ConfigureAwait(false);
 
             var a = stringBuilder0.ToString();
@@ -187,6 +194,40 @@ namespace RunJit.Cli.Services.Net
             }
 
             consoleService.WriteSuccess($"Remove project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} successful");
+        }
+
+        public async Task AddProjectReference(FileInfo projectFileInfo,
+                                        FileInfo projectReference)
+        {
+            consoleService.WriteInfo($"Add project reference: {projectReference.FullName} from project: {projectFileInfo.FullName}");
+
+            var buildResult = Process.StartProcess("dotnet", $"add {projectFileInfo.FullName} reference {projectReference.FullName}");
+            await buildResult.WaitForExitAsync().ConfigureAwait(false);
+
+            // var AddProjectResult = await dotNetTool.RunAsync("dotnet", $"sln {solutionFileInfo.FullName} Add {projectFileInfo.FullName} --in-root");
+            if (buildResult.ExitCode != 0)
+            {
+                throw new RunJitException($"Add project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} failed.");
+            }
+
+            consoleService.WriteSuccess($"Add project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} was successful.");
+        }
+
+        public async Task RemoveProjectReference(FileInfo projectFileInfo,
+                                           FileInfo projectReference)
+        {
+            consoleService.WriteInfo($"Remove project reference: {projectReference.FullName} from project: {projectFileInfo.FullName}");
+
+            var buildResult = Process.StartProcess("dotnet", $"remove {projectFileInfo.FullName} reference {projectReference.FullName}");
+            await buildResult.WaitForExitAsync().ConfigureAwait(false);
+
+            // var RemoveProjectResult = await dotNetTool.RunAsync("dotnet", $"sln {solutionFileInfo.FullName} Remove {projectFileInfo.FullName} --in-root");
+            if (buildResult.ExitCode != 0)
+            {
+                throw new RunJitException($"Remove project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} failed.");
+            }
+
+            consoleService.WriteSuccess($"Remove project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} was successful.");
         }
 
         public async Task RunAsync(string command,

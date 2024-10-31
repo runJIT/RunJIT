@@ -22,7 +22,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                   CreateCommandClasses createCommandClasses) : IDotNetToolSpecificCodeGen
     {
         public Task GenerateAsync(FileInfo projectFileInfo,
-                                  Models.DotNetToolInfos dotNetToolInfos)
+                                  DotNetToolInfos dotNetToolInfos)
         {
             createCommandClasses.Invoke(dotNetToolInfos.ProjectName, dotNetToolInfos.CommandInfo, projectFileInfo.Directory!, commandTypeCollector, dotNetToolInfos.ProjectName, nameSpaceCollector, dotNetToolInfos);
 

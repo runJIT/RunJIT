@@ -82,7 +82,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
-                                        Models.DotNetToolInfos dotNetTool)
+                                        DotNetToolInfos dotNetTool)
         {
             // 1. Add RequestTypeHandleStrategy Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "RequestTypeHandling"));
