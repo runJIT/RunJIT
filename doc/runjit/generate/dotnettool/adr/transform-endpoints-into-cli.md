@@ -5,7 +5,32 @@
 In our tool, we need to transform web API endpoints into command-line interface (CLI) commands. The APIs we work with might be defined using either the traditional ASP.NET Core Controller pattern or the newer minimal API pattern.
 Our goal is to generate a `CLI` based user friendly client to be able to call our `APIs`  
 
-### Example 1: Controller-Based API
+## Decision
+
+We go for the approach to have the `version` as an command and all other parameters in the passed json. Reason is that we want to guide the `Human` developers. So they have smart command infos what is possible:
+
+
+```
+myapi todo
+Required command was not provided.
+
+todo:
+Here comes the description for ToDo
+
+Usage:
+myapi todo [command]
+
+Commands:
+v1 Here comes the description for V1
+v2 Here comes the description for V2
+
+
+C:\Users\renep>
+```
+
+
+
+### Example 1: Controller-Based API 
 ```csharp
 [Authorize]
 [ApiController]
@@ -24,7 +49,7 @@ public class ToDosController : ControllerBase
 }
 ```
 
-Example 2: Minimal API
+### Example 2: Minimal API
 
 ```csharp
 internal static RouteHandlerBuilder MapGetById(this IEndpointRouteBuilder routeGroupBuilder)
@@ -324,3 +349,5 @@ simpleapi todos v1 patch
     }
 }
 ```
+
+
