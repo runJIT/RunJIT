@@ -293,7 +293,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                  {
                                                      internal static class Add$command-name$HandlerExtension
                                                      {
-                                                         internal static void Add$command-name$Handler(this IServiceCollection services)
+                                                         internal static void Add$command-name$Handler(this IServiceCollection services, IConfiguration _)
                                                          {
                                                              services.AddOutputService();
                                                  
@@ -329,7 +329,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                  {
                                                      internal static class Add$command-name$HandlerExtension
                                                      {
-                                                         internal static void Add$command-name$Handler(this IServiceCollection services)
+                                                         internal static void Add$command-name$Handler(this IServiceCollection services, IConfiguration _)
                                                          {
                                                              services.AddSingletonIfNotExists<$command-name$Handler>();
                                                          }

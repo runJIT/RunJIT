@@ -18,7 +18,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         private const string Template = """
                                         namespace $namespace$
                                         {
-                                            internal static class Program
+                                            // Needed public to run automated tests which are debugable
+                                            public static class Program
                                             {
                                                 public static Task<int> Main(string[] args)
                                                 {
