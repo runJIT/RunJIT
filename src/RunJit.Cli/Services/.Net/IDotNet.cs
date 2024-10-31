@@ -105,12 +105,13 @@ namespace RunJit.Cli.Services.Net
             var stringBuilder0 = new StringBuilder();
             var stringBuilder1 = new StringBuilder();
 
-            var process = Process.StartProcess("dotnet", $"build {solutionFileOrProject.FullName}", null, item => stringBuilder0.AppendLine(item), item => stringBuilder1.AppendLine(item));
+            var process = Process.StartProcess("dotnet", $"build {solutionFileOrProject.FullName}", null,
+                                               item => stringBuilder0.AppendLine(item), item => stringBuilder1.AppendLine(item));
+
             await process.WaitForExitAsync().ConfigureAwait(false);
 
             var a = stringBuilder0.ToString();
             var b = stringBuilder1.ToString();
-
 
             // var buildResult = await dotNetTool.RunAsync("dotnet", $"build {solutionFileOrProject.FullName}").ConfigureAwait(false);
             if (process.ExitCode != 0)
@@ -197,11 +198,11 @@ namespace RunJit.Cli.Services.Net
         }
 
         public async Task AddProjectReference(FileInfo projectFileInfo,
-                                        FileInfo projectReference)
+                                              FileInfo projectReference)
         {
             consoleService.WriteInfo($"Add project reference: {projectReference.FullName} from project: {projectFileInfo.FullName}");
 
-            var buildResult = Process.StartProcess("dotnet", $"add {projectFileInfo.FullName} reference {projectReference.FullName}");
+            var buildResult = Process.StartProcess("dotnet", $"add {projectReference.FullName} reference {projectFileInfo.FullName}");
             await buildResult.WaitForExitAsync().ConfigureAwait(false);
 
             // var AddProjectResult = await dotNetTool.RunAsync("dotnet", $"sln {solutionFileInfo.FullName} Add {projectFileInfo.FullName} --in-root");
@@ -214,11 +215,11 @@ namespace RunJit.Cli.Services.Net
         }
 
         public async Task RemoveProjectReference(FileInfo projectFileInfo,
-                                           FileInfo projectReference)
+                                                 FileInfo projectReference)
         {
             consoleService.WriteInfo($"Remove project reference: {projectReference.FullName} from project: {projectFileInfo.FullName}");
 
-            var buildResult = Process.StartProcess("dotnet", $"remove {projectFileInfo.FullName} reference {projectReference.FullName}");
+            var buildResult = Process.StartProcess("dotnet", $"remove {projectReference.FullName} reference {projectFileInfo.FullName}");
             await buildResult.WaitForExitAsync().ConfigureAwait(false);
 
             // var RemoveProjectResult = await dotNetTool.RunAsync("dotnet", $"sln {solutionFileInfo.FullName} Remove {projectFileInfo.FullName} --in-root");
