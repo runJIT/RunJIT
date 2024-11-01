@@ -16,6 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal interface IDotNetToolTestSpecificCodeGen
     {
         Task GenerateAsync(FileInfo projectFileInfo,
+                           XDocument projectDocument,
                            DotNetToolInfos dotNetToolInfos);
     }
 

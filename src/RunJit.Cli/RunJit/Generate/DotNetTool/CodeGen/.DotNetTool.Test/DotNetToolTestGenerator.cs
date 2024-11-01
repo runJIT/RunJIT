@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Services.Net;
@@ -12,6 +13,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
         {
             services.AddCliRunnerCodeGen();
             services.AddGlobalSetupCodeGen();
+            services.AddCommandStructureCodeGen();
+
+            services.AddProjectEmbeddedFilesCodeGen();
+            services.AddProjectSettingsCodeGen();
 
             services.AddSingletonIfNotExists<DotNetToolTestGenerator>();
         }
@@ -67,6 +72,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
 
             // 6. Add required nuget packages into project
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "4.0.10").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "DotNetTool.Service", "0.3.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "Microsoft.NET.Test.Sdk", "17.11.1").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestAdapter", "3.6.2").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestFramework", "3.6.2").ConfigureAwait(false);
@@ -75,21 +81,27 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
             // 7. Add needed project references
             await dotNet.AddProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
 
-            // 8. Generate the whole command structure with arguments, options
+            // 8. Load csproj content to avoid multiple IO write actions to disk which cause io exceptions
+            var xdocument = XDocument.Load(dotNetToolTestProjectFileInfo.FullName);
+
+            // 9. Generate the whole command structure with arguments, options
             //    We only generate any kind of code of the test project does not exist already
             //    otherwise we override the code from the developers
             if (dotNetToolTestProject.IsNull())
             {
                 foreach (var codeGenerator in codeGenerators)
                 {
-                    await codeGenerator.GenerateAsync(dotNetToolTestProjectFileInfo, dotNetToolInfos).ConfigureAwait(false);
+                    await codeGenerator.GenerateAsync(dotNetToolTestProjectFileInfo, xdocument, dotNetToolInfos).ConfigureAwait(false);
                 }
             }
 
-            // 9. And at least we add this project into the solution because we want to avoid to many refreshes as possible
+            // 10. Save the modified csproj file just once to avoid multiple IO write actions to disk which cause io exceptions
+            xdocument.Save(dotNetToolTestProjectFileInfo.FullName);
+
+            // 11. And at least we add this project into the solution because we want to avoid to many refreshes as possible
             await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
 
-            // 10. Return the created test csproj file
+            // 12. Return the created test csproj file
             return dotNetToolTestProjectFileInfo;
         }
     }

@@ -62,9 +62,12 @@
         <PackageReference Include="System.CommandLine" Version="0.3.0-alpha.20054.1" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\CommandStructure.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\GlobalSetup.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\DotNetToolTestGenerator.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\CliRunner.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\ProjectFiles\EmbeddedFiles.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\ProjectFiles\ProjectSettings.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\AppSettings.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\App\App.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\App\AppBuilder.cs" />
