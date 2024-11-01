@@ -1,7 +1,7 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test;
-using RunJit.Cli.RunJit.Generate.DotNetTool.Models;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.RunJit.Generate.DotNetTool
@@ -9,6 +9,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal interface IDotNetToolSpecificCodeGen
     {
         Task GenerateAsync(FileInfo projectFileInfo,
+                           XDocument projectDocument,
                            DotNetToolInfos dotNetToolInfos);
     }
 

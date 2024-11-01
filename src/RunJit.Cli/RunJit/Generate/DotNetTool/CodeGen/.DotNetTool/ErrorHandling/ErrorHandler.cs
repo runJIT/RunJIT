@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
@@ -14,7 +15,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     internal sealed class ErrorHandlerCodeGen(ConsoleService consoleService,
-                                       NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
+                                              NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
     {
         private const string Template = """
                                         using System.CommandLine.Invocation;
@@ -83,6 +84,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
+                                        XDocument projectDocument,
                                         DotNetToolInfos dotNetToolInfos)
         {
             // 1. Add ErrorHandling Folder

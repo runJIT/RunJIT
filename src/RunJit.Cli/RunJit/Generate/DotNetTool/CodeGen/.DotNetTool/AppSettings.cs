@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
@@ -26,14 +27,15 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
-                                        DotNetToolInfos dotNetTool)
+                                        XDocument projectDocument,
+                                        DotNetToolInfos dotNetToolInfos)
         {
 
             // 1. Add AppSettings.cs
             var file = Path.Combine(projectFileInfo.Directory!.FullName, "appsettings.json");
 
-            var newTemplate = Template.Replace("$clientName$", dotNetTool.ProjectName)
-                                      .Replace("$dotNetToolName$", dotNetTool.NormalizedName);
+            var newTemplate = Template.Replace("$clientName$", dotNetToolInfos.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName);
 
             var formattedTemplate = newTemplate.FormatSyntaxTree();
 

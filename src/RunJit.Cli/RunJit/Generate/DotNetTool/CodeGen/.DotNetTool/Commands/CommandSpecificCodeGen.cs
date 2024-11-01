@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 
@@ -17,14 +18,17 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     internal sealed class CommandCodeGen(ConsoleService consoleService,
-                                  CommandTypeCollector commandTypeCollector,
-                                  NameSpaceCollector nameSpaceCollector,
-                                  CreateCommandClasses createCommandClasses) : IDotNetToolSpecificCodeGen
+                                         CommandTypeCollector commandTypeCollector,
+                                         NameSpaceCollector nameSpaceCollector,
+                                         CreateCommandClasses createCommandClasses) : IDotNetToolSpecificCodeGen
     {
         public Task GenerateAsync(FileInfo projectFileInfo,
+                                  XDocument projectDocument,
                                   DotNetToolInfos dotNetToolInfos)
         {
-            createCommandClasses.Invoke(dotNetToolInfos.ProjectName, dotNetToolInfos.CommandInfo, projectFileInfo.Directory!, commandTypeCollector, dotNetToolInfos.ProjectName, nameSpaceCollector, dotNetToolInfos);
+            createCommandClasses.Invoke(dotNetToolInfos.ProjectName, dotNetToolInfos.CommandInfo, projectFileInfo.Directory!,
+                                        commandTypeCollector, dotNetToolInfos.ProjectName, nameSpaceCollector,
+                                        dotNetToolInfos);
 
             // 2. Print success message
             consoleService.WriteSuccess($"Successfully created cli structure");

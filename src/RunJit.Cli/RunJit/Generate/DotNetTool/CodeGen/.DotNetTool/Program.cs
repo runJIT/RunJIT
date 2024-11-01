@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
@@ -30,11 +31,11 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
+                                        XDocument projectDocument,
                                         DotNetToolInfos dotNetToolInfos)
         {
             // 1. Add AppBuilder.cs
             var file = Path.Combine(projectFileInfo.Directory!.FullName, "Program.cs");
-            
 
             var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
                                       .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName);

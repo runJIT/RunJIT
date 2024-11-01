@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 
@@ -13,13 +14,13 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     internal sealed class ProblemDetailsExceptionCodeGen(ConsoleService consoleService,
-                                                  NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
+                                                         NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
     {
         private const string Template = """
                                         using System.Collections.Immutable;
                                         using System.Net;
                                         using Extensions.Pack;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal sealed class ProblemDetailsException : Exception
@@ -73,6 +74,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
+                                        XDocument projectDocument,
                                         DotNetToolInfos dotNetToolInfos)
         {
             // 1. Add ErrorHandling Folder

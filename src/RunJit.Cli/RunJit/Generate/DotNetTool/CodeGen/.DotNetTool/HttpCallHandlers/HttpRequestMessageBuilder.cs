@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
@@ -17,7 +18,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     internal sealed class HttpRequestMessageBuilderCodeGen(ConsoleService consoleService,
-                                                 NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
+                                                           NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
     {
         private const string Template = """
                                         using System.Net;
@@ -25,7 +26,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         using System.Text;
                                         using System.Text.Json;
                                         using Extensions.Pack;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal static class AddHttpRequestMessageBuilderExtension
@@ -60,11 +61,12 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                 }
                                             }
                                         }
-                                        
+
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
-                                        DotNetToolInfos dotNetTool)
+                                        XDocument projectDocument,
+                                        DotNetToolInfos dotNetToolInfos)
         {
             // 1. Add HttpCallHandler Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "HttpCallHandlers"));
@@ -77,16 +79,15 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             // 2. Add HttpCallHandler.cs
             var file = Path.Combine(appFolder.FullName, "HttpRequestMessageBuilder.cs");
 
-            var newTemplate = Template.Replace("$namespace$", dotNetTool.ProjectName)
-                                      .Replace("$dotNetToolName$", dotNetTool.NormalizedName);
+            var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName);
 
             var formattedTemplate = newTemplate.FormatSyntaxTree();
 
             await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
 
-
             // 3. Adjust namespace provider
-            namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetTool.ProjectName}.HttpRequestMessageBuilder", true);
+            namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetToolInfos.ProjectName}.HttpRequestMessageBuilder", true);
 
             // 4. Print success message
             consoleService.WriteSuccess($"Successfully created {file}");

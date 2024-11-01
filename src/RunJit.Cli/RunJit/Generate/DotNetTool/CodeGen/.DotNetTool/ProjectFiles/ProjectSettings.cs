@@ -16,12 +16,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     internal sealed class ProjectSettingsCodeGen(ConsoleService consoleService) : IDotNetToolSpecificCodeGen
     {
         public Task GenerateAsync(FileInfo projectFileInfo,
+                                  XDocument projectDocument,
                                   DotNetToolInfos dotNetToolInfos)
         {
-            // 1. Load csproj file
-            var projectFile = XDocument.Load(projectFileInfo.FullName);
-
-            // 2. Create a new PropertyGroup for .NET tool settings
+            // 1. Create a new PropertyGroup for .NET tool settings
             //    <PropertyGroup>
             //        <OutputType>Exe</OutputType>
             //        <PackAsTool>true</PackAsTool>
@@ -37,13 +35,10 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                                  new XElement("ImplicitUsings", "enable"),
                                                  new XElement("ToolCommandName", dotNetToolInfos.NormalizedName.ToLower()));
 
-            // 3. Add the comment and new PropertyGroup to the root of the project file
-            projectFile.Root!.Add(toolSettingsComment, toolPropertyGroup);
+            // 2. Add the comment and new PropertyGroup to the root of the project file
+            projectDocument.Root!.Add(toolSettingsComment, toolPropertyGroup);
 
-            // 4. Save the changes back to the .csproj file
-            projectFile.Save(projectFileInfo.FullName);
-
-            // 5. Print success message
+            // 3. Print success message
             consoleService.WriteSuccess($"Successfully modified {projectFileInfo.FullName} with .Net tool specific settings");
 
             return Task.CompletedTask;

@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Services.Net;
@@ -113,16 +114,22 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.EnvironmentVariables", "8.0.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.UserSecrets", "8.0.0").ConfigureAwait(false);
 
-            // 7. Generate the whole command structure with arguments, options
+            // 7. Load csproj content to avoid multiple IO write actions to disk which cause io exceptions
+            var xdocument = XDocument.Load(dotnetToolProject.FullName);
+
+            // 8. Generate the whole command structure with arguments, options
             foreach (var codeGenerator in codeGenerators)
             {
-                await codeGenerator.GenerateAsync(dotnetToolProject, dotNetToolInfos).ConfigureAwait(false);
+                await codeGenerator.GenerateAsync(dotnetToolProject, xdocument, dotNetToolInfos).ConfigureAwait(false);
             }
 
-            // 8. And at least we add this project into the solution because we want to avoid to many refreshes as possible
+            // 9. Save the modified csproj file just once to avoid multiple IO write actions to disk which cause io exceptions
+            xdocument.Save(dotnetToolProject.FullName);
+
+            // 10. And at least we add this project into the solution because we want to avoid to many refreshes as possible
             await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotnetToolProject).ConfigureAwait(false);
 
-            // 9. Return the created csproj file
+            // 11. Return the created csproj file
             return dotnetToolProject;
         }
     }

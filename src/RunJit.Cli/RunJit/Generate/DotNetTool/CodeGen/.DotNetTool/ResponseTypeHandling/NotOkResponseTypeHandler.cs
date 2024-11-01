@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 
@@ -16,7 +17,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
     }
 
     internal sealed class NotOkResponseTypeHandlerCodeGen(ConsoleService consoleService,
-                                                   NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
+                                                          NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
     {
         private const string Template = """
                                         using Extensions.Pack;
@@ -66,7 +67,8 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
-                                        DotNetToolInfos dotNetTool)
+                                        XDocument projectDocument,
+                                        DotNetToolInfos dotNetToolInfos)
         {
             // 1. Add NotOkResponseTypeHandler Folder
             var appFolder = new DirectoryInfo(Path.Combine(projectFileInfo.Directory!.FullName, "ResponseTypeHandling"));
@@ -79,15 +81,15 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
             // 2. Add NotOkResponseTypeHandler.cs
             var file = Path.Combine(appFolder.FullName, "NotOkResponseTypeHandler.cs");
 
-            var newTemplate = Template.Replace("$namespace$", dotNetTool.ProjectName)
-                                      .Replace("$dotNetToolName$", dotNetTool.NormalizedName);
+            var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
+                                      .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName);
 
             var formattedTemplate = newTemplate;
 
             await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
 
             // 3. Adjust namespace provider
-            namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetTool.ProjectName}.ResponseTypeHandling", true);
+            namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetToolInfos.ProjectName}.ResponseTypeHandling", true);
 
             // 4. Print success message
             consoleService.WriteSuccess($"Successfully created {file}");

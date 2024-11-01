@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.Xml.Linq;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 
@@ -12,12 +13,12 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
         }
     }
 
-    internal sealed class OutputServiceCodeGen(ConsoleService consoleService, 
-                                        NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
+    internal sealed class OutputServiceCodeGen(ConsoleService consoleService,
+                                               NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
     {
         private const string Template = """
                                         using Extensions.Pack;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal static class AddOutputServiceExtension
@@ -49,6 +50,7 @@ namespace RunJit.Cli.RunJit.Generate.DotNetTool
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
+                                        XDocument projectDocument,
                                         DotNetToolInfos dotNetToolInfos)
         {
             // 1. Add Services Folder
