@@ -68,6 +68,8 @@
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\CliRunner.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\ProjectFiles\EmbeddedFiles.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\ProjectFiles\ProjectSettings.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\TestCases\OutputToFile.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\TestCases\OutputToConsole.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\AppSettings.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\App\App.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\App\AppBuilder.cs" />

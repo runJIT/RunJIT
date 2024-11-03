@@ -1,6 +1,6 @@
 ﻿using Argument.Check;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.Models
+namespace RunJit.Cli.Generate.DotNetTool.Models
 {
     internal sealed class FindAndReplaceInfo
     {

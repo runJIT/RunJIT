@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.Generate.DotNetTool
 {
     internal static class AddDotNetToolExtension
     {

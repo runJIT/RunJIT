@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Solution.Parser.CSharp;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.Generate.DotNetTool
 {
     internal static class AddCommandHandlerNoArgsAndNoOptionBuilderExtension
     {

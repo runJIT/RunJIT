@@ -1,4 +1,4 @@
-﻿namespace RunJit.Cli.RunJit.Generate.DotNetTool
+﻿namespace RunJit.Cli.Generate.DotNetTool
 {
     internal record DotNetToolParameters(bool UseVisualStudio,
                                          bool Build,

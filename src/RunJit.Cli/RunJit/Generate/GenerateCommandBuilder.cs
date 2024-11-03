@@ -2,9 +2,9 @@
 using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool;
 using RunJit.Cli.RunJit.Generate.Client;
 using RunJit.Cli.RunJit.Generate.CustomEndpoint;
-using RunJit.Cli.RunJit.Generate.DotNetTool;
 
 namespace RunJit.Cli.RunJit.Generate
 {

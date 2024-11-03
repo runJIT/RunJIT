@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test
+namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 {
     internal static class AddGlobalSetupCodeGenExtension
     {

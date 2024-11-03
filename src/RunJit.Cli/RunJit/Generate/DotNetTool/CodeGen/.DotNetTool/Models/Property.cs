@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.Models
+namespace RunJit.Cli.Generate.DotNetTool.Models
 {
     [DebuggerDisplay("{" + nameof(Name) + "}")]
     internal sealed class Property(string type,

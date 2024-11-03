@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 [assembly: InternalsVisibleTo("DotNetTool.Builder.Test")]
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.Models
+namespace RunJit.Cli.Generate.DotNetTool.Models
 {
     [method: JsonConstructor]
     public class ArgumentInfo(string name,

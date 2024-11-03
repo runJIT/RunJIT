@@ -1,4 +1,4 @@
-﻿namespace RunJit.Cli.RunJit.Generate.DotNetTool.Models
+﻿namespace RunJit.Cli.Generate.DotNetTool.Models
 {
     public record OptionInfo
     {

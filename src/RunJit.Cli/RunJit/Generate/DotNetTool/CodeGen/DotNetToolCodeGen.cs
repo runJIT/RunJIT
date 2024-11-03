@@ -1,11 +1,19 @@
 ﻿using System.Xml.Linq;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.RunJit.Generate.DotNetTool.DotNetTool.Test;
+using RunJit.Cli.Generate.DotNetTool.DotNetTool.Test;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using Solution.Parser.Solution;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.Generate.DotNetTool
 {
+    internal interface IDotNetToolTestCaseCodeGen
+    {
+        Task<string> GenerateAsync(DotNetToolInfos dotNetToolInfos,
+                                   CommandInfo commandInfo,
+                                   string cliCallPath);
+    }
+
     internal interface IDotNetToolSpecificCodeGen
     {
         Task GenerateAsync(FileInfo projectFileInfo,

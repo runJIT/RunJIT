@@ -5,7 +5,7 @@ using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Services.Net;
 using Solution.Parser.Solution;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.Generate.DotNetTool
 {
     internal static class AddDotNetToolGeneratorExtension
     {

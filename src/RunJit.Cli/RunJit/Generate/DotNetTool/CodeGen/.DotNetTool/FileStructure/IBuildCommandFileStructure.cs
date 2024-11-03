@@ -1,6 +1,6 @@
-﻿using RunJit.Cli.RunJit.Generate.DotNetTool.Models;
+﻿using RunJit.Cli.Generate.DotNetTool.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.Generate.DotNetTool
 {
     internal interface IBuildCommandFileStructure
     {

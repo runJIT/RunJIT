@@ -1,14 +1,14 @@
 ﻿using System.Collections.Immutable;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using RunJit.Cli.RunJit.Generate.Client;
-using RunJit.Cli.RunJit.Generate.DotNetTool.Models;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.Endpoints;
 using Solution.Parser.CSharp;
 using Solution.Parser.Solution;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.Generate.DotNetTool
 {
     internal static class AddDotnetToolGenExtension
     {

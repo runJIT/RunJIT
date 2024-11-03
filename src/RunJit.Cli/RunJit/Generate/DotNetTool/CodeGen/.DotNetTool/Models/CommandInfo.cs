@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using RunJit.Cli.Services.Endpoints;
 [assembly: InternalsVisibleTo("DotNetTool.Builder.Test")]
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool.Models
+namespace RunJit.Cli.Generate.DotNetTool.Models
 {
     [DebuggerDisplay("{" + nameof(Name) + "}")]
     public record CommandInfo

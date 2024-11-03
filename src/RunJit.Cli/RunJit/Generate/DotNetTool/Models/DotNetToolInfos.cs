@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using RunJit.Cli.RunJit.Generate.DotNetTool.Models;
+using RunJit.Cli.Generate.DotNetTool.Models;
 
-namespace RunJit.Cli.RunJit.Generate.DotNetTool
+namespace RunJit.Cli.Generate.DotNetTool
 {
     [DebuggerDisplay("Project: {" + nameof(ProjectName) + "} ToolName: {" + nameof(NormalizedName) + "}")]
     internal record DotNetToolInfos
