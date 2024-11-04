@@ -142,6 +142,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                         
                                                     if (exists)
                                                     {
+                                                        // ToDo: Does this makes sense, to have the possibility provide just an directory ?
                                                         var fileInfo = new FileInfo(result);
                                         
                                                         return fileInfo.Cast<T>();
