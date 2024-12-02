@@ -35,7 +35,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                         
                                             internal sealed class $command-name$Handler(OutputService outputService$dependencies$)
                                             {       
-                                                public async Task HandleAsync($command-name$Parameters parameters)
+                                                public async Task HandleAsync($command-name$Parameters parameters, CancellationToken cancellationToken = default)
                                                 {
                                                     $methodBody$
                                                 }
@@ -67,6 +67,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             {
                 return newTemplate;
             }
+            
             return newTemplate.FormatSyntaxTree();
         }
     }

@@ -36,7 +36,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                         yield return new EndpointGroup
                                      {
                                          GroupName = normalizedGroupName,
-                                         Endpoints = groupedByDomain.SelectMany(item => item).ToImmutableList(),
+                                         Endpoints = boundContext.ToImmutableList(),
                                          Version = groupByVersion.Key
                                      };
                     }

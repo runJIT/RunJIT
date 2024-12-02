@@ -92,7 +92,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
                 await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
                 
                 // 9. Run cleanup code
-                await solutionCodeCleanup.CleanupAsync(solutionFile).ConfigureAwait(false);
+                await solutionCodeCleanup.CleanupSolutionAsync(solutionFile).ConfigureAwait(false);
                 
                 //10. Add changes to git
                 await git.AddAsync().ConfigureAwait(false);

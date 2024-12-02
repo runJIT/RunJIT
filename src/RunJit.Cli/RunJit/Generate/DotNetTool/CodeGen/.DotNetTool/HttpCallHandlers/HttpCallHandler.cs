@@ -73,7 +73,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                                               string url,
                                                                               string paylod)
                                                 {
-                                                    var response = await httpFunction(httpClient, url, paylod);
+                                                    var response = await httpFunction(httpClient, url, paylod).ConfigureAwait(false);
                                                     if (response.IsSuccessStatusCode)
                                                     {
                                                         return;
@@ -93,7 +93,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                                                                 string url,
                                                                                                 string paylod)
                                                 {
-                                                    var response = await httpFunction(httpClient, url, paylod);
+                                                    var response = await httpFunction(httpClient, url, paylod).ConfigureAwait(false);
                                                     var result = await responseHandleStrategy.HandleAsync<TResult>(response, httpMethod, httpClient, url).ConfigureAwait(false);
                                                     return result;
                                                 }

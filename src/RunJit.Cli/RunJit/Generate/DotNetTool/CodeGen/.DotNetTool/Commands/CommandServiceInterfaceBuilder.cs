@@ -21,7 +21,7 @@ namespace $namespace$
 {    
     internal interface I$command-name$Handler
     {       
-        Task HandleAsync($command-name$Parameters parameters);
+        Task HandleAsync($command-name$Parameters parameters, CancellationToken cancellationToken = default);
     }
 }";
 

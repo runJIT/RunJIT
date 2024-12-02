@@ -31,7 +31,9 @@ namespace RunJit.Cli.Generate.DotNetTool
                                         
                                             internal sealed class OutputWriter(ConsoleService consoleService)
                                             {
-                                                internal async Task WriteAsync(string value, FileInfo? fileInfo)
+                                                internal async Task WriteAsync(string value, 
+                                                                               FileInfo? fileInfo,
+                                                                               CancellationToken cancellationToken = default)
                                                 {
                                                     if (fileInfo.IsNull())
                                                     {
@@ -53,7 +55,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                         fileInfo.Directory.Create();
                                                     }
                                         
-                                                    await File.WriteAllTextAsync(fileInfo.FullName, value).ConfigureAwait(false);
+                                                    await File.WriteAllTextAsync(fileInfo.FullName, value, cancellationToken).ConfigureAwait(false);
                                         
                                                     consoleService.WriteSuccess(fileInfo.FullName);
                                                 }

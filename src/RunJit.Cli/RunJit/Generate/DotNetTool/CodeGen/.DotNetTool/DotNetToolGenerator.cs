@@ -2,7 +2,9 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
+using RunJit.Cli.Services;
 using RunJit.Cli.Services.Net;
+using RunJit.Cli.Services.Resharper;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.Generate.DotNetTool
@@ -60,12 +62,15 @@ namespace RunJit.Cli.Generate.DotNetTool
             services.AddNotOkResponseTypeHandlerCodeGen();
             services.AddResponseTypeHandleStrategyCodeGen();
 
+            services.AddFindUsedNetVersion();
+
             services.AddSingletonIfNotExists<DotNetToolGenerator>();
         }
     }
 
     internal class DotNetToolGenerator(IDotNet dotNet,
-                                       IEnumerable<IDotNetToolSpecificCodeGen> codeGenerators)
+                                       IEnumerable<IDotNetToolSpecificCodeGen> codeGenerators,
+                                       SolutionCodeCleanup solutionCodeCleanup)
     {
         public async Task<FileInfo> GenerateAsync(SolutionFile solutionFile,
                                                   DotNetToolInfos dotNetToolInfos)
@@ -96,7 +101,9 @@ namespace RunJit.Cli.Generate.DotNetTool
             // 4. Create new console project
             // dotnet new console --output folder1/folder2/myapp
             var target = Path.Combine(solutionFileInfo.Directory!.FullName, dotNetToolInfos.ProjectName);
-            await dotNet.RunAsync("dotnet", $"new console --output {target}").ConfigureAwait(false);
+
+
+            await dotNet.RunAsync("dotnet", $"new console --output {target} --framework {dotNetToolInfos.NetVersion}").ConfigureAwait(false);
 
             // 5. Get the new created csproj
             var dotnetToolProject = new FileInfo(Path.Combine(target, $"{dotNetToolInfos.ProjectName}.csproj"));
@@ -107,12 +114,12 @@ namespace RunJit.Cli.Generate.DotNetTool
 
             // 6. Add required nuget packages into project
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "System.CommandLine", "0.3.0-alpha.20054.1").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "5.0.4").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "5.0.5").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "GitVersion.MsBuild", "6.0.3").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.DependencyInjection", "8.0.1").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration", "8.0.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.EnvironmentVariables", "8.0.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.UserSecrets", "8.0.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.UserSecrets", "8.0.1").ConfigureAwait(false);
 
             // 7. Load csproj content to avoid multiple IO write actions to disk which cause io exceptions
             var xdocument = XDocument.Load(dotnetToolProject.FullName);
@@ -129,7 +136,10 @@ namespace RunJit.Cli.Generate.DotNetTool
             // 10. And at least we add this project into the solution because we want to avoid to many refreshes as possible
             await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotnetToolProject).ConfigureAwait(false);
 
-            // 11. Return the created csproj file
+            // 11. Cleanup code to be in sync with target solution settings :)
+            await solutionCodeCleanup.CleanupSolutionAsync(solutionFileInfo).ConfigureAwait(false);
+
+            // 12. Return the created csproj file
             return dotnetToolProject;
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Http;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Generate.Client;
 using RunJit.Cli.Services.Endpoints;
@@ -227,6 +229,11 @@ namespace RunJit.Cli.Services
                 return new ResponseType("void", "void");
             }
 
+            if (responseType.Contains("NoContent"))
+            {
+                return new ResponseType("void", "void");
+            }
+            
             return new ResponseType(responseType, responseType);
         }
 
@@ -283,13 +290,22 @@ namespace RunJit.Cli.Services
         {
             var match = Regex.Match(code, @"Map\w+\(\""(.*?)\""");
 
-            return match.Success ? match.Groups[1].Value : string.Empty;
+            var result =  match.Success ? match.Groups[1].Value : string.Empty;
+            
+            
+            // Regex pattern to match the type constraint inside curly braces
+            string pattern = @"\{([^}:]+):[^}]+\}";
+        
+            // Replace the type constraint with just the parameter name
+            string normalizedUrl = Regex.Replace(result, pattern, @"{$1}");
+
+            return normalizedUrl;
+
         }
 
         private IImmutableList<Parameter> ExtractParameters(string code)
         {
             var regex = new Regex(@"\((.*?)\)\s*=>");
-            var regexBrackets = new Regex(@"\((.*?)\)");
 
             var match = regex.Match(code);
 
@@ -300,38 +316,85 @@ namespace RunJit.Cli.Services
                 var parameters = method.TrimStart('(').TrimEnd(')').Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim().TrimStart('(').TrimEnd(')'));
                 var ignoreServices = parameters.Where(p => p.DoesNotContain("[FromService") && p.DoesNotContain("Http")).Where(p => p.Contains(" ")).ToList();
                 var result = Parse(ignoreServices).ToImmutableList();
-
-                return result;
+                
+                // now we have to filter out all non api used parameters like HttpContext -> only primitive types
+                var primitiveTypesOnly = result.Where(t => IsPrimitiveType(t.Type) ||
+                                                           t.Name.EndsWith("Request")).ToImmutableList();
+                
+                return primitiveTypesOnly;
             }
+            
+            // Regex to match the async delegate parameter block
+            var pattern = @"async\s*\(([\s\S]*?)\)\s*=>";
 
-            return ImmutableList<Parameter>.Empty;
+            // Extract the match
+            match = Regex.Match(code, pattern);
 
-            IEnumerable<Parameter> Parse(IEnumerable<string> parameters)
+            if (match.Success)
             {
-                foreach (var parameter in parameters)
+                // Regex, um Parameter-Typ und -Namen zu extrahieren
+                pattern = @"(\w[\w<>,\s]+)\s+(\w+)(?:\s*=\s*[^,)]+)?";
+
+                // Alle Matches finden
+                regex = new Regex(pattern);
+                MatchCollection matches = regex.Matches(match.Value);
+
+                foreach (Match newMatch in matches)
                 {
-                    // int i
-                    // int i = 0
-                    // [FromQuery] string search
-                    // [FromServices] IService service
-                    var isOptional = parameter.Contains("=");
-
-                    var splitted = parameter.Split(" = ").First().Split(" ");
-                    var defaultValue = isOptional ? parameter.Split(" = ").Last() : null;
-
-                    var attribute = parameter.StartsWith('[')
-                                        ? ImmutableList.Create<Attribute>(new Attribute(splitted[0].TrimStart('[').TrimEnd(']'), ImmutableList<string>.Empty, parameter,
-                                                                                        string.Empty))
-                                        : ImmutableList<Attribute>.Empty;
-
-                    var type = splitted.Length == 3 ? splitted[1] : splitted[0];
-                    var name = splitted.Length == 3 ? splitted[2] : splitted[1];
-
-                    yield return new Parameter(type, name, attribute,
-                                               parameter, isOptional, defaultValue,
-                                               string.Empty);
+                    var splitt = newMatch.Value.Replace(Environment.NewLine, string.Empty).Split(",",StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim());
+                    
+                    var result = Parse(splitt).ToImmutableList();
+                    
+                    // now we have to filter out all non api used parameters like HttpContext -> only primitive types
+                    var primitiveTypesOnly = result.Where(t => IsPrimitiveType(t.Type) ||
+                                                               t.Name.EndsWith("Request")).ToImmutableList();
+                    
+                    return primitiveTypesOnly;
                 }
             }
+            
+            
+            return ImmutableList<Parameter>.Empty;
+        }
+        
+        static IEnumerable<Parameter> Parse(IEnumerable<string> parameters)
+        {
+            foreach (var parameter in parameters)
+            {
+                // int i
+                // int i = 0
+                // [FromQuery] string search
+                // [FromServices] IService service
+                var isOptional = parameter.Contains("=");
+
+                var splitted = parameter.Split(" = ").First().Split(" ");
+                var defaultValue = isOptional ? parameter.Split(" = ").Last() : null;
+
+                var attribute = parameter.StartsWith('[')
+                                    ? ImmutableList.Create<Attribute>(new Attribute(splitted[0].TrimStart('[').TrimEnd(']'), ImmutableList<string>.Empty, parameter,
+                                                                                    string.Empty))
+                                    : ImmutableList<Attribute>.Empty;
+
+                var type = splitted.Length == 3 ? splitted[1] : splitted[0];
+                var name = splitted.Length == 3 ? splitted[2] : splitted[1];
+
+                yield return new Parameter(type, name, attribute,
+                                           parameter, isOptional, defaultValue,
+                                           string.Empty);
+            }
+        }
+        
+        static bool IsPrimitiveType(string typeName)
+        {
+            // Define types commonly considered primitive/basic
+            var basicTypes = new HashSet<string>
+                             {
+                                 "int", "long", "short", "byte", "float", "double", "decimal", 
+                                 "bool", "char", "string", "Guid", "DateTime", "CancellationToken"
+                             };
+
+            // Check against the list
+            return basicTypes.Contains(typeName) || Type.GetType(typeName)?.IsPrimitive == true;
         }
 
         private RequestType? ExtractRequestType(List<string> payloads,
@@ -380,16 +443,89 @@ namespace RunJit.Cli.Services
                 produceResponseTypes.Add(produceResponsetype);
             }
 
+            // Generic way to write it
+            string pattern = @"\.Produces<([^>]+)>\((\d+)\)";
+            var regex = new Regex(pattern);
+
+            // Match the pattern in the input string
+            matches = regex.Matches(code);
+
+            // List to store results
+            List<string> results = new List<string>();
+
+            foreach (Match match in matches)
+            {
+                if (match.Groups.Count == 3)
+                {
+                    string type = match.Groups[1].Value;
+                    string statusCode = match.Groups[2].Value;
+                    
+                    var produceResponse = new ProduceResponseTypes(type, statusCode.ToIntOrDefault());
+                    produceResponseTypes.Add(produceResponse);
+                }
+            }
+
+
+            // Regex pattern to match `.Produces<Type>()` without a response code
+            pattern = @"\.Produces<([^>]+)>\(\)";
+
+            // Find matches
+            regex = new Regex(pattern);
+            matches = regex.Matches(code);
+
+            foreach (Match match in matches)
+            {
+                if (match.Success)
+                {
+                    string type = match.Groups[1].Value.Trim();
+                    
+                    var produceResponse = new ProduceResponseTypes(type, 200);
+                    produceResponseTypes.Add(produceResponse);
+                }
+            }
+            
             return produceResponseTypes.ToImmutable();
         }
         
         private IEnumerable<string> ExtractPayload(string code)
         {
-            var matches = Regex.Matches(code, @"\[FromBody\]\s*([^\s]+)");
-
-            foreach (Match match in matches)
+            // 1. First simple part [FromBody] declaration does exist
+            var fromBodyMatches = Regex.Matches(code, @"\[FromBody\]\s*([^\s]+)");
+            foreach (Match fromBodyMatch in fromBodyMatches)
             {
-                yield return match.Groups[1].Value;
+                yield return fromBodyMatch.Groups[1].Value;
+            }
+            
+            // 2. If request postfix
+            // Regex to match the async delegate parameter block
+            var pattern = @"async\s*\(([\s\S]*?)\)\s*=>";
+
+            // Extract the match
+            var match = Regex.Match(code, pattern);
+
+            if (match.Success)
+            {
+                // Regex, um Parameter-Typ und -Namen zu extrahieren
+                pattern = @"(\w[\w<>,\s]+)\s+(\w+)(?:\s*=\s*[^,)]+)?";
+
+                // Alle Matches finden
+                var regex = new Regex(pattern);
+                MatchCollection matches = regex.Matches(match.Value);
+
+                foreach (Match newMatch in matches)
+                {
+                    var splitt = newMatch.Value.Replace(Environment.NewLine, string.Empty).Split(",",StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim());
+                    
+                    var result = Parse(splitt).ToImmutableList();
+
+                    foreach (var parameter in result)
+                    {
+                        if (parameter.Name.EndWith("Request"))
+                        {
+                            yield return parameter.Type;
+                        }
+                    }
+                }
             }
         }
     }

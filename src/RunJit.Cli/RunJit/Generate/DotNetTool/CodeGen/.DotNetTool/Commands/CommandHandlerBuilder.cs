@@ -14,18 +14,11 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
     }
 
-    internal sealed class CommandHandlerBuilder
+    internal sealed class CommandHandlerBuilder(IEnumerable<ICommandHandlerStringBuilder> commandHandlerStringBuilders)
     {
-        private readonly IEnumerable<ICommandHandlerStringBuilder> _commandHandlerStringBuilders;
-
-        public CommandHandlerBuilder(IEnumerable<ICommandHandlerStringBuilder> commandHandlerStringBuilders)
-        {
-            _commandHandlerStringBuilders = commandHandlerStringBuilders;
-        }
-
         public string Build(Models.CommandInfo parameterInfo)
         {
-            var builder = _commandHandlerStringBuilders.Single(b => b.IsThisBuilderFor(parameterInfo));
+            var builder = commandHandlerStringBuilders.Single(b => b.IsThisBuilderFor(parameterInfo));
 
             return builder.Build(parameterInfo);
         }

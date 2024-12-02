@@ -21,6 +21,7 @@
         <PackageIcon>nuget-package-icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <UserSecretsId>6830e677-d5ca-450a-b24d-028018a3375c</UserSecretsId>
+        <TargetFramework>net9.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
         <None Include="..\..\assets\nuget-package-icon.png">
@@ -37,10 +38,10 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="AspNetCore.Simple.Sdk" Version="5.0.6" />
-        <PackageReference Include="AWSSDK.Translate" Version="3.7.400.33" />
+        <PackageReference Include="AspNetCore.Simple.Sdk" Version="6.0.0" />
+        <PackageReference Include="AWSSDK.Translate" Version="3.7.400.57" />
         <PackageReference Include="DotNetTool.Service" Version="0.3.0" />
-        <PackageReference Include="Extensions.Pack" Version="5.0.4" />
+        <PackageReference Include="Extensions.Pack" Version="6.0.1" />
         <PackageReference Include="GitVersion.MsBuild" Version="6.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -51,15 +52,17 @@
         </PackageReference>
         <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MsBuild" Version="4.11.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
-        <PackageReference Include="NuGet.Versioning" Version="6.11.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+        <PackageReference Include="NuGet.Versioning" Version="6.12.1" />
         <PackageReference Include="RunJit.Api.Client" Version="0.1.0-alpha.40" />
-        <PackageReference Include="Solution.Parser" Version="2.0.16" />
+        <PackageReference Include="Solution.Parser" Version="3.0.0" />
         <PackageReference Include="System.CommandLine" Version="0.3.0-alpha.20054.1" />
+        <PackageReference Include="System.Formats.Asn1" Version="9.0.0" />
+        <PackageReference Include="System.Text.Json" Version="9.0.0" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\CommandStructure.cs" />

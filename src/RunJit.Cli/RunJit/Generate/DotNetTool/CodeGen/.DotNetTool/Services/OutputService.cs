@@ -37,13 +37,14 @@ namespace RunJit.Cli.Generate.DotNetTool
                                             {
                                                 internal async Task WriteAsync(string value,
                                                                                FileInfo? fileInfo,
-                                                                               FormatType formatType)
+                                                                               FormatType formatType,
+                                                                               CancellationToken cancellationToken = default)
                                                 {
                                                     // 1. Format the string into expected format
                                                     var formattedString = outputFormatter.Format(value, formatType);
                                         
                                                     // 3. Write the formatted string to the output
-                                                    await outputWriter.WriteAsync(formattedString, fileInfo).ConfigureAwait(false);
+                                                    await outputWriter.WriteAsync(formattedString, fileInfo, cancellationToken).ConfigureAwait(false);
                                                 }
                                             }
                                         }

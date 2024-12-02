@@ -24,14 +24,14 @@ namespace RunJit.Cli.Generate.DotNetTool
     // {
     //     return _httpCallHandler.CallAsync<IEnumerable<AdminPrivilege>>(HttpMethod.Get, $"admin/project/{projectId}/privilege/list?useCache={useCache}", null);
     // }
-    internal class CommandMethodBuilder(IBuiltInTypeTableService builtInTypeTableService)
+    internal class CommandMethodBuilder()
     {
         private readonly string[] _httpActionWithPayloads = { "Post", "Patch", "Put" };
 
         private const string callInfosTemplate = """
                                                  // 2. Convert into target type
-                                                 var callInfos = parameters.Json.FromJsonStringAs<Dictionary<string, object?>>();
-                                                 
+                                                 $callInfosExists$var callInfos = parameters.Json.FromJsonStringAs<Dictionary<string, object?>>();
+
                                                  // 3. Setup all needed variables
                                                  """;
 
@@ -39,17 +39,16 @@ namespace RunJit.Cli.Generate.DotNetTool
         private readonly string _methodTemplate = """
                                                   // 1. create client
                                                   var httpCallHandler = $dotNetToolName$HttpClientFactory.CreateFrom(parameters.Token);
-                                                  
+
                                                   $callInfos$
                                                   $variables$
-                                                  
+
                                                   // Get the response as string -> only OK responses are provided here, error will be handled as exception
                                                   var stringResponse = await httpCallHandler.CallAsync(HttpMethod.$httpMethod$, $$url$, $payloadAsJson$, $cancellationToken$).ConfigureAwait(false);
-                                                  
-                                                  // 3. Write the formatted string to the output
-                                                  await outputService.WriteAsync(stringResponse, parameters.Output, parameters.Format).ConfigureAwait(false);
-                                                  """;
 
+                                                  // 3. Write the formatted string to the output
+                                                  await outputService.WriteAsync(stringResponse, parameters.Output, parameters.Format, cancellationToken).ConfigureAwait(false);
+                                                  """;
 
         internal string BuildFor(EndpointInfo endpointInfo,
                                  DotNetToolInfos dotNetToolInfos)
@@ -73,10 +72,9 @@ namespace RunJit.Cli.Generate.DotNetTool
             var httpClientCall = _httpActionWithPayloads.Contains(endpointInfo.HttpAction) ? $"{endpointInfo.HttpAction}AsJson" : endpointInfo.HttpAction;
 
             // ToDo: detect which parameter is the payload !!
-            var fromBody = endpointInfo.Parameters.FirstOrDefault(p => p.Attributes.Any(a => a.Name.Contains("FromBody")));
+            var fromBody = endpointInfo.Parameters.FirstOrDefault(p => p.Attributes.Any(a => a.Name == "FromBody"));
 
-            var parameterBody = endpointInfo.Parameters.FirstOrDefault(p => p.Attributes.IsEmpty() &&
-                                                                            builtInTypeTableService.GetTypeFor(p.Type).IsNull());
+            var parameterBody = endpointInfo.Parameters.FirstOrDefault(p => endpointInfo.RequestType?.Type.Name == p.Type);
 
             var payloadParameter = fromBody.IsNotNull() ? fromBody.Name : parameterBody?.Name;
             payloadParameter = payloadParameter.IsNullOrWhiteSpace() ? "null" : payloadParameter;
@@ -103,7 +101,8 @@ namespace RunJit.Cli.Generate.DotNetTool
             var cancellationTokenParameter = endpointInfo.Parameters.FirstOrDefault(p => p.Type == nameof(CancellationToken));
             var cancellationToken = cancellationTokenParameter.IsNotNull() ? cancellationTokenParameter.Name : $"{nameof(CancellationToken)}.{nameof(CancellationToken.None)}";
 
-            var parameterAsVariables = endpointInfo.Parameters.Select(p =>
+            var parameterAsVariables = endpointInfo.Parameters.Where(p => p.Name.Contains("cancellation", StringComparison.OrdinalIgnoreCase).IsFalse())
+                                                              .Select(p =>
                                                                       {
                                                                           if (p.IsOptional)
                                                                           {
@@ -111,10 +110,12 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                                           }
 
                                                                           return $$"""var {{p.Name}} = callInfos["{{p.Name}}"]; // Mandatory""";
-                                                                      }).ToFlattenString(Environment.NewLine);
+                                                                      })
+                                                              .ToFlattenString(Environment.NewLine);
 
-            var callInfos = endpointInfo.Parameters.IsEmpty() ? string.Empty : callInfosTemplate;
-
+            // var callInfos = endpointInfo.Parameters.IsEmpty() ? string.Empty : callInfosTemplate;
+            var callInfos = callInfosTemplate;
+            var ignoreCallInfos = parameterAsVariables.IsNotNullOrWhiteSpace() ? string.Empty : "// ";
 
             var method = _methodTemplate.Replace("$returnType$", normalizedReturnType)
                                         .Replace("$name$", methodName)
@@ -129,7 +130,8 @@ namespace RunJit.Cli.Generate.DotNetTool
                                         .Replace("$cancellationToken$", cancellationToken)
                                         .Replace("$variables$", parameterAsVariables)
                                         .Replace("$callInfos$", callInfos)
-                                        .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName.FirstCharToLower());
+                                        .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName.FirstCharToLower())
+                                        .Replace("$callInfosExists$", ignoreCallInfos);
 
             return method;
         }

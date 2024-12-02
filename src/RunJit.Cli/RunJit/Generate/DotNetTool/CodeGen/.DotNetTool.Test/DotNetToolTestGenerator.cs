@@ -3,6 +3,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Services.Net;
+using RunJit.Cli.Services.Resharper;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
@@ -45,7 +46,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             {
                 // Create new net tool test project
                 // dotnet new mstest --output folder1/folder2/myapp
-                await dotNet.RunAsync("dotnet", $"new mstest --output {dotNetToolTestProjectFileInfo.Directory!.FullName}").ConfigureAwait(false);
+                await dotNet.RunAsync("dotnet", $"new mstest --output {dotNetToolTestProjectFileInfo.Directory!.FullName} --framework {dotNetToolInfos.NetVersion}").ConfigureAwait(false);
             }
             else
             {
@@ -54,7 +55,12 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                 dotNetToolTestProjectFileInfo = dotNetToolTestProject.ProjectFileInfo.Value;
 
                 // Important if the .Net tool will be new generated it gets a new project guid so we have to unlink and relink later
-                await dotNet.RemoveProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
+                // await dotNet.RemoveProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
+                
+                // We only update the real new csproj reference then we complete
+                // await dotNet.AddProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
+
+                return dotNetToolTestProjectFileInfo;
             }
 
             // 4. Create the .net tool folder -> the name of the tool
@@ -71,11 +77,11 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             }
 
             // 6. Add required nuget packages into project
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "4.0.10").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "4.0.13").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "DotNetTool.Service", "0.3.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "Microsoft.NET.Test.Sdk", "17.11.1").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestAdapter", "3.6.2").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestFramework", "3.6.2").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "Microsoft.NET.Test.Sdk", "17.12.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestAdapter", "3.6.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestFramework", "3.6.3").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "coverlet.collector", "6.0.2").ConfigureAwait(false);
 
             // 7. Add needed project references
@@ -101,7 +107,10 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             // 11. And at least we add this project into the solution because we want to avoid to many refreshes as possible
             await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
 
-            // 12. Return the created test csproj file
+            // 12. Cleanup test code to be in sync with target solution settings :)
+            // await solutionCodeCleanup.CleanupProjectAsync(solutionFileInfo, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
+            
+            // 13. Return the created test csproj file
             return dotNetToolTestProjectFileInfo;
         }
     }

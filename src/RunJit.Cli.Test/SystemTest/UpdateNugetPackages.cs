@@ -27,11 +27,12 @@ namespace RunJit.Cli.Test.SystemTest
         }
 
         [DataTestMethod]
+        [DataRow("codecommit::eu-central-1://pulse-core")]
+        [DataRow("codecommit::eu-central-1://pulse-flow")]
         [DataRow("codecommit::eu-central-1://pulse-datamanagement")]
         [DataRow("codecommit::eu-central-1://pulse-survey")]
         [DataRow("codecommit::eu-central-1://pulse-core-service")]
         [DataRow("codecommit::eu-central-1://pulse-actionmanagement")]
-        [DataRow("codecommit::eu-central-1://pulse-flow")]
         [DataRow("codecommit::eu-central-1://pulse-documentmanagement")]
         [DataRow("codecommit::eu-central-1://pulse-dbi")]
         [DataRow("codecommit::eu-central-1://pulse-tableau")]
@@ -39,7 +40,7 @@ namespace RunJit.Cli.Test.SystemTest
         [DataRow("codecommit::eu-central-1://pulse-sustainability")]
         [DataRow("codecommit::eu-central-1://pulse-estell")]
         [DataRow("codecommit::eu-central-1://pulse-database")]
-        public async Task Check_Out_Update_Custom(string gitUrl)
+        public async Task Check_Out_Update_Custom_Part_1(string gitUrl)
         {
             // 3. Update to .Net 8
             await Mediator.SendAsync(new UpdateBackendNugetPackagesForGitRepos(gitUrl, @"D:\NugetUpdate")).ConfigureAwait(false);

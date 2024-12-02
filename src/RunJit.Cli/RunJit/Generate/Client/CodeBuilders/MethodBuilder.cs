@@ -25,7 +25,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     // {
     //     return _httpCallHandler.CallAsync<IEnumerable<AdminPrivilege>>(HttpMethod.Get, $"admin/project/{projectId}/privilege/list?useCache={useCache}", null);
     // }
-    public class MethodBuilder(IBuiltInTypeTableService builtInTypeTableService)
+    public class MethodBuilder()
     {
         private readonly string[] _httpActionWithPayloads = { "Post", "Patch", "Put" };
 
@@ -58,10 +58,10 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var httpClientCall = _httpActionWithPayloads.Contains(endpointInfo.HttpAction) ? $"{endpointInfo.HttpAction}AsJson" : endpointInfo.HttpAction;
 
             // ToDo: detect which parameter is the payload !!
+            // ToDo: detect which parameter is the payload !!
             var fromBody = endpointInfo.Parameters.FirstOrDefault(p => p.Attributes.Any(a => a.Name == "FromBody"));
 
-            var parameterBody = endpointInfo.Parameters.FirstOrDefault(p => p.Attributes.IsEmpty() &&
-                                                                            builtInTypeTableService.GetTypeFor(p.Type).IsNull());
+            var parameterBody = endpointInfo.Parameters.FirstOrDefault(p => endpointInfo.RequestType?.Type.Name == p.Type);
 
             var payloadParameter = fromBody.IsNotNull() ? fromBody.Name : parameterBody?.Name;
             payloadParameter = payloadParameter.IsNullOrWhiteSpace() ? "null" : payloadParameter;

@@ -13,5 +13,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         public required string NormalizedName { get; init; }
 
         public required CommandInfo CommandInfo { get; init; }
+
+        public required string NetVersion { get; init; } = "net8.0";
     }
 }

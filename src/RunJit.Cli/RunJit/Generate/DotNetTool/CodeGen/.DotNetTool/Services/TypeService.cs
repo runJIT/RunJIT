@@ -16,7 +16,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         public string GetFullQualifiedName(string projectName, FileInfo fileInfo)
         {
             var path = CollectPath(fileInfo.Directory, projectName).Reverse().ToList();
-            var fullQualifiedName = $"{projectName}.{path.Flatten(".")}.{fileInfo.NameWithoutExtension}";
+            var fullQualifiedName = $"{projectName}.{path.Flatten(".")}.{fileInfo.NameWithoutExtension()}";
             return fullQualifiedName;
         }
 

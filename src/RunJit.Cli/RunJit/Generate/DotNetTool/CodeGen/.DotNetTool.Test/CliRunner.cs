@@ -190,6 +190,21 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                                                                 [CallerArgumentExpression(nameof(expectedOutput))]
                                                                                             string expectedResultName = "")
                                                 {
+                                                    // Resolve json params
+                                                    var resolvedArguments = consoleArguments.Select(p =>
+                                                                                               {
+                                                                                                   if (p.Contains(".json"))
+                                                                                                   {
+                                                                                                       var json = EmbeddedFile.GetFileContentFrom(p);
+
+                                                                                                       return json;
+                                                                                                   }
+
+                                                                                                   return p;
+                                                                                               }).ToArray();
+                                                
+                                                
+                                                
                                                     var result = await starter.RunAsync(consoleArguments);
                                                     var currentOutput = result.Output;
                                         

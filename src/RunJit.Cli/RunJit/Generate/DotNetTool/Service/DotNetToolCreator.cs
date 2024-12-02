@@ -84,7 +84,8 @@ namespace RunJit.Cli.Generate.DotNetTool
                                             EndpointsToCliCommandStructureConverter convertControllerInfos,
                                             MinimalApiEndpointParser minimalApiEndpointParser,
                                             OrganizeMinimalEndpoints organizeMinimalEndpoints,
-                                            DotNetToolCodeGen dotNetToolCodeGen)
+                                            DotNetToolCodeGen dotNetToolCodeGen,
+                                            FindUsedNetVersion findUsedNetVersion)
     {
         internal async Task GenerateDotNetToolAsync(string projectName,
                                                     string name,
@@ -123,8 +124,11 @@ namespace RunJit.Cli.Generate.DotNetTool
             var mappedToEndpoints = organizedEndpoints.Any() ? organizedEndpoints : controllerInfos.ToEndpointInfos();
             var domainGrouped = mappedToEndpoints.GroupBy(e => e.GroupName).Distinct().ToImmutableList();
 
+            // 10. Get .Net version
+            var netVersion = findUsedNetVersion.GetNetVersion(parsedSolution);
+
             // 10. Convert controller infos to dotnet tool structure -> commands, arguments and options
-            var dotnetToolStructure = convertControllerInfos.ConvertTo(domainGrouped, projectName, name, normalizedName);
+            var dotnetToolStructure = convertControllerInfos.ConvertTo(domainGrouped, projectName, name, normalizedName, netVersion);
 
             // 11. Run all code generators
             await dotNetToolCodeGen.GenerateAsync(parsedSolution, dotnetToolStructure).ConfigureAwait(false);
@@ -158,7 +162,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                  
                                                      internal sealed class $command-name$Handler(OutputService outputService)
                                                      {
-                                                         internal async Task HandleAsync($command-name$Parameters getParameters)
+                                                         internal async Task HandleAsync($command-name$Parameters getParameters, CancellationToken cancellationToken = default)
                                                          {
                                                              // 1. If not provide the embedded version
                                                              var appsettings = EmbeddedFile.$command-name$FileContentFrom("appsettings.json");
@@ -167,11 +171,11 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                              var appsettingsOnDisk = new FileInfo(Path.Combine(Environment.CurrentDirectory, "appsettings.json"));
                                                              if (appsettingsOnDisk.Exists)
                                                              {
-                                                                 appsettings = await File.ReadAllTextAsync(appsettingsOnDisk.FullName).ConfigureAwait(false);
+                                                                 appsettings = await File.ReadAllTextAsync(appsettingsOnDisk.FullName, cancellationToken).ConfigureAwait(false);
                                                              }
                                                  
                                                              // 3. Write the formatted string to the output
-                                                             await outputService.WriteAsync(appsettings, getParameters.Output, getParameters.Format).ConfigureAwait(false);
+                                                             await outputService.WriteAsync(appsettings, getParameters.Output, getParameters.Format, cancellationToken).ConfigureAwait(false);
                                                          }
                                                      }
                                                  }
@@ -192,13 +196,13 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                  
                                                      internal sealed class $command-name$Handler(OutputService outputService)
                                                      {
-                                                         internal async Task HandleAsync($command-name$Parameters setParameters)
+                                                         internal async Task HandleAsync($command-name$Parameters setParameters, CancellationToken cancellationToken = default)
                                                          {
                                                              // 1. Define target file
                                                              var appsettingsOnDisk = new FileInfo(Path.Combine(Environment.CurrentDirectory, "appsettings.json"));
                                                  
                                                              // 2. Write output
-                                                             await outputService.WriteAsync(setParameters.Json, appsettingsOnDisk, FormatType.JsonIndented).ConfigureAwait(false);
+                                                             await outputService.WriteAsync(setParameters.Json, appsettingsOnDisk, FormatType.JsonIndented, cancellationToken).ConfigureAwait(false);
                                                          }
                                                      }
                                                  }
@@ -207,7 +211,8 @@ namespace RunJit.Cli.Generate.DotNetTool
         public DotNetToolInfos ConvertTo(ImmutableList<IGrouping<string, EndpointGroup>> domainGroupedByVersion,
                                          string projectName,
                                          string name,
-                                         string normalizedName)
+                                         string normalizedName,
+                                         string netVersion)
         {
             // Root command is the first command
             // Sample:
@@ -368,7 +373,8 @@ namespace RunJit.Cli.Generate.DotNetTool
                 ProjectName = projectName,
                 Name = name,
                 NormalizedName = normalizedName,
-                CommandInfo = rootCommand
+                CommandInfo = rootCommand,
+                NetVersion = netVersion
             };
 
             return dotnetToolInfos;

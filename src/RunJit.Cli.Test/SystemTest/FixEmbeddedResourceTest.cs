@@ -57,6 +57,7 @@ namespace RunJit.Cli.Test.SystemTest
         
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
+        [DataRow(@"D:\Siemens\pulse-common\Pulse.Common.sln")]
         [DataRow(@"D:\Siemens\pulse-survey\PulseSurvey.sln")]
         [DataRow(@"D:\Siemens\pulse-core\PulseCore.sln")]
         [DataRow(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln")]
