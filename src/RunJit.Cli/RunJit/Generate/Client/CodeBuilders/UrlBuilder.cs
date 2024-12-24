@@ -3,7 +3,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using Solution.Parser.CSharp;
 
-namespace RunJit.Cli.RunJit.Generate.Client
+namespace RunJit.Cli.Generate.Client
 {
     internal static class AddUrlBuilderExtension
     {

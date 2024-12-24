@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.Client;
 using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.RunJit.Generate.Client

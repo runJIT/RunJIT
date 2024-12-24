@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
 using Solution.Parser.CSharp;
 
-namespace RunJit.Cli.RunJit.Generate.Client
+namespace RunJit.Cli.Generate.Client
 {
     internal static class AddQueryBuilderExtension
     {

@@ -2,6 +2,7 @@
 using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.Client;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.Endpoints;
 using RunJit.Cli.Services.Resharper;
@@ -65,7 +66,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             services.AddMinimalApiEndpointParser();
             services.AddOrganizeMinimalEndpoints();
-            
+
             services.AddSolutionCodeCleanup();
             services.AddCurlBuilder();
             services.AddRequestPrinter();
@@ -73,28 +74,30 @@ namespace RunJit.Cli.RunJit.Generate.Client
             services.AddHttpCallHandler();
             services.AddHttpCallHandlerFactory();
 
+            services.AddJsonSerializerBuilder();
+
             services.AddSingletonIfNotExists<ClientCreator>();
         }
     }
 
     internal sealed class ClientCreator(ControllerParser controllerParser,
-                                 ClientCreatorForController endpointClientGenerator,
-                                 DomainFacedBuilder domainFacedBuilder,
-                                 ClientBuilder clientBuilder,
-                                 ClientFactoryBuilder clientFactoryBuilder,
-                                 SolutionFileModifier solutionFileModifier,
-                                 ResharperSettingsBuilder resharperSettingsBuilder,
-                                 ClientStructureWriter clientStructureWriter,
-                                 NugetUpdater nugetUpdater,
-                                 ApiTypeLoader apiTypeLoader,
-                                 TestStructureWriter testStructureWriter,
-                                 RestructureController restructureController,
-                                 MinimalApiEndpointParser minimalApiEndpointParser,
-                                 OrganizeMinimalEndpoints organizeMinimalEndpoints,
-                                 CurlBuilder curlBuilder,
-                                 RequestPrinter requestPrinter,
-                                 HttpCallHandler httpCallHandler,
-                                 HttpCallHandlerFactory httpCallHandlerFactory)
+                                        ClientCreatorForController endpointClientGenerator,
+                                        DomainFacedBuilder domainFacedBuilder,
+                                        ClientBuilder clientBuilder,
+                                        ClientFactoryBuilder clientFactoryBuilder,
+                                        SolutionFileModifier solutionFileModifier,
+                                        ResharperSettingsBuilder resharperSettingsBuilder,
+                                        ClientStructureWriter clientStructureWriter,
+                                        NugetUpdater nugetUpdater,
+                                        ApiTypeLoader apiTypeLoader,
+                                        TestStructureWriter testStructureWriter,
+                                        RestructureController restructureController,
+                                        MinimalApiEndpointParser minimalApiEndpointParser,
+                                        OrganizeMinimalEndpoints organizeMinimalEndpoints,
+                                        CurlBuilder curlBuilder,
+                                        RequestPrinter requestPrinter,
+                                        HttpCallHandler httpCallHandler,
+                                        HttpCallHandlerFactory httpCallHandlerFactory)
     {
         internal async Task GenerateClientAsync(Client client,
                                                 FileInfo clientSolution)
@@ -165,11 +168,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // 15. Create Curl folder
             var curlFolder = new DirectoryInfo(Path.Combine(clientFolder.FullName, "Curl"));
+
             if (curlFolder.NotExists())
             {
                 curlFolder.Create();
             }
-
 
             // 16. Now we overwrite the HttpCallHandler
             var httpCallHandlerCode = httpCallHandler.BuildFor(projectName, clientName);
@@ -192,13 +195,13 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // 22. Write new CurlBuilder
             await File.WriteAllTextAsync(Path.Combine(curlFolder.FullName, "CurlBuilder.cs"), curlBuilderCode).ConfigureAwait(false);
-            
+
             // 23. Write new Request printer
             await File.WriteAllTextAsync(Path.Combine(curlFolder.FullName, "RequestPrinter.cs"), requestPrinterCode).ConfigureAwait(false);
 
             // 24. Update http call handler
             await File.WriteAllTextAsync(Path.Combine(httpCallHandlersFolder.FullName, "HttpCallHandler.cs"), httpCallHandlerCode).ConfigureAwait(false);
-            
+
             // 25. Update http call handler factory
             await File.WriteAllTextAsync(Path.Combine(httpCallHandlersFolder.FullName, "HttpCallHandlerFactory.cs"), httpCallHandlerFactoryCode).ConfigureAwait(false);
 
@@ -209,7 +212,6 @@ namespace RunJit.Cli.RunJit.Generate.Client
             // 19.Creates or updates base test structure
             await testStructureWriter.WriteFileStructureAsync(parsedSolution, clientProject, clientTestProject,
                                                               projectName, clientName).ConfigureAwait(false);
-            
         }
     }
 

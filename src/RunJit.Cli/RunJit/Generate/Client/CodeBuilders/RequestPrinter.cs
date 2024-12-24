@@ -1,7 +1,7 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RunJit.Cli.RunJit.Generate.Client
+namespace RunJit.Cli.Generate.Client
 {
     internal static class AddRequestPrinterExtension
     {

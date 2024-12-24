@@ -1,6 +1,7 @@
 ﻿using DotNetTool.Service;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.Client;
 using Solution.Parser.Project;
 using Solution.Parser.Solution;
 
@@ -18,7 +19,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     internal sealed class TestStructureWriter(MsTestBaseClassBuilder msTestBaseClassBuilder,
-                                       AppsettingsBuilder appsettingsBuilder)
+                                              AppsettingsBuilder appsettingsBuilder,
+                                              JsonSerializerBuilder jsonSerializerBuilder)
     {
         public async Task WriteFileStructureAsync(SolutionFile solutionFile,
                                                   ProjectFile clientProject,
@@ -57,6 +59,17 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 await File.WriteAllTextAsync(appSettingsFile.FullName, appSettings).ConfigureAwait(false);
             }
 
+            // NEW Jsonserializer
+            var jsonSerializer = jsonSerializerBuilder.BuildFor(projectName, clientName);
+            var jsonSerializerFile = new FileInfo(Path.Combine(clientProject.ProjectFileInfo.Value.Directory!.FullName,"Serializer", "JsonSerializer.cs"));
+            if (jsonSerializerFile.Directory!.NotExists())
+            {
+                jsonSerializerFile.Directory!.Create();
+            }
+            
+            await File.WriteAllTextAsync(jsonSerializerFile.FullName, jsonSerializer).ConfigureAwait(false);
+            
+            
             // 4. Add project references
             var dotNetTool = DotNetToolFactory.Create();
 
