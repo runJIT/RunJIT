@@ -1,9 +1,11 @@
-﻿namespace RunJit.Cli.Generate.DotNetTool
+﻿using RunJit.Cli.Generate.DotNetTool.Models;
+
+namespace RunJit.Cli.Generate.DotNetTool
 {
     internal interface INewOptionExpressionBuilder
     {
-        string Build(Models.OptionInfo optionInfo);
+        string Build(OptionInfo optionInfo);
 
-        bool IsBuilderFor(Models.OptionInfo optionInfo);
+        bool IsBuilderFor(OptionInfo optionInfo);
     }
 }

@@ -45,7 +45,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         }
     }
 
-    interface ILocalizeStringsStrategy
+    internal interface ILocalizeStringsStrategy
     {
         bool CanHandle(LocalizeStringsParameters parameters);
 

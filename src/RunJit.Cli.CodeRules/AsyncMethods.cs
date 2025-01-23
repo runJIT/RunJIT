@@ -15,7 +15,7 @@ namespace RunJit.Cli.CodeRules
         {
             var returnAwaitOnly = (from syntaxTree in AllSyntaxTrees
                                    from @class in syntaxTree.Classes
-                                   from @method in @class.Methods
+                                   from method in @class.Methods
                                    where method.Statements.Count < 2 && method.MethodBody.Contains("await") && method.LineStatements.Count < 2
                                    select new
                                           {
@@ -40,7 +40,7 @@ Sample: {method.MethodValue.Replace("return await", "return").Replace(".Configur
         {
             var returnAwaitOnly = from syntaxTree in AllSyntaxTrees
                                   from @class in syntaxTree.Classes
-                                  from @method in @class.Methods
+                                  from method in @class.Methods
                                   where method.Statements.Count == 1 &&
                                         (method.Statements[0].StartWith("await") || method.Statements[0].StartWith("return await"))
                                   select new
@@ -67,7 +67,7 @@ Sample: {method.MethodValue.Replace("return await", "return").Replace("await", "
             var returnAwaitOnly = from syntaxTree in AllSyntaxTrees
                                   from @class in syntaxTree.Classes
                                   where @class.Name.NotEqualsTo(nameof(Program))
-                                  from @method in @class.Methods
+                                  from method in @class.Methods
                                   where method.Attributes.IsNull() || method.Attributes.All(a => a.Name.DoesNotContain("TestMethod"))
                                   where method.ReturnParameter.Contains("Task") && method.Name.EndWith("Async").IsFalse()
                                   where method.Name.NotEqualsTo("Handle") // Exception MediatR class dont have async :(
@@ -95,7 +95,7 @@ Sample: {method.Name}Async
             var returnAwaitOnly = from syntaxTree in AllSyntaxTrees
                                   from @class in syntaxTree.Classes
                                   where @class.Name.NotEqualsTo(nameof(Program))
-                                  from @method in @class.Methods
+                                  from method in @class.Methods
                                   where method.Attributes.Any(attribute => attribute.Name.EqualsTo("TestMethod") || attribute.Name.EqualsTo("DataTestMethod")).IsFalse()
                                   where method.ReturnParameter.Contains("Task") && method.Name.EndWith("Async").IsFalse()
                                   where method.Name.NotEqualsTo("Handle") // Exception MediatR class dont have async :(
@@ -122,7 +122,7 @@ Sample: {method.Name}Async
         {
             var ienumerableReturnTypes = from syntaxTree in AllSyntaxTrees
                                          from @class in syntaxTree.Classes
-                                         from @method in @class.Methods
+                                         from method in @class.Methods
                                          where method.ReturnParameter.Contains("Task<IEnumerable")
                                          select new
                                                 {
@@ -149,7 +149,7 @@ Best:   {method.MethodValue.Split(Environment.NewLine)[0].Replace(method.ReturnP
         {
             var ienumerableReturnTypes = from syntaxTree in AllSyntaxTrees
                                          from @class in syntaxTree.Classes
-                                         from @method in @class.Methods
+                                         from method in @class.Methods
                                          where method.ReturnParameter.Contains("IEnumerable<Task")
                                          select new
                                                 {
@@ -175,8 +175,8 @@ Sample: {method.MethodValue.Split(Environment.NewLine)[0].Replace(method.ReturnP
             var blockingOperation = from syntaxTree in AllSyntaxTrees
                                     from @class in syntaxTree.Classes
                                     where @class.Name.NotEqualsTo(nameof(AsyncMethods))
-                                    from @method in @class.Methods
-                                    from statement in @method.Statements
+                                    from method in @class.Methods
+                                    from statement in method.Statements
                                     where statement.Contains($"{nameof(Task)}.{nameof(Task.WaitAll)}")
                                     select new
                                            {
@@ -207,8 +207,8 @@ Sample:    {statement.Replace($"{nameof(Task)}.{nameof(Task.WaitAll)}", $"await 
         {
             var blockingOperations = from syntaxTree in AllSyntaxTrees
                                      from @class in syntaxTree.Classes
-                                     from @method in @class.Methods
-                                     from statement in @method.Statements
+                                     from method in @class.Methods
+                                     from statement in method.Statements
                                      where statement.Contains(blockingOperation)
                                      select new
                                             {

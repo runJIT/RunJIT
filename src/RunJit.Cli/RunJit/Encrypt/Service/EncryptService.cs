@@ -24,7 +24,7 @@ namespace RunJit.Cli.RunJit.Encrypt
     }
 
     internal sealed class EncryptService(ICryptoService cryptoService,
-                                  ConsoleService consoleService) : IEncryptService
+                                         ConsoleService consoleService) : IEncryptService
     {
         public async Task HandleAsync(EncryptParameters parameters)
         {

@@ -12,9 +12,9 @@ namespace RunJit.Cli.RunJit.New.Lambda
     }
 
     internal sealed class LambdaParameters(FileInfo solution,
-                                    string moduleName,
-                                    string functionName,
-                                    string lambdaName)
+                                           string moduleName,
+                                           string functionName,
+                                           string lambdaName)
     {
         public FileInfo Solution { get; } = solution;
 

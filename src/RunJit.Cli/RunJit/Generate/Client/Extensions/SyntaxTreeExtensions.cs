@@ -6,7 +6,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
 {
     internal static class SyntaxTreeExtensions
     {
-        private static readonly string[] MapActions = new string[]
+        private static readonly string[] MapActions = new[]
                                                       {
                                                           ".MapGet(", ".MapPost(", ".MapDelete(",
                                                           ".MapPut(", ".MapPatch("

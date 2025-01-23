@@ -24,16 +24,16 @@ namespace RunJit.Cli.Generate.DotNetTool
     // {
     //     return _httpCallHandler.CallAsync<IEnumerable<AdminPrivilege>>(HttpMethod.Get, $"admin/project/{projectId}/privilege/list?useCache={useCache}", null);
     // }
-    internal class CommandMethodBuilder()
+    internal class CommandMethodBuilder
     {
-        private readonly string[] _httpActionWithPayloads = { "Post", "Patch", "Put" };
-
         private const string callInfosTemplate = """
                                                  // 2. Convert into target type
                                                  $callInfosExists$var callInfos = parameters.Json.FromJsonStringAs<Dictionary<string, object?>>();
 
                                                  // 3. Setup all needed variables
                                                  """;
+
+        private readonly string[] _httpActionWithPayloads = { "Post", "Patch", "Put" };
 
         // ToDo: Question how to communicate obsolete methods ?
         private readonly string _methodTemplate = """
@@ -102,16 +102,16 @@ namespace RunJit.Cli.Generate.DotNetTool
             var cancellationToken = cancellationTokenParameter.IsNotNull() ? cancellationTokenParameter.Name : $"{nameof(CancellationToken)}.{nameof(CancellationToken.None)}";
 
             var parameterAsVariables = endpointInfo.Parameters.Where(p => p.Name.Contains("cancellation", StringComparison.OrdinalIgnoreCase).IsFalse())
-                                                              .Select(p =>
-                                                                      {
-                                                                          if (p.IsOptional)
-                                                                          {
-                                                                              return $$"""var {{p.Name}} = callInfos.GetValueOrDefault({{p.Name}}"); // Optional""";
-                                                                          }
+                                                   .Select(p =>
+                                                           {
+                                                               if (p.IsOptional)
+                                                               {
+                                                                   return $$"""var {{p.Name}} = callInfos.GetValueOrDefault({{p.Name}}"); // Optional""";
+                                                               }
 
-                                                                          return $$"""var {{p.Name}} = callInfos["{{p.Name}}"]; // Mandatory""";
-                                                                      })
-                                                              .ToFlattenString(Environment.NewLine);
+                                                               return $$"""var {{p.Name}} = callInfos["{{p.Name}}"]; // Mandatory""";
+                                                           })
+                                                   .ToFlattenString(Environment.NewLine);
 
             // var callInfos = endpointInfo.Parameters.IsEmpty() ? string.Empty : callInfosTemplate;
             var callInfos = callInfosTemplate;

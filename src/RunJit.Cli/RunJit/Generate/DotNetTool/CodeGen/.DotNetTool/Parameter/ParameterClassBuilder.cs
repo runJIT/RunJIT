@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 
 namespace RunJit.Cli.Generate.DotNetTool
 {
@@ -15,7 +16,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
     }
 
-    internal sealed class ParameterClassBuilder 
+    internal sealed class ParameterClassBuilder
     {
         private readonly IEnumerable<IParameterSpecificClassBuilder> _parameterSpecificClassBuilders;
 
@@ -27,7 +28,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
 
         public string Build(string projectName,
-                            Models.CommandInfo parameterInfo,
+                            CommandInfo parameterInfo,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);

@@ -45,7 +45,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
         }
     }
 
-    interface IUpdateNugetStrategy
+    internal interface IUpdateNugetStrategy
     {
         bool CanHandle(UpdateNugetParameters parameters);
 

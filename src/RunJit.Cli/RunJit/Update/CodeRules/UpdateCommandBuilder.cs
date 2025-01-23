@@ -9,7 +9,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
     internal static class AddUpdateCodeRulesCommandBuilderExtension
     {
         internal static void AddUpdateCodeRulesCommandBuilder(this IServiceCollection services,
-                                                            IConfiguration configuration)
+                                                              IConfiguration configuration)
         {
             services.AddUpdateCodeRulesOptionsBuilder();
 
@@ -21,7 +21,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
     }
 
     internal sealed class UpdateCodeRulesCommandBuilder(IUpdateCodeRules updateService,
-                                                 IUpdateCodeRulesOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
+                                                        IUpdateCodeRulesOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {
         public Command Build()
         {

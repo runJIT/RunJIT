@@ -17,7 +17,7 @@ namespace RunJit.Cli.Generate.Client
                                                   using System.Reflection;
                                                   using System.Text.Json.Serialization;
                                                   using System.Text.Json;
-                                                  
+
                                                   namespace $namespace$
                                                   {
                                                       internal static class AddJsonSerializerExtension
@@ -331,7 +331,7 @@ namespace RunJit.Cli.Generate.Client
                                                           }
                                                       }
                                                   }
-                                                  
+
                                                   """;
 
         public string BuildFor(string projectName,

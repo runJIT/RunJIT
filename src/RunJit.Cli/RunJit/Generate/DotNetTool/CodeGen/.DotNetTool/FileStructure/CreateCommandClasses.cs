@@ -15,7 +15,6 @@ namespace RunJit.Cli.Generate.DotNetTool
             services.AddCreateParameterClassStructure();
             services.AddCreateSubCommandStructure();
 
-
             services.AddSingletonIfNotExists<CreateCommandClasses>();
         }
     }
@@ -43,10 +42,11 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                                         currentPath, namespaceCollector, subCommnandDirectoryInfo,
                                                                         commandInfo, donNetToolName));
 
-
             foreach (var commandInfoSubCommand in commandInfo.SubCommands)
             {
-                Invoke(projectName, commandInfoSubCommand, subCommnandDirectoryInfo, commandTypeCollector, currentPath, namespaceCollector, donNetToolName, commandInfo);
+                Invoke(projectName, commandInfoSubCommand, subCommnandDirectoryInfo,
+                       commandTypeCollector, currentPath, namespaceCollector,
+                       donNetToolName, commandInfo);
             }
         }
     }

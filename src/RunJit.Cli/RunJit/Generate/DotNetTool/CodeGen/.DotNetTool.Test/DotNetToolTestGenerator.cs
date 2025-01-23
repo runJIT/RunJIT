@@ -3,7 +3,6 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Services.Net;
-using RunJit.Cli.Services.Resharper;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
@@ -56,7 +55,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 
                 // Important if the .Net tool will be new generated it gets a new project guid so we have to unlink and relink later
                 // await dotNet.RemoveProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
-                
+
                 // We only update the real new csproj reference then we complete
                 // await dotNet.AddProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
 
@@ -65,6 +64,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 
             // 4. Create the .net tool folder -> the name of the tool
             var netToolFolder = new DirectoryInfo(Path.Combine(dotNetToolTestProjectFileInfo.Directory!.FullName, dotNetToolInfos.NormalizedName));
+
             if (netToolFolder.Exists.IsFalse())
             {
                 netToolFolder.Create();
@@ -109,7 +109,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 
             // 12. Cleanup test code to be in sync with target solution settings :)
             // await solutionCodeCleanup.CleanupProjectAsync(solutionFileInfo, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
-            
+
             // 13. Return the created test csproj file
             return dotNetToolTestProjectFileInfo;
         }

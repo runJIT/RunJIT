@@ -19,9 +19,9 @@ namespace RunJit.Cli.RunJit.New.Lambda
     }
 
     internal sealed class TemplateExtractor(IMediator mediator,
-                                     IHttpClientFactory httpClientFactory,
-                                     IRunJitApiClientFactory runJitApiClientFactory,
-                                     RunJitApiClientSettings runJitApiClientSettings)
+                                            IHttpClientFactory httpClientFactory,
+                                            IRunJitApiClientFactory runJitApiClientFactory,
+                                            RunJitApiClientSettings runJitApiClientSettings)
     {
         public async Task ExtractToAsync(DirectoryInfo directoryInfo)
         {

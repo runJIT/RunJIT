@@ -1,5 +1,6 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 
 namespace RunJit.Cli.Generate.DotNetTool
 {
@@ -19,15 +20,15 @@ namespace RunJit.Cli.Generate.DotNetTool
     // Default: 'dotnet newtool --use-visualstudio'
     internal sealed class CommandTypeCollector
     {
-        private readonly Dictionary<string, IEnumerable<Models.TypeToRegister>> _typesToRegister;
+        private readonly Dictionary<string, IEnumerable<TypeToRegister>> _typesToRegister;
 
         public CommandTypeCollector()
         {
-            _typesToRegister = new Dictionary<string, IEnumerable<Models.TypeToRegister>>();
+            _typesToRegister = new Dictionary<string, IEnumerable<TypeToRegister>>();
         }
 
-        public void Add(Models.CommandInfo parameterInfo,
-                        Models.TypeToRegister typeToRegister)
+        public void Add(CommandInfo parameterInfo,
+                        TypeToRegister typeToRegister)
         {
             var name = parameterInfo.Name;
             var alreadyExists = _typesToRegister.ContainsKey(name);
@@ -42,7 +43,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             }
         }
 
-        public Dictionary<string, IEnumerable<Models.TypeToRegister>> GetAll()
+        public Dictionary<string, IEnumerable<TypeToRegister>> GetAll()
         {
             return _typesToRegister;
         }

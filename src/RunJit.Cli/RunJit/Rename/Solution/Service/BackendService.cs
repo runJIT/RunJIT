@@ -23,8 +23,8 @@ namespace RunJit.Cli.RunJit.Rename.Solution
     }
 
     internal sealed class BackendService(ConsoleService consoleService,
-                                  IRenameFilesAndFolders renameFilesAndFolders,
-                                  FindSolutionFile findSolutionFile) : IBackendService
+                                         IRenameFilesAndFolders renameFilesAndFolders,
+                                         FindSolutionFile findSolutionFile) : IBackendService
     {
         public Task HandleAsync(BackendParameters parameters)
         {

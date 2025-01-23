@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.Generate.DotNetTool
@@ -23,7 +24,7 @@ namespace $namespace$
 }";
 
         public string Build(string projectName,
-                            Models.CommandInfo parameterInfo,
+                            CommandInfo parameterInfo,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);
@@ -36,7 +37,7 @@ namespace $namespace$
             return newTemplate.FormatSyntaxTree();
         }
 
-        public bool IsThisBuilderFor(Models.CommandInfo parameterInfo)
+        public bool IsThisBuilderFor(CommandInfo parameterInfo)
         {
             Throw.IfNull(() => parameterInfo);
 

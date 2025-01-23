@@ -106,7 +106,7 @@ namespace RunJit.Cli.Services.Git
 
         public Task ResetHardAsync()
         {
-            return RunGitCommandAsync($"reset --hard");
+            return RunGitCommandAsync("reset --hard");
         }
 
         public Task CreateBranchAsync(string branchName)
@@ -140,7 +140,7 @@ namespace RunJit.Cli.Services.Git
 
         public Task PullAsync()
         {
-            return RunGitCommandAsync($"pull");
+            return RunGitCommandAsync("pull");
         }
 
         public Task PushAsync(string branchName)

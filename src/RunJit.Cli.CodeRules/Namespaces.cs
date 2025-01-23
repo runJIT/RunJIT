@@ -10,14 +10,15 @@ namespace RunJit.Cli.CodeRules
     public class Namespaces : MsTestBase
     {
         /// <summary>
-        /// Namespaces:
-        /// - API.Comments.V2.OpenCommentsTranslated
-        /// - API.Comments.V3.Export
-        /// - API.MailTemplate.V1.Controllers
-        /// Problem: We want to detect all technical namespaces.
-        /// Solutions:
-        /// - 1. We try to split by . but too different constellation what is coming after the Version -> failed because of different namespace constellations
-        /// - 2. We just simple check a list of technical aspects
+        ///     Namespaces:
+        ///     - API.Comments.V2.OpenCommentsTranslated
+        ///     - API.Comments.V3.Export
+        ///     - API.MailTemplate.V1.Controllers
+        ///     Problem: We want to detect all technical namespaces.
+        ///     Solutions:
+        ///     - 1. We try to split by . but too different constellation what is coming after the Version -> failed because of
+        ///     different namespace constellations
+        ///     - 2. We just simple check a list of technical aspects
         /// </summary>
         [TestMethod]
         public void Api_Namespaces_Should_Not_Contain_Any_Technical_Aspects()
@@ -32,7 +33,7 @@ namespace RunJit.Cli.CodeRules
                                        "Mapper", "Wrapper"
                                    };
 
-            var versions = new string[] { "V1" };
+            var versions = new[] { "V1" };
 
             var invalidNamespaces = (from syntaxTree in ProductiveCodeSyntaxTreesToAnaylze
                                      let @namespace = syntaxTree.NameSpace.Name

@@ -1,7 +1,9 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using Solution.Parser.CSharp;
+using Property = RunJit.Cli.Generate.DotNetTool.Models.Property;
 
 namespace RunJit.Cli.Generate.DotNetTool
 {
@@ -36,7 +38,7 @@ namespace $namespace$
         }
 
         public string Build(string projectName,
-                            Models.CommandInfo parameterInfo,
+                            CommandInfo parameterInfo,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);
@@ -60,30 +62,30 @@ namespace $namespace$
             return newTemplate.FormatSyntaxTree();
         }
 
-        public bool IsThisBuilderFor(Models.CommandInfo parameterInfo)
+        public bool IsThisBuilderFor(CommandInfo parameterInfo)
         {
             Throw.IfNull(() => parameterInfo);
 
             return parameterInfo.Argument.IsNotNull() || parameterInfo.Options.Any();
         }
 
-        private string BuildPropertyString(IEnumerable<Models.Property> properties)
+        private string BuildPropertyString(IEnumerable<Property> properties)
         {
             var result = properties.Select(p => $"        public {p.Type} {p.Name} {{ get; }}").Flatten(Environment.NewLine);
 
             return result;
         }
 
-        private string BuildPropertyInitializerString(IEnumerable<Models.CtorArgument> arguments,
-                                                      IEnumerable<Models.Property> properties)
+        private string BuildPropertyInitializerString(IEnumerable<CtorArgument> arguments,
+                                                      IEnumerable<Property> properties)
         {
             var result = BuildPropertyInitializer(arguments, properties);
 
             return result.Flatten(Environment.NewLine);
         }
 
-        private IEnumerable<string> BuildPropertyInitializer(IEnumerable<Models.CtorArgument> arguments,
-                                                             IEnumerable<Models.Property> properties)
+        private IEnumerable<string> BuildPropertyInitializer(IEnumerable<CtorArgument> arguments,
+                                                             IEnumerable<Property> properties)
         {
             foreach (var property in properties)
             {
@@ -93,18 +95,18 @@ namespace $namespace$
             }
         }
 
-        private string BuildArguments(IEnumerable<Models.CtorArgument> ctorArguments)
+        private string BuildArguments(IEnumerable<CtorArgument> ctorArguments)
         {
             var result = ctorArguments.Select(arg => CtorArgument.Replace("$type$", arg.Type).Replace("$argName$", arg.Name.FirstCharToUpper())).Flatten(", ");
 
             return result;
         }
 
-        private IEnumerable<Models.Property> BuildProperties(IEnumerable<Models.CtorArgument> ctorArguments)
+        private IEnumerable<Property> BuildProperties(IEnumerable<CtorArgument> ctorArguments)
         {
             foreach (var argument in ctorArguments)
             {
-                yield return new Models.Property(argument.Type, argument.NormalizedName);
+                yield return new Property(argument.Type, argument.NormalizedName);
             }
         }
     }

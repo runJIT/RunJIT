@@ -25,10 +25,10 @@ namespace RunJit.Cli.Services
     }
 
     internal sealed class MethodParser(DataTypeFinder dataTypeFinder,
-                                UrlBuilder urlBuilder,
-                                ModelNormalizer modelNormalizer,
-                                ParameterNormalizer parameterNormalizer,
-                                ResponseTypeNormalizer responseTypeNormalizer)
+                                       UrlBuilder urlBuilder,
+                                       ModelNormalizer modelNormalizer,
+                                       ParameterNormalizer parameterNormalizer,
+                                       ResponseTypeNormalizer responseTypeNormalizer)
     {
         internal IImmutableList<MethodInfos> Parse(IImmutableList<Method> methods,
                                                    string baseUrl,

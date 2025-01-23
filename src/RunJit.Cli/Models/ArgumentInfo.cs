@@ -1,6 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-
 [assembly: InternalsVisibleTo("DotNetTool.Builder.Test")]
 
 namespace RunJit.Cli.Models

@@ -45,7 +45,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
         }
     }
 
-    interface ICleanupCodeStrategy
+    internal interface ICleanupCodeStrategy
     {
         bool CanHandle(CleanupCodeParameters parameters);
 

@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.Generate.DotNetTool
@@ -55,8 +56,8 @@ namespace $namespace$
         }
 
         public string Build(string project,
-                            Models.CommandInfo commandInfo,
-                            Models.CommandInfo? parentCommandInfo,
+                            CommandInfo commandInfo,
+                            CommandInfo? parentCommandInfo,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
@@ -67,7 +68,7 @@ namespace $namespace$
             var interfaceImplementation = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? string.Empty : $" : I{parentCommandInfo.NormalizedName}SubCommandBuilder";
 
             var subCommandRegistration = commandInfo.SubCommands.Select(command => $"services.Add{command.NormalizedName}CommandBuilder(configuration);").ToFlattenString(Environment.NewLine);
-            var subCommandUsings  =commandInfo.SubCommands.Select(command => $"using {nameSpace}.{command.NormalizedName};").ToFlattenString(Environment.NewLine);
+            var subCommandUsings = commandInfo.SubCommands.Select(command => $"using {nameSpace}.{command.NormalizedName};").ToFlattenString(Environment.NewLine);
             var commandRegistration = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? $"{commandInfo.NormalizedName}CommandBuilder" : $"I{parentCommandInfo.NormalizedName}SubCommandBuilder, {commandInfo.NormalizedName}CommandBuilder";
 
             var newTemplate = Template.Replace("$command-name$", commandInfo.NormalizedName)

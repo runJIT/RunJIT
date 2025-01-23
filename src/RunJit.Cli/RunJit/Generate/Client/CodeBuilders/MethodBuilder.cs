@@ -25,7 +25,7 @@ namespace RunJit.Cli.Generate.Client
     // {
     //     return _httpCallHandler.CallAsync<IEnumerable<AdminPrivilege>>(HttpMethod.Get, $"admin/project/{projectId}/privilege/list?useCache={useCache}", null);
     // }
-    public class MethodBuilder()
+    public class MethodBuilder
     {
         private readonly string[] _httpActionWithPayloads = { "Post", "Patch", "Put" };
 

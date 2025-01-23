@@ -24,10 +24,10 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
     }
 
     internal sealed class CloneReposAndUpdateAll(ConsoleService consoleService,
-                                          IGitService git,
-                                          IDotNet dotNet,
-                                          IAwsCodeCommit awsCodeCommit,
-                                          FindSolutionFile findSolutionFile) : ICheckBackendBuildsStrategy
+                                                 IGitService git,
+                                                 IDotNet dotNet,
+                                                 IAwsCodeCommit awsCodeCommit,
+                                                 FindSolutionFile findSolutionFile) : ICheckBackendBuildsStrategy
     {
         public bool CanHandle(CheckBackendBuildsParameters parameters)
         {
@@ -48,11 +48,11 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
             var repos = parameters.GitRepos.Split(';');
             var orginalStartFolder = parameters.WorkingDirectory.IsNotNullOrWhiteSpace() ? parameters.WorkingDirectory : Environment.CurrentDirectory;
 
-            if(Directory.Exists(orginalStartFolder) == false)
+            if (Directory.Exists(orginalStartFolder) == false)
             {
                 Directory.CreateDirectory(orginalStartFolder);
             }
-            
+
             foreach (var repo in repos)
             {
                 var index = repos.IndexOf(repo) + 1;

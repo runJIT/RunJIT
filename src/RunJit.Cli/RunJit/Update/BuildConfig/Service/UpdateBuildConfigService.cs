@@ -45,7 +45,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
         }
     }
 
-    interface IUpdateBuildConfigStrategy
+    internal interface IUpdateBuildConfigStrategy
     {
         bool CanHandle(UpdateBuildConfigParameters parameters);
 

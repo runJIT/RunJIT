@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Generate
     internal static class AddGenerateCommandBuilderExtension
     {
         internal static void AddGenerateCommandBuilder(this IServiceCollection services,
-                                                     IConfiguration configuration)
+                                                       IConfiguration configuration)
         {
             services.AddClientCommandBuilder(configuration);
             services.AddGenerateCustomEndpointCommandBuilder();

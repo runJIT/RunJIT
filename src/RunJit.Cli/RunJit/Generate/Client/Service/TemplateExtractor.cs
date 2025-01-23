@@ -27,9 +27,9 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     internal sealed class TemplateExtractor(IRunJitApiClientFactory runJitApiClientFactory,
-                                     IMediator mediator,
-                                     IHttpClientFactory httpClientFactory,
-                                     RunJitApiClientSettings runJitApiClientSettings) : ITemplateExtractor
+                                            IMediator mediator,
+                                            IHttpClientFactory httpClientFactory,
+                                            RunJitApiClientSettings runJitApiClientSettings) : ITemplateExtractor
     {
         public async Task ExtractToAsync(DirectoryInfo directoryInfo,
                                          ClientParameters clientGenParameters)
@@ -37,6 +37,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
             var httpClient = httpClientFactory.CreateClient();
             httpClient.BaseAddress = new Uri(runJitApiClientSettings.BaseAddress);
+
             // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
             var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
 

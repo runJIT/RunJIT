@@ -26,11 +26,11 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
     }
 
     internal sealed class CloneReposAndUpdateAll(ConsoleService consoleService,
-                                          IGitService git,
-                                          IDotNet dotNet,
-                                          IAwsCodeCommit awsCodeCommit,
-                                          EmbeddedFileService embeddedFileService,
-                                          FindSolutionFile findSolutionFile) : IUpdateSwaggerTestsStrategy
+                                                 IGitService git,
+                                                 IDotNet dotNet,
+                                                 IAwsCodeCommit awsCodeCommit,
+                                                 EmbeddedFileService embeddedFileService,
+                                                 FindSolutionFile findSolutionFile) : IUpdateSwaggerTestsStrategy
     {
         public bool CanHandle(UpdateSwaggerTestsParameters parameters)
         {
@@ -51,11 +51,11 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
             var repos = parameters.GitRepos.Split(';');
             var orginalStartFolder = parameters.WorkingDirectory.IsNotNullOrWhiteSpace() ? parameters.WorkingDirectory : Environment.CurrentDirectory;
 
-            if(Directory.Exists(orginalStartFolder) == false)
+            if (Directory.Exists(orginalStartFolder) == false)
             {
                 Directory.CreateDirectory(orginalStartFolder);
             }
-            
+
             foreach (var repo in repos)
             {
                 var index = repos.IndexOf(repo) + 1;

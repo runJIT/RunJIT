@@ -14,13 +14,13 @@ namespace RunJit.Cli.Generate.DotNetTool
     }
 
     internal sealed class ProblemDetailsCodeGen(ConsoleService consoleService,
-                                       NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
+                                                NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
     {
         private const string Template = """
                                         using System.Diagnostics.CodeAnalysis;
                                         using System.Text.Json;
                                         using System.Text.Json.Serialization;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal sealed class ProblemDetailsJsonConverter : JsonConverter<ProblemDetails>

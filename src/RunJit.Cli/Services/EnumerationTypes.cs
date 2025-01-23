@@ -21,7 +21,7 @@ namespace RunJit.Cli.Services
         // The following table shows the keywords for built-in C# types, which are aliases of predefined types in the System namespace
         // All this types will bot be found as type in the system namespace so we need this information too.
         // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table
-        private static readonly List<string> BaseEnumerableTypeNames = new List<string>
+        private static readonly List<string> BaseEnumerableTypeNames = new()
                                                                        {
                                                                            "Enumerable",
                                                                            "List",

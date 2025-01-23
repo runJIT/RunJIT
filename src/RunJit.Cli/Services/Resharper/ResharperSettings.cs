@@ -12,7 +12,6 @@ namespace RunJit.Cli.Services.Resharper
         }
     }
 
-
     // What we create here:
     // - We create here the resharper project settings to setup namespace providers correctly
     // 

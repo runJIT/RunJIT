@@ -2,7 +2,6 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
-using RunJit.Cli.RunJit.Update.Net;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.Git;
 using RunJit.Cli.Services.Net;
@@ -17,7 +16,6 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
             services.AddConsoleService();
             services.AddGitService();
             services.AddDotNet();
-            services.AddDotNetService();
 
             // services.AddFixEmbeddedResourcesPackageService();
             services.AddFindSolutionFile();
@@ -70,15 +68,15 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
 
                 foreach (var fileExtension in fileExtensions)
                 {
-                    var sqlElement = csprojXml.Descendants().FirstOrDefault(e => e.Name.LocalName == "EmbeddedResource" && (e.Attribute("Include")?.Value == $@"**\*.{fileExtension}"));
+                    var sqlElement = csprojXml.Descendants().FirstOrDefault(e => e.Name.LocalName == "EmbeddedResource" && e.Attribute("Include")?.Value == $@"**\*.{fileExtension}");
 
                     if (sqlElement.IsNull())
                     {
                         var embeddedResourceSql = new XElement("EmbeddedResource");
                         embeddedResourceSql.Add(new XAttribute("Include", $@"**\*.{fileExtension}"));
-                        
+
                         // Very important to exclude bin and obj folders
-                        embeddedResourceSql.Add(new XAttribute("Exclude", $@"bin\**\*;obj\**\*"));
+                        embeddedResourceSql.Add(new XAttribute("Exclude", @"bin\**\*;obj\**\*"));
                         itemGroup.Add(embeddedResourceSql);
                     }
                 }
@@ -91,10 +89,12 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
                 // all appsettings.x.json have to be ignored for now
                 // all appsettings.x.json have to be ignored for now
                 var appsettings = csprojFile.ProjectFileInfo.Value.Directory!.EnumerateFiles("appsetting*.json").ToList();
+
                 if (appsettings.Any())
                 {
                     var existAlready = csprojXml.Root!.ElementByAttribute("Include", "appsetting*.json");
-                    if(existAlready.IsNull())
+
+                    if (existAlready.IsNull())
                     {
                         var itemgroupIgnore = new XElement("ItemGroup");
                         var appsettingElement = new XElement("EmbeddedResource");

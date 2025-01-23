@@ -17,8 +17,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     internal sealed class EndpointStructureBuilder(VersionFolderBuilder versionFolderBuilder,
-                                            ModelFolderBuilder modelFolderBuilder,
-                                            ModelsToFilesWriter modelsToFileWriter)
+                                                   ModelFolderBuilder modelFolderBuilder,
+                                                   ModelsToFilesWriter modelsToFileWriter)
     {
         internal async Task CreateAsync(DirectoryInfo domainFolder,
                                         IImmutableList<GeneratedClientCodeForController> endpoints,

@@ -20,8 +20,8 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
 
     internal sealed class UpdateSwaggerTestsCommandBuilder(IUpdateSwaggerTests updateService,
 
-                                                    // IUpdateSwaggerTestsArgumentsBuilder argumentsBuilder,
-                                                    IUpdateSwaggerTestsOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
+                                                           // IUpdateSwaggerTestsArgumentsBuilder argumentsBuilder,
+                                                           IUpdateSwaggerTestsOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {
         public Command Build()
         {

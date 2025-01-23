@@ -1,9 +1,11 @@
-﻿namespace RunJit.Cli.Generate.DotNetTool
+﻿using RunJit.Cli.Generate.DotNetTool.Models;
+
+namespace RunJit.Cli.Generate.DotNetTool
 {
     internal interface ICommandHandlerStringBuilder
     {
-        string Build(Models.CommandInfo parameterInfo);
+        string Build(CommandInfo parameterInfo);
 
-        bool IsThisBuilderFor(Models.CommandInfo parameterInfo);
+        bool IsThisBuilderFor(CommandInfo parameterInfo);
     }
 }

@@ -45,7 +45,7 @@ namespace RunJit.Cli.RunJit.Check.Backend.Builds
         }
     }
 
-    interface ICheckBackendBuildsStrategy
+    internal interface ICheckBackendBuildsStrategy
     {
         bool CanHandle(CheckBackendBuildsParameters parameters);
 

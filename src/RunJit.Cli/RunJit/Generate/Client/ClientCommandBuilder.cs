@@ -19,7 +19,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     internal sealed class ClientCommandBuilder(IClientGen clientGen,
-                                        IClientGenOptionsBuilder optionsBuilder) : IGenerateSubCommandBuilder
+                                               IClientGenOptionsBuilder optionsBuilder) : IGenerateSubCommandBuilder
     {
         public Command Build()
         {

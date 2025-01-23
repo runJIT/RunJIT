@@ -9,7 +9,7 @@ namespace RunJit.Cli.RunJit.New
     internal static class AddNewCommandBuilderExtension
     {
         internal static void AddNewCommandBuilder(this IServiceCollection services,
-                                                IConfiguration configuration)
+                                                  IConfiguration configuration)
         {
             services.AddLambdaCommandBuilder();
 

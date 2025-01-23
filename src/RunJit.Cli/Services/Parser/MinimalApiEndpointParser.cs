@@ -1,8 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using Extensions.Pack;
-using Microsoft.AspNetCore.Http;
-using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Generate.Client;
 using RunJit.Cli.Services.Endpoints;
@@ -74,11 +72,11 @@ namespace RunJit.Cli.Services
 
     internal sealed class MinimalApiEndpointParser(DataTypeFinder dataTypeFinder)
     {
-        private string[] mapActions = new string[]
-                                      {
-                                          ".MapGet(", ".MapPost(", ".MapDelete(",
-                                          ".MapPut(", ".MapPatch("
-                                      };
+        private readonly string[] mapActions = new[]
+                                               {
+                                                   ".MapGet(", ".MapPost(", ".MapDelete(",
+                                                   ".MapPut(", ".MapPatch("
+                                               };
 
         internal IImmutableList<EndpointInfo> ExtractFrom(IImmutableList<CSharpSyntaxTree> syntaxTrees,
                                                           IImmutableList<Type> reflectionTypes)
@@ -160,7 +158,9 @@ namespace RunJit.Cli.Services
                                     var normalizedBasePath = basePath.Replace("{apiVersion:apiVersion}", version.Original);
                                     var relativeUrl = ExtractRelativeUrl(methodStatement);
                                     var url = $"{normalizedBasePath}/{relativeUrl}";
-                                    var allUsedModels = GetAllUsedModels(produceResponseTypes, syntaxTrees, reflectionTypes, version, payloads);
+
+                                    var allUsedModels = GetAllUsedModels(produceResponseTypes, syntaxTrees, reflectionTypes,
+                                                                         version, payloads);
 
                                     var endpointInfo = new EndpointInfo
                                                        {
@@ -197,7 +197,7 @@ namespace RunJit.Cli.Services
                                                                  IEnumerable<string> payloads)
         {
             var responseType = produceResponseTypes.FirstOrDefault(p => p.StatusCode >= 200 && p.StatusCode < 300)?.Type;
-            
+
             var match = GlobalRegex.GetGenericTypeRegex().Match(responseType ?? string.Empty);
 
             if (match.Success)
@@ -206,7 +206,7 @@ namespace RunJit.Cli.Services
             }
 
             var allModelsToFind = payloads.Concat(responseType);
-            
+
             var classes = syntaxTrees.SelectMany(tree => tree.Classes).Where(c => allModelsToFind.Any(x => x == c.Name) && c.FullQualifiedName.Contains(versionInfo.Normalized)).ToList();
             var records = syntaxTrees.SelectMany(tree => tree.Records).Where(c => allModelsToFind.Any(x => x == c.Name) && c.FullQualifiedName.Contains(versionInfo.Normalized)).ToList();
 
@@ -233,7 +233,7 @@ namespace RunJit.Cli.Services
             {
                 return new ResponseType("void", "void");
             }
-            
+
             return new ResponseType(responseType, responseType);
         }
 
@@ -290,17 +290,15 @@ namespace RunJit.Cli.Services
         {
             var match = Regex.Match(code, @"Map\w+\(\""(.*?)\""");
 
-            var result =  match.Success ? match.Groups[1].Value : string.Empty;
-            
-            
+            var result = match.Success ? match.Groups[1].Value : string.Empty;
+
             // Regex pattern to match the type constraint inside curly braces
-            string pattern = @"\{([^}:]+):[^}]+\}";
-        
+            var pattern = @"\{([^}:]+):[^}]+\}";
+
             // Replace the type constraint with just the parameter name
-            string normalizedUrl = Regex.Replace(result, pattern, @"{$1}");
+            var normalizedUrl = Regex.Replace(result, pattern, @"{$1}");
 
             return normalizedUrl;
-
         }
 
         private IImmutableList<Parameter> ExtractParameters(string code)
@@ -316,14 +314,14 @@ namespace RunJit.Cli.Services
                 var parameters = method.TrimStart('(').TrimEnd(')').Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim().TrimStart('(').TrimEnd(')'));
                 var ignoreServices = parameters.Where(p => p.DoesNotContain("[FromService") && p.DoesNotContain("Http")).Where(p => p.Contains(" ")).ToList();
                 var result = Parse(ignoreServices).ToImmutableList();
-                
+
                 // now we have to filter out all non api used parameters like HttpContext -> only primitive types
                 var primitiveTypesOnly = result.Where(t => IsPrimitiveType(t.Type) ||
                                                            t.Name.EndsWith("Request")).ToImmutableList();
-                
+
                 return primitiveTypesOnly;
             }
-            
+
             // Regex to match the async delegate parameter block
             var pattern = @"async\s*\(([\s\S]*?)\)\s*=>";
 
@@ -337,27 +335,26 @@ namespace RunJit.Cli.Services
 
                 // Alle Matches finden
                 regex = new Regex(pattern);
-                MatchCollection matches = regex.Matches(match.Value);
+                var matches = regex.Matches(match.Value);
 
                 foreach (Match newMatch in matches)
                 {
-                    var splitt = newMatch.Value.Replace(Environment.NewLine, string.Empty).Split(",",StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim());
-                    
+                    var splitt = newMatch.Value.Replace(Environment.NewLine, string.Empty).Split(",", StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim());
+
                     var result = Parse(splitt).ToImmutableList();
-                    
+
                     // now we have to filter out all non api used parameters like HttpContext -> only primitive types
                     var primitiveTypesOnly = result.Where(t => IsPrimitiveType(t.Type) ||
                                                                t.Name.EndsWith("Request")).ToImmutableList();
-                    
+
                     return primitiveTypesOnly;
                 }
             }
-            
-            
+
             return ImmutableList<Parameter>.Empty;
         }
-        
-        static IEnumerable<Parameter> Parse(IEnumerable<string> parameters)
+
+        private static IEnumerable<Parameter> Parse(IEnumerable<string> parameters)
         {
             foreach (var parameter in parameters)
             {
@@ -383,14 +380,25 @@ namespace RunJit.Cli.Services
                                            string.Empty);
             }
         }
-        
-        static bool IsPrimitiveType(string typeName)
+
+        private static bool IsPrimitiveType(string typeName)
         {
             // Define types commonly considered primitive/basic
             var basicTypes = new HashSet<string>
                              {
-                                 "int", "long", "short", "byte", "float", "double", "decimal", 
-                                 "bool", "char", "string", "Guid", "DateTime", "CancellationToken"
+                                 "int",
+                                 "long",
+                                 "short",
+                                 "byte",
+                                 "float",
+                                 "double",
+                                 "decimal",
+                                 "bool",
+                                 "char",
+                                 "string",
+                                 "Guid",
+                                 "DateTime",
+                                 "CancellationToken"
                              };
 
             // Check against the list
@@ -444,27 +452,26 @@ namespace RunJit.Cli.Services
             }
 
             // Generic way to write it
-            string pattern = @"\.Produces<([^>]+)>\((\d+)\)";
+            var pattern = @"\.Produces<([^>]+)>\((\d+)\)";
             var regex = new Regex(pattern);
 
             // Match the pattern in the input string
             matches = regex.Matches(code);
 
             // List to store results
-            List<string> results = new List<string>();
+            List<string> results = new();
 
             foreach (Match match in matches)
             {
                 if (match.Groups.Count == 3)
                 {
-                    string type = match.Groups[1].Value;
-                    string statusCode = match.Groups[2].Value;
-                    
+                    var type = match.Groups[1].Value;
+                    var statusCode = match.Groups[2].Value;
+
                     var produceResponse = new ProduceResponseTypes(type, statusCode.ToIntOrDefault());
                     produceResponseTypes.Add(produceResponse);
                 }
             }
-
 
             // Regex pattern to match `.Produces<Type>()` without a response code
             pattern = @"\.Produces<([^>]+)>\(\)";
@@ -477,25 +484,26 @@ namespace RunJit.Cli.Services
             {
                 if (match.Success)
                 {
-                    string type = match.Groups[1].Value.Trim();
-                    
+                    var type = match.Groups[1].Value.Trim();
+
                     var produceResponse = new ProduceResponseTypes(type, 200);
                     produceResponseTypes.Add(produceResponse);
                 }
             }
-            
+
             return produceResponseTypes.ToImmutable();
         }
-        
+
         private IEnumerable<string> ExtractPayload(string code)
         {
             // 1. First simple part [FromBody] declaration does exist
             var fromBodyMatches = Regex.Matches(code, @"\[FromBody\]\s*([^\s]+)");
+
             foreach (Match fromBodyMatch in fromBodyMatches)
             {
                 yield return fromBodyMatch.Groups[1].Value;
             }
-            
+
             // 2. If request postfix
             // Regex to match the async delegate parameter block
             var pattern = @"async\s*\(([\s\S]*?)\)\s*=>";
@@ -510,12 +518,12 @@ namespace RunJit.Cli.Services
 
                 // Alle Matches finden
                 var regex = new Regex(pattern);
-                MatchCollection matches = regex.Matches(match.Value);
+                var matches = regex.Matches(match.Value);
 
                 foreach (Match newMatch in matches)
                 {
-                    var splitt = newMatch.Value.Replace(Environment.NewLine, string.Empty).Split(",",StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim());
-                    
+                    var splitt = newMatch.Value.Replace(Environment.NewLine, string.Empty).Split(",", StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim());
+
                     var result = Parse(splitt).ToImmutableList();
 
                     foreach (var parameter in result)

@@ -48,10 +48,10 @@ namespace RunJit.Cli.Generate.Client
     //     }
     // }
     internal sealed class ClientBuilder(UsingsBuilder usingsBuilder,
-                                 ParameterBuilder parameterBuilder,
-                                 AssignExpressionBuilder assignExpressionBuilder,
-                                 ServiceRegistrationBuilder serviceRegistrationBuilder,
-                                 PropertiesBuilder propertiesBuilder)
+                                        ParameterBuilder parameterBuilder,
+                                        AssignExpressionBuilder assignExpressionBuilder,
+                                        ServiceRegistrationBuilder serviceRegistrationBuilder,
+                                        PropertiesBuilder propertiesBuilder)
     {
         private readonly string _clientTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.client.rps");
 

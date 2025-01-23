@@ -13,7 +13,7 @@ namespace RunJit.Cli.Generate.DotNetTool
 
     internal sealed class NameSpaceCollector
     {
-        private readonly List<string> _items = new List<string>();
+        private readonly List<string> _items = new();
 
         public void Add(string nameSpace)
         {

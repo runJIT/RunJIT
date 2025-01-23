@@ -33,28 +33,27 @@ namespace RunJit.Cli.Test.SystemTest
 
         [Ignore("Dev only")]
         [DataTestMethod]
-        [DataRow("codecommit::eu-central-1://pulse-datamanagement")]    // Merged
-        [DataRow("codecommit::eu-central-1://pulse-survey")]            // Merged
-        [DataRow("codecommit::eu-central-1://pulse-core-service")]      // Merged
-        [DataRow("codecommit::eu-central-1://pulse-actionmanagement")]  // Merged
-        [DataRow("codecommit::eu-central-1://pulse-flow")]              // Merged
-        [DataRow("codecommit::eu-central-1://pulse-documentmanagement")]// Merged
-        [DataRow("codecommit::eu-central-1://pulse-dbi")]               // Merged
-        [DataRow("codecommit::eu-central-1://pulse-tableau")]           // Merged
-        [DataRow("codecommit::eu-central-1://pulse-powerbi")]           // Merged
-        [DataRow("codecommit::eu-central-1://pulse-sustainability")]    // Merged
-        [DataRow("codecommit::eu-central-1://pulse-estell")]            // Merged
-        [DataRow("codecommit::eu-central-1://pulse-database")]          // Merged
-        [DataRow("codecommit::eu-central-1://pulse-common")]            // Merged
+        [DataRow("codecommit::eu-central-1://pulse-datamanagement")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-survey")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-core-service")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-actionmanagement")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-flow")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-documentmanagement")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-dbi")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-tableau")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-powerbi")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-sustainability")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-estell")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-database")] // Merged
+        [DataRow("codecommit::eu-central-1://pulse-common")] // Merged
         [DataRow("codecommit::eu-central-1://pulse-code-rules")]
-        [DataRow("codecommit::eu-central-1://pulse-core")]              // Merged
+        [DataRow("codecommit::eu-central-1://pulse-core")] // Merged
         public async Task Fix_All_Embedded_Resources_In(string gitUrl)
         {
             // 3. Update to .Net 8
             await Mediator.SendAsync(new FixEmbeddedResource(gitUrl, @"D:\EmbeddedResource")).ConfigureAwait(false);
         }
-        
-        
+
         [DataTestMethod]
         [DataRow(@"D:\GitHub\RunJit.Api\RunJit.Api.sln")]
         [DataRow(@"D:\Siemens\pulse-common\Pulse.Common.sln")]

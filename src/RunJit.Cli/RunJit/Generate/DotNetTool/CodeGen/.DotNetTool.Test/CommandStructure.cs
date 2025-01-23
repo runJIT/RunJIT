@@ -12,7 +12,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
         {
             services.AddOutputToConsoleCodeGen();
             services.AddOutputToFileCodeGen();
-            
+
             services.AddSingletonIfNotExists<IDotNetToolTestSpecificCodeGen, CommandStructureCodeGen>();
         }
     }
@@ -40,7 +40,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             await CreateTestsForCommandAsync(projectFileInfo, projectDocument, dotNetToolInfos,
                                              dotNetToolInfos.CommandInfo, null, string.Empty);
 
-            consoleService.WriteSuccess($"Successfully created cli test structure");
+            consoleService.WriteSuccess("Successfully created cli test structure");
         }
 
         private async Task CreateTestsForCommandAsync(FileInfo projectFileInfo,
@@ -96,6 +96,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 
                 // Output folder
                 var outputFolder = new DirectoryInfo(Path.Combine(targetFolder.FullName, "Output"));
+
                 if (outputFolder.NotExists())
                 {
                     outputFolder.Create();
@@ -107,6 +108,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                 {
                     // Parameters folder
                     var parametersFolder = new DirectoryInfo(Path.Combine(targetFolder.FullName, "Parameters"));
+
                     if (parametersFolder.NotExists())
                     {
                         parametersFolder.Create();

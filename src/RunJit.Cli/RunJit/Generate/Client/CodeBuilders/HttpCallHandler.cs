@@ -21,7 +21,7 @@ namespace RunJit.Cli.Generate.Client
     // Curl
     //   -> HttpCallHandler.cs
     //   -> RequestPrinter.cs
-    internal sealed class HttpCallHandler()
+    internal sealed class HttpCallHandler
     {
         private readonly string _httpCallHandlerTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.HttpCallHandler.rps");
 

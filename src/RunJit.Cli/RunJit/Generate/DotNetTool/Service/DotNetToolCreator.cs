@@ -128,7 +128,8 @@ namespace RunJit.Cli.Generate.DotNetTool
             var netVersion = findUsedNetVersion.GetNetVersion(parsedSolution);
 
             // 10. Convert controller infos to dotnet tool structure -> commands, arguments and options
-            var dotnetToolStructure = convertControllerInfos.ConvertTo(domainGrouped, projectName, name, normalizedName, netVersion);
+            var dotnetToolStructure = convertControllerInfos.ConvertTo(domainGrouped, projectName, name,
+                                                                       normalizedName, netVersion);
 
             // 11. Run all code generators
             await dotNetToolCodeGen.GenerateAsync(parsedSolution, dotnetToolStructure).ConfigureAwait(false);
@@ -219,26 +220,26 @@ namespace RunJit.Cli.Generate.DotNetTool
             // - dotnet tool install (dotnet is root command)
             // - pulse core resources v1 (pulse is the root command)
             var rootCommand = new CommandInfo
-            {
-                NormalizedName = normalizedName,
-                Value = name,
-                Name = name,
-                Description = name,
-            };
+                              {
+                                  NormalizedName = normalizedName,
+                                  Value = name,
+                                  Name = name,
+                                  Description = name
+                              };
 
             // New options for output and formating !
-            var options = ImmutableList.Create<OptionInfo>(new OptionInfo()
-            {
-                Alias = "-f",
-                NormalizedName = "format",
-                Argument = new ArgumentInfo("format", "Provide the format in which type the output should be created. Choose an an available option", "<format>[FormatType]",
+            var options = ImmutableList.Create<OptionInfo>(new OptionInfo
+                                                           {
+                                                               Alias = "-f",
+                                                               NormalizedName = "format",
+                                                               Argument = new ArgumentInfo("format", "Provide the format in which type the output should be created. Choose an an available option", "<format>[FormatType]",
                                                                                            "FormatType", "FormatType", "Format"),
-                IsIsRequired = false,
-                Name = "format",
-                Value = "--format",
-                Description = "Provide the format in which type the output should be created. Choose an an available option"
-            },
-                                                           new OptionInfo()
+                                                               IsIsRequired = false,
+                                                               Name = "format",
+                                                               Value = "--format",
+                                                               Description = "Provide the format in which type the output should be created. Choose an an available option"
+                                                           },
+                                                           new OptionInfo
                                                            {
                                                                Alias = "-o",
                                                                NormalizedName = "Output",
@@ -253,37 +254,38 @@ namespace RunJit.Cli.Generate.DotNetTool
             // For your tool we want to be able to manage the whole configuration
             // So we need a command to get/set the configuration
             var configCommand = new CommandInfo
-            {
-                NormalizedName = "Config",
-                Value = "config",
-                Name = "config",
-                Description = "Command to handle the configuration for your dotnet tool. Known as appsettings",
-            };
+                                {
+                                    NormalizedName = "Config",
+                                    Value = "config",
+                                    Name = "config",
+                                    Description = "Command to handle the configuration for your dotnet tool. Known as appsettings"
+                                };
 
             // We need a command to read the whole config
-            var getConfigCommand = new CommandInfo()
-            {
-                NormalizedName = "Get",
-                Value = "get",
-                Name = "get",
-                Description = "Command to read the whole configuration for your dotnet tool. Known as appsettings",
-                Options = options.ToList(),
-                CodeTemplate = GetConfigTemplate,
-                NoSyntaxTreeFormatting = true,
-            };
+            var getConfigCommand = new CommandInfo
+                                   {
+                                       NormalizedName = "Get",
+                                       Value = "get",
+                                       Name = "get",
+                                       Description = "Command to read the whole configuration for your dotnet tool. Known as appsettings",
+                                       Options = options.ToList(),
+                                       CodeTemplate = GetConfigTemplate,
+                                       NoSyntaxTreeFormatting = true
+                                   };
 
             // We need a command to set/update the whole config
-            var setConfigCommand = new CommandInfo()
-            {
-                NormalizedName = "Set",
-                Value = "set",
-                Name = "set",
-                Description = "Command to set the whole configuration for your dotnet tool. Known as appsettings. To set the configuration call 'configuration get' change the settings you want to change and call 'configuration set' to set the whole json back",
-                Options = options.ToList(),
-                CodeTemplate = SetConfigTemplate,
-                NoSyntaxTreeFormatting = true,
-                Argument = new ArgumentInfo("json", "Provide the new config json which is known as appsettings.json", "<json>[string]", "string", "string", "Json")
-            };
+            var setConfigCommand = new CommandInfo
+                                   {
+                                       NormalizedName = "Set",
+                                       Value = "set",
+                                       Name = "set",
+                                       Description = "Command to set the whole configuration for your dotnet tool. Known as appsettings. To set the configuration call 'configuration get' change the settings you want to change and call 'configuration set' to set the whole json back",
+                                       Options = options.ToList(),
+                                       CodeTemplate = SetConfigTemplate,
+                                       NoSyntaxTreeFormatting = true,
+                                       Argument = new ArgumentInfo("json", "Provide the new config json which is known as appsettings.json", "<json>[string]",
+                                                                   "string", "string", "Json")
+                                   };
 
             configCommand.SubCommands.Add(getConfigCommand);
             configCommand.SubCommands.Add(setConfigCommand);
@@ -297,13 +299,13 @@ namespace RunJit.Cli.Generate.DotNetTool
                 // Domain command like
                 // Users
                 // Resources
-                var domainCommand = new CommandInfo()
-                {
-                    Name = domainGroupByVersion.Key,
-                    NormalizedName = domainGroupByVersion.Key,
-                    Description = $"Here comes the description for {domainGroupByVersion.Key}",
-                    Value = domainGroupByVersion.Key,
-                };
+                var domainCommand = new CommandInfo
+                                    {
+                                        Name = domainGroupByVersion.Key,
+                                        NormalizedName = domainGroupByVersion.Key,
+                                        Description = $"Here comes the description for {domainGroupByVersion.Key}",
+                                        Value = domainGroupByVersion.Key
+                                    };
 
                 foreach (var version in domainGroupByVersion)
                 {
@@ -312,13 +314,13 @@ namespace RunJit.Cli.Generate.DotNetTool
                     //  - V1
                     // Resources
                     //  - V1
-                    var versionCommand = new CommandInfo()
-                    {
-                        Name = version.Version.Normalized,
-                        NormalizedName = version.Version.Normalized,
-                        Description = $"Here comes the description for {version.Version.Normalized}",
-                        Value = version.Version.Normalized,
-                    };
+                    var versionCommand = new CommandInfo
+                                         {
+                                             Name = version.Version.Normalized,
+                                             NormalizedName = version.Version.Normalized,
+                                             Description = $"Here comes the description for {version.Version.Normalized}",
+                                             Value = version.Version.Normalized
+                                         };
 
                     domainCommand.SubCommands.Add(versionCommand);
 
@@ -333,33 +335,33 @@ namespace RunJit.Cli.Generate.DotNetTool
                         //  - V1
                         //    - AddResource
                         // Temp tool build do not allow exceptions
-                        var optionInfo = new OptionInfo()
-                        {
-                            Alias = "-t",
-                            NormalizedName = "token",
-                            Argument = new ArgumentInfo("token", "Bearer token for authentication", "<token>[string]",
+                        var optionInfo = new OptionInfo
+                                         {
+                                             Alias = "-t",
+                                             NormalizedName = "token",
+                                             Argument = new ArgumentInfo("token", "Bearer token for authentication", "<token>[string]",
                                                                          "string", "string", "Token"),
-                            IsIsRequired = false,
-                            Name = "token",
-                            Value = "--token",
-                            Description = "Bearer token for authentication"
-                        };
+                                             IsIsRequired = false,
+                                             Name = "token",
+                                             Value = "--token",
+                                             Description = "Bearer token for authentication"
+                                         };
 
                         var optionsForEndpoints = options.Add(optionInfo).ToList();
 
-                        var endpointCommand = new CommandInfo()
-                        {
-                            Name = endoint.SwaggerOperationId.FirstCharToUpper(),
-                            NormalizedName = endoint.SwaggerOperationId.FirstCharToUpper(),
-                            Description = $"Here comes the description for {endoint.SwaggerOperationId.FirstCharToUpper()}",
-                            Value = endoint.SwaggerOperationId.FirstCharToUpper(),
-                            Argument = endoint.Parameters.IsEmpty()
+                        var endpointCommand = new CommandInfo
+                                              {
+                                                  Name = endoint.SwaggerOperationId.FirstCharToUpper(),
+                                                  NormalizedName = endoint.SwaggerOperationId.FirstCharToUpper(),
+                                                  Description = $"Here comes the description for {endoint.SwaggerOperationId.FirstCharToUpper()}",
+                                                  Value = endoint.SwaggerOperationId.FirstCharToUpper(),
+                                                  Argument = endoint.Parameters.IsEmpty()
                                                                  ? null
                                                                  : new ArgumentInfo("json", "Call info as json which contains url- and query parameters as well the payload if needed", "<callInfos>[string]",
                                                                                     "string", "string", "Json"),
-                            EndpointInfo = endoint,
-                            Options = optionsForEndpoints
-                        };
+                                                  EndpointInfo = endoint,
+                                                  Options = optionsForEndpoints
+                                              };
 
                         versionCommand.SubCommands.Add(endpointCommand);
                     }
@@ -368,14 +370,14 @@ namespace RunJit.Cli.Generate.DotNetTool
                 rootCommand.SubCommands.Add(domainCommand);
             }
 
-            var dotnetToolInfos = new DotNetToolInfos()
-            {
-                ProjectName = projectName,
-                Name = name,
-                NormalizedName = normalizedName,
-                CommandInfo = rootCommand,
-                NetVersion = netVersion
-            };
+            var dotnetToolInfos = new DotNetToolInfos
+                                  {
+                                      ProjectName = projectName,
+                                      Name = name,
+                                      NormalizedName = normalizedName,
+                                      CommandInfo = rootCommand,
+                                      NetVersion = netVersion
+                                  };
 
             return dotnetToolInfos;
         }

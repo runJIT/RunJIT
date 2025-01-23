@@ -4,7 +4,7 @@ namespace RunJit.Cli.Models
 {
     [DebuggerDisplay("{" + nameof(Name) + "}")]
     internal sealed class Property(string type,
-                            string name)
+                                   string name)
     {
         public string Type { get; } = type;
 

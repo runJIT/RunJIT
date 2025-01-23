@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
     }
 
     internal sealed class LambdaCommandBuilder(ILambdaService lambdaService,
-                                        ILambdaOptionsBuilder optionsBuilder) : INewSubCommandBuilder
+                                               ILambdaOptionsBuilder optionsBuilder) : INewSubCommandBuilder
     {
         public Command Build()
         {

@@ -31,7 +31,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                         dotNetToolInfos);
 
             // 2. Print success message
-            consoleService.WriteSuccess($"Successfully created cli structure");
+            consoleService.WriteSuccess("Successfully created cli structure");
 
             return Task.CompletedTask;
         }

@@ -45,9 +45,9 @@ namespace RunJit.Cli.Generate.Client
     //     }
     // }
     internal sealed class DomainFacedBuilder(AssignExpressionBuilder assignExpressionBuilder,
-                                      ParameterBuilder parameterBuilder,
-                                      ServiceRegistrationBuilder serviceRegistrationBuilder,
-                                      PropertiesBuilder propertiesBuilder)
+                                             ParameterBuilder parameterBuilder,
+                                             ServiceRegistrationBuilder serviceRegistrationBuilder,
+                                             PropertiesBuilder propertiesBuilder)
     {
         private readonly string _facadeTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.facade.rps");
 

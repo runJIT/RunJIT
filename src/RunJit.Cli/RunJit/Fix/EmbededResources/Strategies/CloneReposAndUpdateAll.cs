@@ -26,10 +26,10 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
     }
 
     internal sealed class CloneReposAndUpdateAll(ConsoleService consoleService,
-                                          IGitService git,
-                                          IDotNet dotNet,
-                                          IAwsCodeCommit awsCodeCommit,
-                                          FindSolutionFile findSolutionFile) : IFixEmbeddedResourcesStrategy
+                                                 IGitService git,
+                                                 IDotNet dotNet,
+                                                 IAwsCodeCommit awsCodeCommit,
+                                                 FindSolutionFile findSolutionFile) : IFixEmbeddedResourcesStrategy
     {
         public bool CanHandle(FixEmbeddedResourcesParameters parameters)
         {
@@ -50,11 +50,11 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
             var repos = parameters.GitRepos.Split(';');
             var orginalStartFolder = parameters.WorkingDirectory.IsNotNullOrWhiteSpace() ? parameters.WorkingDirectory : Environment.CurrentDirectory;
 
-            if(Directory.Exists(orginalStartFolder) == false)
+            if (Directory.Exists(orginalStartFolder) == false)
             {
                 Directory.CreateDirectory(orginalStartFolder);
             }
-            
+
             foreach (var repo in repos)
             {
                 var index = repos.IndexOf(repo) + 1;
@@ -113,15 +113,15 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
 
                     foreach (var fileExtension in fileExtensions)
                     {
-                        var sqlElement = csprojXml.Descendants().FirstOrDefault(e => e.Name.LocalName == "EmbeddedResource" && (e.Attribute("Include")?.Value == $@"**\*.{fileExtension}"));
+                        var sqlElement = csprojXml.Descendants().FirstOrDefault(e => e.Name.LocalName == "EmbeddedResource" && e.Attribute("Include")?.Value == $@"**\*.{fileExtension}");
 
                         if (sqlElement.IsNull())
                         {
                             var embeddedResourceSql = new XElement("EmbeddedResource");
                             embeddedResourceSql.Add(new XAttribute("Include", $@"**\*.{fileExtension}"));
-                            
+
                             // Very important to exclude bin and obj folders
-                            embeddedResourceSql.Add(new XAttribute("Exclude", $@"bin\**\*;obj\**\*"));
+                            embeddedResourceSql.Add(new XAttribute("Exclude", @"bin\**\*;obj\**\*"));
                             itemGroup.Add(embeddedResourceSql);
                         }
                     }
@@ -133,10 +133,12 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
 
                     // all appsettings.x.json have to be ignored for now
                     var appsettings = csprojFile.ProjectFileInfo.Value.Directory!.EnumerateFiles("appsetting*.json").ToList();
+
                     if (appsettings.Any())
                     {
                         var existAlready = csprojXml.Root!.ElementByAttribute("Remove", "appsetting*.json");
-                        if(existAlready.IsNull())
+
+                        if (existAlready.IsNull())
                         {
                             var itemgroupIgnore = new XElement("ItemGroup");
                             var appsettingElement = new XElement("EmbeddedResource");
@@ -159,7 +161,6 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
 
                             csprojXml.Root!.Add(itemgroupIgnore);
                         }
-                        
                     }
 
                     // remove empty elements

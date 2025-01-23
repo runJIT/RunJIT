@@ -45,7 +45,7 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
         }
     }
 
-    interface IUpdateResharperSettingsStrategy
+    internal interface IUpdateResharperSettingsStrategy
     {
         bool CanHandle(UpdateResharperSettingsParameters parameters);
 

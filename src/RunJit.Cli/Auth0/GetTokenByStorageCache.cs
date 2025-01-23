@@ -10,7 +10,7 @@ namespace RunJit.Cli.Auth0
     internal static class AddAuth0Extension
     {
         internal static void AddAuth0(this IServiceCollection services,
-                                    IConfiguration configuration)
+                                      IConfiguration configuration)
         {
             services.AddAuth0Settings(configuration);
 
@@ -21,19 +21,19 @@ namespace RunJit.Cli.Auth0
         }
     }
 
-    internal record GetTokenByStorageCache() : IQuery<Auth0Token>;
+    internal record GetTokenByStorageCache : IQuery<Auth0Token>;
 
     internal sealed class GetTokenByStorageCacheHandler(IMediator mediator,
-                                                 AspNetCore.Simple.Sdk.Authentication.Auth0.Auth0 authSettings) : IQueryHandler<GetTokenByStorageCache, Auth0Token>
+                                                        AspNetCore.Simple.Sdk.Authentication.Auth0.Auth0 authSettings) : IQueryHandler<GetTokenByStorageCache, Auth0Token>
     {
         public async Task<Auth0Token> Handle(GetTokenByStorageCache request,
                                              CancellationToken cancellationToken)
         {
             // Get the path to the current user's folder
-            string userFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var userFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
             // Define the path to the JSON file
-            string jsonFilePath = Path.Combine(userFolderPath, "RunJit.Cli", "secrets.json");
+            var jsonFilePath = Path.Combine(userFolderPath, "RunJit.Cli", "secrets.json");
 
             // Write the JSON string to the file
             var fileInfo = new FileInfo(jsonFilePath);

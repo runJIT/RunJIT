@@ -42,7 +42,7 @@ namespace RunJit.Cli.Generate.DotNetTool
 
             var implementationToRegister = typeService.GetFullQualifiedName(projectName, argumentImplementationFilePath);
 
-            commandTypeCollector.Add(commandInfo, new Models.TypeToRegister(implementationToRegister, implementationToRegister));
+            commandTypeCollector.Add(commandInfo, new TypeToRegister(implementationToRegister, implementationToRegister));
 
             namespaceCollector.Add($"{currentPath}.Arguments");
         }

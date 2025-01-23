@@ -24,10 +24,10 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
     }
 
     internal sealed class CloneReposAndUpdateAll(ConsoleService consoleService,
-                                          IGitService git,
-                                          IDotNet dotNet,
-                                          IAwsCodeCommit awsCodeCommit,
-                                          FindSolutionFile findSolutionFile) : IUpdateBuildConfigStrategy
+                                                 IGitService git,
+                                                 IDotNet dotNet,
+                                                 IAwsCodeCommit awsCodeCommit,
+                                                 FindSolutionFile findSolutionFile) : IUpdateBuildConfigStrategy
     {
         public bool CanHandle(UpdateBuildConfigParameters parameters)
         {
@@ -47,7 +47,8 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             //    if it is null or whitespace we check current directory
             var repos = parameters.GitRepos.Split(';');
             var orginalStartFolder = parameters.WorkingDirectory.IsNotNullOrWhiteSpace() ? parameters.WorkingDirectory : Environment.CurrentDirectory;
-            if(Directory.Exists(orginalStartFolder) == false)
+
+            if (Directory.Exists(orginalStartFolder) == false)
             {
                 Directory.CreateDirectory(orginalStartFolder);
             }
@@ -88,16 +89,16 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
 
                 // 6. Build the solution first
                 await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
-                
+
                 // 8. Directory.Build.props
                 var file = Path.Combine(solutionFile.Directory!.FullName, "Directory.Build.props");
-            
+
                 // 9. FileContent
                 var content = EmbeddedFile.GetFileContentFrom("RunJit.Update.BuildConfig.Templates.Directory.Build.props");
 
                 //10. Write directory.build.props
                 await File.WriteAllTextAsync(file, content).ConfigureAwait(false);
-                
+
                 //12. Add changes to git
                 await git.AddAsync().ConfigureAwait(false);
 

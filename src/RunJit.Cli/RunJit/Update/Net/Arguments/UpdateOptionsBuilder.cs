@@ -1,7 +1,8 @@
-﻿using Extensions.Pack;
+﻿using System.CommandLine;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RunJit.Cli.RunJit.Update.Net
+namespace RunJit.Cli.Update
 {
     internal static class AddDotNetArgumentsBuilderExtension
     {
@@ -20,15 +21,13 @@ namespace RunJit.Cli.RunJit.Update.Net
     {
         public IEnumerable<System.CommandLine.Argument> Build()
         {
-            yield return BuildSourceOption();
+            yield break;
+            // yield return BuildSourceOption();
         }
 
-        public System.CommandLine.Argument BuildSourceOption()
-        {
-            return new System.CommandLine.Argument<string>()
-                   {
-                       Name = "solutionFile",
-                   };
-        }
+        //public System.CommandLine.Argument BuildSourceOption()
+        //{
+        //    return new Argument<string> { Name = "solutionFile" };
+        //}
     }
 }

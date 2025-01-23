@@ -28,7 +28,8 @@ namespace RunJit.Cli.Test.SystemTest
         [TestMethod]
         [DataRow(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln", "MyApi")]
         [DataRow(@"D:\Siemens\siemens-data-cloud-core\Siemens.Data.Cloud.Core.sln", "Sdc")]
-        public async Task Generate_Cli_For_Minimal_Web_Api(string solutionPath, string toolName)
+        public async Task Generate_Cli_For_Minimal_Web_Api(string solutionPath,
+                                                           string toolName)
         {
             //// 1. Create new Web Api
             //var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("Pulse.NetTool.FromApi", WebApiFolder, BasePath)).ConfigureAwait(false);
@@ -54,11 +55,13 @@ namespace RunJit.Cli.Test.SystemTest
         }
     }
 
-    internal sealed record GenerateDotNetTool(FileInfo Solution, string DotNetToolName) : ICommand;
+    internal sealed record GenerateDotNetTool(FileInfo Solution,
+                                              string DotNetToolName) : ICommand;
 
     internal sealed class GenerateDotNetToolHandler : ICommandHandler<GenerateDotNetTool>
     {
-        public async Task Handle(GenerateDotNetTool request, CancellationToken cancellationToken)
+        public async Task Handle(GenerateDotNetTool request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);

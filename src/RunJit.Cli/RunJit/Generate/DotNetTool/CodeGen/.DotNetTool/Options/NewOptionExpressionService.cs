@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 
 namespace RunJit.Cli.Generate.DotNetTool
 {
@@ -26,7 +27,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             _newOptionExpressionBuilders = newOptionExpressionBuilders;
         }
 
-        public string Build(Models.OptionInfo optionInfo)
+        public string Build(OptionInfo optionInfo)
         {
             Throw.IfNull(() => optionInfo);
 

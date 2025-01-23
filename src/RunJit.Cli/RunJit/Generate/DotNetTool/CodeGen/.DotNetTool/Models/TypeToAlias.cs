@@ -3,7 +3,7 @@
     internal sealed class TypeToAlias
     {
         internal TypeToAlias(Type type,
-                             string @alias)
+                             string alias)
         {
             Type = type;
             Alias = alias;

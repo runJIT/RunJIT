@@ -23,7 +23,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                         using Microsoft.Extensions.DependencyInjection;
                                         using Extensions.Pack;
                                         using System.Text.RegularExpressions;
-                                        
+
                                         namespace $namespace$
                                         {
                                             /// <summary>
@@ -196,10 +196,10 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                                                                    if (p.Contains(".json"))
                                                                                                    {
                                                                                                        var json = EmbeddedFile.GetFileContentFrom(p);
-
+                                        
                                                                                                        return json;
                                                                                                    }
-
+                                        
                                                                                                    return p;
                                                                                                }).ToArray();
                                                 

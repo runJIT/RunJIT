@@ -21,7 +21,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
     }
 
     internal sealed class UpdateNugetPackageService(ConsoleService consoleService,
-                                             IDotNet dotnet) : IUpdateNugetPackageService
+                                                    IDotNet dotnet) : IUpdateNugetPackageService
     {
         public async Task UpdateNugetPackageAsync(OutdatedNugetResponse outdatedNugetResponse,
                                                   IImmutableList<string> packagesToIgnore)

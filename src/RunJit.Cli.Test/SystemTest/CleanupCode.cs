@@ -25,8 +25,9 @@ namespace RunJit.Cli.Test.SystemTest
             // 3. Update to .Net 8
             await Mediator.SendAsync(new CleanupCodeInSolution(solutionFile.FullName)).ConfigureAwait(false);
         }
-        
+
         [DataTestMethod]
+
         //[DataRow("codecommit::eu-central-1://pulse-datamanagement")]
         //[DataRow("codecommit::eu-central-1://pulse-survey")]
         //[DataRow("codecommit::eu-central-1://pulse-core-service")]
@@ -36,6 +37,7 @@ namespace RunJit.Cli.Test.SystemTest
         //[DataRow("codecommit::eu-central-1://pulse-dbi")]
         //[DataRow("codecommit::eu-central-1://pulse-tableau")]
         [DataRow("codecommit::eu-central-1://pulse-powerbi")]
+
         //[DataRow("codecommit::eu-central-1://pulse-sustainability")]
         //[DataRow("codecommit::eu-central-1://pulse-estell")]
         //[DataRow("codecommit::eu-central-1://pulse-database")]
@@ -106,7 +108,7 @@ namespace RunJit.Cli.Test.SystemTest
     }
 
     internal sealed record CleanupCodeForGitRepos(string GitRepos,
-                                                              string WorkingDirectory) : ICommand;
+                                                  string WorkingDirectory) : ICommand;
 
     internal sealed class CleanupCodeForGitReposHandler : ICommandHandler<CleanupCodeForGitRepos>
     {

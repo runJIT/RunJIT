@@ -10,12 +10,12 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             services.AddSingletonIfNotExists<IUpdateBuildConfigArgumentsBuilder, UpdateBuildConfigArgumentsBuilder>();
         }
     }
-    
+
     internal interface IUpdateBuildConfigArgumentsBuilder
     {
         IEnumerable<System.CommandLine.Argument> Build();
     }
-    
+
     internal sealed class UpdateBuildConfigArgumentsBuilder : IUpdateBuildConfigArgumentsBuilder
     {
         public IEnumerable<System.CommandLine.Argument> Build()
@@ -28,7 +28,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
         //    return new System.CommandLine.Argument<string>()
         //           {
         //               Name = "solutionFile",
-                       
+
         //           };
         //}
     }

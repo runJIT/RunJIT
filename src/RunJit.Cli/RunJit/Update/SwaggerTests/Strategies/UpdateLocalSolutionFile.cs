@@ -2,7 +2,6 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
-using RunJit.Cli.RunJit.Update.Net;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.Git;
 using RunJit.Cli.Services.Net;
@@ -17,7 +16,6 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
             services.AddConsoleService();
             services.AddGitService();
             services.AddDotNet();
-            services.AddDotNetService();
 
             // services.AddUpdateSwaggerTestsPackageService();
             services.AddFindSolutionFile();
@@ -27,9 +25,9 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
     }
 
     internal sealed class UpdateLocalSolutionFile(ConsoleService consoleService,
-                                           IDotNet dotNet,
-                                           EmbeddedFileService embeddedFileService,
-                                           FindSolutionFile findSolutionFile) : IUpdateSwaggerTestsStrategy
+                                                  IDotNet dotNet,
+                                                  EmbeddedFileService embeddedFileService,
+                                                  FindSolutionFile findSolutionFile) : IUpdateSwaggerTestsStrategy
     {
         public bool CanHandle(UpdateSwaggerTestsParameters parameters)
         {

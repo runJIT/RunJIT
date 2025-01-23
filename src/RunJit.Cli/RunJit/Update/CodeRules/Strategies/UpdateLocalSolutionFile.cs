@@ -5,12 +5,11 @@ using System.Text.RegularExpressions;
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using MediatR;
-using RunJit.Api.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Api.Client;
 using RunJit.Cli.Auth0;
 using RunJit.Cli.ErrorHandling;
-using RunJit.Cli.RunJit.Update.Net;
 using RunJit.Cli.RunJit.Update.Nuget;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.AwsCodeCommit;
@@ -27,11 +26,11 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             services.AddConsoleService();
             services.AddGitService();
             services.AddDotNet();
-            services.AddDotNetService();
+            services.AddRenameFilesAndFolders();
+            services.AddFindSolutionFile();
             services.AddAwsCodeCommit();
             services.AddUpdateNugetPackageService();
             services.AddRenameFilesAndFolders();
-            services.AddFindSolutionFile();
 
             services.AddRunJitApiClientFactory(configuration);
             services.AddRunJitApiClient();
@@ -47,18 +46,14 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
     }
 
     internal sealed class UpdateLocalSolutionFile(ConsoleService consoleService,
-                                           IGitService git,
-
-                                           //IAwsCodeCommit awsCodeCommit,
-                                           IDotNet dotNet,
-
-                                           //IUpdateNugetPackageService updateNugetPackageService,
-                                           IRenameFilesAndFolders renameFilesAndFolders,
-                                           FindSolutionFile findSolutionFile,
-                                           IRunJitApiClientFactory runJitApiClientFactory,
-                                           IHttpClientFactory httpClientFactory,
-                                           IMediator mediator,
-                                           RunJitApiClientSettings runJitApiClientSettings) : IUpdateCodeRulesStrategy
+                                                  IGitService git,
+                                                  IDotNet dotNet,
+                                                  IRenameFilesAndFolders renameFilesAndFolders,
+                                                  FindSolutionFile findSolutionFile,
+                                                  IRunJitApiClientFactory runJitApiClientFactory,
+                                                  IHttpClientFactory httpClientFactory,
+                                                  IMediator mediator,
+                                                  RunJitApiClientSettings runJitApiClientSettings) : IUpdateCodeRulesStrategy
     {
         public bool CanHandle(UpdateCodeRulesParameters parameters)
         {
@@ -201,9 +196,9 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                 {
                     var fileContent = await File.ReadAllTextAsync(mstestbaseClass.FullName).ConfigureAwait(false);
 
-                    string pattern = @"new SolutionFileName\("".*\.sln""\)";
-                    string replacement = @$"new SolutionFileName(""{solutionFile.Name}"")";
-                    string result = Regex.Replace(fileContent, pattern, replacement);
+                    var pattern = @"new SolutionFileName\("".*\.sln""\)";
+                    var replacement = @$"new SolutionFileName(""{solutionFile.Name}"")";
+                    var result = Regex.Replace(fileContent, pattern, replacement);
 
                     await File.WriteAllTextAsync(mstestbaseClass.FullName, result).ConfigureAwait(false);
                 }
@@ -233,7 +228,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
                 if (newCodeRuleProject.IsNull())
                 {
-                    throw new FileNotFoundException($"Could not find the code rules project after renaming process.");
+                    throw new FileNotFoundException("Could not find the code rules project after renaming process.");
                 }
             }
 
@@ -284,7 +279,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
             foreach (var directoryInfo in folders)
             {
-                if (Guid.TryParse(directoryInfo.Name, out var _))
+                if (Guid.TryParse(directoryInfo.Name, out _))
                 {
                     directoryInfo.Delete(true);
                 }

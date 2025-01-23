@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 
 namespace RunJit.Cli.Generate.DotNetTool
 {
@@ -31,7 +32,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             _newOptionExpressionService = newOptionExpressionService;
         }
 
-        public IEnumerable<Models.MethodInfo> Build(IEnumerable<Models.OptionInfo> options)
+        public IEnumerable<MethodInfo> Build(IEnumerable<OptionInfo> options)
         {
             Throw.IfNull(() => options);
 
@@ -41,7 +42,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                 var newMethod = OptionMethodTemplate.Replace("$option$", newOptionStatement).Replace("$option-name$", option.NormalizedName);
                 var methodName = $"Build{option.NormalizedName}Option";
 
-                yield return new Models.MethodInfo(methodName, newMethod);
+                yield return new MethodInfo(methodName, newMethod);
             }
         }
     }

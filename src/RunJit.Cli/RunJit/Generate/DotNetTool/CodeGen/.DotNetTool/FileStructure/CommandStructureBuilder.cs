@@ -39,10 +39,12 @@ namespace RunJit.Cli.Generate.DotNetTool
             }
 
             string? command = null;
+
             // ToDo: Better refactor take over code from .net tool builder > 7 years old
             if (commandInfo.Argument.IsNull() && commandInfo.Options.IsEmpty())
             {
-                command = commandBuilderSimple.Build(projectName, commandInfo, parentCommandInfo, currentPath);
+                command = commandBuilderSimple.Build(projectName, commandInfo, parentCommandInfo,
+                                                     currentPath);
             }
             else if (commandInfo.Argument.IsNull() && commandInfo.Options.Any())
             {
@@ -56,7 +58,8 @@ namespace RunJit.Cli.Generate.DotNetTool
             }
             else if (commandInfo.Argument.IsNotNull() && commandInfo.Options.Any())
             {
-                command = commandBuilderWithArgumentAndOption.Build(projectName, commandInfo, parentCommandInfo, currentPath);
+                command = commandBuilderWithArgumentAndOption.Build(projectName, commandInfo, parentCommandInfo,
+                                                                    currentPath);
             }
 
             var fileInfo = new FileInfo(Path.Combine(subCommnandDirectoryInfo.FullName, $"{commandInfo.NormalizedName}CommandBuilder.cs"));
@@ -69,7 +72,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             var interfaceName = $"{newNamespaceForInterface}.I{parentCommandInfo?.NormalizedName}SubCommandBuilder";
             var implementationToRegister = typeService.GetFullQualifiedName(projectName, fileInfo);
 
-            commandTypeCollector.Add(commandInfo, new Models.TypeToRegister(interfaceName, implementationToRegister));
+            commandTypeCollector.Add(commandInfo, new TypeToRegister(interfaceName, implementationToRegister));
         }
     }
 }

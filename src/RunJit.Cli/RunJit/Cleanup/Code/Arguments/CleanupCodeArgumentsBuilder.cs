@@ -1,4 +1,5 @@
-﻿using Extensions.Pack;
+﻿using System.CommandLine;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RunJit.Cli.RunJit.Cleanup.Code
@@ -25,10 +26,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
 
         public System.CommandLine.Argument BuildSourceOption()
         {
-            return new System.CommandLine.Argument<string>()
-            {
-                Name = "solutionFile",
-            };
+            return new Argument<string> { Name = "solutionFile" };
         }
     }
 }

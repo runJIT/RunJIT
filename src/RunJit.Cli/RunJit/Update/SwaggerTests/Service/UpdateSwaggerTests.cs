@@ -45,7 +45,7 @@ namespace RunJit.Cli.RunJit.Update.SwaggerTests
         }
     }
 
-    interface IUpdateSwaggerTestsStrategy
+    internal interface IUpdateSwaggerTestsStrategy
     {
         bool CanHandle(UpdateSwaggerTestsParameters parameters);
 

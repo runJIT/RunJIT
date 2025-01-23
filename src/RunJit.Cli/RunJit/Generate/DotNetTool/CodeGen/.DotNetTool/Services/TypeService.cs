@@ -11,16 +11,19 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
     }
 
-    internal sealed class TypeService 
+    internal sealed class TypeService
     {
-        public string GetFullQualifiedName(string projectName, FileInfo fileInfo)
+        public string GetFullQualifiedName(string projectName,
+                                           FileInfo fileInfo)
         {
             var path = CollectPath(fileInfo.Directory, projectName).Reverse().ToList();
             var fullQualifiedName = $"{projectName}.{path.Flatten(".")}.{fileInfo.NameWithoutExtension()}";
+
             return fullQualifiedName;
         }
 
-        private static IEnumerable<string> CollectPath(DirectoryInfo? startDirectoryInfo, string name)
+        private static IEnumerable<string> CollectPath(DirectoryInfo? startDirectoryInfo,
+                                                       string name)
         {
             if (startDirectoryInfo == null)
             {
@@ -38,6 +41,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             }
 
             var result = CollectPath(startDirectoryInfo.Parent, name).ToList();
+
             foreach (var value in result)
             {
                 // Hint: Structure in the solutions all was normalized, that first char is to upper.

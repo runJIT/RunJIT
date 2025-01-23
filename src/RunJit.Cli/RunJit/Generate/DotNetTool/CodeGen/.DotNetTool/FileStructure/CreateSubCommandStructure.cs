@@ -52,9 +52,8 @@ namespace RunJit.Cli.Generate.DotNetTool
 
             var implementation = $"{currentPath}.{filePath0.NameWithoutExtension()}";
             var interfaceType = parentCommandInfo.IsNull() ? implementation : $"{newNamespaceForInterface}.I{parentCommandInfo?.NormalizedName}SubCommandBuilder";
-            
 
-            commandTypeCollector.Add(commandInfo, new Models.TypeToRegister(interfaceType, implementation));
+            commandTypeCollector.Add(commandInfo, new TypeToRegister(interfaceType, implementation));
         }
     }
 }

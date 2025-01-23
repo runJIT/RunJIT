@@ -20,8 +20,8 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
 
     internal sealed class CleanupCodeCommandBuilder(ICleanupCode updateService,
 
-                                             // ICleanupCodeArgumentsBuilder argumentsBuilder,
-                                             ICleanupCodeOptionsBuilder optionsBuilder) : ICleanupSubCommandBuilder
+                                                    // ICleanupCodeArgumentsBuilder argumentsBuilder,
+                                                    ICleanupCodeOptionsBuilder optionsBuilder) : ICleanupSubCommandBuilder
     {
         public Command Build()
         {

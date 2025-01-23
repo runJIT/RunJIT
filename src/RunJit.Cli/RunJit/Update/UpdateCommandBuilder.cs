@@ -5,17 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Rename.Solution;
 using RunJit.Cli.RunJit.Update.BuildConfig;
 using RunJit.Cli.RunJit.Update.CodeRules;
-using RunJit.Cli.RunJit.Update.Net;
 using RunJit.Cli.RunJit.Update.Nuget;
 using RunJit.Cli.RunJit.Update.ResharperSettings;
 using RunJit.Cli.RunJit.Update.SwaggerTests;
+using RunJit.Cli.Update;
 
 namespace RunJit.Cli.RunJit.Update
 {
     internal static class AddUpdateCommandBuilderExtension
     {
         internal static void AddUpdateCommandBuilder(this IServiceCollection services,
-                                                   IConfiguration configuration)
+                                                     IConfiguration configuration)
         {
             services.AddBackendCommandBuilder();
             services.AddUpdateCodeRulesCommandBuilder(configuration);

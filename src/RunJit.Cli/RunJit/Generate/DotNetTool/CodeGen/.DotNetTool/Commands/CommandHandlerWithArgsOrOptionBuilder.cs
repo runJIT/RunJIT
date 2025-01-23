@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.Generate.DotNetTool
@@ -17,7 +18,7 @@ namespace RunJit.Cli.Generate.DotNetTool
     {
         private const string Template = "CommandHandler.Create<$types$>(($argument-names$) => $command-argument-name$Handler.HandleAsync(new $command-name$Parameters($argument-names$)))";
 
-        public string Build(Models.CommandInfo parameterInfo)
+        public string Build(CommandInfo parameterInfo)
         {
             var arguments = BuildCtorArguments(parameterInfo).ToList();
             var types = arguments.Select(arg => arg.Type).Flatten(", ");
@@ -31,14 +32,14 @@ namespace RunJit.Cli.Generate.DotNetTool
             return newTemplate.FormatSyntaxTree();
         }
 
-        public bool IsThisBuilderFor(Models.CommandInfo parameterInfo)
+        public bool IsThisBuilderFor(CommandInfo parameterInfo)
         {
             Throw.IfNull(() => parameterInfo);
 
             return parameterInfo.Argument.IsNotNull() || parameterInfo.Options.Any();
         }
 
-        private IEnumerable<Models.CtorArgument> BuildCtorArguments(Models.CommandInfo parameterInfo)
+        private IEnumerable<CtorArgument> BuildCtorArguments(CommandInfo parameterInfo)
         {
             Throw.IfNull(() => parameterInfo);
 
@@ -46,18 +47,18 @@ namespace RunJit.Cli.Generate.DotNetTool
 
             if (argumentInfo.IsNotNull())
             {
-                yield return new Models.CtorArgument(argumentInfo.OptimizedType, ((string)argumentInfo.NormalizedName).FirstCharToLower());
+                yield return new CtorArgument(argumentInfo.OptimizedType, ((string)argumentInfo.NormalizedName).FirstCharToLower());
             }
 
             foreach (var optionInfo in parameterInfo.Options)
             {
                 if (optionInfo.Argument.IsNotNull())
                 {
-                    yield return new Models.CtorArgument(optionInfo.Argument.OptimizedType, ((string)optionInfo.NormalizedName).FirstCharToLower());
+                    yield return new CtorArgument(optionInfo.Argument.OptimizedType, ((string)optionInfo.NormalizedName).FirstCharToLower());
                 }
                 else
                 {
-                    yield return new Models.CtorArgument("bool", ((string)optionInfo.NormalizedName).FirstCharToLower());
+                    yield return new CtorArgument("bool", ((string)optionInfo.NormalizedName).FirstCharToLower());
                 }
             }
         }

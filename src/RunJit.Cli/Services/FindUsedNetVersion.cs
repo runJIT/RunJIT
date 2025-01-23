@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.Services
@@ -21,32 +21,32 @@ namespace RunJit.Cli.Services
         {
             var netFrameworkInSolution = solutionFile.ProductiveProjects[0].TargetFrameworkVersion.FirstOrDefault();
 
-
             if (netFrameworkInSolution.IsNullOrEmpty())
             {
                 // We have to check directory build props
                 var directoryBuildProps = solutionFile.SolutionFileInfo.Value.Directory!.EnumerateFiles("Directory.Build.props").FirstOrDefault();
+
                 if (directoryBuildProps.IsNull())
                 {
                     // Default this was the min when we developed the code
                     return DefaultNetVersion;
                 }
-                else
+
+                var directoryBuildPropsAsXDocument = XDocument.Load(directoryBuildProps.FullName);
+
+                // Find the TargetFramework or TargetFrameworks element
+                var targetFramework = directoryBuildPropsAsXDocument.Descendants("TargetFramework").FirstOrDefault()?.Value;
+
+                if (targetFramework.IsNotNullOrWhiteSpace())
                 {
-                    var directoryBuildPropsAsXDocument = XDocument.Load(directoryBuildProps.FullName);
+                    return targetFramework;
+                }
 
-                    // Find the TargetFramework or TargetFrameworks element
-                    var targetFramework = directoryBuildPropsAsXDocument.Descendants("TargetFramework").FirstOrDefault()?.Value;
-                    if (targetFramework.IsNotNullOrWhiteSpace())
-                    {
-                        return targetFramework;
-                    }
+                var targetFrameworks = directoryBuildPropsAsXDocument.Descendants("TargetFrameworks").FirstOrDefault()?.Value.Split(";").OrderBy(i => i).LastOrDefault();
 
-                    var targetFrameworks = directoryBuildPropsAsXDocument.Descendants("TargetFrameworks").FirstOrDefault()?.Value.Split(";").OrderBy(i => i).LastOrDefault();
-                    if (targetFrameworks.IsNotNullOrWhiteSpace())
-                    {
-                        return targetFrameworks;
-                    }
+                if (targetFrameworks.IsNotNullOrWhiteSpace())
+                {
+                    return targetFrameworks;
                 }
             }
 

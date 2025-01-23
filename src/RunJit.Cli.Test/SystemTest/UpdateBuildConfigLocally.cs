@@ -27,7 +27,6 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new UpdateBuildConfigLocally(solutionFile.FullName, 8)).ConfigureAwait(false);
         }
 
-        
         [DataTestMethod]
         [DataRow("codecommit::eu-central-1://pulse-datamanagement")]
         [DataRow("codecommit::eu-central-1://pulse-survey")]
@@ -70,7 +69,6 @@ namespace RunJit.Cli.Test.SystemTest
             var exitCode = await Program.Main(strings).ConfigureAwait(false);
             var output = sw.ToString();
 
-
             Assert.AreEqual(0, exitCode, output);
         }
 
@@ -85,7 +83,7 @@ namespace RunJit.Cli.Test.SystemTest
     }
 
     internal sealed record UpdateBuildConfig(string GitRepos,
-                                               string WorkingDirectory) : ICommand;
+                                             string WorkingDirectory) : ICommand;
 
     internal sealed class UpdateBuildConfigHandler : ICommandHandler<UpdateBuildConfig>
     {

@@ -18,7 +18,7 @@ namespace RunJit.Cli.Generate.DotNetTool
     {
         private const string Template = """
                                         using Extensions.Pack;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal static class AddOutputWriterExtension

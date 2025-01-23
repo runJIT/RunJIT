@@ -1,8 +1,6 @@
-﻿using System.Xml.Linq;
-using Extensions.Pack;
+﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Generate.DotNetTool.Models;
-using RunJit.Cli.Services;
 
 namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 {
@@ -14,7 +12,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
         }
     }
 
-    internal sealed class OutputToConsoleCodeGen() : IDotNetToolTestCaseCodeGen
+    internal sealed class OutputToConsoleCodeGen : IDotNetToolTestCaseCodeGen
     {
         private const string Template = """
                                                 /// <summary>
@@ -59,7 +57,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 
             var newTemplate = Template.Replace("$namespace$", $"{dotNetToolInfos.ProjectName}.Test")
                                       .Replace("$cliCall$", cliCallWithArgumentAndOutput)
-                                      .Replace("$testMethodName$", $"{testMethodName}_To_Console_Out_With_Format" )
+                                      .Replace("$testMethodName$", $"{testMethodName}_To_Console_Out_With_Format")
                                       .Replace("$expectedOutput$", expectedOutput)
                                       .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName.ToLower())
                                       .Replace("$commandName$", commandInfo.NormalizedName)

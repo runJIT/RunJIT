@@ -30,7 +30,6 @@ namespace RunJit.Cli.Generate.DotNetTool
                                         XDocument projectDocument,
                                         DotNetToolInfos dotNetToolInfos)
         {
-
             // 1. Add AppSettings.cs
             var file = Path.Combine(projectFileInfo.Directory!.FullName, "appsettings.json");
 

@@ -66,7 +66,7 @@ namespace RunJit.Cli.Services.Resharper
             await File.WriteAllTextAsync(editorConfigFile.FullName, editorConfig).ConfigureAwait(false);
 
             // 4. Get the absolute installation path of the .dotnet/tools directory
-            string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var dotnetToolDirectory = new DirectoryInfo(Path.Combine(userProfile, ".dotnet", "tools"));
 
             // 5. Find absolute path of the installed R# dotnet tool
@@ -93,8 +93,7 @@ namespace RunJit.Cli.Services.Resharper
                 consoleService.WriteError($"Code cleanup in solution {solutionFile.FullName} failed");
             }
         }
-        
-        
+
         //internal async Task CleanupProjectAsync(FileInfo solutionFile,
         //                                        FileInfo projectFile)
         //{

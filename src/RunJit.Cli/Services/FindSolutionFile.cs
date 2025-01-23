@@ -44,7 +44,10 @@ namespace RunJit.Cli.Services
 
             if (files.Length > 1)
             {
-                throw new RunJitException($"Found more than one solution file in directory {directoryInfo}");
+                // ToDo: Temporary
+                return new FileInfo(files[0]);
+
+                // throw new RunJitException($"Found more than one solution file in directory {directoryInfo}");
             }
 
             return new FileInfo(files[0]);

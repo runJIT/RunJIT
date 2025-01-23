@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
     internal static class AddUpdateCodeRulesExtension
     {
         internal static void AddUpdateCodeRules(this IServiceCollection services,
-                                              IConfiguration configuration)
+                                                IConfiguration configuration)
         {
             services.AddConsoleService();
             services.AddUpdateCodeRulesParameters();
@@ -50,7 +50,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
         }
     }
 
-    interface IUpdateCodeRulesStrategy
+    internal interface IUpdateCodeRulesStrategy
     {
         bool CanHandle(UpdateCodeRulesParameters parameters);
 

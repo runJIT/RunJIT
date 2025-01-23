@@ -4,7 +4,6 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit.Update.Nuget;
-using Solution.Parser.Solution;
 
 namespace RunJit.Cli.Services.Net
 {

@@ -18,8 +18,8 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
     }
 
     internal sealed class UpdateBuildConfigCommandBuilder(IUpdateBuildConfigService updateService,
-                                             IUpdateBuildConfigArgumentsBuilder argumentsBuilder,
-                                             IUpdateBuildConfigOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
+                                                          IUpdateBuildConfigArgumentsBuilder argumentsBuilder,
+                                                          IUpdateBuildConfigOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {
         public Command Build()
         {

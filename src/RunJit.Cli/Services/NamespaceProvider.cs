@@ -15,12 +15,12 @@ namespace RunJit.Cli.Services
     internal sealed class NamespaceProvider
     {
         private const string Template = """
-                                <wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                                                        xmlns:s="clr-namespace:System;assembly=mscorlib"
-                                                        xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml"
-                                                        xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-                                </wpf:ResourceDictionary>
-                                """;
+                                        <wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                                                xmlns:s="clr-namespace:System;assembly=mscorlib"
+                                                                xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml"
+                                                                xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                                        </wpf:ResourceDictionary>
+                                        """;
 
         internal void SetNamespaceProviderAsync(FileInfo projectFile,
                                                 string @namespace,
@@ -40,7 +40,7 @@ namespace RunJit.Cli.Services
 
             XNamespace sNamespace = "clr-namespace:System;assembly=mscorlib";
             XNamespace xNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
-            XElement element = new XElement(sNamespace + "Boolean");
+            var element = new XElement(sNamespace + "Boolean");
             element.SetAttributeValue(xNamespace + "Key", $"/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/={resharperIgnoreEntry}/@EntryIndexedValue");
             element.Value = value.ToString();
             xDocument.XDocument.Root!.Add(element);
@@ -48,7 +48,7 @@ namespace RunJit.Cli.Services
             xDocument.XDocument.Save(xDocument.Path);
         }
 
-        private (XDocument XDocument, string Path) GetXDocument(FileInfo projectFile)
+        private (System.Xml.Linq.XDocument XDocument, string Path) GetXDocument(FileInfo projectFile)
         {
             var dotSetttings = projectFile.Directory!.EnumerateFiles($"{projectFile.Name}.DotSettings").FirstOrDefault();
 

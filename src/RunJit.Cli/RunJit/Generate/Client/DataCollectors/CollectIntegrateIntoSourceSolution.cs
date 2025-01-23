@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     internal sealed class CollectIntegrateIntoSourceSolution(IntegrateIntoSourceSolutionValidator inputValidator,
-                                                      ICollectTillInputCorrect collectTillInputCorrect)
+                                                             ICollectTillInputCorrect collectTillInputCorrect)
     {
         private const string Title = @"Where would you like to create your client:
 1. Into your given source solutions {0}

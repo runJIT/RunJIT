@@ -26,10 +26,7 @@ namespace RunJit.Cli.RunJit.Zip
 
         private System.CommandLine.Argument BuildValueArgument()
         {
-            return new Argument<DirectoryInfo>("directory")
-                   {
-                       Description = "The value which should be Ziped",
-                   };
+            return new Argument<DirectoryInfo>("directory") { Description = "The value which should be Ziped" };
         }
     }
 }

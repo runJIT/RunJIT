@@ -34,13 +34,15 @@ namespace RunJit.Cli.Generate.DotNetTool
                 return;
             }
 
-            var commandServiceResult = commandServiceBuilder.Build(projectName, commandInfo, currentPath, dotNetToolName);
+            var commandServiceResult = commandServiceBuilder.Build(projectName, commandInfo, currentPath,
+                                                                   dotNetToolName);
+
             var serviceFolder = new DirectoryInfo(Path.Combine(subCommnandDirectoryInfo.FullName, "Handlers"));
             serviceFolder.Exists.IfFalseThen(() => serviceFolder.Create());
             var commandService = new FileInfo(Path.Combine(serviceFolder.FullName, $"{commandInfo.NormalizedName}Handler.cs"));
 
             File.WriteAllText(commandService.FullName, commandServiceResult);
-            
+
             var implementationToRegister = typeService.GetFullQualifiedName(projectName, commandService);
 
             commandTypeCollector.Add(commandInfo, new TypeToRegister(implementationToRegister, implementationToRegister));

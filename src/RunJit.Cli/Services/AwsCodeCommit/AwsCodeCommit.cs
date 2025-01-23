@@ -29,7 +29,7 @@ namespace RunJit.Cli.Services.AwsCodeCommit
     }
 
     internal sealed class AwsCodeCommit(ConsoleService consoleService,
-                                 IGitService git) : IAwsCodeCommit
+                                        IGitService git) : IAwsCodeCommit
     {
         public async Task CreatePullRequestAsync(string title,
                                                  string description,

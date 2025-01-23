@@ -10,7 +10,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
             services.AddSingletonIfNotExists<UpdateBuildConfigParameters>();
         }
     }
-    
+
     internal record UpdateBuildConfigParameters(string SolutionFile,
                                                 string GitRepos,
                                                 string WorkingDirectory);

@@ -20,8 +20,8 @@ namespace RunJit.Cli.RunJit.Update.ResharperSettings
 
     internal sealed class UpdateResharperSettingsCommandBuilder(IUpdateResharperSettings updateService,
 
-                                                         // IUpdateResharperSettingsArgumentsBuilder argumentsBuilder,
-                                                         IUpdateResharperSettingsOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
+                                                                // IUpdateResharperSettingsArgumentsBuilder argumentsBuilder,
+                                                                IUpdateResharperSettingsOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {
         public Command Build()
         {

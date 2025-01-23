@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
     internal static class AddNewLambdaServiceExtension
     {
         internal static void AddNewLambdaService(this IServiceCollection services,
-                                               IConfiguration configuration)
+                                                 IConfiguration configuration)
         {
             services.AddUpdateLocalSolutionFile(configuration);
             services.AddCloneReposAndUpdateAll();
@@ -47,7 +47,7 @@ namespace RunJit.Cli.RunJit.New.Lambda
         }
     }
 
-    interface IAddNewLambdaServiceStrategy
+    internal interface IAddNewLambdaServiceStrategy
     {
         bool CanHandle(LambdaParameters parameters);
 

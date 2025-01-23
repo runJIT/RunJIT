@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     internal sealed class CollectTargetPath(TargetPathValidator inputValidator,
-                                     ICollectTillInputCorrect collectTillInputCorrect)
+                                            ICollectTillInputCorrect collectTillInputCorrect)
     {
         private const string Title = @"Please enter the target path where the client should be generated. Sample: D:\Clients\";
 

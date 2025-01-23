@@ -1,5 +1,6 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 
 namespace RunJit.Cli.Generate.DotNetTool
 {
@@ -16,7 +17,7 @@ namespace RunJit.Cli.Generate.DotNetTool
 
     internal sealed class CommandHandlerBuilder(IEnumerable<ICommandHandlerStringBuilder> commandHandlerStringBuilders)
     {
-        public string Build(Models.CommandInfo parameterInfo)
+        public string Build(CommandInfo parameterInfo)
         {
             var builder = commandHandlerStringBuilders.Single(b => b.IsThisBuilderFor(parameterInfo));
 

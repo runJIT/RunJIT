@@ -17,11 +17,12 @@ namespace RunJit.Cli.Generate.Client
 
     /// <summary>
     ///     What we create here:
-    ///     - We are just replace parameters from the RunJit.Generate.Client.Templates.client.factory.rps template to create the
+    ///     - We are just replace parameters from the RunJit.Generate.Client.Templates.client.factory.rps template to create
+    ///     the
     ///     client factory
     /// </summary>
     internal sealed class ClientFactoryBuilder(UsingsBuilder usingsBuilder,
-                                        DependencyBuilder dependencyBuilder)
+                                               DependencyBuilder dependencyBuilder)
     {
         private readonly string _clientFactoryTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.client.factory.rps");
 

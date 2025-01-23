@@ -17,7 +17,7 @@ namespace RunJit.Cli.Test
         protected static DirectoryInfo WebApiFolder { get; private set; } = null!;
 
         protected static DirectoryInfo NugetFolder { get; private set; } = null!;
-        
+
         protected static DirectoryInfo CodeCleanupFolder { get; private set; } = null!;
 
         protected static DirectoryInfo CodeRuleFolder { get; private set; } = null!;
@@ -62,7 +62,7 @@ namespace RunJit.Cli.Test
             {
                 NugetFolder.Delete(true);
             }
-            
+
             if (CodeCleanupFolder.Exists)
             {
                 foreach (var folder in CodeCleanupFolder.EnumerateDirectories("*", SearchOption.AllDirectories))
@@ -82,7 +82,7 @@ namespace RunJit.Cli.Test
             }
             else
             {
-                CodeCleanupFolder.Create();   
+                CodeCleanupFolder.Create();
             }
 
             if (CodeRuleFolder.Exists)

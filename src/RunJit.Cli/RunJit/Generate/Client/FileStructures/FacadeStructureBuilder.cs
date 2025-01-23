@@ -16,7 +16,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     internal sealed class FacadeStructureBuilder(DomainFolderBuilder domainFolderBuilder,
-                                          EndpointStructureBuilder endpointStructureBuilder)
+                                                 EndpointStructureBuilder endpointStructureBuilder)
     {
         internal async Task CreateAsync(DirectoryInfo apiFolder,
                                         IImmutableList<GeneratedFacade> clientFacades,

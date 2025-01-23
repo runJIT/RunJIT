@@ -8,9 +8,9 @@ namespace RunJit.Cli.Generate.DotNetTool.Models
     [DebuggerDisplay("{" + nameof(Name) + "}")]
     public record CommandInfo
     {
-        public List<CommandInfo> SubCommands { get; init; } = new List<CommandInfo>();
+        public List<CommandInfo> SubCommands { get; init; } = new();
 
-        public List<OptionInfo> Options { get; init; } = new List<OptionInfo>();
+        public List<OptionInfo> Options { get; init; } = new();
 
         public ArgumentInfo? Argument { get; init; }
 

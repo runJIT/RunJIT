@@ -25,11 +25,11 @@ namespace RunJit.Cli.RunJit.Update.Nuget
     }
 
     internal sealed class CloneReposAndUpdateAll(ConsoleService consoleService,
-                                          IGitService git,
-                                          IDotNet dotNet,
-                                          IUpdateNugetPackageService updateNugetPackageService,
-                                          IAwsCodeCommit awsCodeCommit,
-                                          FindSolutionFile findSolutionFile) : IUpdateNugetStrategy
+                                                 IGitService git,
+                                                 IDotNet dotNet,
+                                                 IUpdateNugetPackageService updateNugetPackageService,
+                                                 IAwsCodeCommit awsCodeCommit,
+                                                 FindSolutionFile findSolutionFile) : IUpdateNugetStrategy
     {
         public bool CanHandle(UpdateNugetParameters parameters)
         {
@@ -49,6 +49,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
             //    if it is null or whitespace we check current directory
             var repos = parameters.GitRepos.Split(';');
             var orginalStartFolder = parameters.WorkingDirectory.IsNotNullOrWhiteSpace() ? parameters.WorkingDirectory : Environment.CurrentDirectory;
+
             if (Directory.Exists(orginalStartFolder) == false)
             {
                 Directory.CreateDirectory(orginalStartFolder);
@@ -99,6 +100,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
 
                 // just for testing
                 var testprojectFolders = solutionFile.Directory!.EnumerateDirectories("*.Test");
+
                 foreach (var testprojectFolder in testprojectFolders)
                 {
                     foreach (var csharprFile in testprojectFolder.EnumerateFiles("*.cs", SearchOption.AllDirectories))

@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.Generate.DotNetTool
@@ -13,7 +14,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
     }
 
-    internal sealed class ArgumentBuilder 
+    internal sealed class ArgumentBuilder
     {
         private const string Template =
             @"
@@ -45,7 +46,7 @@ namespace $namespace$
 }";
 
         public string Build(string projectName,
-                            Models.CommandInfo parameterInfo,
+                            CommandInfo parameterInfo,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(projectName);

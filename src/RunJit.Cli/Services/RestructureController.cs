@@ -36,15 +36,15 @@ namespace RunJit.Cli.Services
                         var normalizedGroupName = string.Join("", boundContext.Key.Where(char.IsLetterOrDigit));
 
                         yield return new ControllerInfo
-                        {
-                            DomainName = normalizedGroupName,
-                            GroupName = normalizedGroupName,
-                            Name = normalizedGroupName,
-                            Methods = methods,
-                            BaseUrl = boundContext.First().BaseUrl,
-                            Version = groupByVersion.Key,
-                            Attributes = attributes
-                        };
+                                     {
+                                         DomainName = normalizedGroupName,
+                                         GroupName = normalizedGroupName,
+                                         Name = normalizedGroupName,
+                                         Methods = methods,
+                                         BaseUrl = boundContext.First().BaseUrl,
+                                         Version = groupByVersion.Key,
+                                         Attributes = attributes
+                                     };
                     }
                 }
             }

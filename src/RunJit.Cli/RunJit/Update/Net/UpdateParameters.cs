@@ -1,16 +1,18 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RunJit.Cli.RunJit.Update.Net
+namespace RunJit.Cli.Update
 {
     internal static class AddDotNetParametersExtension
     {
-        internal static void AddDotNetParameters(this IServiceCollection services)
+        internal static void AddUpdateDotNetVersionParameters(this IServiceCollection services)
         {
-            services.AddSingletonIfNotExists<DotNetParameters>();
+            services.AddSingletonIfNotExists<UpdateDotNetVersionParameters>();
         }
     }
 
-    internal record DotNetParameters(string SolutionFile,
-                                     int Version);
+    internal record UpdateDotNetVersionParameters(string SolutionFile,
+                                                  string GitRepos,
+                                                  string WorkingDirectory,
+                                                  int Version);
 }

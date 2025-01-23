@@ -28,6 +28,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             //        <ImplicitUsings>enable</ImplicitUsings>
             //    </PropertyGroup>
             var toolSettingsComment = new XComment(".NET tool specific settings");
+
             var toolPropertyGroup = new XElement("PropertyGroup",
                                                  new XElement("OutputType", "Exe"),
                                                  new XElement("PackAsTool", "true"),

@@ -9,8 +9,6 @@ namespace RunJit.Cli.Test.SystemTest
     [TestClass]
     public class LocalizeStringsTest : GlobalSetup
     {
-
-        
         [DataTestMethod]
         [DataRow("codecommit::eu-central-1://pulse-datamanagement")]
         [DataRow("codecommit::eu-central-1://pulse-survey")]

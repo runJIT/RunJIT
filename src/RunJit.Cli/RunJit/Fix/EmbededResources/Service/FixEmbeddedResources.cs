@@ -45,7 +45,7 @@ namespace RunJit.Cli.RunJit.Fix.EmbededResources
         }
     }
 
-    interface IFixEmbeddedResourcesStrategy
+    internal interface IFixEmbeddedResourcesStrategy
     {
         bool CanHandle(FixEmbeddedResourcesParameters parameters);
 

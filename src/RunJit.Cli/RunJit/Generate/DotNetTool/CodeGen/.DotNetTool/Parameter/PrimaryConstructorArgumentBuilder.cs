@@ -1,5 +1,6 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 
 namespace RunJit.Cli.Generate.DotNetTool
 {
@@ -13,24 +14,24 @@ namespace RunJit.Cli.Generate.DotNetTool
 
     internal sealed class PrimaryConstructorArgumentBuilder
     {
-        public IEnumerable<Models.CtorArgument> Build(Models.CommandInfo parameterInfo)
+        public IEnumerable<CtorArgument> Build(CommandInfo parameterInfo)
         {
             var argumentInfo = parameterInfo.Argument;
 
             if (argumentInfo.IsNotNull())
             {
-                yield return new Models.CtorArgument(argumentInfo.OptimizedType, ((string)argumentInfo.NormalizedName).FirstCharToLower());
+                yield return new CtorArgument(argumentInfo.OptimizedType, ((string)argumentInfo.NormalizedName).FirstCharToLower());
             }
 
             foreach (var optionInfo in parameterInfo.Options)
             {
                 if (optionInfo.Argument.IsNotNull())
                 {
-                    yield return new Models.CtorArgument(optionInfo.Argument.OptimizedType, ((string)optionInfo.NormalizedName).FirstCharToUpper());
+                    yield return new CtorArgument(optionInfo.Argument.OptimizedType, ((string)optionInfo.NormalizedName).FirstCharToUpper());
                 }
                 else
                 {
-                    yield return new Models.CtorArgument("bool", ((string)optionInfo.NormalizedName).FirstCharToUpper());
+                    yield return new CtorArgument("bool", ((string)optionInfo.NormalizedName).FirstCharToUpper());
                 }
             }
         }

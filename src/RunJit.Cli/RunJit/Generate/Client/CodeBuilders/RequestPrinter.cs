@@ -19,7 +19,7 @@ namespace RunJit.Cli.Generate.Client
     // Curl
     //   -> CurlBuilder.cs
     //   -> RequestPrinter.cs
-    internal sealed class RequestPrinter()
+    internal sealed class RequestPrinter
     {
         private readonly string _curlBuilderTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.RequestPrinter.rps");
 

@@ -1,9 +1,7 @@
 ﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
-using RunJit.Cli.RunJit.Update.Net;
 using RunJit.Cli.Services;
-using RunJit.Cli.Services.Git;
 using RunJit.Cli.Services.Net;
 
 namespace RunJit.Cli.RunJit.Cleanup.Code
@@ -12,11 +10,6 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
     {
         internal static void AddUpdateLocalSolutionFile(this IServiceCollection services)
         {
-            services.AddConsoleService();
-            services.AddGitService();
-            services.AddDotNet();
-            services.AddDotNetService();
-
             // services.AddCleanupCodePackageService();
             services.AddFindSolutionFile();
             services.AddDotNet();
@@ -26,7 +19,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
     }
 
     internal sealed class UpdateLocalSolutionFile(FindSolutionFile findSolutionFile,
-                                           IDotNet dotNet) : ICleanupCodeStrategy
+                                                  IDotNet dotNet) : ICleanupCodeStrategy
     {
         public bool CanHandle(CleanupCodeParameters parameters)
         {
@@ -44,16 +37,16 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
             var solutionFile = findSolutionFile.Find(parameters.SolutionFile);
 
             // 7. Check for R# dot settings if existed, if not create one
-            var dotSettingsFile  = new FileInfo($"{solutionFile.FullName}.DotSettings");
+            var dotSettingsFile = new FileInfo($"{solutionFile.FullName}.DotSettings");
+
             if (dotSettingsFile.NotExists())
             {
                 var fileContent = EmbeddedFile.GetFileContentFrom("Resharper.sln.DotSettings");
                 await File.WriteAllTextAsync(dotSettingsFile.FullName, fileContent).ConfigureAwait(false);
             }
-                
+
             // 8. Build the solution first, we can not clean up the code if the solution is not building
             await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
-
         }
     }
 }

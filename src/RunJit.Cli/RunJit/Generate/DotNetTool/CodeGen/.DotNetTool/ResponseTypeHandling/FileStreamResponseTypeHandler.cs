@@ -17,13 +17,13 @@ namespace RunJit.Cli.Generate.DotNetTool
     }
 
     internal sealed class FileStreamResponseTypeHandlerCodeGen(ConsoleService consoleService,
-                              NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
+                                                               NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
     {
         private const string Template = """
                                         using System.Net.Mime;
                                         using Extensions.Pack;
                                         using Microsoft.AspNetCore.Mvc;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal static class AddFileStreamResponseTypeHandlerExtension
@@ -62,7 +62,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                 }
                                             }
                                         }
-                                        
+
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
@@ -86,7 +86,6 @@ namespace RunJit.Cli.Generate.DotNetTool
             var formattedTemplate = newTemplate;
 
             await File.WriteAllTextAsync(file, formattedTemplate).ConfigureAwait(false);
-
 
             // 3. Adjust namespace provider
             namespaceProvider.SetNamespaceProviderAsync(projectFileInfo, $"{dotNetToolInfos.ProjectName}.ResponseTypeHandling", true);

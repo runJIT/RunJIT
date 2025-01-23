@@ -61,15 +61,15 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // NEW Jsonserializer
             var jsonSerializer = jsonSerializerBuilder.BuildFor(projectName, clientName);
-            var jsonSerializerFile = new FileInfo(Path.Combine(clientProject.ProjectFileInfo.Value.Directory!.FullName,"Serializer", "JsonSerializer.cs"));
+            var jsonSerializerFile = new FileInfo(Path.Combine(clientProject.ProjectFileInfo.Value.Directory!.FullName, "Serializer", "JsonSerializer.cs"));
+
             if (jsonSerializerFile.Directory!.NotExists())
             {
                 jsonSerializerFile.Directory!.Create();
             }
-            
+
             await File.WriteAllTextAsync(jsonSerializerFile.FullName, jsonSerializer).ConfigureAwait(false);
-            
-            
+
             // 4. Add project references
             var dotNetTool = DotNetToolFactory.Create();
 

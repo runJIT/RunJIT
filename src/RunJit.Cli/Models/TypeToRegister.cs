@@ -4,7 +4,7 @@ namespace RunJit.Cli.Models
 {
     [DebuggerDisplay("{" + nameof(InterfaceType) + "} - " + "{" + nameof(ImplementationType) + "}")]
     internal sealed class TypeToRegister(string interfaceType,
-                                  string implementationType)
+                                         string implementationType)
     {
         public string InterfaceType { get; } = interfaceType;
 

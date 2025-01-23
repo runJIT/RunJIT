@@ -17,7 +17,7 @@ namespace RunJit.Cli.Generate.DotNetTool
     {
         private const string Template = """
                                         using $namespace$.$dotNetToolName$;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal sealed class Startup
@@ -42,6 +42,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         {
             // 1. Add AppBuilder.cs
             var file = Path.Combine(projectFileInfo.Directory!.FullName, "Startup.cs");
+
             var newTemplate = Template.Replace("$namespace$", dotNetToolInfos.ProjectName)
                                       .Replace("$dotNetToolName$", dotNetToolInfos.NormalizedName);
 

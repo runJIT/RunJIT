@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.Generate.DotNetTool
@@ -25,7 +26,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                 }
             }";
 
-        public string Build(Models.OptionInfo optionInfo)
+        public string Build(OptionInfo optionInfo)
         {
             Throw.IfNull(() => optionInfo);
 
@@ -40,7 +41,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             return newTemplate.FormatSyntaxTree();
         }
 
-        public bool IsBuilderFor(Models.OptionInfo optionInfo)
+        public bool IsBuilderFor(OptionInfo optionInfo)
         {
             Throw.IfNull(() => optionInfo);
 

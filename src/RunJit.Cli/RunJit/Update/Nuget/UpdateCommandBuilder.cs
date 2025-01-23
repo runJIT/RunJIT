@@ -20,8 +20,8 @@ namespace RunJit.Cli.RunJit.Update.Nuget
 
     internal sealed class UpdateNugetCommandBuilder(IUpdateNuget updateService,
 
-                                             // IUpdateNugetArgumentsBuilder argumentsBuilder,
-                                             IUpdateNugetOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
+                                                    // IUpdateNugetArgumentsBuilder argumentsBuilder,
+                                                    IUpdateNugetOptionsBuilder optionsBuilder) : IUpdateSubCommandBuilder
     {
         public Command Build()
         {

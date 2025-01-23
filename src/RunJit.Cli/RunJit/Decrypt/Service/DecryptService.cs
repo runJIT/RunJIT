@@ -24,7 +24,7 @@ namespace RunJit.Cli.RunJit.Decrypt
     }
 
     internal sealed class DecryptService(ICryptoService cryptoService,
-                                  ConsoleService consoleService) : IDecryptService
+                                         ConsoleService consoleService) : IDecryptService
     {
         public async Task HandleAsync(DecryptParameters parameters)
         {

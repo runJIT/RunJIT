@@ -19,7 +19,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
         private const string Template = """
                                         using DotNetTool.Service;
                                         using Microsoft.Extensions.DependencyInjection;
-                                        
+
                                         namespace AspNetCore.MinimalApi.Sdk.DotNetTool.Test
                                         {
                                             [TestClass]

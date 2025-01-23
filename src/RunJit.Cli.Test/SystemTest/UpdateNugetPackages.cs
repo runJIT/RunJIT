@@ -73,10 +73,44 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-
             yield return "nuget";
             yield return "--solution";
             yield return parameters.solution;
+        }
+    }
+    
+    internal sealed record UpdateBackendNugetPackagesForGitRepos(string GitRepos, string WorkingDirectory) : ICommand;
+
+    internal sealed class UpdateBackendNugetPackagesForGitReposHandler : ICommandHandler<UpdateBackendNugetPackagesForGitRepos>
+    {
+        public async Task Handle(UpdateBackendNugetPackagesForGitRepos request, CancellationToken cancellationToken)
+        {
+            await using var sw = new StringWriter();
+            Console.SetOut(sw);
+
+            var strings = CollectConsoleParameters(request).ToArray();
+            var consoleCall = strings.Flatten(" ");
+            Console.WriteLine();
+            Console.WriteLine(consoleCall);
+            Debug.WriteLine(consoleCall);
+            var exitCode = await Program.Main(strings);
+            var output = sw.ToString();
+
+            Assert.AreEqual(0, exitCode, output);
+        }
+
+        private IEnumerable<string> CollectConsoleParameters(UpdateBackendNugetPackagesForGitRepos parameters)
+        {
+            // 1. Parameter solution file from the backend to parse
+            yield return "runjit";
+            yield return "update";
+            yield return "nuget";
+            yield return "--git-repos";
+            yield return parameters.GitRepos;
+            yield return "--working-directory";
+            yield return parameters.WorkingDirectory;
+            yield return "--ignore-packages";
+            yield return "EPPlus;MySql.Data;GitVersion.MsBuild";
         }
     }
 }

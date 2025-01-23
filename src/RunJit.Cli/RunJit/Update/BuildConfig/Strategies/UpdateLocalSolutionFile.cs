@@ -24,10 +24,10 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
     }
 
     internal sealed class UpdateLocalSolutionFile(ConsoleService consoleService,
-                                           IGitService git,
-                                           IAwsCodeCommit awsCodeCommit,
-                                           IDotNet dotNet,
-                                           FindSolutionFile findSolutionFile) : IUpdateBuildConfigStrategy
+                                                  IGitService git,
+                                                  IAwsCodeCommit awsCodeCommit,
+                                                  IDotNet dotNet,
+                                                  FindSolutionFile findSolutionFile) : IUpdateBuildConfigStrategy
     {
         public bool CanHandle(UpdateBuildConfigParameters parameters)
         {
@@ -54,6 +54,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
 
             // 4. Check if git exists
             var existingGitFolder = solutionFile.Directory!.EnumerateDirectories(".git").FirstOrDefault();
+
             if (existingGitFolder.IsNotNull())
             {
                 // NEW check for legacy branches and delete them all
@@ -70,7 +71,7 @@ namespace RunJit.Cli.RunJit.Update.BuildConfig
 
             // 6. Directory.Build.props
             var file = Path.Combine(solutionFile.Directory!.FullName, "Directory.Build.props");
-            
+
             // 7. FileContent
             var content = EmbeddedFile.GetFileContentFrom("RunJit.Update.BuildConfig.Templates.Directory.Build.props");
 

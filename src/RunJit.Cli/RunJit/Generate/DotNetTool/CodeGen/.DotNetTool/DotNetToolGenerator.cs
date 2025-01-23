@@ -82,6 +82,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             //    Depending on new restriction of microsoft we can not just check the .Net.Web.Sdk
             //    so we need to check the implementation
             var dotNetToolProject = solutionFile.ProductiveProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion.ToLowerInvariant() == dotNetToolInfos.ProjectName.ToLowerInvariant());
+
             if (dotNetToolProject.IsNotNull())
             {
                 // 1.1 Remove project
@@ -93,6 +94,7 @@ namespace RunJit.Cli.Generate.DotNetTool
 
             // 2. Create the .net tool folder -> the name of the tool
             var netToolFolder = new DirectoryInfo(Path.Combine(solutionFileInfo.Directory!.FullName, dotNetToolInfos.ProjectName));
+
             if (netToolFolder.Exists)
             {
                 netToolFolder.Delete(true);
@@ -102,11 +104,11 @@ namespace RunJit.Cli.Generate.DotNetTool
             // dotnet new console --output folder1/folder2/myapp
             var target = Path.Combine(solutionFileInfo.Directory!.FullName, dotNetToolInfos.ProjectName);
 
-
             await dotNet.RunAsync("dotnet", $"new console --output {target} --framework {dotNetToolInfos.NetVersion}").ConfigureAwait(false);
 
             // 5. Get the new created csproj
             var dotnetToolProject = new FileInfo(Path.Combine(target, $"{dotNetToolInfos.ProjectName}.csproj"));
+
             if (dotnetToolProject.NotExists())
             {
                 throw new RunJitException($"Expected .NetTool project does not exists. {dotnetToolProject.FullName}");

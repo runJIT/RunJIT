@@ -13,15 +13,15 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
     }
 
-    internal sealed class OutputFormatterCodeGen(ConsoleService consoleService, 
-                                        NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
+    internal sealed class OutputFormatterCodeGen(ConsoleService consoleService,
+                                                 NamespaceProvider namespaceProvider) : IDotNetToolSpecificCodeGen
     {
         private const string Template = """
                                         using System.Collections.Immutable;
                                         using System.Text.Json;
                                         using System.Text.Json.Serialization;
                                         using Extensions.Pack;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal static class AddOutputFormatterExtension
@@ -201,7 +201,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                 }
                                             }
                                         }
-                                        
+
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,

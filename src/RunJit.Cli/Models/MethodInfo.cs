@@ -4,7 +4,7 @@ namespace RunJit.Cli.Models
 {
     [DebuggerDisplay("{" + nameof(MethodName) + "}")]
     internal sealed class MethodInfo(string methodName,
-                              string methodSyntax)
+                                     string methodSyntax)
     {
         public string MethodName { get; } = methodName;
 

@@ -4,7 +4,7 @@ namespace RunJit.Cli.Models
 {
     [DebuggerDisplay("ExitCode: '{" + nameof(ExitCode) + "}'")]
     internal sealed class CliRunResult(int exitCode,
-                                string output)
+                                       string output)
     {
         public int ExitCode { get; } = exitCode;
 

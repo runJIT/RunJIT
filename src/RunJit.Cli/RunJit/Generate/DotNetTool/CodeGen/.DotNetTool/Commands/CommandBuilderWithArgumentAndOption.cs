@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.Generate.DotNetTool
@@ -56,14 +57,12 @@ namespace $namespace$
 
         public CommandBuilderWithArgumentAndOption(CommandHandlerBuilder commandHandlerBuilder)
         {
-            
-
             _commandHandlerBuilder = commandHandlerBuilder;
         }
 
         public string Build(string project,
-                            Models.CommandInfo commandInfo,
-                            Models.CommandInfo? parentCommandInfo,
+                            CommandInfo commandInfo,
+                            CommandInfo? parentCommandInfo,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);
@@ -82,7 +81,9 @@ namespace $namespace$
                                       .Replace("$namespace$", nameSpace)
                                       .Replace("$project-name$", project)
                                       .Replace("$interface$", interfaceImplementation)
-                                      .Replace("$commandRegistration$", commandRegistration);;
+                                      .Replace("$commandRegistration$", commandRegistration);
+
+            ;
 
             return newTemplate.FormatSyntaxTree();
         }

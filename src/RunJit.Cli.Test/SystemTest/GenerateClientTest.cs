@@ -15,6 +15,7 @@ namespace RunJit.Cli.Test.SystemTest
     public class GenerateClientTest : GlobalSetup
     {
         private const string Resource = "User";
+
         private const string BasePath = "api/client-gen";
 
         [TestMethod]
@@ -55,7 +56,7 @@ namespace RunJit.Cli.Test.SystemTest
         public async Task Next_Level_Parsing()
         {
             // Adjust the path to your solution file
-            string solutionPath = "D:\\AzureDevOps\\AspNetCore.MinimalApi.Sdk\\AspNetCore.MinimalApi.Sdk.sln";
+            var solutionPath = "D:\\AzureDevOps\\AspNetCore.MinimalApi.Sdk\\AspNetCore.MinimalApi.Sdk.sln";
 
             // Load the workspace and project
             var workspace = MSBuildWorkspace.Create();

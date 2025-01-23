@@ -14,10 +14,14 @@ namespace RunJit.Cli.Test.SystemTest
         private const string BasePath = "api/lambdas";
 
         [TestMethod]
-        [DataRow("Pulse.Lambdas.Gpt1", "core", "CallGpt", "analytics-gpt-chat")]
-        [DataRow("Pulse.Lambdas.Gpt2", "Core", "CallGpt", "analytics-gpt-chat")]
-        [DataRow("Pulse.Lambdas.Gpt3", "Core", "CallGpt1", "analytics-gpt-chat")]
-        [DataRow("Pulse.Lambdas.Gpt4", "Core", "CallGpt1", "analytics-gpt-chat1")]
+        [DataRow("Pulse.Lambdas.Gpt1", "core", "CallGpt",
+                    "analytics-gpt-chat")]
+        [DataRow("Pulse.Lambdas.Gpt2", "Core", "CallGpt",
+                    "analytics-gpt-chat")]
+        [DataRow("Pulse.Lambdas.Gpt3", "Core", "CallGpt1",
+                    "analytics-gpt-chat")]
+        [DataRow("Pulse.Lambdas.Gpt4", "Core", "CallGpt1",
+                    "analytics-gpt-chat1")]
         public async Task Should_Create_A_New_Lambda_And_Integrate_It_Into_Target_Solution(string projectName,
                                                                                            string moduleName,
                                                                                            string functionName,
@@ -38,10 +42,14 @@ namespace RunJit.Cli.Test.SystemTest
         }
 
         [TestMethod]
-        [DataRow("Pulse.Lambdas.Gpt10", "core!", "CallGpt", "analytics-gpt-chat", "ModuleName should contain no special characters other than '-'. \nExample: 'core'")]
-        [DataRow("Pulse.Lambdas.Gpt11", "core", "1CallGpt", "analytics-gpt-chat", "FunctionName should be alphanumeric and not begin with a number. \nExample: 'CallGpt'")]
-        [DataRow("Pulse.Lambdas.Gpt12", "core", "CallGpt!", "analytics-gpt-chat", "FunctionName should be alphanumeric and not begin with a number. \nExample: 'CallGpt'")]
-        [DataRow("Pulse.Lambdas.Gpt13", "core", "CallGpt", "analytics-gpt-chat!", "LambdaName should contain no special characters other than '-'. \nExample: 'analytics-gpt-chat'")]
+        [DataRow("Pulse.Lambdas.Gpt10", "core!", "CallGpt",
+                    "analytics-gpt-chat", "ModuleName should contain no special characters other than '-'. \nExample: 'core'")]
+        [DataRow("Pulse.Lambdas.Gpt11", "core", "1CallGpt",
+                    "analytics-gpt-chat", "FunctionName should be alphanumeric and not begin with a number. \nExample: 'CallGpt'")]
+        [DataRow("Pulse.Lambdas.Gpt12", "core", "CallGpt!",
+                    "analytics-gpt-chat", "FunctionName should be alphanumeric and not begin with a number. \nExample: 'CallGpt'")]
+        [DataRow("Pulse.Lambdas.Gpt13", "core", "CallGpt",
+                    "analytics-gpt-chat!", "LambdaName should contain no special characters other than '-'. \nExample: 'analytics-gpt-chat'")]
         public async Task Should_Throw_Error_With_Invalid_Input(string projectName,
                                                                 string moduleName,
                                                                 string functionName,
@@ -63,7 +71,8 @@ namespace RunJit.Cli.Test.SystemTest
             var solutionFile = new FileInfo("NotExistingSolution.sln");
 
             // 2. Generate lambda
-            await Mediator.SendAsync(new GenerateLambda(solutionFile, "core", "CallGpt", "analytics-gpt-chat", $"The provided solution file: {solutionFile.FullName} does not exist.")).ConfigureAwait(false);
+            await Mediator.SendAsync(new GenerateLambda(solutionFile, "core", "CallGpt",
+                                                        "analytics-gpt-chat", $"The provided solution file: {solutionFile.FullName} does not exist.")).ConfigureAwait(false);
         }
 
         internal sealed record GenerateLambda(FileInfo SolutionFile,

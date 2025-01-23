@@ -2,12 +2,13 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
+using RunJit.Cli.RunJit.Update.Nuget;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.AwsCodeCommit;
 using RunJit.Cli.Services.Git;
 using RunJit.Cli.Services.Net;
 
-namespace RunJit.Cli.RunJit.Update.Nuget
+namespace RunJit.Cli.Update.Strategies
 {
     internal static class AddUpdateLocalSolutionFileExtension
     {
@@ -15,12 +16,12 @@ namespace RunJit.Cli.RunJit.Update.Nuget
         {
             services.AddConsoleService();
             services.AddGitService();
-            services.AddAwsCodeCommit();
             services.AddDotNet();
             services.AddUpdateNugetPackageService();
             services.AddFindSolutionFile();
+            services.AddUpdateAllFilesService();
 
-            services.AddSingletonIfNotExists<IUpdateNugetStrategy, UpdateLocalSolutionFile>();
+            services.AddSingletonIfNotExists<IUpdateDotNetVersionStrategy, UpdateLocalSolutionFile>();
         }
     }
 
@@ -28,20 +29,20 @@ namespace RunJit.Cli.RunJit.Update.Nuget
                                                   IGitService git,
                                                   IAwsCodeCommit awsCodeCommit,
                                                   IDotNet dotNet,
-                                                  IUpdateNugetPackageService updateNugetPackageService,
-                                                  FindSolutionFile findSolutionFile) : IUpdateNugetStrategy
+                                                  UpdateAllFilesService updateAllFilesService,
+                                                  FindSolutionFile findSolutionFile) : IUpdateDotNetVersionStrategy
     {
-        public bool CanHandle(UpdateNugetParameters parameters)
+        public bool CanHandle(UpdateDotNetVersionParameters parameters)
         {
             return parameters.SolutionFile.IsNotNullOrWhiteSpace();
         }
 
-        public async Task HandleAsync(UpdateNugetParameters parameters)
+        public async Task HandleAsync(UpdateDotNetVersionParameters parameters)
         {
             // 0. Check that precondition is met
             if (CanHandle(parameters).IsFalse())
             {
-                throw new RunJitException($"Please call {nameof(IUpdateNugetStrategy.CanHandle)} before call {nameof(IUpdateNugetStrategy.HandleAsync)}");
+                throw new RunJitException($"Please call {nameof(IUpdateDotNetVersionStrategy.CanHandle)} before call {nameof(IUpdateNugetStrategy.HandleAsync)}");
             }
 
             // 1. Check if solution file is the file or directory
@@ -71,11 +72,7 @@ namespace RunJit.Cli.RunJit.Update.Nuget
             // 7. Build solution first to go sure anything is working
             await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
 
-            // 8. Get outdated nuget packages
-            var outdatedNugetResponse = await dotNet.ListOutdatedPackagesAsync(solutionFile).ConfigureAwait(false);
-
-            // 9. Update nuget packages
-            await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetResponse, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
+            await updateAllFilesService.HandleAsync(parameters).ConfigureAwait(false);
 
             if (existingGitFolder.IsNotNull())
             {

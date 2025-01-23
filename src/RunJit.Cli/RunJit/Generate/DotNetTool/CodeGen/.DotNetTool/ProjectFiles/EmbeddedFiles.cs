@@ -30,8 +30,8 @@ namespace RunJit.Cli.Generate.DotNetTool
             // 2. Add wildcards for files which should be embedded
             var itemGroup = new XElement("ItemGroup");
             var embeddedResource = new XElement("EmbeddedResource");
-            var includeAttribute = new XAttribute("Include", $@"**\*.json");
-            var excludeAttribute = new XAttribute("Exclude", $@"bin\**\*;obj\**\*");
+            var includeAttribute = new XAttribute("Include", @"**\*.json");
+            var excludeAttribute = new XAttribute("Exclude", @"bin\**\*;obj\**\*");
 
             embeddedResource.Add(includeAttribute);
             embeddedResource.Add(excludeAttribute);

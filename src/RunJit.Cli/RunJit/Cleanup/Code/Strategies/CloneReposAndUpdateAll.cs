@@ -25,11 +25,11 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
     }
 
     internal sealed class CloneReposAndUpdateAll(ConsoleService consoleService,
-                                          IGitService git,
-                                          IDotNet dotNet,
-                                          IAwsCodeCommit awsCodeCommit,
-                                          FindSolutionFile findSolutionFile,
-                                          SolutionCodeCleanup solutionCodeCleanup) : ICleanupCodeStrategy
+                                                 IGitService git,
+                                                 IDotNet dotNet,
+                                                 IAwsCodeCommit awsCodeCommit,
+                                                 FindSolutionFile findSolutionFile,
+                                                 SolutionCodeCleanup solutionCodeCleanup) : ICleanupCodeStrategy
     {
         public bool CanHandle(CleanupCodeParameters parameters)
         {
@@ -50,12 +50,11 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
             var repos = parameters.GitRepos.Split(';');
             var orginalStartFolder = parameters.WorkingDirectory.IsNotNullOrWhiteSpace() ? parameters.WorkingDirectory : Environment.CurrentDirectory;
 
-            
-            if(Directory.Exists(orginalStartFolder) == false)
+            if (Directory.Exists(orginalStartFolder) == false)
             {
                 Directory.CreateDirectory(orginalStartFolder);
             }
-            
+
             foreach (var repo in repos)
             {
                 var index = repos.IndexOf(repo) + 1;
@@ -90,10 +89,10 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
 
                 // 8. Build the solution first, we can not clean up the code if the solution is not building
                 await dotNet.BuildAsync(solutionFile).ConfigureAwait(false);
-                
+
                 // 9. Run cleanup code
                 await solutionCodeCleanup.CleanupSolutionAsync(solutionFile).ConfigureAwait(false);
-                
+
                 //10. Add changes to git
                 await git.AddAsync().ConfigureAwait(false);
 

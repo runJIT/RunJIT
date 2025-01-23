@@ -30,12 +30,12 @@ namespace RunJit.Cli.RunJit.Generate.Client
     }
 
     internal sealed class ClientGen(ITargetFolderService targetFolderService,
-                             ITemplateExtractor templateExtractor,
-                             ITemplateService templateService,
-                             IProcessService processService,
-                             ConsoleService consoleService,
-                             ClientGeneratorBuilder clientGeneratorBuilder,
-                             ClientCreator clientCreator)
+                                    ITemplateExtractor templateExtractor,
+                                    ITemplateService templateService,
+                                    IProcessService processService,
+                                    ConsoleService consoleService,
+                                    ClientGeneratorBuilder clientGeneratorBuilder,
+                                    ClientCreator clientCreator)
         : IClientGen
     {
         public async Task<int> HandleAsync(ClientParameters parameters)

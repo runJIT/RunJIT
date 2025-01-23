@@ -15,7 +15,7 @@ namespace RunJit.Cli.Test.SystemTest
         private const string BasePath = "api/net-test";
 
         [TestMethod]
-        public async Task Should_Update_Net_Version_For_Target_Solution()
+        public async Task UpdateNetVersion()
         {
             // 1. Create new Web Api
             var solutionFile = await Mediator.SendAsync(new CreateNewSimpleWebApi("RunJit.Update.Net", WebApiFolder, BasePath)).ConfigureAwait(false);
@@ -23,11 +23,10 @@ namespace RunJit.Cli.Test.SystemTest
             // 2. Create Web-Api endpoints
             await Mediator.SendAsync(new CreateSimpleRestController(solutionFile, Resource, false)).ConfigureAwait(false);
 
-            // 3. Update to .Net 8
-            await Mediator.SendAsync(new UpdateNetVersion(solutionFile.FullName, 8)).ConfigureAwait(false);
+            // 3. Update to .Net 9
+            await Mediator.SendAsync(new UpdateNetVersion(solutionFile.FullName, 9)).ConfigureAwait(false);
         }
 
-        
         [DataTestMethod]
         [DataRow("codecommit::eu-central-1://pulse-datamanagement")]
         [DataRow("codecommit::eu-central-1://pulse-survey")]
@@ -44,9 +43,9 @@ namespace RunJit.Cli.Test.SystemTest
         [DataRow("codecommit::eu-central-1://pulse-common")]
         [DataRow("codecommit::eu-central-1://pulse-code-rules")]
         [DataRow("codecommit::eu-central-1://pulse-core")]
-        public async Task Should_Update_Nuget_Packages_For_Target_Solutions(string gitUrl)
+        public async Task Should_Update_Net_Version_For_On_Repo(string gitUrl)
         {
-           await Mediator.SendAsync(new UpdateBackendNugetPackagesForGitRepos(gitUrl, @"D:\NugetUpdate")).ConfigureAwait(false);
+            await Mediator.SendAsync(new UpdateNetVersionForGitRepos(gitUrl, @"D:\UpdateNetVersion", 9)).ConfigureAwait(false);
         }
     }
 
@@ -84,11 +83,14 @@ namespace RunJit.Cli.Test.SystemTest
         }
     }
 
-    internal sealed record UpdateBackendNugetPackagesForGitRepos(string GitRepos, string WorkingDirectory) : ICommand;
+    internal sealed record UpdateNetVersionForGitRepos(string GitRepos,
+                                                       string WorkingDirectory,
+                                                       int Version) : ICommand;
 
-    internal sealed class UpdateBackendNugetPackagesForGitReposHandler : ICommandHandler<UpdateBackendNugetPackagesForGitRepos>
+    internal sealed class UpdateNetVersionForGitReposHandler : ICommandHandler<UpdateNetVersionForGitRepos>
     {
-        public async Task Handle(UpdateBackendNugetPackagesForGitRepos request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateNetVersionForGitRepos request,
+                                 CancellationToken cancellationToken)
         {
             await using var sw = new StringWriter();
             Console.SetOut(sw);
@@ -104,18 +106,18 @@ namespace RunJit.Cli.Test.SystemTest
             Assert.AreEqual(0, exitCode, output);
         }
 
-        private IEnumerable<string> CollectConsoleParameters(UpdateBackendNugetPackagesForGitRepos parameters)
+        private IEnumerable<string> CollectConsoleParameters(UpdateNetVersionForGitRepos parameters)
         {
             // 1. Parameter solution file from the backend to parse
             yield return "runjit";
             yield return "update";
-            yield return "nuget";
+            yield return ".net";
             yield return "--git-repos";
             yield return parameters.GitRepos;
             yield return "--working-directory";
             yield return parameters.WorkingDirectory;
-            yield return "--ignore-packages";
-            yield return "EPPlus;MySql.Data;GitVersion.MsBuild";
+            yield return "--version";
+            yield return parameters.Version.ToInvariantString();
         }
     }
 }

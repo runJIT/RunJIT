@@ -17,7 +17,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         internal static void AddStringLocalizer(this IServiceCollection services)
         {
             services.AddExtractStringsToLocalize();
-            
+
             services.AddSingletonIfNotExists<StringLocalizer>();
         }
     }
@@ -32,10 +32,9 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         public async Task LocalizeAsync(IImmutableList<string> languages,
                                         string solutionPath)
         {
-
             // 1. Extract all declared strings in exceptions.
             //    Per default development mode is english !
-            var projectsWithStringsToLocalize= await extractStringsToLocalize.ExtractLocalizableStrings(languages, solutionPath);
+            var projectsWithStringsToLocalize = await extractStringsToLocalize.ExtractLocalizableStrings(languages, solutionPath);
 
             // 2. POC use AWS translation service to translate the strings
             using var translationClient = new AmazonTranslateClient(RegionEndpoint.EUCentral1);
@@ -64,6 +63,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                     if (language == "en")
                     {
                         await File.WriteAllTextAsync(languageFile.FullName, projectWithStringsToLocalize.TextToLocalize.ToJsonIntended());
+
                         continue;
                     }
 
@@ -78,6 +78,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                         if (textKeyAndText.Value.IsNullOrWhiteSpace())
                         {
                             languageSpecificTranslations[textKeyAndText.Key] = textKeyAndText.Value;
+
                             continue;
                         }
 
@@ -89,14 +90,15 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                         {
                             // ToDo: Text length < 1000 then split off
                             var translateRequest = new TranslateTextRequest
-                            {
-                                SourceLanguageCode = "en",
-                                TargetLanguageCode = language,
-                                Text = textKeyAndText.Value
-                            };
+                                                   {
+                                                       SourceLanguageCode = "en",
+                                                       TargetLanguageCode = language,
+                                                       Text = textKeyAndText.Value
+                                                   };
 
                             // ToDo: Eval if language code is valid or AWS throws exception
                             var translatedTextResponse = await translationClient.TranslateTextAsync(translateRequest).ConfigureAwait(false);
+
                             if (translatedTextResponse.HttpStatusCode.NotEqualsTo(HttpStatusCode.OK))
                             {
                                 continue;
@@ -114,6 +116,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         private static IEnumerable<ThrowStatementSyntax> FindAllThrowStatements(SyntaxTree syntaxTree)
         {
             var root = syntaxTree.GetRoot();
+
             return root.DescendantNodes().OfType<ThrowStatementSyntax>()
                        .Where(ts => ts.Expression is ObjectCreationExpressionSyntax);
         }
@@ -126,8 +129,10 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                 {
                     return methodDeclaration;
                 }
+
                 node = node.Parent;
             }
+
             return null;
         }
 
@@ -139,8 +144,10 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                 {
                     return classDeclaration;
                 }
+
                 node = node.Parent;
             }
+
             return null;
         }
 
@@ -165,19 +172,21 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                 yield break;
             }
 
-            string fullyQualifiedClassName = classSymbol.ToDisplayString();
+            var fullyQualifiedClassName = classSymbol.ToDisplayString();
 
             // Get the method name
-            string methodName = methodDeclaration.Identifier.Text;
+            var methodName = methodDeclaration.Identifier.Text;
 
             // Get the exception type
             var objectCreation = throwStatement.Expression as ObjectCreationExpressionSyntax;
+
             if (objectCreation.IsNull())
             {
                 yield break;
             }
 
             var constructorSymbol = semanticModel.GetSymbolInfo(objectCreation).Symbol as IMethodSymbol;
+
             if (constructorSymbol.IsNull())
             {
                 yield break;
@@ -189,7 +198,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
             }
 
             // Generate the text key for each parameter
-            for (int i = 0; i < objectCreation.ArgumentList.Arguments.Count; i++)
+            for (var i = 0; i < objectCreation.ArgumentList.Arguments.Count; i++)
             {
                 var argument = objectCreation.ArgumentList.Arguments[i];
 
@@ -205,7 +214,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                     literalExpression.IsKind(SyntaxKind.StringLiteralExpression))
                 {
                     // Get the parameter name (e.g., "message" for ArgumentException)
-                    string parameterName = parameter.Name.FirstCharToUpper();
+                    var parameterName = parameter.Name.FirstCharToUpper();
 
                     // Get the string value from the literal expression
                     var stringValue = literalExpression.Token.ValueText;
@@ -217,12 +226,11 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                     var parameterKey = $"{fullyQualifiedClassName}.{methodName}.{constructorSymbol.ContainingType.Name}.{parameterName}.{stringValue}";
 
                     // Return the key and the string value as a tuple
-                    yield return new(parameterKey, stringValue);
+                    yield return new TextToTranslate(parameterKey, stringValue);
                 }
             }
         }
     }
-
 
     internal static class AddExtractStringsToLocalizeExtension
     {
@@ -239,7 +247,8 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         //       This fixture allows you to localize all exception messages in all available language files.
         //       This code parse all the exception message strings out and create the keys and its default language "english" -> "en"
         //       into the language files.
-        public async Task<IImmutableList<StringsToLocalize>> ExtractLocalizableStrings(IImmutableList<string> languages, string solutionPath)
+        public async Task<IImmutableList<StringsToLocalize>> ExtractLocalizableStrings(IImmutableList<string> languages,
+                                                                                       string solutionPath)
         {
             var builder = ImmutableList.CreateBuilder<StringsToLocalize>();
 
@@ -284,7 +293,6 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                         continue;
                     }
 
-
                     var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
                     var throwStatements = FindAllThrowStatements(syntaxTree);
@@ -309,6 +317,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         private static IEnumerable<ThrowStatementSyntax> FindAllThrowStatements(SyntaxTree syntaxTree)
         {
             var root = syntaxTree.GetRoot();
+
             return root.DescendantNodes().OfType<ThrowStatementSyntax>()
                        .Where(ts => ts.Expression is ObjectCreationExpressionSyntax);
         }
@@ -321,8 +330,10 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                 {
                     return methodDeclaration;
                 }
+
                 node = node.Parent;
             }
+
             return null;
         }
 
@@ -334,8 +345,10 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                 {
                     return classDeclaration;
                 }
+
                 node = node.Parent;
             }
+
             return null;
         }
 
@@ -360,19 +373,21 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                 yield break;
             }
 
-            string fullyQualifiedClassName = classSymbol.ToDisplayString();
+            var fullyQualifiedClassName = classSymbol.ToDisplayString();
 
             // Get the method name
-            string methodName = methodDeclaration.Identifier.Text;
+            var methodName = methodDeclaration.Identifier.Text;
 
             // Get the exception type
             var objectCreation = throwStatement.Expression as ObjectCreationExpressionSyntax;
+
             if (objectCreation.IsNull())
             {
                 yield break;
             }
 
             var constructorSymbol = semanticModel.GetSymbolInfo(objectCreation).Symbol as IMethodSymbol;
+
             if (constructorSymbol.IsNull())
             {
                 yield break;
@@ -384,7 +399,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
             }
 
             // Generate the text key for each parameter
-            for (int i = 0; i < objectCreation.ArgumentList.Arguments.Count; i++)
+            for (var i = 0; i < objectCreation.ArgumentList.Arguments.Count; i++)
             {
                 var argument = objectCreation.ArgumentList.Arguments[i];
 
@@ -400,7 +415,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                     literalExpression.IsKind(SyntaxKind.StringLiteralExpression))
                 {
                     // Get the parameter name (e.g., "message" for ArgumentException)
-                    string parameterName = parameter.Name.FirstCharToUpper();
+                    var parameterName = parameter.Name.FirstCharToUpper();
 
                     // Get the string value from the literal expression
                     var stringValue = literalExpression.Token.ValueText;
@@ -412,7 +427,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
                     var parameterKey = $"{fullyQualifiedClassName}.{methodName}.{constructorSymbol.ContainingType.Name}.{parameterName}.{stringValue}";
 
                     // Return the key and the string value as a tuple
-                    yield return new(parameterKey, stringValue);
+                    yield return new TextToTranslate(parameterKey, stringValue);
                 }
             }
         }

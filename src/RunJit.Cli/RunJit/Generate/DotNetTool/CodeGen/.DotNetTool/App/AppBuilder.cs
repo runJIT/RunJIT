@@ -20,7 +20,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         private const string Template = """
                                         using Extensions.Pack;
                                         using Microsoft.Extensions.Configuration.Json;
-                                        
+
                                         namespace $namespace$
                                         {
                                             internal sealed class AppBuilder

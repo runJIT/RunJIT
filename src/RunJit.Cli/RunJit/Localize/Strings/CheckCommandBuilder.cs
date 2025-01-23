@@ -29,9 +29,10 @@ namespace RunJit.Cli.RunJit.Localize.Strings
             localizeStringsOptionsBuilder.Build().ForEach(opt => checkCommand.AddOption(opt));
 
             checkCommand.Handler = CommandHandler.Create<string, string, string, string>((solution,
-                                                                                  gitRepos,
-                                                                                  workingDirectory,
-                                                                                  languages) => localizeStrings.HandleAsync(new LocalizeStringsParameters(solution ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty, languages?.Split(";").ToImmutableList() ?? ImmutableList.Create<string>("de", "en"))));
+                                                                                          gitRepos,
+                                                                                          workingDirectory,
+                                                                                          languages) => localizeStrings.HandleAsync(new LocalizeStringsParameters(solution ?? string.Empty, gitRepos ?? string.Empty, workingDirectory ?? string.Empty,
+                                                                                                                                                                  languages?.Split(";").ToImmutableList() ?? ImmutableList.Create<string>("de", "en"))));
 
             return checkCommand;
         }

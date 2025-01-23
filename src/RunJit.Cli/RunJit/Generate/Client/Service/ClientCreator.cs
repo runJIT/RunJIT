@@ -231,7 +231,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                     endpoints.Add(endpoint);
                 }
 
-                var endpointGroup = new EndpointGroup()
+                var endpointGroup = new EndpointGroup
                                     {
                                         GroupName = controllerInfo.GroupName,
                                         Endpoints = endpoints.ToImmutable(),
@@ -253,7 +253,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         {
             var obsoleteValue = methodInfo.Attributes.FirstOrDefault(a => a.Name.StartsWith("Obsolete"))?.Arguments.FirstOrDefault();
 
-            var endpoint = new EndpointInfo()
+            var endpoint = new EndpointInfo
                            {
                                ResponseType = methodInfo.ResponseType,
                                BaseUrl = methodInfo.RelativeUrl,

@@ -43,7 +43,8 @@ namespace RunJit.Cli.Generate.DotNetTool
             var projectName = $"{parameters.SolutionFile.NameWithoutExtension()}.DotNetTool";
 
             // 2. Generate the dotnet tool into solution
-            await dotNetToolCreator.GenerateDotNetToolAsync(projectName, $"dotnet-{parameters.ToolName}", parameters.ToolName, parameters.SolutionFile).ConfigureAwait(false);
+            await dotNetToolCreator.GenerateDotNetToolAsync(projectName, $"dotnet-{parameters.ToolName}", parameters.ToolName,
+                                                            parameters.SolutionFile).ConfigureAwait(false);
 
             // 3. Write success message
             consoleService.WriteSuccess($"Enjoy your new generated: '{projectName}' .net tool");

@@ -25,6 +25,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             //        <ImplicitUsings>enable</ImplicitUsings>
             //    </PropertyGroup>
             var toolSettingsComment = new XComment(".NET tool specific settings");
+
             var toolPropertyGroup = new XElement("PropertyGroup",
                                                  new XElement("IsPackable", "false"),
                                                  new XElement("ImplicitUsings", "enable"));

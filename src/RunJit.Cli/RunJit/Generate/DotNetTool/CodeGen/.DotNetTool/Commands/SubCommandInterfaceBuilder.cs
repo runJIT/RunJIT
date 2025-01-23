@@ -1,6 +1,7 @@
 ﻿using Argument.Check;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Generate.DotNetTool.Models;
 using Solution.Parser.CSharp;
 
 namespace RunJit.Cli.Generate.DotNetTool
@@ -13,7 +14,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
     }
 
-    internal sealed class SubCommandInterfaceBuilder 
+    internal sealed class SubCommandInterfaceBuilder
     {
         private const string Template =
             @"using System.CommandLine;
@@ -27,8 +28,8 @@ namespace $namespace$
 }";
 
         public string Build(string project,
-                            Models.CommandInfo parameterInfo,
-                            Models.CommandInfo? parent,
+                            CommandInfo parameterInfo,
+                            CommandInfo? parent,
                             string nameSpace)
         {
             Throw.IfNullOrWhiteSpace(project);

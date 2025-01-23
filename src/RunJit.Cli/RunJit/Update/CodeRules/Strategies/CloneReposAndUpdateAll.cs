@@ -30,16 +30,16 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
     }
 
     internal sealed class CloneReposAndUpdateAll(ConsoleService consoleService,
-                                          IGitService git,
-                                          IDotNet dotNet,
-                                          IRenameFilesAndFolders renameFilesAndFolders,
+                                                 IGitService git,
+                                                 IDotNet dotNet,
+                                                 IRenameFilesAndFolders renameFilesAndFolders,
 
-                                          // IUpdateNugetPackageService updateNugetPackageService,
-                                          FindSolutionFile findSolutionFile,
-                                          IMediator mediator,
-                                          IHttpClientFactory httpClientFactory,
-                                          IRunJitApiClientFactory runJitApiClientFactory,
-                                          RunJitApiClientSettings runJitApiClientSettings) : IUpdateCodeRulesStrategy
+                                                 // IUpdateNugetPackageService updateNugetPackageService,
+                                                 FindSolutionFile findSolutionFile,
+                                                 IMediator mediator,
+                                                 IHttpClientFactory httpClientFactory,
+                                                 IRunJitApiClientFactory runJitApiClientFactory,
+                                                 RunJitApiClientSettings runJitApiClientSettings) : IUpdateCodeRulesStrategy
     {
         public bool CanHandle(UpdateCodeRulesParameters parameters)
         {
@@ -57,7 +57,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
             if (parameters.Branch.IsNullOrWhiteSpace())
             {
-                throw new RunJitException($"Please provider a branch name which have to be used as base for integrating the code rules.");
+                throw new RunJitException("Please provider a branch name which have to be used as base for integrating the code rules.");
             }
 
             // 1. Check if solution file is the file or directory
@@ -170,7 +170,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
                 if (codeRuleFolder.IsNull())
                 {
-                    throw new FileNotFoundException($"Could not find the code rules folder RunJit.CodeRules");
+                    throw new FileNotFoundException("Could not find the code rules folder RunJit.CodeRules");
                 }
 
                 var newTarget = new DirectoryInfo(Path.Combine(solutionFile.Directory!.FullName, codeRuleFolder.Name));
@@ -186,7 +186,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
                 if (newCodeRuleProject.IsNull())
                 {
-                    throw new FileNotFoundException($"Could not find the code rules project after renaming process.");
+                    throw new FileNotFoundException("Could not find the code rules project after renaming process.");
                 }
 
                 tempFolder.Delete(true);
