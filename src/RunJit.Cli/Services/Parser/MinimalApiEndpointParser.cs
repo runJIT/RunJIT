@@ -72,7 +72,7 @@ namespace RunJit.Cli.Services
 
     internal sealed class MinimalApiEndpointParser(DataTypeFinder dataTypeFinder)
     {
-        private readonly string[] mapActions = new[]
+        private readonly string[] _mapActions = new[]
                                                {
                                                    ".MapGet(", ".MapPost(", ".MapDelete(",
                                                    ".MapPut(", ".MapPatch("
@@ -148,7 +148,7 @@ namespace RunJit.Cli.Services
                     {
                         foreach (var methodStatement in method.Statements)
                         {
-                            foreach (var mapAction in mapActions)
+                            foreach (var mapAction in _mapActions)
                             {
                                 if (methodStatement.Contains(mapAction))
                                 {

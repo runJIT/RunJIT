@@ -1,0 +1,28 @@
+{
+  "Content": {
+    "Headers": [
+      {
+        "Key": "Expires",
+        "Value": [ "Thu, 01 Jan 1970 00:00:00 GMT" ]
+      },
+      {
+        "Key": "Content-Type",
+        "Value": [ "application/json" ]
+      }
+    ],
+    "Value": "{\u0022status\u0022:\u0022Healthy\u0022,\u0022totalDuration\u0022:\u002200:00:00.0006638\u0022,\u0022entries\u0022:{}}"
+  },
+  "StatusCode": "OK",
+  "Headers": [
+    {
+      "Key": "Cache-Control",
+      "Value": [ "no-store, no-cache" ]
+    },
+    {
+      "Key": "Pragma",
+      "Value": [ "no-cache" ]
+    }
+  ],
+  "TrailingHeaders": [],
+  "IsSuccessStatusCode": true
+}

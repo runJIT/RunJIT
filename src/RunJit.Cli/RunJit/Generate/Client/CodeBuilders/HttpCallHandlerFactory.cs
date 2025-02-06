@@ -23,12 +23,12 @@ namespace RunJit.Cli.Generate.Client
     //   -> RequestPrinter.cs
     internal sealed class HttpCallHandlerFactory
     {
-        private readonly string _HttpCallHandlerFactoryTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.HttpCallHandlerFactory.rps");
+        private readonly string _httpCallHandlerFactoryTemplate = EmbeddedFile.GetFileContentFrom("RunJit.Generate.Client.Templates.HttpCallHandlerFactory.rps");
 
         public string BuildFor(string projectName,
                                string clientName)
         {
-            var clientFactory = _HttpCallHandlerFactoryTemplate.Replace("$clientNameLower$", clientName.FirstCharToLower())
+            var clientFactory = _httpCallHandlerFactoryTemplate.Replace("$clientNameLower$", clientName.FirstCharToLower())
                                                                .Replace("$projectName$", projectName);
 
             return clientFactory;

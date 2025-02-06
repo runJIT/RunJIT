@@ -26,7 +26,7 @@ namespace RunJit.Cli.Generate.DotNetTool
     // }
     internal class CommandMethodBuilder
     {
-        private const string callInfosTemplate = """
+        private const string CallInfosTemplate = """
                                                  // 2. Convert into target type
                                                  $callInfosExists$var callInfos = parameters.Json.FromJsonStringAs<Dictionary<string, object?>>();
 
@@ -114,7 +114,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                    .ToFlattenString(Environment.NewLine);
 
             // var callInfos = endpointInfo.Parameters.IsEmpty() ? string.Empty : callInfosTemplate;
-            var callInfos = callInfosTemplate;
+            var callInfos = CallInfosTemplate;
             var ignoreCallInfos = parameterAsVariables.IsNotNullOrWhiteSpace() ? string.Empty : "// ";
 
             var method = _methodTemplate.Replace("$returnType$", normalizedReturnType)

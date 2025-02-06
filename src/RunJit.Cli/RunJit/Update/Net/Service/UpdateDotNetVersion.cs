@@ -26,11 +26,11 @@ namespace RunJit.Cli.Update
         Task HandleAsync(UpdateDotNetVersionParameters parameters);
     }
 
-    internal sealed class UpdateDotNetVersion(IEnumerable<IUpdateDotNetVersionStrategy> UpdateDotNetVersionStrategies) : IUpdateDotNetVersion
+    internal sealed class UpdateDotNetVersion(IEnumerable<IUpdateDotNetVersionStrategy> updateDotNetVersionStrategies) : IUpdateDotNetVersion
     {
         public Task HandleAsync(UpdateDotNetVersionParameters parameters)
         {
-            var updateDotNetVersionStrategy = UpdateDotNetVersionStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
+            var updateDotNetVersionStrategy = updateDotNetVersionStrategies.Where(x => x.CanHandle(parameters)).ToImmutableList();
 
             if (updateDotNetVersionStrategy.Count < 1)
             {

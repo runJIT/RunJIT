@@ -30,7 +30,8 @@ namespace RunJit.Cli.Services.Net
         Task RestoreNugetPackagesAsync(FileInfo solutionFileOrProject);
 
         Task AddProjectToSolutionAsync(FileInfo solutionFileInfo,
-                                       FileInfo projectFileInfo);
+                                       FileInfo projectFileInfo,
+                                       string solutionFolder = "");
 
         Task RemoveProjectFromSolutionAsync(FileInfo solutionFileInfo,
                                             FileInfo projectFileInfo);
@@ -42,7 +43,9 @@ namespace RunJit.Cli.Services.Net
                                     FileInfo projectFileInfo);
 
         Task RunAsync(string command,
-                      string arguments);
+                      string arguments,
+                      string successMessage = "",
+                      string errorTitle = "");
     }
 
     internal record TryResult(bool WasSuccessful,
@@ -79,46 +82,22 @@ namespace RunJit.Cli.Services.Net
             return outdatedNugetResponse;
         }
 
-        public async Task AddNugetPackageAsync(string projectPath,
-                                               string packageId,
-                                               string packageVersion)
+        public Task AddNugetPackageAsync(string projectPath,
+                                         string packageId,
+                                         string packageVersion)
         {
-            consoleService.WriteInfo($"Add nuget package: {packageId} with version: {packageVersion} into project: {projectPath}");
-
-            var process = Process.StartProcess("dotnet", $"add {projectPath} package {packageId} --version {packageVersion}");
-            await process.WaitForExitAsync().ConfigureAwait(false);
-
-            // var buildResult = await dotNetTool.RunAsync("dotnet", $"build {solutionFileOrProject.FullName}").ConfigureAwait(false);
-            if (process.ExitCode != 0)
-            {
-                throw new RunJitException($"Add nuget package: {packageId} with version: {packageVersion} into project: {projectPath} failed.");
-            }
-
-            consoleService.WriteSuccess($"Add nuget package: {packageId} with version: {packageVersion} into project: {projectPath} successful");
+            return RunAsync("dotnet",
+                            $"add {projectPath} package {packageId} --version {packageVersion}",
+                            $"Add nuget package: {packageId} with version: {packageVersion} into project: {projectPath} successful",
+                            $"Add nuget package: {packageId} with version: {packageVersion} into project: {projectPath} failed.");
         }
 
-        public async Task BuildAsync(FileInfo solutionFileOrProject)
+        public Task BuildAsync(FileInfo solutionFileOrProject)
         {
-            consoleService.WriteInfo($"Build solution or project: {solutionFileOrProject}");
-
-            var stringBuilder0 = new StringBuilder();
-            var stringBuilder1 = new StringBuilder();
-
-            var process = Process.StartProcess("dotnet", $"build {solutionFileOrProject.FullName}", null,
-                                               item => stringBuilder0.AppendLine(item), item => stringBuilder1.AppendLine(item));
-
-            await process.WaitForExitAsync().ConfigureAwait(false);
-
-            var a = stringBuilder0.ToString();
-            var b = stringBuilder1.ToString();
-
-            // var buildResult = await dotNetTool.RunAsync("dotnet", $"build {solutionFileOrProject.FullName}").ConfigureAwait(false);
-            if (process.ExitCode != 0)
-            {
-                throw new RunJitException($"Could not build solution file or project: {solutionFileOrProject.FullName}");
-            }
-
-            consoleService.WriteInfo($"Build solution or project: {solutionFileOrProject} successful");
+            return RunAsync("dotnet",
+                            $"build {solutionFileOrProject.FullName}",
+                            $"Build solution or project: {solutionFileOrProject} successful",
+                            $"Could not build solution file or project: {solutionFileOrProject.FullName}");
         }
 
         public async Task<TryResult> TryBuildAsync(FileInfo solutionFileOrProject)
@@ -146,92 +125,57 @@ namespace RunJit.Cli.Services.Net
             return new TryResult(true, output);
         }
 
-        public async Task RestoreNugetPackagesAsync(FileInfo solutionFileOrProject)
+        public Task RestoreNugetPackagesAsync(FileInfo solutionFileOrProject)
         {
-            consoleService.WriteInfo($"Restore nuget packages for: {solutionFileOrProject}");
-
-            var buildResult = Process.StartProcess("dotnet", $"restore {solutionFileOrProject.FullName}");
-            await buildResult.WaitForExitAsync().ConfigureAwait(false);
-
-            // var buildResult = await dotNetTool.RunAsync("dotnet", $"restore {solutionFileOrProject.FullName}").ConfigureAwait(false);
-            if (buildResult.ExitCode != 0)
-            {
-                throw new RunJitException($"Could not restore nuget packages for: {solutionFileOrProject.FullName}{Environment.NewLine}");
-            }
-
-            consoleService.WriteInfo($"Restore nuget packages for: {solutionFileOrProject} successful");
+            return RunAsync("dotnet",
+                            $"restore {solutionFileOrProject.FullName}",
+                            $"Restore nuget packages for: {solutionFileOrProject} successful",
+                            $"Could not restore nuget packages for: {solutionFileOrProject.FullName}{Environment.NewLine}");
         }
 
         public async Task AddProjectToSolutionAsync(FileInfo solutionFileInfo,
-                                                    FileInfo projectFileInfo)
+                                                    FileInfo projectFileInfo,
+                                                    string solutionFolder = "")
         {
-            consoleService.WriteInfo($"Add project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName}");
+            var solutionFolderParameter = solutionFolder.IsNullOrWhiteSpace() ? "--in-root" : $"--solution-folder {solutionFolder}";
 
-            var buildResult = Process.StartProcess("dotnet", $"sln {solutionFileInfo.FullName} add {projectFileInfo.FullName} --in-root");
-            await buildResult.WaitForExitAsync().ConfigureAwait(false);
-
-            // var addProjectResult = await dotNetTool.RunAsync("dotnet", $"sln {solutionFileInfo.FullName} add {projectFileInfo.FullName} --in-root");
-            if (buildResult.ExitCode != 0)
-            {
-                throw new RunJitException($"Add project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} failed.");
-            }
-
-            consoleService.WriteSuccess($"Add project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} successful");
+            await RunAsync("dotnet",
+                           $"sln {solutionFileInfo.FullName} add {projectFileInfo.FullName} {solutionFolderParameter}",
+                           $"Add project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} successful",
+                           $"Add project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} failed.").ConfigureAwait(false);
         }
 
-        public async Task RemoveProjectFromSolutionAsync(FileInfo solutionFileInfo,
-                                                         FileInfo projectFileInfo)
+        public Task RemoveProjectFromSolutionAsync(FileInfo solutionFileInfo,
+                                                   FileInfo projectFileInfo)
         {
-            consoleService.WriteInfo($"Remove project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName}");
-
-            var buildResult = Process.StartProcess("dotnet", $"sln {solutionFileInfo.FullName} remove {projectFileInfo.FullName} --in-root");
-            await buildResult.WaitForExitAsync().ConfigureAwait(false);
-
-            // var RemoveProjectResult = await dotNetTool.RunAsync("dotnet", $"sln {solutionFileInfo.FullName} Remove {projectFileInfo.FullName} --in-root");
-            if (buildResult.ExitCode != 0)
-            {
-                throw new RunJitException($"Remove project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} failed.");
-            }
-
-            consoleService.WriteSuccess($"Remove project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} successful");
+            return RunAsync("dotnet",
+                            $"sln {solutionFileInfo.FullName} remove {projectFileInfo.FullName} --in-root",
+                            $"Remove project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} successful",
+                            $"Remove project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} failed.");
         }
 
-        public async Task AddProjectReference(FileInfo projectFileInfo,
-                                              FileInfo projectReference)
+        public Task AddProjectReference(FileInfo projectFileInfo,
+                                        FileInfo projectReference)
         {
-            consoleService.WriteInfo($"Add project reference: {projectReference.FullName} from project: {projectFileInfo.FullName}");
-
-            var buildResult = Process.StartProcess("dotnet", $"add {projectReference.FullName} reference {projectFileInfo.FullName}");
-            await buildResult.WaitForExitAsync().ConfigureAwait(false);
-
-            // var AddProjectResult = await dotNetTool.RunAsync("dotnet", $"sln {solutionFileInfo.FullName} Add {projectFileInfo.FullName} --in-root");
-            if (buildResult.ExitCode != 0)
-            {
-                throw new RunJitException($"Add project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} failed.");
-            }
-
-            consoleService.WriteSuccess($"Add project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} was successful.");
+            return RunAsync("dotnet",
+                            $"add {projectReference.FullName} reference {projectFileInfo.FullName}",
+                            $"Add project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} was successful.",
+                            $"Add project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} failed.");
         }
 
-        public async Task RemoveProjectReference(FileInfo projectFileInfo,
-                                                 FileInfo projectReference)
+        public Task RemoveProjectReference(FileInfo projectFileInfo,
+                                           FileInfo projectReference)
         {
-            consoleService.WriteInfo($"Remove project reference: {projectReference.FullName} from project: {projectFileInfo.FullName}");
-
-            var buildResult = Process.StartProcess("dotnet", $"remove {projectReference.FullName} reference {projectFileInfo.FullName}");
-            await buildResult.WaitForExitAsync().ConfigureAwait(false);
-
-            // var RemoveProjectResult = await dotNetTool.RunAsync("dotnet", $"sln {solutionFileInfo.FullName} Remove {projectFileInfo.FullName} --in-root");
-            if (buildResult.ExitCode != 0)
-            {
-                throw new RunJitException($"Remove project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} failed.");
-            }
-
-            consoleService.WriteSuccess($"Remove project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} was successful.");
+            return RunAsync("dotnet",
+                            $"remove {projectReference.FullName} reference {projectFileInfo.FullName}",
+                            $"Remove project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} was successful.",
+                            $"Remove project reference: {projectReference.FullName} from project: {projectFileInfo.FullName} failed.");
         }
 
         public async Task RunAsync(string command,
-                                   string arguments)
+                                   string arguments,
+                                   string successMessage = "",
+                                   string errorTitle = "")
         {
             consoleService.WriteInfo($"Run custom command: {command} {arguments}");
 
@@ -250,10 +194,13 @@ namespace RunJit.Cli.Services.Net
 
                 var output = errorOutput.IsNotNullOrWhiteSpace() ? errorOutput : normalOutput;
 
-                throw new RunJitException($"Run custom command: {command} {arguments} successful failed. {output}");
+                var errorMessage = errorTitle.IsNotNullOrWhiteSpace() ? $"{errorTitle}. {output}" : $"Run custom command: {command} {arguments} successful failed. {output}";
+
+                throw new RunJitException(errorMessage);
             }
 
-            consoleService.WriteSuccess($"Run custom command: {command} {arguments} successful");
+            var successInfo = successMessage.IsNotNullOrWhiteSpace() ? successMessage : $"Run custom command: {command} {arguments} successful";
+            consoleService.WriteSuccess(successInfo);
         }
     }
 }

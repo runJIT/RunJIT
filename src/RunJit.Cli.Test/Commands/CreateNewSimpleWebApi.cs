@@ -26,8 +26,6 @@ namespace RunJit.Cli.Test.Commands
 
             var result = await dotNetTool.RunAsync("pulse", consoleCall).ConfigureAwait(false);
 
-            var output = sw.ToString();
-
             Assert.AreEqual(0, result.ExitCode, result.Output);
 
             var projectDirectory = new DirectoryInfo(Path.Combine(request.Output.FullName, request.ProjectName));
