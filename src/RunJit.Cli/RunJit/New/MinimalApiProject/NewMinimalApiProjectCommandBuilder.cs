@@ -2,7 +2,6 @@
 using System.CommandLine.Invocation;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
-using RunJit.Cli.New.MinimalApiProject.CodeGen;
 using RunJit.Cli.RunJit.New;
 
 namespace RunJit.Cli.New.MinimalApiProject

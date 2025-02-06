@@ -1,0 +1,186 @@
+﻿using System.Xml.Linq;
+using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.ErrorHandling;
+using RunJit.Cli.Generate.DotNetTool;
+using RunJit.Cli.Services.Net;
+using Solution.Parser.Solution;
+
+namespace RunJit.Cli.New.MinimalApiProject
+{
+    internal static class AddMinimalApiProjectGeneratorExtension
+    {
+        internal static void AddMinimalApiProjectGenerator(this IServiceCollection services)
+        {
+            // .github code gens
+            // services.AddGitHubCodeGen();
+
+            // Project level code gens
+            services.AddAppSettingsCodeGen();
+            services.AddProgramCodeGen();
+
+            services.AddEmbeddedFiles();
+
+            services.AddWriteEmbbededFileIntoTarget();
+
+            services.AddSingletonIfNotExists<MinimalApiProjectGenerator>();
+        }
+    }
+
+    public static class AddWriteEmbbededFileIntoTargetExtension
+    {
+        public static void AddWriteEmbbededFileIntoTarget(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<IMinimalApiProjectSpecificCodeGen, WriteEmbbededFileIntoTarget>();
+        }
+    }
+
+    internal sealed class WriteEmbbededFileIntoTarget : IMinimalApiProjectSpecificCodeGen
+    {
+        public async Task GenerateAsync(FileInfo projectFileInfo,
+                                        XDocument projectDocument,
+                                        MinimalApiProjectInfos minimalApiProjectInfos)
+        {
+            // Get all embedded files matching to the strcuture
+            var embbededFiles = GetType().Assembly.GetManifestResourceNames();
+            var webApiProjectResources = embbededFiles.Where(f => f.Contains("New.MinimalApiProject.CodeGen."));
+
+            foreach (var webApiProjectResource in webApiProjectResources)
+            {
+                var fileExtension = Path.GetExtension(webApiProjectResource);
+                var fileContent = EmbeddedFile.GetFileContentFrom(webApiProjectResource);
+                // var normalizedEmbbeddedFileName = webApiProjectResource.Replace("$ProjectName$", projectFileInfo.NameWithoutExtension());
+
+                // Splitting at the double dot ".."
+                var parts = webApiProjectResource.Split(["New.MinimalApiProject.CodeGen."], StringSplitOptions.None);
+
+                if (parts.Length == 2)
+                {
+                    // Replacing dots with backslashes in the file path part
+                    var part = parts[1];
+                    var isRelativePath = part.Contains(".github.") || part.Contains("Project.");
+
+                    if (isRelativePath.IsFalse())
+                    {
+                        var rootPathFile = Path.Combine(projectFileInfo.Directory!.Parent!.FullName, part);
+                        var rootPathFileInfo = new FileInfo(rootPathFile);
+
+                        if (rootPathFileInfo.Directory!.NotExists())
+                        {
+                            rootPathFileInfo.Directory!.Create();
+                        }
+                        
+                        await File.WriteAllTextAsync(rootPathFileInfo.FullName, fileContent).ConfigureAwait(false);
+                        
+                        continue;
+                    }
+
+                    var nameWithoutExtension = projectFileInfo.NameWithoutExtension();
+                    var normalizedPart = part.StartsWith("Project.") ? part.Replace("Project.", $"{nameWithoutExtension}.") : part;
+                    
+                    
+                    var removeFileExtensions = part.Replace(fileExtension, string.Empty);
+                    
+                    
+                    var transformedPath = isRelativePath ? removeFileExtensions.TrimStart('.').Replace('.', Path.DirectorySeparatorChar) : part;
+
+                    // Concatenating the final path
+                    // Special folders have to be carefully handled !
+                    if (normalizedPart.StartsWith("."))
+                    {
+                        transformedPath = $".{transformedPath}";
+                    }
+                    
+                    var withFileExtension = $"{transformedPath.TrimEnd(Path.DirectorySeparatorChar)}{fileExtension}".Replace("..", ".");
+
+                    var finalPath = Path.Combine(projectFileInfo.Directory!.Parent!.FullName, withFileExtension.TrimStart(Path.DirectorySeparatorChar));
+
+                    var projectNamePath = finalPath.Replace(@$"{Path.DirectorySeparatorChar}Project{Path.DirectorySeparatorChar}Test{Path.DirectorySeparatorChar}", $@"{Path.DirectorySeparatorChar}{minimalApiProjectInfos.NormalizedName}.Test{Path.DirectorySeparatorChar}")
+                                                   .Replace(@$"{Path.DirectorySeparatorChar}Project{Path.DirectorySeparatorChar}", $@"{Path.DirectorySeparatorChar}{minimalApiProjectInfos.NormalizedName}{Path.DirectorySeparatorChar}");
+                    var fileInfo = new FileInfo(projectNamePath);
+
+                    if (fileInfo.Directory!.NotExists())
+                    {
+                        fileInfo.Directory!.Create();
+                    }
+
+                    await File.WriteAllTextAsync(fileInfo.FullName, fileContent).ConfigureAwait(false);
+                }
+            }
+        }
+    }
+
+    internal class MinimalApiProjectGenerator(IDotNet dotNet,
+                                              IEnumerable<IMinimalApiProjectSpecificCodeGen> codeGenerators)
+
+    {
+        public async Task<FileInfo> GenerateAsync(SolutionFile solutionFile,
+                                                  MinimalApiProjectInfos minimalApiProjectInfos)
+        {
+            var solutionFileInfo = solutionFile.SolutionFileInfo.Value;
+
+            // POC starts here
+            // 1. Check if cli project already exists
+            //    Depending on new restriction of microsoft we can not just check the .Net.Web.Sdk
+            //    so we need to check the implementation
+            var dotNetToolProject = solutionFile.ProductiveProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion.ToLowerInvariant() == minimalApiProjectInfos.ProjectName.ToLowerInvariant());
+
+            if (dotNetToolProject.IsNotNull())
+            {
+                // 1.1 Remove project
+                await dotNet.RemoveProjectFromSolutionAsync(solutionFileInfo, dotNetToolProject.ProjectFileInfo.Value).ConfigureAwait(false);
+
+                // 1.2 If exists remove all files
+                dotNetToolProject.ProjectFileInfo.Value.Directory?.Delete(true);
+            }
+
+            // 2. Create the .net tool folder -> the name of the tool
+            var netToolFolder = new DirectoryInfo(Path.Combine(solutionFileInfo.Directory!.FullName, minimalApiProjectInfos.ProjectName));
+
+            if (netToolFolder.Exists)
+            {
+                netToolFolder.Delete(true);
+            }
+
+            // 4. Create new console project
+            // dotnet new console --output folder1/folder2/myapp
+            var target = Path.Combine(solutionFileInfo.Directory!.FullName, minimalApiProjectInfos.ProjectName);
+
+            await dotNet.RunAsync("dotnet", $"new webapi --name {minimalApiProjectInfos.ProjectName} --output {target} --framework {minimalApiProjectInfos.NetVersion}").ConfigureAwait(false);
+
+            // 5. Get the new created csproj
+            var dotnetToolProject = new FileInfo(Path.Combine(target, $"{minimalApiProjectInfos.ProjectName}.csproj"));
+
+            if (dotnetToolProject.NotExists())
+            {
+                throw new RunJitException($"Expected .NetTool project does not exists. {dotnetToolProject.FullName}");
+            }
+
+            // 6. Add required nuget packages into project
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Siemens.AspNet.ErrorHandling", "2.1.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "6.0.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Amazon.Lambda.AspNetCoreServer.Hosting", "1.7.2").ConfigureAwait(false);
+
+            // 7. Load csproj content to avoid multiple IO write actions to disk which cause io exceptions
+            var xdocument = XDocument.Load(dotnetToolProject.FullName);
+
+            // 8. Generate the whole command structure with arguments, options
+            foreach (var codeGenerator in codeGenerators)
+            {
+                await codeGenerator.GenerateAsync(dotnetToolProject, xdocument, minimalApiProjectInfos).ConfigureAwait(false);
+            }
+
+            // 9. Save the modified csproj file just once to avoid multiple IO write actions to disk which cause io exceptions
+            xdocument.Save(dotnetToolProject.FullName);
+
+            // 10. And at least we add this project into the solution because we want to avoid to many refreshes as possible
+            await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotnetToolProject, "Api").ConfigureAwait(false);
+
+            // 11. Cleanup code to be in sync with target solution settings :)
+            // await solutionCodeCleanup.CleanupSolutionAsync(solutionFileInfo).ConfigureAwait(false);
+
+            // 12. Return the created csproj file
+            return dotnetToolProject;
+        }
+    }
+}

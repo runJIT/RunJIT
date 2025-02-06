@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Generate.DotNetTool;
 using RunJit.Cli.Generate.DotNetTool.Models;
-using RunJit.Cli.New.MinimalApiProject.CodeGen;
 using RunJit.Cli.RunJit.Generate.Client;
 using RunJit.Cli.Services;
 using RunJit.Cli.Services.Endpoints;

@@ -150,29 +150,6 @@
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\OutputWriter.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Services\TypeService.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\Startup.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject.Test\ApiTestBase.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject.Test\Api\Health\V1\GetHealthState\GetHealthStateTest.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject.Test\CommandStructure.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject.Test\MinimalApiProjectTestGenerator.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject.Test\ProjectFiles\EmbeddedFiles.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject.Test\ProjectFiles\ProjectSettings.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject.Test\TestCases\HealthEndpointTestCodeGenTest.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.github\GitHubCodeGen.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.github\ISSUE_TEMPLATE\BugReportCodeGen.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.github\ISSUE_TEMPLATE\SupportQuestionCodeGen.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.github\ISSUE_TEMPLATE\FeatureRequestCodeGen.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.github\PULL_REQUEST_TEMPLATE\PullRequestTemplateCodeGen.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.github\workflows\WorkflowCodeGen.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\Api\Health\Startup.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\Api\Health\V1\GetHealthState\Endpoints\GetHealthStateEndpoint.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\Api\Health\V1\GetHealthState\Extensions\Startup.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\Api\Health\V1\GetHealthState\Models\GetHealthResponse.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\Api\Health\V1\Startup.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\AppSettings.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\EmbeddedFiles.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\Extensions\SimpleMinimalApiExtensionsCodeGen.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\MinimalApiProjectGenerator.cs" />
-        <Compile Include="RunJit\New\MinimalApiProject\CodeGen\.MinimalApiProject\Program.cs" />
         <Compile Include="Services\.Net\IDotNet.cs" />
     </ItemGroup>
     <ItemGroup>
@@ -186,15 +163,43 @@
         <EmbeddedResource Include="**\*.DotSettings" Exclude="bin\**\*;obj\**\*" />
     </ItemGroup>
     <ItemGroup>
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\ApiTestBase.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\Api\Health\V1\GetHealthState\GetHealthStateTest.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\Startup.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Endpoints\GetHealthStateEndpoint.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Extensions\Startup.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Models\GetHealthResponse.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\Startup.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\ExtensionMethods\SimpleMinimalApi.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Program.cs" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <None Remove="Logo\RunJit.txt" />
         <None Remove="RunJit\Generate\Client\Templates\CurlBuilder.rps" />
         <None Remove="RunJit\Generate\Client\Templates\HttpCallHandler.rps" />
         <None Remove="RunJit\Generate\Client\Templates\HttpCallHandlerFactory.rps" />
         <None Remove="RunJit\Generate\Client\Templates\RequestPrinter.rps" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\.gitignore" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\commitlint.config.js" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Directory.Build.props" />
         <None Remove="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
         <None Remove="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
     <ItemGroup>
+        <EmbeddedResource Include="D:\GitHub\RunJit.Cli\src\RunJit.Cli\RunJit\New\MinimalApiProject\CodeGen\.editorconfig" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.gitignore" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\commitlint.config.js" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Directory.Build.props" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project.Test\ApiTestBase.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project.Test\Api\Health\V1\GetHealthState\GetHealthStateTest.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\Startup.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Endpoints\GetHealthStateEndpoint.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Extensions\Startup.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Models\GetHealthResponse.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\Startup.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\ExtensionMethods\SimpleMinimalApi.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Program.cs" />
         <EmbeddedResource Include="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
         <EmbeddedResource Include="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
@@ -203,5 +208,8 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="RunJit\New\NugetProject\" />
+    </ItemGroup>
+    <ItemGroup>
+      <EditorConfigFiles Remove="D:\GitHub\RunJit.Cli\src\RunJit.Cli\RunJit\New\MinimalApiProject\CodeGen\.editorconfig" />
     </ItemGroup>
 </Project>
