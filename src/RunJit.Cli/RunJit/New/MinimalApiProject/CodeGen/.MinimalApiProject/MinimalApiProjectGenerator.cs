@@ -5,7 +5,6 @@ using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Generate.DotNetTool;
 using RunJit.Cli.New.MinimalApiProject.CodeGen.github;
 using RunJit.Cli.Services.Net;
-using RunJit.Cli.Services.Resharper;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.New.MinimalApiProject.CodeGen.MinimalApiProject
