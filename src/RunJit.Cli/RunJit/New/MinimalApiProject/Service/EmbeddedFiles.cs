@@ -12,11 +12,13 @@ namespace RunJit.Cli.New.MinimalApiProject
             services.AddRetryHelper();
 
             services.AddSingletonIfNotExists<IMinimalApiProjectSpecificCodeGen, EmbeddedFiles>();
+            services.AddSingletonIfNotExists<IMinimalApiProjectTestSpecificCodeGen, EmbeddedFiles>();
         }
     }
 
     
-    internal sealed class EmbeddedFiles(ConsoleService consoleService) : IMinimalApiProjectSpecificCodeGen
+    internal sealed class EmbeddedFiles(ConsoleService consoleService) : IMinimalApiProjectSpecificCodeGen,
+                                                                         IMinimalApiProjectTestSpecificCodeGen
     {
         public Task GenerateAsync(FileInfo projectFileInfo,
                                   XDocument projectDocument,

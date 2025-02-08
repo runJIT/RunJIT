@@ -2,6 +2,7 @@
 using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RunJit.Cli.Test.Extensions;
 
 namespace RunJit.Cli.Test.SystemTest
 {
@@ -19,8 +20,11 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Create new solution and projects
             var result = await Mediator.SendAsync(new NewMinimalApiProject(projectName, basePath, targetDirectory)).ConfigureAwait(false);
 
-            // 2. Assert that solution file have original name
-            Assert.AreEqual(result.NameWithoutExtension(), projectName);
+            // 2. Assert that solution can be build
+            await DotNetTool.AssertRunAsync("dotnet", $"build {result.FullName}").ConfigureAwait(false);
+
+            // 3. Assert that solution can be tested
+            await DotNetTool.AssertRunAsync("dotnet", $"test {result.FullName}").ConfigureAwait(false);
         }
 
         internal sealed record NewMinimalApiProject(string ProjectName,

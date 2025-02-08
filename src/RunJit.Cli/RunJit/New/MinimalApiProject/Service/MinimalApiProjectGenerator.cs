@@ -49,6 +49,11 @@ namespace RunJit.Cli.New.MinimalApiProject
             {
                 var fileExtension = Path.GetExtension(webApiProjectResource);
                 var fileContent = EmbeddedFile.GetFileContentFrom(webApiProjectResource);
+
+                var newFileContent = fileContent.Replace("$BasePath$", minimalApiProjectInfos.BasePath)
+                                                .Replace("$ProjectName$", minimalApiProjectInfos.NormalizedName)
+                                                .Replace("$Namespace$", minimalApiProjectInfos.NormalizedName);
+
                 // var normalizedEmbbeddedFileName = webApiProjectResource.Replace("$ProjectName$", projectFileInfo.NameWithoutExtension());
 
                 // Splitting at the double dot ".."
@@ -58,6 +63,8 @@ namespace RunJit.Cli.New.MinimalApiProject
                 {
                     // Replacing dots with backslashes in the file path part
                     var part = parts[1];
+                    part = part.Replace("$ProjectName$", minimalApiProjectInfos.NormalizedName);
+
                     var isRelativePath = part.Contains(".github.") || part.Contains("Project.");
 
                     if (isRelativePath.IsFalse())
@@ -69,19 +76,19 @@ namespace RunJit.Cli.New.MinimalApiProject
                         {
                             rootPathFileInfo.Directory!.Create();
                         }
-                        
-                        await File.WriteAllTextAsync(rootPathFileInfo.FullName, fileContent).ConfigureAwait(false);
-                        
+
+                        await File.WriteAllTextAsync(rootPathFileInfo.FullName, newFileContent).ConfigureAwait(false);
+
                         continue;
                     }
 
                     var nameWithoutExtension = projectFileInfo.NameWithoutExtension();
                     var normalizedPart = part.StartsWith("Project.") ? part.Replace("Project.", $"{nameWithoutExtension}.") : part;
-                    
-                    
+
+
                     var removeFileExtensions = part.Replace(fileExtension, string.Empty);
-                    
-                    
+
+
                     var transformedPath = isRelativePath ? removeFileExtensions.TrimStart('.').Replace('.', Path.DirectorySeparatorChar) : part;
 
                     // Concatenating the final path
@@ -90,7 +97,7 @@ namespace RunJit.Cli.New.MinimalApiProject
                     {
                         transformedPath = $".{transformedPath}";
                     }
-                    
+
                     var withFileExtension = $"{transformedPath.TrimEnd(Path.DirectorySeparatorChar)}{fileExtension}".Replace("..", ".");
 
                     var finalPath = Path.Combine(projectFileInfo.Directory!.Parent!.FullName, withFileExtension.TrimStart(Path.DirectorySeparatorChar));
@@ -104,7 +111,7 @@ namespace RunJit.Cli.New.MinimalApiProject
                         fileInfo.Directory!.Create();
                     }
 
-                    await File.WriteAllTextAsync(fileInfo.FullName, fileContent).ConfigureAwait(false);
+                    await File.WriteAllTextAsync(fileInfo.FullName, newFileContent).ConfigureAwait(false);
                 }
             }
         }
@@ -157,9 +164,16 @@ namespace RunJit.Cli.New.MinimalApiProject
             }
 
             // 6. Add required nuget packages into project
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Siemens.AspNet.ErrorHandling", "2.1.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "6.0.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Asp.Versioning.Http", "8.1.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Asp.Versioning.Mvc.ApiExplorer", "8.1.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Amazon.Lambda.AspNetCoreServer.Hosting", "1.7.2").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "6.0.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.AspNetCore.Authentication.JwtBearer", "9.0.1").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Siemens.AspNet.ErrorHandling", "2.1.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "AspNetCore.HealthChecks.UI", "9.0.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "AspNetCore.HealthChecks.UI.Client", "9.0.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Diagnostics.HealthChecks", "9.0.1").ConfigureAwait(false);
+
 
             // 7. Load csproj content to avoid multiple IO write actions to disk which cause io exceptions
             var xdocument = XDocument.Load(dotnetToolProject.FullName);

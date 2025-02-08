@@ -74,8 +74,9 @@ namespace RunJit.Cli.New.MinimalApiProject
             }
 
             // 6. Add required nuget packages into project
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "6.0.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "6.0.4").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "Microsoft.NET.Test.Sdk", "17.12.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest", "3.7.3").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestAdapter", "3.7.3").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestFramework", "3.7.3").ConfigureAwait(false);
 

@@ -1,6 +1,7 @@
 ﻿using AspNetCore.Simple.MsTest.Sdk;
+using Extensions.Pack;
 
-namespace MinimalApi.Test
+namespace $ProjectName$.Test
 {
     [TestClass]
     public abstract class ApiTestBase
@@ -11,12 +12,15 @@ namespace MinimalApi.Test
         public static void AssemblyInitialize(TestContext _)
         {
             // 1. Super simple just use the provided API test base class and you are ready to go
+            var environmentVariables = EmbeddedFile.GetFileContentFrom("Properties.EnvironmentVariables.json")
+                                                   .FromJsonStringAs<Dictionary<string, string>>()
+                                                   .Select(keyValue => (keyValue.Key, keyValue.Value)).ToArray();
+            
             _apiTestBase = new ApiTestBase<Program>("Development", // The environment name
-                                                    (_,
-                                                     _) =>
+                                                    (_, _) =>
                                                     {
                                                     }, // The register services action
-                                                    []); // Configure environment variables  
+                                                    environmentVariables); // Configure environment variables  
 
             // 2. We need once the http client to communicate with the started api
             Client = _apiTestBase.CreateClient();

@@ -164,16 +164,36 @@
     </ItemGroup>
     <ItemGroup>
       <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\ApiTestBase.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\Api\Health\V1\GetHealthState\GetHealthStateTest.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\Startup.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Endpoints\GetHealthStateEndpoint.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Extensions\Startup.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Models\GetHealthResponse.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\Startup.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\ExtensionMethods\SimpleMinimalApi.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\Api\Health\GetHealthStateTest.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\OpenApi\OpenApiTest.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Startup.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AwsCognitoSettings.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\AppJsonSerializerContext.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\JsonSerializeOptions.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\BearerSecuritySchemeTransformer.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\DocumentInfosTransformer.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiInfos.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiVersionInfo.cs" />
       <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Program.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Startup\ServerlessMinimalApplication.cs" />
     </ItemGroup>
-    
+    <ItemGroup>
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\ApiTestBase.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AwsCognitoSettings.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\AppJsonSerializerContext.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\JsonSerializeOptions.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\BearerSecuritySchemeTransformer.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\DocumentInfosTransformer.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiInfos.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiVersionInfo.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Program.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Startup\ServerlessMinimalApplication.cs" />
+    </ItemGroup>
+
     <ItemGroup>
         <None Remove="Logo\RunJit.txt" />
         <None Remove="RunJit\Generate\Client\Templates\CurlBuilder.rps" />
@@ -192,14 +212,20 @@
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\commitlint.config.js" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Directory.Build.props" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project.Test\ApiTestBase.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project.Test\Api\Health\V1\GetHealthState\GetHealthStateTest.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\Startup.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Endpoints\GetHealthStateEndpoint.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Extensions\Startup.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\GetHealthState\Models\GetHealthResponse.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Health\V1\Startup.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\ExtensionMethods\SimpleMinimalApi.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project.Test\Api\Health\GetHealthStateTest.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project.Test\OpenApi\OpenApiTest.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Startup.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AwsCognitoSettings.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\AppJsonSerializerContext.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\JsonSerializeOptions.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\BearerSecuritySchemeTransformer.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\DocumentInfosTransformer.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiInfos.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiVersionInfo.cs" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Program.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Startup\ServerlessMinimalApplication.cs" />
         <EmbeddedResource Include="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
         <EmbeddedResource Include="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
@@ -207,9 +233,9 @@
         <ProjectReference Include="..\..\..\RunJit.Api\src\RunJit.Api.Client\RunJit.Api.Client.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="RunJit\New\NugetProject\" />
+        <Folder Include="RunJit\New\NugetProject\" />
     </ItemGroup>
     <ItemGroup>
-      <EditorConfigFiles Remove="D:\GitHub\RunJit.Cli\src\RunJit.Cli\RunJit\New\MinimalApiProject\CodeGen\.editorconfig" />
+        <EditorConfigFiles Remove="D:\GitHub\RunJit.Cli\src\RunJit.Cli\RunJit\New\MinimalApiProject\CodeGen\.editorconfig" />
     </ItemGroup>
 </Project>

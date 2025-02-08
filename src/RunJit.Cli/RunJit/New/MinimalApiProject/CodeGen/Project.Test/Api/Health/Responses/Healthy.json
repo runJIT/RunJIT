@@ -10,7 +10,11 @@
         "Value": [ "application/json" ]
       }
     ],
-    "Value": "{\u0022status\u0022:\u0022Healthy\u0022,\u0022totalDuration\u0022:\u002200:00:00.0006638\u0022,\u0022entries\u0022:{}}"
+    "Value": {
+      "status": "Healthy",
+      "totalDuration": "00:00:00.0006638",
+      "entries": {}
+    }
   },
   "StatusCode": "OK",
   "Headers": [

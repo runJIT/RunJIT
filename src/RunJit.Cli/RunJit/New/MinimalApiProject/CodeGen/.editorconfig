@@ -1,7 +1,8 @@
-# To learn more about .editorconfig see https://aka.ms/editorconfigdocs
+﻿# To learn more about .editorconfig see https://aka.ms/editorconfigdocs
 ###############################
 # Core EditorConfig Options   #
 ###############################
+
 ###############################
 # .NET Diagnostic Analyzers    #
 ###############################
@@ -31,8 +32,7 @@ dotnet_diagnostic.IDE0058.severity = silent
 dotnet_diagnostic.IDE0072.severity = silent
 dotnet_diagnostic.IDE0130.severity = silent
 dotnet_diagnostic.IDE0005.severity = silent
-dotnet_diagnostic.IDE0270.severity = error
-dotnet_diagnostic.IDE0007.severity = error
+
 # All files
 [*]
 indent_style = space
@@ -98,6 +98,8 @@ dotnet_diagnostic.CA1826.severity = suggestion
 dotnet_diagnostic.CA2254.severity = suggestion
 dotnet_diagnostic.CA1861.severity = suggestion
 dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_diagnostic.MSTEST0015.severity = suggestion
+dotnet_diagnostic.MSTEST0016.severity = suggestion
 ###############################
 # C# Coding Conventions       #
 ###############################
@@ -181,6 +183,7 @@ dotnet_diagnostic.IDE0055.severity = suggestion
 dotnet_diagnostic.IDE0037.severity = suggestion
 csharp_style_unused_value_expression_statement_preference = discard_variable:silent
 csharp_style_allow_embedded_statements_on_same_line_experimental = true:silent
+csharp_prefer_system_threading_lock = true:suggestion
 ###############################
 # VB Coding Conventions       #
 ###############################

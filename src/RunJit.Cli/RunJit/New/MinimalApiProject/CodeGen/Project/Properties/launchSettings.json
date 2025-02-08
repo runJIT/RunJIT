@@ -1,0 +1,57 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Development": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "launchUrl": "",
+      "applicationUrl": "http://localhost:1337",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Logging__LogLevel__Default": "Information",
+        "Logging__LogLevel__Microsoft.AspNetCore": "Warning",
+        "AllowedHosts": "*",
+        "AWS__Region": "eu-west-1",
+        "AWS__Profile": "sdcdev",
+        "AWS__DynamoDbServiceUrl": "http://localhost:8001",
+        "AwsCognitoSettings__Authority": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_WWflkHNwn",
+        "AwsCognitoSettings__Audience": "7oup5j6busol448gnor8lv0qi6",
+        "AwsStepFunctionSetting__DeployAwsStateMachineArn": "arn:aws:states:eu-west-1:783764573141:stateMachine:sdc-capability-rollout",
+        "OpenApiInfos__Versions__0__Audience": "company-internal",
+        "OpenApiInfos__Versions__0__ContactEmail": "philip.pregler@siemens.com",
+        "OpenApiInfos__Versions__0__ContactName": "Pulse Core API Team",
+        "OpenApiInfos__Versions__0__ContactUrl": "https://www.pulse.de",
+        "OpenApiInfos__Versions__0__Description": "API which provides all core functions",
+        "OpenApiInfos__Versions__0__Id": "5064d915-f010-4223-956f-8f18e3ac43d0",
+        "OpenApiInfos__Versions__0__Title": "API V1"
+      }
+    },
+    "Release": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "",
+      "applicationUrl": "https://localhost:1337",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Release",
+        "Logging__LogLevel__Default": "Information",
+        "Logging__LogLevel__Microsoft.AspNetCore": "Warning",
+        "AllowedHosts": "*",
+        "AWS__Region": "eu-west-1",
+        "AWS__Profile": "sdcdev",
+        "AWS__DynamoDbServiceUrl": "http://localhost:8001",
+        "AwsCognitoSettings__Authority": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_WWflkHNwn",
+        "AwsCognitoSettings__Audience": "7oup5j6busol448gnor8lv0qi6",
+        "AwsStepFunctionSetting__DeployAwsStateMachineArn": "tobedefinied",
+        "OpenApiInfos__Versions__0__Audience": "company-internal",
+        "OpenApiInfos__Versions__0__ContactEmail": "philip.pregler@siemens.com",
+        "OpenApiInfos__Versions__0__ContactName": "Pulse Core API Team",
+        "OpenApiInfos__Versions__0__ContactUrl": "https://www.pulse.de",
+        "OpenApiInfos__Versions__0__Description": "API which provides all core functions",
+        "OpenApiInfos__Versions__0__Id": "5064d915-f010-4223-956f-8f18e3ac43d0",
+        "OpenApiInfos__Versions__0__Title": "API V1"
+      }
+    }
+  }
+}
