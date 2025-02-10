@@ -12,16 +12,12 @@ namespace RunJit.Cli.New.MinimalApiProject
     {
         internal static void AddMinimalApiProjectGenerator(this IServiceCollection services)
         {
-            // .github code gens
-            // services.AddGitHubCodeGen();
-
             // Project level code gens
             services.AddAppSettingsCodeGen();
             services.AddProgramCodeGen();
-
-            services.AddEmbeddedFiles();
-
+            services.AddEmbeddedFileSettings();
             services.AddWriteEmbbededFileIntoTarget();
+            services.AddProjectSolutionFolders();
 
             services.AddSingletonIfNotExists<MinimalApiProjectGenerator>();
         }
@@ -38,12 +34,13 @@ namespace RunJit.Cli.New.MinimalApiProject
     internal sealed class WriteEmbbededFileIntoTarget : IMinimalApiProjectSpecificCodeGen
     {
         public async Task GenerateAsync(FileInfo projectFileInfo,
+                                        FileInfo solutionFile,
                                         XDocument projectDocument,
                                         MinimalApiProjectInfos minimalApiProjectInfos)
         {
             // Get all embedded files matching to the strcuture
             var embbededFiles = GetType().Assembly.GetManifestResourceNames();
-            var webApiProjectResources = embbededFiles.Where(f => f.Contains("New.MinimalApiProject.CodeGen."));
+            var webApiProjectResources = embbededFiles.Where(f => f.Contains("New.MinimalApiProject.CodeGen.")).ToList();
 
             foreach (var webApiProjectResource in webApiProjectResources)
             {
@@ -54,8 +51,6 @@ namespace RunJit.Cli.New.MinimalApiProject
                                                 .Replace("$ProjectName$", minimalApiProjectInfos.NormalizedName)
                                                 .Replace("$Namespace$", minimalApiProjectInfos.NormalizedName);
 
-                // var normalizedEmbbeddedFileName = webApiProjectResource.Replace("$ProjectName$", projectFileInfo.NameWithoutExtension());
-
                 // Splitting at the double dot ".."
                 var parts = webApiProjectResource.Split(["New.MinimalApiProject.CodeGen."], StringSplitOptions.None);
 
@@ -65,11 +60,11 @@ namespace RunJit.Cli.New.MinimalApiProject
                     var part = parts[1];
                     part = part.Replace("$ProjectName$", minimalApiProjectInfos.NormalizedName);
 
-                    var isRelativePath = part.Contains(".github.") || part.Contains("Project.");
+                    var isRelativePath = part.Contains(".github.") || part.Contains("src.");
 
                     if (isRelativePath.IsFalse())
                     {
-                        var rootPathFile = Path.Combine(projectFileInfo.Directory!.Parent!.FullName, part);
+                        var rootPathFile = Path.Combine(solutionFile.Directory!.FullName, part);
                         var rootPathFileInfo = new FileInfo(rootPathFile);
 
                         if (rootPathFileInfo.Directory!.NotExists())
@@ -82,12 +77,10 @@ namespace RunJit.Cli.New.MinimalApiProject
                         continue;
                     }
 
-                    var nameWithoutExtension = projectFileInfo.NameWithoutExtension();
+                    var nameWithoutExtension = solutionFile.NameWithoutExtension();
                     var normalizedPart = part.StartsWith("Project.") ? part.Replace("Project.", $"{nameWithoutExtension}.") : part;
 
-
                     var removeFileExtensions = part.Replace(fileExtension, string.Empty);
-
 
                     var transformedPath = isRelativePath ? removeFileExtensions.TrimStart('.').Replace('.', Path.DirectorySeparatorChar) : part;
 
@@ -100,10 +93,11 @@ namespace RunJit.Cli.New.MinimalApiProject
 
                     var withFileExtension = $"{transformedPath.TrimEnd(Path.DirectorySeparatorChar)}{fileExtension}".Replace("..", ".");
 
-                    var finalPath = Path.Combine(projectFileInfo.Directory!.Parent!.FullName, withFileExtension.TrimStart(Path.DirectorySeparatorChar));
+                    var finalPath = Path.Combine(solutionFile.Directory!.FullName, withFileExtension.TrimStart(Path.DirectorySeparatorChar));
 
                     var projectNamePath = finalPath.Replace(@$"{Path.DirectorySeparatorChar}Project{Path.DirectorySeparatorChar}Test{Path.DirectorySeparatorChar}", $@"{Path.DirectorySeparatorChar}{minimalApiProjectInfos.NormalizedName}.Test{Path.DirectorySeparatorChar}")
                                                    .Replace(@$"{Path.DirectorySeparatorChar}Project{Path.DirectorySeparatorChar}", $@"{Path.DirectorySeparatorChar}{minimalApiProjectInfos.NormalizedName}{Path.DirectorySeparatorChar}");
+
                     var fileInfo = new FileInfo(projectNamePath);
 
                     if (fileInfo.Directory!.NotExists())
@@ -151,7 +145,7 @@ namespace RunJit.Cli.New.MinimalApiProject
 
             // 4. Create new console project
             // dotnet new console --output folder1/folder2/myapp
-            var target = Path.Combine(solutionFileInfo.Directory!.FullName, minimalApiProjectInfos.ProjectName);
+            var target = Path.Combine(solutionFileInfo.Directory!.FullName, "src", minimalApiProjectInfos.ProjectName);
 
             await dotNet.RunAsync("dotnet", $"new webapi --name {minimalApiProjectInfos.ProjectName} --output {target} --framework {minimalApiProjectInfos.NetVersion}").ConfigureAwait(false);
 
@@ -174,14 +168,13 @@ namespace RunJit.Cli.New.MinimalApiProject
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "AspNetCore.HealthChecks.UI.Client", "9.0.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Diagnostics.HealthChecks", "9.0.1").ConfigureAwait(false);
 
-
             // 7. Load csproj content to avoid multiple IO write actions to disk which cause io exceptions
             var xdocument = XDocument.Load(dotnetToolProject.FullName);
 
             // 8. Generate the whole command structure with arguments, options
             foreach (var codeGenerator in codeGenerators)
             {
-                await codeGenerator.GenerateAsync(dotnetToolProject, xdocument, minimalApiProjectInfos).ConfigureAwait(false);
+                await codeGenerator.GenerateAsync(dotnetToolProject, solutionFileInfo, xdocument, minimalApiProjectInfos).ConfigureAwait(false);
             }
 
             // 9. Save the modified csproj file just once to avoid multiple IO write actions to disk which cause io exceptions

@@ -20,6 +20,7 @@ namespace RunJit.Cli.Test.SystemTest
             // 1. Create new solution and projects
             var result = await Mediator.SendAsync(new NewMinimalApiProject(projectName, basePath, targetDirectory)).ConfigureAwait(false);
 
+
             // 2. Assert that solution can be build
             await DotNetTool.AssertRunAsync("dotnet", $"build {result.FullName}").ConfigureAwait(false);
 

@@ -4,6 +4,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit.Update.Nuget;
+using Solution.Parser.Project;
 
 namespace RunJit.Cli.Services.Net
 {
@@ -32,6 +33,10 @@ namespace RunJit.Cli.Services.Net
         Task AddProjectToSolutionAsync(FileInfo solutionFileInfo,
                                        FileInfo projectFileInfo,
                                        string solutionFolder = "");
+
+        Task AddFileIntoSoltionAsync(FileInfo solutionFileInfo,
+                                     FileInfo fileToAdd,
+                                     string solutionFolder = "");
 
         Task RemoveProjectFromSolutionAsync(FileInfo solutionFileInfo,
                                             FileInfo projectFileInfo);
@@ -143,6 +148,17 @@ namespace RunJit.Cli.Services.Net
                            $"sln {solutionFileInfo.FullName} add {projectFileInfo.FullName} {solutionFolderParameter}",
                            $"Add project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} successful",
                            $"Add project: {projectFileInfo.FullName} to solution: {solutionFileInfo.FullName} failed.").ConfigureAwait(false);
+        }
+
+        public async Task AddFileIntoSoltionAsync(FileInfo solutionFileInfo,
+                                                  FileInfo fileToAdd,
+                                                  string solutionFolder = "")
+        {
+            var solutionFolderParameter = solutionFolder.IsNullOrWhiteSpace() ? "--in-root" : $"--solution-folder {solutionFolder}";
+            await RunAsync("dotnet",
+                           $"sln {solutionFileInfo.FullName} add-file {fileToAdd.FullName} {solutionFolderParameter}",
+                           $"Add file: {fileToAdd.FullName} to solution: {solutionFileInfo.FullName} successful",
+                           $"Add file: {fileToAdd.FullName} to solution: {solutionFileInfo.FullName} failed.").ConfigureAwait(false); throw new NotImplementedException();
         }
 
         public Task RemoveProjectFromSolutionAsync(FileInfo solutionFileInfo,

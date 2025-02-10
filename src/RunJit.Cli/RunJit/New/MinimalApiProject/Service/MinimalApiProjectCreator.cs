@@ -1,12 +1,9 @@
-﻿using System.Collections.Immutable;
-using Extensions.Pack;
+﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.Generate.DotNetTool;
-using RunJit.Cli.Generate.DotNetTool.Models;
 using RunJit.Cli.RunJit.Generate.Client;
 using RunJit.Cli.Services;
-using RunJit.Cli.Services.Endpoints;
 using RunJit.Cli.Services.Net;
 using RunJit.Cli.Services.Resharper;
 using Solution.Parser.Solution;
@@ -30,7 +27,7 @@ namespace RunJit.Cli.New.MinimalApiProject
         }
     }
 
-    internal sealed class MinimalApiProjectCreator(MinimalApiProjectCodeGen minimalApiProjectCodeGen,
+    internal sealed class MinimalApiProjectCreator(MinimalApiProjectsCodeGen minimalApiProjectsCodeGen,
                                                    IDotNet dotNet)
 
     {
@@ -45,18 +42,20 @@ namespace RunJit.Cli.New.MinimalApiProject
                 minimalApiProjectParameters.TargetDirectoryInfo.Delete(true);
             }
 
+            // 3. Create target directory
             minimalApiProjectParameters.TargetDirectoryInfo.Create();
 
-            // 3. Create new solution
+            // 4. Create new solution
             await dotNet.RunAsync("dotnet", $"dotnet new sln --name {minimalApiProjectParameters.ProjectName} --output {minimalApiProjectParameters.TargetDirectoryInfo.FullName}").ConfigureAwait(false);
 
-            // 2. Parse the solution
+            // 5. Check if solution was created
             var targetSolutionFile = new FileInfo(Path.Combine(minimalApiProjectParameters.TargetDirectoryInfo.FullName, solutionFileName));
             if (targetSolutionFile.NotExists())
             {
                 throw new RunJitException($"The target solution: {targetSolutionFile.FullName} was not found please check if the Web-Api solution was successfully created and if so, check the path of the creation.");
             }
 
+            // 6. Parse solution and setup project infos
             var parsedSolution = new SolutionFileInfo(targetSolutionFile.FullName).Parse();
             var minimalApiProjectInfos = new MinimalApiProjectInfos
             {
@@ -67,10 +66,10 @@ namespace RunJit.Cli.New.MinimalApiProject
                 NormalizedName = minimalApiProjectParameters.ProjectName,
             };
 
-            // 11. Run all code generators
-            await minimalApiProjectCodeGen.GenerateAsync(parsedSolution, minimalApiProjectParameters, minimalApiProjectInfos).ConfigureAwait(false);
+            // 7. Run all code generators
+            await minimalApiProjectsCodeGen.GenerateAsync(parsedSolution, minimalApiProjectParameters, minimalApiProjectInfos).ConfigureAwait(false);
 
-            // 12. Cleanup code
+            // 8. Cleanup code
             // await solutionCodeCleanup.CleanupSolutionAsync(targetSolutionFile).ConfigureAwait(false);
 
             return parsedSolution.SolutionFileInfo.Value;

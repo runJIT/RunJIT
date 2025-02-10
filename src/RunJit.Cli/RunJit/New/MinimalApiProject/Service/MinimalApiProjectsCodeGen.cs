@@ -20,6 +20,7 @@ namespace RunJit.Cli.New.MinimalApiProject
     internal interface IMinimalApiProjectSpecificCodeGen
     {
         Task GenerateAsync(FileInfo projectFileInfo,
+                           FileInfo solutionFile,
                            XDocument projectDocument,
                            MinimalApiProjectInfos minimalApiProjectInfos);
     }
@@ -27,6 +28,7 @@ namespace RunJit.Cli.New.MinimalApiProject
     internal interface IMinimalApiProjectTestSpecificCodeGen
     {
         Task GenerateAsync(FileInfo projectFileInfo,
+                           FileInfo solutionFile,
                            XDocument projectDocument,
                            MinimalApiProjectInfos minimalApiProjectInfos);
     }
@@ -38,28 +40,11 @@ namespace RunJit.Cli.New.MinimalApiProject
             services.AddMinimalApiProjectGenerator();
             services.AddMinimalApiProjectTestGenerator();
 
-            //services.AddChangelogCodeGen();
-            //services.AddCodeOfConduct();
-            //services.AddCommitLintConfigCodeGen();
-            //services.AddContributingCodeGen();
-            //services.AddDirectoryBuildPropsCodeGen();
-            //services.AddDotSettingsCodeGen();
-            //services.AddEditorConfigCodeGen();
-            //services.AddGitIgnoreCodeGen();
-            //services.AddGlobalJsonCodeGen();
-            //services.AddLicenseCodeGen();
-            //services.AddMaintainersCodeGen();
-            //services.AddProjectCreationCheckListCodeGen();
-            //services.AddReadmeCodeGen();
-            //services.AddRepoLinterCodeGen();
-            //services.AddSecurityCodeGen();
-            //services.AddSupportCodeGen();
-
-            services.AddSingletonIfNotExists<MinimalApiProjectCodeGen>();
+            services.AddSingletonIfNotExists<MinimalApiProjectsCodeGen>();
         }
     }
 
-    internal class MinimalApiProjectCodeGen(MinimalApiProjectGenerator minimalApiProjectGenerator,
+    internal class MinimalApiProjectsCodeGen(MinimalApiProjectGenerator minimalApiProjectGenerator,
                                             MinimalApiProjectTestGenerator minimalApiProjectTestGenerator,
                                             IEnumerable<IMinimalApiProjectRootLevelCodeGen> rootLevelCodeGens)
     {

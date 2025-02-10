@@ -163,35 +163,35 @@
         <EmbeddedResource Include="**\*.DotSettings" Exclude="bin\**\*;obj\**\*" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\ApiTestBase.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\Api\Health\GetHealthStateTest.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\OpenApi\OpenApiTest.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Startup.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AwsCognitoSettings.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\AppJsonSerializerContext.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\JsonSerializeOptions.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\BearerSecuritySchemeTransformer.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\DocumentInfosTransformer.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiInfos.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiVersionInfo.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Program.cs" />
-      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Startup\ServerlessMinimalApplication.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project.Test\ApiTestBase.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project.Test\Api\Health\GetHealthStateTest.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project.Test\OpenApi\OpenApiTest.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\Api\Startup.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\IdentityProvider\AwsCognitoSettings.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\JsonSerializing\AppJsonSerializerContext.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\JsonSerializing\JsonSerializeOptions.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\BearerSecuritySchemeTransformer.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\DocumentInfosTransformer.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\OpenApiInfos.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\OpenApiVersionInfo.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\Program.cs" />
+      <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\Startup\ServerlessMinimalApplication.cs" />
     </ItemGroup>
     <ItemGroup>
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project.Test\ApiTestBase.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AwsCognitoSettings.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\AppJsonSerializerContext.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\JsonSerializeOptions.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\BearerSecuritySchemeTransformer.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\DocumentInfosTransformer.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiInfos.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiVersionInfo.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Program.cs" />
-        <None Remove="RunJit\New\MinimalApiProject\CodeGen\Project\Startup\ServerlessMinimalApplication.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project.Test\ApiTestBase.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\IdentityProvider\AwsCognitoSettings.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\JsonSerializing\AppJsonSerializerContext.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\JsonSerializing\JsonSerializeOptions.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\BearerSecuritySchemeTransformer.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\DocumentInfosTransformer.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\OpenApiInfos.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\OpenApiVersionInfo.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\Program.cs" />
+        <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\Startup\ServerlessMinimalApplication.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -211,21 +211,21 @@
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.gitignore" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\commitlint.config.js" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Directory.Build.props" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project.Test\ApiTestBase.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project.Test\Api\Health\GetHealthStateTest.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project.Test\OpenApi\OpenApiTest.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Api\Startup.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\IdentityProvider\AwsCognitoSettings.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\AppJsonSerializerContext.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\JsonSerializing\JsonSerializeOptions.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\BearerSecuritySchemeTransformer.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\DocumentInfosTransformer.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiInfos.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\OpenApi\OpenApiVersionInfo.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Program.cs" />
-        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Project\Startup\ServerlessMinimalApplication.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project.Test\ApiTestBase.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project.Test\Api\Health\GetHealthStateTest.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project.Test\OpenApi\OpenApiTest.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\Api\Startup.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\IdentityProvider\AwsCognitoSettings.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\JsonSerializing\AppJsonSerializerContext.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\JsonSerializing\JsonSerializeOptions.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\BearerSecuritySchemeTransformer.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\DocumentInfosTransformer.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\OpenApiInfos.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\OpenApi\OpenApiVersionInfo.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\Program.cs" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\Startup\ServerlessMinimalApplication.cs" />
         <EmbeddedResource Include="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
         <EmbeddedResource Include="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
