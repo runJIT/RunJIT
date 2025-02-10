@@ -15,7 +15,7 @@ namespace RunJit.Cli.Services
 
     internal class FindUsedNetVersion
     {
-        private const string DefaultNetVersion = "net8.0";
+        private const string DefaultNetVersion = "net9.0";
 
         public string GetNetVersion(SolutionFile solutionFile)
         {
@@ -48,6 +48,10 @@ namespace RunJit.Cli.Services
                 {
                     return targetFrameworks;
                 }
+            }
+            else if (netFrameworkInSolution.StartWith("net"))
+            {
+                return netFrameworkInSolution;
             }
 
             return DefaultNetVersion;

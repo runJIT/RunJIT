@@ -14,6 +14,6 @@ namespace RunJit.Cli.Generate.DotNetTool
 
         public required CommandInfo CommandInfo { get; init; }
 
-        public required string NetVersion { get; init; } = "net8.0";
+        public required string NetVersion { get; init; } = "net9.0";
     }
 }

@@ -136,7 +136,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                                                               [CallerArgumentExpression(nameof(expectedOutput))]
                                                                                           string expectedResultName = "") where T : FileSystemInfo
                                                 {
-                                                    var result = await starter.AssertRunAsync(cliCall, expectedOutput, expectedResultName);
+                                                    var result = await starter.AssertRunAsync(cliCall, expectedOutput, expectedResultName).ConfigureAwait(false);
                                         
                                                     var exists = Path.Exists(result);
                                         

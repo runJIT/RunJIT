@@ -42,6 +42,10 @@ namespace RunJit.Cli.Generate.DotNetTool
             // 1. Build client generator from parameters
             var projectName = $"{parameters.SolutionFile.NameWithoutExtension()}.DotNetTool";
 
+            // 2. Normalizing name
+            var normalizedName = new string(parameters.ToolName.Where(char.IsAsciiLetterOrDigit).ToArray());
+            parameters = parameters with { ToolName = normalizedName };
+
             // 2. Generate the dotnet tool into solution
             await dotNetToolCreator.GenerateDotNetToolAsync(projectName, $"dotnet-{parameters.ToolName}", parameters.ToolName,
                                                             parameters.SolutionFile).ConfigureAwait(false);

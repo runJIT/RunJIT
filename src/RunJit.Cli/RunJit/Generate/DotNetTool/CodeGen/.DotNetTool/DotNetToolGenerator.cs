@@ -93,8 +93,11 @@ namespace RunJit.Cli.Generate.DotNetTool
             }
 
             // 2. Create the .net tool folder -> the name of the tool
-            var netToolFolder = new DirectoryInfo(Path.Combine(solutionFileInfo.Directory!.FullName, dotNetToolInfos.ProjectName));
+            //    New: We have to check if a 'src' folder exists
+            var sourceFolder = solutionFileInfo.Directory!.EnumerateDirectories("src").FirstOrDefault();
+            var sourceFolderPart = sourceFolder.IsNull() ? string.Empty : sourceFolder.Name;
 
+            var netToolFolder = new DirectoryInfo(Path.Combine(solutionFileInfo.Directory!.FullName, sourceFolderPart, dotNetToolInfos.ProjectName));
             if (netToolFolder.Exists)
             {
                 netToolFolder.Delete(true);
@@ -102,7 +105,7 @@ namespace RunJit.Cli.Generate.DotNetTool
 
             // 4. Create new console project
             // dotnet new console --output folder1/folder2/myapp
-            var target = Path.Combine(solutionFileInfo.Directory!.FullName, dotNetToolInfos.ProjectName);
+            var target = Path.Combine(solutionFileInfo.Directory!.FullName, sourceFolderPart, dotNetToolInfos.ProjectName);
 
             await dotNet.RunAsync("dotnet", $"new console --output {target} --framework {dotNetToolInfos.NetVersion}").ConfigureAwait(false);
 
@@ -116,12 +119,12 @@ namespace RunJit.Cli.Generate.DotNetTool
 
             // 6. Add required nuget packages into project
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "System.CommandLine", "0.3.0-alpha.20054.1").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "5.0.5").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Extensions.Pack", "6.0.3").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "GitVersion.MsBuild", "5.12.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.DependencyInjection", "8.0.1").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration", "8.0.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.EnvironmentVariables", "8.0.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.UserSecrets", "8.0.1").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.DependencyInjection", "9.0.1").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration", "9.0.1").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.EnvironmentVariables", "9.0.1").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotnetToolProject.FullName, "Microsoft.Extensions.Configuration.UserSecrets", "9.0.1").ConfigureAwait(false);
 
             // 7. Load csproj content to avoid multiple IO write actions to disk which cause io exceptions
             var xdocument = XDocument.Load(dotnetToolProject.FullName);
@@ -136,7 +139,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             xdocument.Save(dotnetToolProject.FullName);
 
             // 10. And at least we add this project into the solution because we want to avoid to many refreshes as possible
-            await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotnetToolProject).ConfigureAwait(false);
+            await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotnetToolProject, "Cli").ConfigureAwait(false);
 
             // 11. Cleanup code to be in sync with target solution settings :)
             await solutionCodeCleanup.CleanupSolutionAsync(solutionFileInfo).ConfigureAwait(false);

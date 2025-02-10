@@ -17,6 +17,9 @@ namespace RunJit.Cli.Generate.Client
                                                   using System.Reflection;
                                                   using System.Text.Json.Serialization;
                                                   using System.Text.Json;
+                                                  using Microsoft.Extensions.Configuration;
+                                                  using Microsoft.Extensions.DependencyInjection;
+                                                  using Microsoft.Extensions.Logging;
 
                                                   namespace $namespace$
                                                   {

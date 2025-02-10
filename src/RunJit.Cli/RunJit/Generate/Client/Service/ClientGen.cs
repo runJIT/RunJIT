@@ -35,8 +35,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                     IProcessService processService,
                                     ConsoleService consoleService,
                                     ClientGeneratorBuilder clientGeneratorBuilder,
-                                    ClientCreator clientCreator)
-        : IClientGen
+                                    ClientCreator clientCreator) : IClientGen
     {
         public async Task<int> HandleAsync(ClientParameters parameters)
         {

@@ -33,8 +33,13 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             var solutionFileInfo = solutionFile.SolutionFileInfo.Value;
 
             // 2. Expected test project
+            //    New: We have to check if a 'src' folder exists
             var dotNetToolTestProjectName = $"{dotNetToolInfos.ProjectName}.Test";
-            var dotNetToolTestProjectFileInfo = new FileInfo(Path.Combine(solutionFileInfo.Directory!.FullName, dotNetToolTestProjectName, $"{dotNetToolTestProjectName}.csproj"));
+
+            var sourceFolder = solutionFileInfo.Directory!.EnumerateDirectories("src").FirstOrDefault();
+            var sourceFolderPart = sourceFolder.IsNull() ? string.Empty : sourceFolder.Name;
+
+            var dotNetToolTestProjectFileInfo = new FileInfo(Path.Combine(solutionFileInfo.Directory!.FullName, sourceFolderPart, dotNetToolTestProjectName, $"{dotNetToolTestProjectName}.csproj"));
 
             // 3. Check if cli test project already exists
             var dotNetToolTestProject = solutionFile.UnitTestProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion.ToLowerInvariant() == dotNetToolTestProjectName.ToLowerInvariant());
@@ -77,12 +82,13 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             }
 
             // 6. Add required nuget packages into project
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "4.0.13").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "6.0.4").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "DotNetTool.Service", "0.3.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "Microsoft.NET.Test.Sdk", "17.12.0").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestAdapter", "3.6.3").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestFramework", "3.6.3").ConfigureAwait(false);
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "coverlet.collector", "6.0.2").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "Microsoft.NET.Test.Sdk", "17.13.0").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest", "3.7.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestAdapter", "3.7.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestFramework", "3.7.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "coverlet.collector", "6.0.4").ConfigureAwait(false);
 
             // 7. Add needed project references
             await dotNet.AddProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
@@ -105,7 +111,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             xdocument.Save(dotNetToolTestProjectFileInfo.FullName);
 
             // 11. And at least we add this project into the solution because we want to avoid to many refreshes as possible
-            await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
+            await dotNet.AddProjectToSolutionAsync(solutionFileInfo, dotNetToolTestProjectFileInfo, "Cli").ConfigureAwait(false);
 
             // 12. Cleanup test code to be in sync with target solution settings :)
             // await solutionCodeCleanup.CleanupProjectAsync(solutionFileInfo, dotNetToolTestProjectFileInfo).ConfigureAwait(false);

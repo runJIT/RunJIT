@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Api.Client;
+using RunJit.Api.Client.Api.Clients.V1;
 using RunJit.Cli.Auth0;
 
 namespace RunJit.Cli.RunJit.Generate.Client
@@ -41,7 +42,12 @@ namespace RunJit.Cli.RunJit.Generate.Client
             // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
             var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
 
-            var generateClientResponse = await rRunJitApiClient.Clients.V1.GenerateClientAsync().ConfigureAwait(false);
+            var generateClientRequest = new GenerateClientRequest()
+                                        {
+                                            NetVersion = 9
+                                        };
+
+            var generateClientResponse = await rRunJitApiClient.Clients.V1.GenerateClientAsync(generateClientRequest).ConfigureAwait(false);
 
             using var zipArchive = new ZipArchive(generateClientResponse.FileStream);
             zipArchive.ExtractToDirectory(directoryInfo.FullName, true);

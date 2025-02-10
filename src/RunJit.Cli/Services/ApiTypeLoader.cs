@@ -28,7 +28,9 @@ namespace RunJit.Cli.Services
             var searchPattern = $"{webAppProject.ProjectFileInfo.FileNameWithoutExtenion}.dll";
 
             var assembly = webAppProject.ProjectFileInfo.Value.Directory!.EnumerateFiles(searchPattern, SearchOption.AllDirectories)
-                                        .FirstOrDefault(file => file.FullName.Contains("Debug") && file.FullName.Contains("net8") && !file.FullName.Contains("obj"));
+                                        .FirstOrDefault(file => file.FullName.Contains("Debug") && 
+                                                                (file.FullName.Contains("net8")  || file.FullName.Contains("net9"))&& 
+                                                                !file.FullName.Contains("obj"));
 
             if (assembly.IsNull())
             {
