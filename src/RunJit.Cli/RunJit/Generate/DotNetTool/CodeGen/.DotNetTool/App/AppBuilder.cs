@@ -25,7 +25,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                         {
                                             internal sealed class AppBuilder
                                             {
-                                                internal App Build()
+                                                internal App Build(Action<IServiceCollection, IConfiguration> serviceInterceptor)
                                                 {
                                                     // 1. Setup startup
                                                     var startup = new Startup();
@@ -62,10 +62,13 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                     // 5. Call startup to configure and setup the .net tool
                                                     startup.ConfigureServices(services, configuration);
                                         
-                                                    // 6. Build service provider
+                                                    // 6. Service interceptor for custom setups
+                                                    serviceInterceptor(services, configuration);
+                                                    
+                                                    // 7. Build service provider
                                                     var buildServiceProvider = services.BuildServiceProvider();
-                                        
-                                                    // 7. Provide the ready to use app
+                                                    
+                                                    // 8. Provide the ready to use app
                                                     return new App(buildServiceProvider);
                                                 }
                                             }

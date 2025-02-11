@@ -232,11 +232,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 }
 
                 var endpointGroup = new EndpointGroup
-                                    {
-                                        GroupName = controllerInfo.GroupName,
-                                        Endpoints = endpoints.ToImmutable(),
-                                        Version = controllerInfo.Version
-                                    };
+                {
+                    GroupName = controllerInfo.GroupName,
+                    Endpoints = endpoints.ToImmutable(),
+                    Version = controllerInfo.Version
+                };
 
                 endpointGroups.Add(endpointGroup);
             }
@@ -254,22 +254,22 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var obsoleteValue = methodInfo.Attributes.FirstOrDefault(a => a.Name.StartsWith("Obsolete"))?.Arguments.FirstOrDefault();
 
             var endpoint = new EndpointInfo
-                           {
-                               ResponseType = methodInfo.ResponseType,
-                               BaseUrl = methodInfo.RelativeUrl,
-                               DomainName = methodInfo.Name,
-                               HttpAction = methodInfo.HttpAction,
-                               GroupName = groupName,
-                               Parameters = methodInfo.Parameters,
-                               SwaggerOperationId = methodInfo.SwaggerOperationId,
-                               ProduceResponseTypes = methodInfo.ProduceResponseTypes,
-                               RequestType = methodInfo.RequestType,
-                               Version = versionInfo,
-                               ObsoleteInfo = obsoleteValue.IsNull() ? null : new ObsoleteInfo(obsoleteValue),
-                               Models = methodInfo.Models,
-                               Name = methodInfo.Name,
-                               RelativeUrl = methodInfo.RelativeUrl
-                           };
+            {
+                ResponseType = methodInfo.ResponseType,
+                BaseUrl = methodInfo.RelativeUrl,
+                DomainName = methodInfo.Name,
+                HttpAction = methodInfo.HttpAction,
+                GroupName = groupName,
+                Parameters = methodInfo.Parameters,
+                SwaggerOperationId = methodInfo.SwaggerOperationId,
+                ProduceResponseTypes = methodInfo.ProduceResponseTypes,
+                RequestType = methodInfo.RequestType,
+                Version = versionInfo,
+                ObsoleteInfo = obsoleteValue.IsNull() ? null : new ObsoleteInfo(obsoleteValue),
+                Models = methodInfo.Models,
+                Name = methodInfo.Name,
+                RelativeUrl = methodInfo.RelativeUrl
+            };
 
             return endpoint;
         }

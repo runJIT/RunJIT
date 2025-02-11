@@ -94,7 +94,7 @@ namespace RunJit.Cli.Services
             //return controllerInfos;
         }
 
-        private string FindBasePath(IImmutableList<CSharpSyntaxTree> syntaxTrees)
+        internal string FindBasePath(IImmutableList<CSharpSyntaxTree> syntaxTrees)
         {
             foreach (var cSharpSyntaxTree in syntaxTrees)
             {

@@ -58,7 +58,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var targetDirectory = targetFolderService.CreateTargetDirectory(client);
 
             // 3. Extract templates solution or project templates depends on parameters
-            await templateExtractor.ExtractToAsync(targetDirectory, parameters).ConfigureAwait(false);
+            //    If we have an existing src folder, we will use it as a source
+            var sourceFolder = targetDirectory.EnumerateDirectories("src").FirstOrDefault();
+            var targetFolder = sourceFolder ?? targetDirectory;
+
+            await templateExtractor.ExtractToAsync(targetFolder, parameters).ConfigureAwait(false);
 
             // 4. Renaming all stuff
             templateService.RenameAllIn(targetDirectory, client);

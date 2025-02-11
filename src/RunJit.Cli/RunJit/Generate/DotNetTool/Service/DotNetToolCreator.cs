@@ -128,8 +128,10 @@ namespace RunJit.Cli.Generate.DotNetTool
             var netVersion = findUsedNetVersion.GetNetVersion(parsedSolution);
 
             // 10. Convert controller infos to dotnet tool structure -> commands, arguments and options
+            var basePath = minimalApiEndpointParser.FindBasePath(allSyntaxTrees);
+
             var dotnetToolStructure = convertControllerInfos.ConvertTo(domainGrouped, projectName, name,
-                                                                       normalizedName, netVersion);
+                                                                       normalizedName, netVersion, basePath);
 
             // 11. Run all code generators
             await dotNetToolCodeGen.GenerateAsync(parsedSolution, dotnetToolStructure).ConfigureAwait(false);
@@ -213,7 +215,8 @@ namespace RunJit.Cli.Generate.DotNetTool
                                          string projectName,
                                          string name,
                                          string normalizedName,
-                                         string netVersion)
+                                         string netVersion,
+                                         string basePath)
         {
             // Root command is the first command
             // Sample:
@@ -227,29 +230,45 @@ namespace RunJit.Cli.Generate.DotNetTool
                                   Description = name
                               };
 
+            // Common options
+            var tokenOption = new OptionInfo
+                             {
+                                 Alias = "-t",
+                                 NormalizedName = "token",
+                                 Argument = new ArgumentInfo("token", "Bearer token for authentication", "<token>[string]",
+                                                             "string", "string", "Token"),
+                                 IsIsRequired = false,
+                                 Name = "token",
+                                 Value = "--token",
+                                 Description = "Bearer token for authentication"
+                             };
+
             // New options for output and formating !
-            var options = ImmutableList.Create<OptionInfo>(new OptionInfo
-                                                           {
-                                                               Alias = "-f",
-                                                               NormalizedName = "format",
-                                                               Argument = new ArgumentInfo("format", "Provide the format in which type the output should be created. Choose an an available option", "<format>[FormatType]",
-                                                                                           "FormatType", "FormatType", "Format"),
-                                                               IsIsRequired = false,
-                                                               Name = "format",
-                                                               Value = "--format",
-                                                               Description = "Provide the format in which type the output should be created. Choose an an available option"
-                                                           },
-                                                           new OptionInfo
-                                                           {
-                                                               Alias = "-o",
-                                                               NormalizedName = "Output",
-                                                               Argument = new ArgumentInfo("output", "Writes the output in your provided file. Sample: 'D:/Documents/MyFile.txt'", "<output>[FileInfo?]",
-                                                                                           "FileInfo?", "FileInfo?", "Output"),
-                                                               IsIsRequired = false,
-                                                               Name = "output",
-                                                               Value = "--output",
-                                                               Description = "Writes the output in your provided file. Sample: 'D:/Documents/MyFile.txt'"
-                                                           });
+            var options = ImmutableList.Create(new OptionInfo
+                                               {
+                                                   Alias = "-f",
+                                                   NormalizedName = "format",
+                                                   Argument = new ArgumentInfo("format", "Provide the format in which type the output should be created. Choose an an available option", "<format>[FormatType]",
+                                                                               "FormatType", "FormatType", "Format"),
+                                                   IsIsRequired = false,
+                                                   Name = "format",
+                                                   Value = "--format",
+                                                   Description = "Provide the format in which type the output should be created. Choose an an available option"
+                                               },
+                                               new OptionInfo
+                                               {
+                                                   Alias = "-o",
+                                                   NormalizedName = "Output",
+                                                   Argument = new ArgumentInfo("output", "Writes the output in your provided file. Sample: 'D:/Documents/MyFile.txt'", "<output>[FileInfo?]",
+                                                                               "FileInfo?", "FileInfo?", "Output"),
+                                                   IsIsRequired = false,
+                                                   Name = "output",
+                                                   Value = "--output",
+                                                   Description = "Writes the output in your provided file. Sample: 'D:/Documents/MyFile.txt'"
+                                               });
+
+            // Config command
+            // ToDo: We have to implement ICustomCommand to handle such exception cases :)
 
             // For your tool we want to be able to manage the whole configuration
             // So we need a command to get/set the configuration
@@ -290,7 +309,64 @@ namespace RunJit.Cli.Generate.DotNetTool
             configCommand.SubCommands.Add(getConfigCommand);
             configCommand.SubCommands.Add(setConfigCommand);
 
+            // Health command
+            // ToDo: We have to implement ICustomCommand to handle such exception cases :)
+            // Health command does not exist es explicit endpoint it is just configured as
+            // services.AddHealthChecks();
+            // app.UseHealthChecks("/health);
+            // For your tool we want to be able to manage the whole configuration
+            // So we need a command to get/set the configuration
+            var healthCommand = new CommandInfo
+                                {
+                                    NormalizedName = "Health",
+                                    Value = "health",
+                                    Name = "health",
+                                    Description = "Command to get info about health status"
+                                };
+
+            // We need a command to read the whole config
+            var getHealthCommand = new CommandInfo
+                                   {
+                                       NormalizedName = "GetHealthStatus",
+                                       Value = "getHealthStatus",
+                                       Name = "getHealthStatus",
+                                       Description = "Get the health status of your api",
+                                       Options = options.Add(tokenOption).ToList(),
+
+                                       // CodeTemplate = GetConfigTemplate,
+                                       EndpointInfo = new EndpointInfo
+                                                      {
+                                                          BaseUrl = basePath,
+                                                          DomainName = "Health",
+                                                          GroupName = "Health",
+                                                          HttpAction = "Get",
+                                                          ResponseType = new ResponseType("HealthStatusResponse",
+                                                                                          "HealthStatusResponse"),
+                                                          ProduceResponseTypes = ImmutableList<ProduceResponseTypes>.Empty,
+                                                          RelativeUrl = "health",
+                                                          Name = "GetHealthStatusAsync",
+                                                          Models = ImmutableList.Create<DeclarationBase>(new DeclarationBase("HealthStatusResponse",
+                                                                                                                             "HealthStatusResponse",
+                                                                                                                             """
+                                                                                                                             internal sealed record HealthStatusResponse(string Status,
+                                                                                                                             string TotalDuration,
+                                                                                                                             Dictionary<string, object> Entries);
+                                                                                                                             """,
+                                                                                                                             string.Empty)),
+                                                          Version = new VersionInfo("0",
+                                                                                    "0"),
+                                                          SwaggerOperationId = "getHealthStatus",
+                                                          Parameters = ImmutableList<Parameter>.Empty,
+                                                          RequestType = null,
+                                                          ObsoleteInfo = null
+                                                      },
+                                       NoSyntaxTreeFormatting = true
+                                   };
+
+            healthCommand.SubCommands.Add(getHealthCommand);
+
             rootCommand.SubCommands.Add(configCommand);
+            rootCommand.SubCommands.Add(healthCommand);
 
             // convert controller infos into dotnet tool structure
             // endpointGroups are grouped by version
@@ -335,19 +411,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                         //  - V1
                         //    - AddResource
                         // Temp tool build do not allow exceptions
-                        var optionInfo = new OptionInfo
-                                         {
-                                             Alias = "-t",
-                                             NormalizedName = "token",
-                                             Argument = new ArgumentInfo("token", "Bearer token for authentication", "<token>[string]",
-                                                                         "string", "string", "Token"),
-                                             IsIsRequired = false,
-                                             Name = "token",
-                                             Value = "--token",
-                                             Description = "Bearer token for authentication"
-                                         };
-
-                        var optionsForEndpoints = options.Add(optionInfo).ToList();
+                        var optionsForEndpoints = options.Add(tokenOption).ToList();
 
                         var endpointCommand = new CommandInfo
                                               {

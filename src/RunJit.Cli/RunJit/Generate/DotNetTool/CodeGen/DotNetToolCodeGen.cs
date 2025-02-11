@@ -3,6 +3,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Generate.DotNetTool.DotNetTool.Test;
 using RunJit.Cli.Generate.DotNetTool.Models;
+using Solution.Parser.Project;
 using Solution.Parser.Solution;
 
 namespace RunJit.Cli.Generate.DotNetTool
@@ -25,7 +26,8 @@ namespace RunJit.Cli.Generate.DotNetTool
     {
         Task GenerateAsync(FileInfo projectFileInfo,
                            XDocument projectDocument,
-                           DotNetToolInfos dotNetToolInfos);
+                           DotNetToolInfos dotNetToolInfos,
+                           ProjectFile? webApiProject);
     }
 
     internal static class AddDotNetToolCodeGenExtension

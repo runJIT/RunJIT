@@ -14,6 +14,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             services.AddCliRunnerCodeGen();
             services.AddGlobalSetupCodeGen();
             services.AddCommandStructureCodeGen();
+            services.AddEnvironmentVariablesCodeGen();
 
             services.AddProjectEmbeddedFilesCodeGen();
             services.AddProjectSettingsCodeGen();
@@ -82,16 +83,23 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             }
 
             // 6. Add required nuget packages into project
-            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "6.0.4").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "AspNetCore.Simple.MsTest.Sdk", "6.0.5").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "DotNetTool.Service", "0.3.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "Microsoft.NET.Test.Sdk", "17.13.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest", "3.7.3").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestAdapter", "3.7.3").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "MSTest.TestFramework", "3.7.3").ConfigureAwait(false);
+            await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "NSubstitute", "5.3.0").ConfigureAwait(false);
             await dotNet.AddNugetPackageAsync(dotNetToolTestProjectFileInfo.FullName, "coverlet.collector", "6.0.4").ConfigureAwait(false);
 
             // 7. Add needed project references
             await dotNet.AddProjectReference(netToolProject, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
+
+            var webApiProject = solutionFile.ProductiveProjects.FirstOrDefault(p => p.ProjectFileInfo.FileNameWithoutExtenion == solutionFile.SolutionFileInfo.FileNameWithoutExtenion);
+            if (webApiProject != null)
+            {
+                await dotNet.AddProjectReference(webApiProject.ProjectFileInfo.Value, dotNetToolTestProjectFileInfo).ConfigureAwait(false);
+            }
 
             // 8. Load csproj content to avoid multiple IO write actions to disk which cause io exceptions
             var xdocument = XDocument.Load(dotNetToolTestProjectFileInfo.FullName);
@@ -103,7 +111,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             {
                 foreach (var codeGenerator in codeGenerators)
                 {
-                    await codeGenerator.GenerateAsync(dotNetToolTestProjectFileInfo, xdocument, dotNetToolInfos).ConfigureAwait(false);
+                    await codeGenerator.GenerateAsync(dotNetToolTestProjectFileInfo, xdocument, dotNetToolInfos, webApiProject).ConfigureAwait(false);
                 }
             }
 

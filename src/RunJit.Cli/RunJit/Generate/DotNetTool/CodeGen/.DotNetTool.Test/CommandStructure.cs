@@ -3,6 +3,7 @@ using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Generate.DotNetTool.Models;
 using RunJit.Cli.Services;
+using Solution.Parser.Project;
 
 namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 {
@@ -10,6 +11,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
     {
         internal static void AddCommandStructureCodeGen(this IServiceCollection services)
         {
+            services.AddDefaultTestCodeGen();
             services.AddOutputToConsoleCodeGen();
             services.AddOutputToFileCodeGen();
 
@@ -35,7 +37,8 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 
         public async Task GenerateAsync(FileInfo projectFileInfo,
                                         XDocument projectDocument,
-                                        DotNetToolInfos dotNetToolInfos)
+                                        DotNetToolInfos dotNetToolInfos,
+                                        ProjectFile? webApiProject)
         {
             await CreateTestsForCommandAsync(projectFileInfo, projectDocument, dotNetToolInfos,
                                              dotNetToolInfos.CommandInfo, null, string.Empty);
@@ -102,7 +105,19 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                     outputFolder.Create();
                 }
 
+
+                // Default test case
                 await File.WriteAllTextAsync(Path.Combine(outputFolder.FullName, $"{commandInfo.NormalizedName}.json"), "{}").ConfigureAwait(false);
+
+                // We have for each formatting one file !
+                // [DataTestMethod]
+                // [DataRow("Json")]
+                // [DataRow("JsonIndented")]
+                // [DataRow("JsonAsString")]
+                // Quickfix
+                await File.WriteAllTextAsync(Path.Combine(outputFolder.FullName, $"{commandInfo.NormalizedName}AsJson.json"), "{}").ConfigureAwait(false);
+                await File.WriteAllTextAsync(Path.Combine(outputFolder.FullName, $"{commandInfo.NormalizedName}AsJsonIndented.json"), "{}").ConfigureAwait(false);
+                await File.WriteAllTextAsync(Path.Combine(outputFolder.FullName, $"{commandInfo.NormalizedName}AsJsonAsString.json"), "{}").ConfigureAwait(false);
 
                 if (commandInfo.EndpointInfo.RequestType.IsNotNull())
                 {

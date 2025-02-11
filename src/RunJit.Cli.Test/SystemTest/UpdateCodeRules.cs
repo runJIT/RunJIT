@@ -26,8 +26,9 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFile.FullName)).ConfigureAwait(false);
         }
 
-        [Ignore]
+        // [Ignore]
         [DataTestMethod]
+        [DataRow(@"D:\Siemens\pulse-database\Pulse.Database.sln")]
         [DataRow(@"D:\SoftwareOne\css-partners\SWO.CSS.OneSalesPartnerService.sln")]
         [DataRow(@"D:\AzureDevOps\SoftwareOne.Workshop.November.2023\RunJit\UserManagement\UserManagement.sln")]
         [DataRow(@"D:\AzureDevOps\AspNetCore.MinimalApi.Sdk\AspNetCore.MinimalApi.Sdk.sln")]

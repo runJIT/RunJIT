@@ -66,12 +66,14 @@
         <PackageReference Include="System.Text.Json" Version="9.0.0" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\EnvironmentVariables.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\CommandStructure.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\GlobalSetup.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\DotNetToolTestGenerator.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\CliRunner.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\ProjectFiles\EmbeddedFiles.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\ProjectFiles\ProjectSettings.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\TestCases\Default.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\TestCases\OutputToFile.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\TestCases\OutputToConsole.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool\AppSettings.cs" />
@@ -209,6 +211,7 @@
     <ItemGroup>
         <EmbeddedResource Include="D:\GitHub\RunJit.Cli\src\RunJit.Cli\RunJit\New\MinimalApiProject\CodeGen\.editorconfig" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.gitignore" />
+        <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.runsettings" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\commitlint.config.js" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\Directory.Build.props" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project.Test\ApiTestBase.cs" />

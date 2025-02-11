@@ -2,6 +2,7 @@
 using DotNetTool.Service;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
+using RunJit.Cli.Services.Net;
 
 namespace RunJit.Cli.RunJit.Generate.Client
 {
@@ -13,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    public class SolutionFileModifier
+    internal class SolutionFileModifier(IDotNet dotNet)
     {
         public async Task AddProjectsAsync(FileInfo solutionFile)
         {
@@ -24,20 +25,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
             Throw.IfNull(clientProject);
             Throw.IfNull(clientTestProject);
 
-            var dotnetTool = DotNetToolFactory.Create();
-            var addClientProjectResult = await dotnetTool.RunAsync("dotnet", $"sln {solutionFile.FullName} add {clientProject.FullName} --in-root").ConfigureAwait(false);
-
-            if (addClientProjectResult.ExitCode != 0)
-            {
-                throw new Exception($"Error while adding client project to solution: {addClientProjectResult.Output}");
-            }
-
-            var addClientTestProjectResult = await dotnetTool.RunAsync("dotnet", $"sln {solutionFile.FullName} add {clientTestProject.FullName} --in-root").ConfigureAwait(false);
-
-            if (addClientTestProjectResult.ExitCode != 0)
-            {
-                throw new Exception($"Error while adding client test project to solution: {addClientTestProjectResult.Output}");
-            }
+            await dotNet.AddProjectToSolutionAsync(solutionFile, clientProject, "Client").ConfigureAwait(false);
+            await dotNet.AddProjectToSolutionAsync(solutionFile, clientTestProject, "Client").ConfigureAwait(false);
         }
     }
 }

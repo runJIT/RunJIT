@@ -40,7 +40,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             }
 
             // 1. Build client generator from parameters
-            var projectName = $"{parameters.SolutionFile.NameWithoutExtension()}.DotNetTool";
+            var projectName = $"{parameters.SolutionFile.NameWithoutExtension()}.Cli";
 
             // 2. Normalizing name
             var normalizedName = new string(parameters.ToolName.Where(char.IsAsciiLetterOrDigit).ToArray());

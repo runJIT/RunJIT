@@ -32,7 +32,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                 
                                                     // 2. Executes the CLI command and asserts the output against the expected JSON file.
                                                     return Cli.AssertRunAsync($"$cliCall$",
-                                                                              "$expectedOutput$");
+                                                                              $"$expectedOutput$");
                                                 }
                                                                                        
                                         """;
@@ -47,14 +47,24 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
             }
 
             var expectedOutput = cliCallPath.Split(" ").Where(value => value.StartsWith("-").IsFalse()).Flatten(".");
-            expectedOutput = $"{expectedOutput}.Output.{commandInfo.NormalizedName}.json";
+
+            // Brand new test sdk have now an embedded file locator, name only is enough :)
+            expectedOutput = $"{commandInfo.NormalizedName}As{{format}}.json";
 
             var testMethodName = cliCallPath.Split(" ").Where(value => value.StartsWith("-").IsFalse()).Flatten("_");
             var parametersFile = cliCallPath.Split(" ").Where(value => value.StartsWith("-").IsFalse()).Flatten(".");
-            parametersFile = $"{parametersFile}.Parameters.{commandInfo.NormalizedName}.json";
+
+            // Brand new test sdk have now an embedded file locator, name only is enough :)
+            parametersFile = $"{commandInfo.NormalizedName}As{{format}}.json";
 
             var cliCall = cliCallPath;
-            var cliCallWithArgument = commandInfo.EndpointInfo.IsNull() ? $"{cliCall}" : $"{cliCall.ToLowerInvariant()} {parametersFile}";
+            var callWithArgs = commandInfo.EndpointInfo.IsNotNull() &&
+                               (commandInfo.EndpointInfo.Parameters.Any() ||
+                                commandInfo.EndpointInfo.RequestType.IsNotNull());
+
+            var cliCallWithArgument = callWithArgs ? $"{cliCall.ToLowerInvariant()} {parametersFile}" : $"{cliCall.ToLowerInvariant()}";
+
+
             var cliCallWithArgumentAndOutput = $"{cliCallWithArgument} --format {{format}} --output {{file}}";
 
             var commandAsFolderPath = cliCallPath.Split(" ").Select(value => $"\"{value}\"").Flatten(", ");

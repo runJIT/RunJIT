@@ -43,6 +43,16 @@ namespace RunJit.Cli.RunJit.Generate.Client
             var msTestBaseClass = msTestBaseClassBuilder.BuildFor(clientTestProject.ProjectFileInfo.Value.NameWithoutExtension(), clientName);
             var msTestBaseFile = new FileInfo(Path.Combine(environmentFolder.FullName, "MsTestBase.cs"));
 
+            // Quickfix Startup vs Program.cs
+            // If on any csproj root level is no startup so we have program.cs only
+            var programFile = solutionFile.ProductiveProjects.Where(p => p.ProjectFileInfo.FileNameWithoutExtenion == solutionFile.SolutionFileInfo.FileNameWithoutExtenion).SelectMany(p => p.CSharpFileInfos).Where(c => c.Value.Name.Contains("program.cs", StringComparison.OrdinalIgnoreCase)).ToList();
+            var startup = programFile.SelectMany(p => p.Value.Directory!.EnumerateFiles("startup.cs", SearchOption.TopDirectoryOnly));
+
+            if (startup.IsEmpty())
+            {
+                msTestBaseClass = msTestBaseClass.Replace("<Startup>", "<Program>");
+            }
+
             // 2.1 Important we will not overwrite if it exists already because of custom changes
             if (msTestBaseFile.NotExists())
             {

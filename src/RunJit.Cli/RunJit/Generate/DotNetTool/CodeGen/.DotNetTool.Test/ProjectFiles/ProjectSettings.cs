@@ -2,6 +2,7 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
+using Solution.Parser.Project;
 
 namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 {
@@ -17,7 +18,8 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
     {
         public Task GenerateAsync(FileInfo projectFileInfo,
                                   XDocument projectDocument,
-                                  DotNetToolInfos dotNetToolInfos)
+                                  DotNetToolInfos dotNetToolInfos,
+                                  ProjectFile? webApiProject)
         {
             // 1. Create a new PropertyGroup for .NET tool settings
             //    <PropertyGroup>

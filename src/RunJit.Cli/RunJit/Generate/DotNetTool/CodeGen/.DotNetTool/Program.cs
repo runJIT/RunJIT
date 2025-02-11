@@ -24,7 +24,13 @@ namespace RunJit.Cli.Generate.DotNetTool
                                             {
                                                 public static Task<int> Main(string[] args)
                                                 {
-                                                    return new AppBuilder().Build().RunAsync(args);
+                                                    return CustomSetup(args, (_, __) => { });
+                                                }
+                                            
+                                                public static Task<int> CustomSetup(string[] args,
+                                                                                    Action<IServiceCollection, IConfiguration> serviceInterceptor)
+                                                {
+                                                    return new AppBuilder().Build(serviceInterceptor).RunAsync(args);
                                                 }
                                             }
                                         }
