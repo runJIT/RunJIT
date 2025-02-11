@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace $namespace$
 {
     [TestClass]
-    public abstract class ClientTestBase
+    public abstract class ApiTestBase
     {
         private static ApiTestBase<Startup>? _customWebApplicationFactory;
         private static HttpClient? _httpClient;
@@ -15,12 +15,18 @@ namespace $namespace$
         [AssemblyInitialize]
         public static Task AssemblyInitializeAsync(TestContext _)
         {
+            // 1. Super simple just use the provided API test base class and you are ready to go
+            var environmentVariables = EmbeddedFile.GetFileContentFrom("Properties.EnvironmentVariables.json")
+                                                   .FromJsonStringAs<Dictionary<string, string>>()
+                                                   .Select(keyValue => (keyValue.Key, keyValue.Value)).ToArray();
+
             // Create this with new, is not a fault, the reason is to keep the test class more cleaner.
             _customWebApplicationFactory = new ApiTestBase<Startup>("Development", (services, config) =>
             {                
                 services.Add$clientName$();
                 services.Add$clientName$Factory(config);
-            });
+            },
+            environmentVariables);
     
     
             var serviceProvider = _customWebApplicationFactory.Services;

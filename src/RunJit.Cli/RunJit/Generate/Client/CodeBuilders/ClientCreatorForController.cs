@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.RunJit.Generate.Client;
@@ -62,17 +62,22 @@ namespace RunJit.Cli.Generate.Client
             var domainName = endpointGroup.GroupName;
             var domainNameWithVersion = endpointGroup.Version.IsNull() ? domainName : $"{domainName}{endpointGroup.Version.Normalized}";
 
-            var methods = methodBuilder.BuildFor(endpointGroup);
+            // We dont want to switch version to NULL now cause changes to huge
+            // V0 = NO version as a workaround
+            if (endpointGroup.Version.Normalized == "0")
+            {
+                var domainName = endpointGroup.GroupName;
+                var domainNameWithVersion = $"{domainName}Facade";
 
             var @namespace = endpointGroup.Version.IsNotNull() ? 
                                  $"{projectName}.{ClientGenConstants.Api}.{domainName}.{endpointGroup.Version.Normalized}" :
                                  $"{projectName}.{ClientGenConstants.Api}.{domainName}";
 
-            //var controllerObsoleteAttribute = endpointGroup.Attributes.FirstOrDefault(a => a.Name == "Obsolete");
-            //var attributes = controllerObsoleteAttribute.IsNotNull() ? controllerObsoleteAttribute.SyntaxTree : string.Empty;
-            var attributes = string.Empty;
+                var @namespace = $"{projectName}.{ClientGenConstants.Api}.{domainName}Facade";
 
-            var methodSyntax = methods.Flatten($"{Environment.NewLine}{Environment.NewLine}");
+                //var controllerObsoleteAttribute = endpointGroup.Attributes.FirstOrDefault(a => a.Name == "Obsolete");
+                //var attributes = controllerObsoleteAttribute.IsNotNull() ? controllerObsoleteAttribute.SyntaxTree : string.Empty;
+                var attributes = string.Empty;
 
             var syntaxTree = _versionClass.Replace("$name$", domainName)
                                           .Replace("$version$", endpointGroup.Version?.Normalized ?? string.Empty)
@@ -82,7 +87,41 @@ namespace RunJit.Cli.Generate.Client
                                           .Replace("$namespace$", @namespace)
                                           .Replace("$attributes$", attributes);
 
-            return new GeneratedClientCodeForController(endpointGroup, syntaxTree, domainNameWithVersion);
+                var syntaxTree = _versionClass.Replace("$name$", $"{domainName}Facade")
+                                              .Replace("$version$", string.Empty)
+                                              .Replace("$methods$", methodSyntax)
+                                              .Replace("$projectName$", projectName)
+                                              .Replace("$clientName$", clientName)
+                                              .Replace("$namespace$", @namespace)
+                                              .Replace("$attributes$", attributes);
+
+                return new GeneratedClientCodeForController(endpointGroup, syntaxTree, domainNameWithVersion);
+            }
+            else
+            {
+                var domainName = endpointGroup.GroupName;
+                var domainNameWithVersion = $"{domainName}{endpointGroup.Version.Normalized}";
+
+                var methods = methodBuilder.BuildFor(endpointGroup);
+
+                var @namespace = $"{projectName}.{ClientGenConstants.Api}.{domainName}.{endpointGroup.Version.Normalized}";
+
+                //var controllerObsoleteAttribute = endpointGroup.Attributes.FirstOrDefault(a => a.Name == "Obsolete");
+                //var attributes = controllerObsoleteAttribute.IsNotNull() ? controllerObsoleteAttribute.SyntaxTree : string.Empty;
+                var attributes = string.Empty;
+
+                var methodSyntax = methods.Flatten($"{Environment.NewLine}{Environment.NewLine}");
+
+                var syntaxTree = _versionClass.Replace("$name$", domainName)
+                                              .Replace("$version$", endpointGroup.Version.Normalized)
+                                              .Replace("$methods$", methodSyntax)
+                                              .Replace("$projectName$", projectName)
+                                              .Replace("$clientName$", clientName)
+                                              .Replace("$namespace$", @namespace)
+                                              .Replace("$attributes$", attributes);
+
+                return new GeneratedClientCodeForController(endpointGroup, syntaxTree, domainNameWithVersion);
+            }
         }
     }
 }

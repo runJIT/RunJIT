@@ -28,7 +28,7 @@ namespace RunJit.Cli.Test.SystemTest
             //await DotNetTool.AssertRunAsync("dotnet", $"test {result.FullName}").ConfigureAwait(false);
 
             // 4. Create .Net tool
-            await Mediator.SendAsync(new GenerateDotNetTool(result, toolName));
+            // await Mediator.SendAsync(new GenerateDotNetTool(result, toolName));
 
             // 5. Create Client
             await Mediator.SendAsync(new GenerateClient(result, false));

@@ -182,6 +182,7 @@
       <Compile Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\Startup\ServerlessMinimalApplication.cs" />
     </ItemGroup>
     <ItemGroup>
+        <None Remove="RunJit\Generate\Client\Templates\client.zip" />
         <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project.Test\ApiTestBase.cs" />
         <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
         <None Remove="RunJit\New\MinimalApiProject\CodeGen\src\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
@@ -210,6 +211,7 @@
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="D:\GitHub\RunJit.Cli\src\RunJit.Cli\RunJit\New\MinimalApiProject\CodeGen\.editorconfig" />
+        <EmbeddedResource Include="RunJit\Generate\Client\Templates\client.zip" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.gitignore" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\.runsettings" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\commitlint.config.js" />

@@ -73,10 +73,10 @@ namespace RunJit.Cli.Services
     internal sealed class MinimalApiEndpointParser(DataTypeFinder dataTypeFinder)
     {
         private readonly string[] _mapActions = new[]
-                                               {
-                                                   ".MapGet(", ".MapPost(", ".MapDelete(",
-                                                   ".MapPut(", ".MapPatch("
-                                               };
+                                                {
+                                                    ".MapGet(", ".MapPost(", ".MapDelete(",
+                                                    ".MapPut(", ".MapPatch("
+                                                };
 
         internal IImmutableList<EndpointInfo> ExtractFrom(IImmutableList<CSharpSyntaxTree> syntaxTrees,
                                                           IImmutableList<Type> reflectionTypes)
@@ -85,6 +85,36 @@ namespace RunJit.Cli.Services
 
             // 1. Detect all controllers. Derived class like Controller, ControllerBase, ODataController and so on
             var endpointMappings = GetAllStatements(basePath, syntaxTrees, reflectionTypes);
+
+            // 2. Minimal APIs we have to add health endpoints
+            var healthEndpoint = new EndpointInfo
+            {
+                BaseUrl = basePath,
+                DomainName = "Health",
+                GroupName = "Health",
+                HttpAction = "Get",
+                ResponseType = new ResponseType("HealthStatusResponse",
+                                                                    "HealthStatusResponse"),
+                ProduceResponseTypes = ImmutableList<ProduceResponseTypes>.Empty,
+                RelativeUrl = "health",
+                Name = "GetHealthStatusAsync",
+                Models = ImmutableList.Create(new DeclarationBase("HealthStatusResponse",
+                                                                                      "HealthStatusResponse",
+                                                                                      """
+                                                                                      internal sealed record HealthStatusResponse(string Status,
+                                                                                      string TotalDuration,
+                                                                                      Dictionary<string, object> Entries);
+                                                                                      """,
+                                                                                      string.Empty)),
+                Version = new VersionInfo("0", "0"),
+                SwaggerOperationId = "getHealthStatus",
+                Parameters = ImmutableList<Parameter>.Empty,
+                RequestType = null,
+                ObsoleteInfo = null
+            };
+
+
+            endpointMappings = endpointMappings.Add(healthEndpoint);
 
             return endpointMappings;
 
@@ -163,21 +193,21 @@ namespace RunJit.Cli.Services
                                                                          version, payloads);
 
                                     var endpointInfo = new EndpointInfo
-                                                       {
-                                                           Name = ExtractName(methodStatement),
-                                                           DomainName = ExtractDomainName(methodStatement),
-                                                           Version = version,
-                                                           BaseUrl = normalizedBasePath,
-                                                           GroupName = ExtractGroupName(methodStatement),
-                                                           SwaggerOperationId = ExtractSwaggerOperationId(methodStatement, version),
-                                                           HttpAction = ExtractHttpAction(methodStatement),
-                                                           RelativeUrl = url,
-                                                           Parameters = ExtractParameters(methodStatement),
-                                                           RequestType = ExtractRequestType(payloads, allUsedModels, reflectionTypes),
-                                                           ResponseType = ExtractResponseType(produceResponseTypes),
-                                                           ProduceResponseTypes = produceResponseTypes,
-                                                           Models = allUsedModels
-                                                       };
+                                    {
+                                        Name = ExtractName(methodStatement),
+                                        DomainName = ExtractDomainName(methodStatement),
+                                        Version = version,
+                                        BaseUrl = normalizedBasePath,
+                                        GroupName = ExtractGroupName(methodStatement),
+                                        SwaggerOperationId = ExtractSwaggerOperationId(methodStatement, version),
+                                        HttpAction = ExtractHttpAction(methodStatement),
+                                        RelativeUrl = url,
+                                        Parameters = ExtractParameters(methodStatement),
+                                        RequestType = ExtractRequestType(payloads, allUsedModels, reflectionTypes),
+                                        ResponseType = ExtractResponseType(produceResponseTypes),
+                                        ProduceResponseTypes = produceResponseTypes,
+                                        Models = allUsedModels
+                                    };
 
                                     listStatements = listStatements.Add(endpointInfo);
                                 }
@@ -368,8 +398,8 @@ namespace RunJit.Cli.Services
                 var defaultValue = isOptional ? parameter.Split(" = ").Last() : null;
 
                 var attribute = parameter.StartsWith('[')
-                                    ? ImmutableList.Create<Attribute>(new Attribute(splitted[0].TrimStart('[').TrimEnd(']'), ImmutableList<string>.Empty, parameter,
-                                                                                    string.Empty))
+                                    ? ImmutableList.Create(new Attribute(splitted[0].TrimStart('[').TrimEnd(']'), ImmutableList<string>.Empty, parameter,
+                                                                         string.Empty))
                                     : ImmutableList<Attribute>.Empty;
 
                 var type = splitted.Length == 3 ? splitted[1] : splitted[0];

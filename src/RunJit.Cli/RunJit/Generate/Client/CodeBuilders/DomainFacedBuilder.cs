@@ -62,15 +62,18 @@ namespace RunJit.Cli.Generate.Client
             // => UserV2
             var groupedControllers = generatedClientCodeForEndpoints.GroupBy(g => g.ControllerInfo.GroupName).ToImmutableList();
 
-            var facades = groupedControllers.Select(group => BuildFrom(group, projectName, clientName));
+            var facades = groupedControllers.Select(group => BuildFrom(group, projectName, clientName)).ToImmutableList();
 
-            return facades.ToImmutableList();
+            return facades;
         }
 
         private GeneratedFacade BuildFrom(IGrouping<string, GeneratedClientCodeForController> groupedEndpoints,
                                           string projectName,
                                           string clientName)
         {
+
+
+
             var domain = groupedEndpoints.Key;
             var neutralDomain = domain.Replace("Controller", string.Empty);
             var serviceRegistrations = serviceRegistrationBuilder.BuildFrom(groupedEndpoints);
@@ -101,8 +104,7 @@ namespace RunJit.Cli.Generate.Client
                                              .Replace("$namespace$", @namespace)
                                              .Replace("$usings$", usings);
 
-            return new GeneratedFacade(groupedEndpoints.ToImmutableList(), facadeClass, neutralDomain,
-                                       facadeName);
+            return new GeneratedFacade(groupedEndpoints.ToImmutableList(), facadeClass, neutralDomain, facadeName);
         }
     }
 }

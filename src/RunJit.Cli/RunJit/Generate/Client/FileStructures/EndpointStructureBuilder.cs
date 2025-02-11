@@ -23,10 +23,18 @@ namespace RunJit.Cli.RunJit.Generate.Client
         internal async Task CreateAsync(DirectoryInfo domainFolder,
                                         IImmutableList<GeneratedClientCodeForController> endpoints,
                                         string projectName,
-                                        string clientName)
+                                        string clientName,
+                                        FileInfo facadeFileInfo)
         {
             foreach (var endpoint in endpoints)
             {
+                // NEW quickfix
+                if (endpoint.ControllerInfo.Version.Normalized == "0")
+                {
+                    await File.WriteAllTextAsync(facadeFileInfo.FullName, endpoint.SyntaxTree).ConfigureAwait(false);
+                    continue;
+                }
+
                 // 0. Create version folder like V1, V2, V3
                 var versionFolder = versionFolderBuilder.Build(domainFolder, endpoint);
 

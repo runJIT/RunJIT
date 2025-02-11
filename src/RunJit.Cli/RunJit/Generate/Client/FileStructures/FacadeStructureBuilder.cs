@@ -29,11 +29,11 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 var domainFolder = domainFolderBuilder.Build(apiFolder, generatedFacade);
 
                 // 1. Write facade class like UsersFacade.cs, ResourcesFacade.cs
-                await File.WriteAllTextAsync(Path.Combine(domainFolder.FullName, $"{generatedFacade.FacadeName}.cs"), generatedFacade.SyntaxTree).ConfigureAwait(false);
+                var facadeFileInfo = new FileInfo(Path.Combine(domainFolder.FullName, $"{generatedFacade.FacadeName}.cs"));
+                await File.WriteAllTextAsync(facadeFileInfo.FullName, generatedFacade.SyntaxTree).ConfigureAwait(false);
 
                 // 2. Write endpoint file structures
-                await endpointStructureBuilder.CreateAsync(domainFolder, generatedFacade.Endpoints, projectName,
-                                                           clientName).ConfigureAwait(false);
+                await endpointStructureBuilder.CreateAsync(domainFolder, generatedFacade.Endpoints, projectName, clientName, facadeFileInfo).ConfigureAwait(false);
             }
         }
     }

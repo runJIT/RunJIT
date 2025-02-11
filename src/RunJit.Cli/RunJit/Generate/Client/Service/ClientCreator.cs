@@ -145,6 +145,8 @@ namespace RunJit.Cli.RunJit.Generate.Client
             // 7. Collect all endpoints
             var allEndpoints = endpointClientGenerator.Create(mappedToEndpoints, projectName, clientName);
 
+            // NEW Default health endpoint
+
             // 8. Create facades for each domain endpoint
             var facades = domainFacedBuilder.BuildFrom(allEndpoints, projectName, clientName);
 
