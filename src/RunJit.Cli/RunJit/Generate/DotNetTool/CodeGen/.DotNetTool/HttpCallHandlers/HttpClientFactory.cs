@@ -83,11 +83,17 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                 internal HttpCallHandler CreateFrom(string token)
                                                 {
                                                     var httpClient = httpClientFactory.CreateClient();
-                                                    httpClient.BaseAddress = new Uri(aspNetCoreMinimalApiSdkClientSettings.BaseAddress);
-                                                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                                                    httpClient.DefaultRequestHeaders.Add("User-Agent", "DotNetToolName");
+                                                
+                                                    // ToDo: We are in a cli we can just setup http client once as singleton
+                                                    //       We need this also for testing
+                                                    if (httpClient.BaseAddress.IsNull())
+                                                    {
+                                                        httpClient.BaseAddress = new Uri(aspNetCoreMinimalApiSdkClientSettings.BaseAddress);
+                                                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                                                        httpClient.DefaultRequestHeaders.Add("User-Agent", "DotNetToolName");
+                                                    }
+                                                    
                                                     var httpClientHandler = httpCallHandlerFactory.CreateFrom(httpClient);
-                                        
                                                     return httpClientHandler;
                                                 }
                                             }
