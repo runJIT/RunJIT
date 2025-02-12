@@ -11,7 +11,7 @@ namespace RunJit.Cli.Services.Endpoints
 
         public required string DomainName { get; init; } = string.Empty;
 
-        public required VersionInfo Version { get; init; } = new("1.0", "V1");
+        public required VersionInfo? Version { get; init; } = new("1.0", "V1");
 
         public required string BaseUrl { get; init; } = string.Empty;
 
@@ -45,7 +45,7 @@ namespace RunJit.Cli.Services.Endpoints
 
         public required string GroupName { get; init; } = string.Empty;
 
-        public required VersionInfo Version { get; init; } = new("1.0", "V1");
+        public required VersionInfo? Version { get; init; }
 
         public ObsoleteInfo? ObsoleteInfo { get; init; }
     }

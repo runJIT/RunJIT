@@ -79,7 +79,16 @@ namespace RunJit.Cli.Generate.Client
             var properties = propertiesBuilder.BuildFrom(groupedEndpoints);
 
             var @namespace = $"{projectName}.{ClientGenConstants.Api}.{neutralDomain}";
-            var usings = groupedEndpoints.Select(endpoint => $"using {@namespace}.{endpoint.ControllerInfo.Version.Normalized};").Flatten(Environment.NewLine);
+            var usings = groupedEndpoints.Select(endpoint =>
+                                                 {
+                                                     if (endpoint.ControllerInfo.Version.IsNull())
+                                                     {
+                                                         return $"using {@namespace};";
+                                                     }
+
+                                                     return $"using {@namespace}.{endpoint.ControllerInfo.Version.Normalized};";
+
+                                                 }).Flatten(Environment.NewLine);
             var facadeName = $"{neutralDomain}Facade";
 
             var facadeClass = _facadeTemplate.Replace("$name$", facadeName)

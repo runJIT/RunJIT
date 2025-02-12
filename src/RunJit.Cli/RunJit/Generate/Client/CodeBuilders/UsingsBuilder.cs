@@ -55,7 +55,14 @@ namespace RunJit.Cli.Generate.Client
                     foreach (var endpoint in facade.Endpoints)
                     {
                         // Users.V1
-                        yield return $"using {projectName}.{ClientGenConstants.Api}.{facade.Domain}.{endpoint.ControllerInfo.Version.Normalized};";
+                        if (endpoint.ControllerInfo.Version.IsNotNull())
+                        {
+                            yield return $"using {projectName}.{ClientGenConstants.Api}.{facade.Domain}.{endpoint.ControllerInfo.Version.Normalized};";
+                        }
+                        else
+                        {
+                            yield return $"using {projectName}.{ClientGenConstants.Api}.{facade.Domain};";
+                        }
                     }
                 }
             }

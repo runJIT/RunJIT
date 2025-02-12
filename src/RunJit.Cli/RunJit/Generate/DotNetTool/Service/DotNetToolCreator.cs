@@ -385,6 +385,16 @@ namespace RunJit.Cli.Generate.DotNetTool
 
                 foreach (var version in domainGroupByVersion)
                 {
+                    if (version.IsNull())
+                    {
+                        continue;
+                    }
+
+                    if (version.Version.IsNull())
+                    {
+                        continue;
+                    }
+
                     // Domain command like
                     // Users
                     //  - V1

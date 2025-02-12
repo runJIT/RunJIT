@@ -35,7 +35,7 @@ namespace RunJit.Cli.Generate.Client
         internal string BuildFrom(IGrouping<string, GeneratedClientCodeForController> groupedEndpoints)
         {
             var properties = groupedEndpoints.Select(f => _propertyTemplate.Replace("$name$", f.Domain)
-                                                                           .Replace("$version$", f.ControllerInfo.Version.Normalized)
+                                                                           .Replace("$version$", f.ControllerInfo.Version?.Normalized ?? string.Empty)
                                                                            .Replace("$attributes$", f.ControllerInfo.ObsoleteInfo.IsNull() ? string.Empty : $"""[Obsolete("{f.ControllerInfo.ObsoleteInfo.Info}")]"""))
                                              .Flatten(Environment.NewLine);
 

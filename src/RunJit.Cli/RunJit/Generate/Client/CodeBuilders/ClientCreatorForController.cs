@@ -60,11 +60,13 @@ namespace RunJit.Cli.Generate.Client
                                                          string clientName)
         {
             var domainName = endpointGroup.GroupName;
-            var domainNameWithVersion = $"{domainName}{endpointGroup.Version.Normalized}";
+            var domainNameWithVersion = endpointGroup.Version.IsNull() ? domainName : $"{domainName}{endpointGroup.Version.Normalized}";
 
             var methods = methodBuilder.BuildFor(endpointGroup);
 
-            var @namespace = $"{projectName}.{ClientGenConstants.Api}.{domainName}.{endpointGroup.Version.Normalized}";
+            var @namespace = endpointGroup.Version.IsNotNull() ? 
+                                 $"{projectName}.{ClientGenConstants.Api}.{domainName}.{endpointGroup.Version.Normalized}" :
+                                 $"{projectName}.{ClientGenConstants.Api}.{domainName}";
 
             //var controllerObsoleteAttribute = endpointGroup.Attributes.FirstOrDefault(a => a.Name == "Obsolete");
             //var attributes = controllerObsoleteAttribute.IsNotNull() ? controllerObsoleteAttribute.SyntaxTree : string.Empty;
@@ -73,7 +75,7 @@ namespace RunJit.Cli.Generate.Client
             var methodSyntax = methods.Flatten($"{Environment.NewLine}{Environment.NewLine}");
 
             var syntaxTree = _versionClass.Replace("$name$", domainName)
-                                          .Replace("$version$", endpointGroup.Version.Normalized)
+                                          .Replace("$version$", endpointGroup.Version?.Normalized ?? string.Empty)
                                           .Replace("$methods$", methodSyntax)
                                           .Replace("$projectName$", projectName)
                                           .Replace("$clientName$", clientName)

@@ -49,11 +49,22 @@ namespace RunJit.Cli.Services.Resharper
                 foreach (var endpoint in facade.Endpoints)
                 {
                     var domain = endpoint.Domain.ToLowerInvariant();
-                    var version = endpoint.ControllerInfo.Version.Normalized.ToLowerInvariant();
+                    var version = endpoint.ControllerInfo.Version?.Normalized.ToLowerInvariant();
 
-                    yield return $"api_005C{domain}_005C{version}_005Cmodels";
-                    yield return $"api_005C{domain}_005C{version}_005Crequests";
-                    yield return $"api_005C{domain}_005C{version}_005Cresponses";
+                    if (version.IsNotNull())
+                    {
+                        
+                        yield return $"api_005C{domain}_005Cmodels";
+                        yield return $"api_005C{domain}_005Crequests";
+                        yield return $"api_005C{domain}_005Cresponses";
+                    }
+                    else
+                    {
+                        yield return $"api_005C{domain}_005C{version}_005Cmodels";
+                        yield return $"api_005C{domain}_005C{version}_005Crequests";
+                        yield return $"api_005C{domain}_005C{version}_005Cresponses";
+                    }
+
                 }
             }
 

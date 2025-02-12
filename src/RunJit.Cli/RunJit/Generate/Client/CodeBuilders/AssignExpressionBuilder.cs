@@ -32,7 +32,15 @@ namespace RunJit.Cli.Generate.Client
 
         internal string BuildFrom(IGrouping<string, GeneratedClientCodeForController> groupedEndpoints)
         {
-            var assignments = groupedEndpoints.Select(f => $"\t\t\t{f.ControllerInfo.Version.Normalized}".ToUpperInvariant() + " = " + $"{f.Domain};".FirstCharToLower())
+            var assignments = groupedEndpoints.Select(f =>
+                                                      {
+                                                          if (f.ControllerInfo.Version.IsNotNull())
+                                                          {
+                                                              return $"\t\t\t{f.ControllerInfo.Version.Normalized}".ToUpperInvariant() + " = " + $"{f.Domain};".FirstCharToLower();
+                                                          }
+
+                                                          return $"\t\t\t{f.Domain}".ToUpperInvariant() + " = " + $"{f.Domain};".FirstCharToLower();
+                                                      })
                                               .Flatten(Environment.NewLine);
 
             return assignments;
