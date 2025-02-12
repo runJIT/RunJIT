@@ -44,27 +44,37 @@ namespace RunJit.Cli.New.MinimalApiProject
 
             // !! WIP !!
 
-            // GitHub we add anything
-            //var gitHub = solutionFile.Directory!.EnumerateDirectories().FirstOrDefault(item => item.Name == ".github");
 
+
+            var solutionFileLines = await File.ReadAllLinesAsync(solutionFile.FullName).ConfigureAwait(false);
+            var solutionFilesAsLines = solutionFileLines.IsNull() ? new List<string>() : solutionFileLines.ToList();
+
+            // GitHub we add anything
+            // Recursive directory / files structure into solution files
+            // is insane sick > comes later
+            //var gitHub = solutionFile.Directory!.EnumerateDirectories().FirstOrDefault(item => item.Name == ".github");
             //if (gitHub.IsNotNull())
             //{
-            //    var allGitHubFiles = gitHub.EnumerateFiles("*", SearchOption.AllDirectories);
+            //    // Create root folder, Root -> Bottom
+            //    solutionFileService.AddOrUpdateSolutionFolder(solutionFilesAsLines, solutionFile, "GitHub");
 
+            //    foreach (var directory in gitHub.EnumerateDirectories())
+            //    {
+            //        // Create root folder, Root -> Bottom
+            //        solutionFileService.AddOrUpdateSolutionFolder(solutionFilesAsLines, solutionFile, directory.Name);
+            //    }
+
+            //    var allGitHubFiles = gitHub.EnumerateFiles("*", SearchOption.AllDirectories);
             //    foreach (var fileInfo in allGitHubFiles)
             //    {
             //        // Relative solution folder path
             //        var relativePath = Path.GetRelativePath(gitHub.FullName, fileInfo.Directory!.FullName);
             //        var withGitHubFolder = Path.Combine("GitHub", relativePath);
-            //        var relativeFilePath = new FileInfo(Path.GetRelativePath(solutionFile.Directory.Name, fileInfo.FullName));
-            //        await dotNet.AddFileIntoSoltionAsync(solutionFile, relativeFilePath, withGitHubFolder);
+            //        solutionFileService.AddOrUpdateSolutionFolder(solutionFilesAsLines, solutionFile, withGitHubFolder, fileInfo);
             //    }
             //}
 
             var filesOnSolutionRoot = solutionFile.Directory!.EnumerateFiles();
-
-            var solutionFileLines = await File.ReadAllLinesAsync(solutionFile.FullName).ConfigureAwait(false);
-            var solutionFilesAsLines = solutionFileLines.IsNull() ? new List<string>() : solutionFileLines.ToList();
 
             foreach (var fileInfo in filesOnSolutionRoot)
             {
