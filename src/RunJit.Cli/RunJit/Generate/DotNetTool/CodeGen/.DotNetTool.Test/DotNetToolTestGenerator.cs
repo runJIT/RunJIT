@@ -18,6 +18,8 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
 
             services.AddProjectEmbeddedFilesCodeGen();
             services.AddProjectSettingsCodeGen();
+            services.AddGetHealthCheckTestCodeGen();
+            services.AddRemoveDefaultTestClasses();
 
             services.AddSingletonIfNotExists<DotNetToolTestGenerator>();
         }

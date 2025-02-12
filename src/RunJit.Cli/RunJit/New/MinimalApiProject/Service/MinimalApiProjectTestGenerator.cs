@@ -13,6 +13,7 @@ namespace RunJit.Cli.New.MinimalApiProject
         {
             services.AddDotNet();
             services.AddEmbeddedFileSettings();
+            services.AddRemoveDefaultTestClasses();
 
             services.AddSingletonIfNotExists<MinimalApiProjectTestGenerator>();
         }

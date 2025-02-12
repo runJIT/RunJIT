@@ -24,14 +24,14 @@ namespace RunJit.Cli.Test.SystemTest
             // 2. Assert that solution can be build and needed for client as well
             await DotNetTool.AssertRunAsync("dotnet", $"build {result.FullName}").ConfigureAwait(false);
 
-            //// 3. Assert that solution can be tested
+            // 3. Assert that solution can be tested
             //await DotNetTool.AssertRunAsync("dotnet", $"test {result.FullName}").ConfigureAwait(false);
 
-            // 4. Create .Net tool
-            await Mediator.SendAsync(new GenerateDotNetTool(result, toolName));
-
-            // 5. Create Client
+            // 4. Create Client
             await Mediator.SendAsync(new GenerateClient(result, false));
+
+            // 5. Create .Net tool
+            await Mediator.SendAsync(new GenerateDotNetTool(result, toolName));
 
             // 6. Assert that solution can be build
             // await DotNetTool.AssertRunAsync("dotnet", $"build {result.FullName}").ConfigureAwait(false);

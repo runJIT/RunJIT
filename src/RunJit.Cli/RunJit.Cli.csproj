@@ -66,6 +66,8 @@
         <PackageReference Include="System.Text.Json" Version="9.0.0" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\RemoveDefaultTestClasses.cs" />
+        <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\GetHealthCheckTest.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\EnvironmentVariables.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\CommandStructure.cs" />
         <Compile Include="RunJit\Generate\DotNetTool\CodeGen\.DotNetTool.Test\GlobalSetup.cs" />
