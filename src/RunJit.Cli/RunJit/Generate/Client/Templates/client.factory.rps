@@ -17,6 +17,7 @@ namespace $projectName$
             services.AddHttpClient();
             services.Add$clientName$Settings(configuration);
             services.AddResponseTypeHandleStrategy();
+            services.AddJsonSerializer(configuration);
 
             services.AddSingletonIfNotExists<I$clientName$Factory, $clientName$Factory>();
         }

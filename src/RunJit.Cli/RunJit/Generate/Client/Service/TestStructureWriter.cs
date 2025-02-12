@@ -22,6 +22,103 @@ namespace RunJit.Cli.RunJit.Generate.Client
                                               AppsettingsBuilder appsettingsBuilder,
                                               JsonSerializerBuilder jsonSerializerBuilder)
     {
+        private const string HealthTestTemplate = """
+                                                  using System.Collections.Immutable;
+                                                  using AspNetCore.Simple.MsTest.Sdk;
+                                                  using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+                                                  namespace $namespace$.Api.Health
+                                                  {
+                                                      [TestClass]
+                                                      [TestCategory("Health")]
+                                                      public class GetHealthStateTest : ApiTestBase
+                                                      {
+                                                          [TestMethod]
+                                                          public async Task Should_Return_Healthy_State()
+                                                          {
+                                                              var healthResponse = await $clientName$.Health.GetHealthStatusAsync().ConfigureAwait(false);
+                                                  
+                                                              Assert.That.ObjectsAreEqual("Healthy.json",
+                                                                                          healthResponse,
+                                                                                          differenceFunc: IgnoreDifferences);
+                                                          }
+                                                  
+                                                          private IEnumerable<Difference> IgnoreDifferences(IImmutableList<Difference> differences)
+                                                          {
+                                                              foreach (var difference in differences)
+                                                              {
+                                                                  if (difference.MemberPath.Contains("TotalDuration"))
+                                                                  {
+                                                                      continue;
+                                                                  }
+                                                  
+                                                                  yield return difference;
+                                                              }
+                                                          }
+                                                      }
+                                                  }
+
+                                                  """;
+
+        private const string HealthResponseFile = """
+                                                  {
+                                                    "Content": {
+                                                      "Headers": [
+                                                        {
+                                                          "Key": "Expires",
+                                                          "Value": [ "Thu, 01 Jan 1970 00:00:00 GMT" ]
+                                                        },
+                                                        {
+                                                          "Key": "Content-Type",
+                                                          "Value": [ "application/json" ]
+                                                        }
+                                                      ],
+                                                      "Value": {
+                                                        "status": "Healthy",
+                                                        "totalDuration": "00:00:00.0006638",
+                                                        "entries": {}
+                                                      }
+                                                    },
+                                                    "StatusCode": "OK",
+                                                    "Headers": [
+                                                      {
+                                                        "Key": "Cache-Control",
+                                                        "Value": [ "no-store, no-cache" ]
+                                                      },
+                                                      {
+                                                        "Key": "Pragma",
+                                                        "Value": [ "no-cache" ]
+                                                      }
+                                                    ],
+                                                    "TrailingHeaders": [],
+                                                    "IsSuccessStatusCode": true
+                                                  }
+
+                                                  """;
+
+        private const string EnvironmentVariables = """
+                                                    {
+                                                      "ASPNETCORE_ENVIRONMENT": "Development",
+                                                      "Logging__LogLevel__Default": "Information",
+                                                      "Logging__LogLevel__Microsoft.AspNetCore": "Warning",
+                                                      "AllowedHosts": "*",
+                                                      "AWS__Region": "eu-west-1",
+                                                      "AWS__Profile": "sdcdev",
+                                                      "AWS__DynamoDbServiceUrl": "http://localhost:8001",
+                                                      "AwsCognitoSettings__Authority": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_WWflkHNwn",
+                                                      "AwsCognitoSettings__Audience": "7oup5j6busol448gnor8lv0qi6",
+                                                      "AwsStepFunctionSetting__DeployAwsStateMachineArn": "arn:aws:states:eu-west-1:783764573141:stateMachine:sdc-capability-rollout",
+                                                      "OpenApiInfos__Versions__0__Audience": "company-internal",
+                                                      "OpenApiInfos__Versions__0__ContactEmail": "philip.pregler@siemens.com",
+                                                      "OpenApiInfos__Versions__0__ContactName": "Pulse Core API Team",
+                                                      "OpenApiInfos__Versions__0__ContactUrl": "https://www.pulse.de",
+                                                      "OpenApiInfos__Versions__0__Description": "API which provides all core functions",
+                                                      "OpenApiInfos__Versions__0__Id": "5064d915-f010-4223-956f-8f18e3ac43d0",
+                                                      "OpenApiInfos__Versions__0__Title": "API V1 - In Test"
+                                                    }
+
+                                                    """;
+
         public async Task WriteFileStructureAsync(SolutionFile solutionFile,
                                                   ProjectFile clientProject,
                                                   ProjectFile clientTestProject,
@@ -41,7 +138,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // 2. MsTest base class
             var msTestBaseClass = msTestBaseClassBuilder.BuildFor(clientTestProject.ProjectFileInfo.Value.NameWithoutExtension(), clientName);
-            var msTestBaseFile = new FileInfo(Path.Combine(environmentFolder.FullName, "MsTestBase.cs"));
+            var msTestBaseFile = new FileInfo(Path.Combine(environmentFolder.FullName, "ApiTestBase.cs"));
 
             // Quickfix Startup vs Program.cs
             // If on any csproj root level is no startup so we have program.cs only
@@ -80,6 +177,36 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             await File.WriteAllTextAsync(jsonSerializerFile.FullName, jsonSerializer).ConfigureAwait(false);
 
+            // NEW health endpoint test
+            var healthTest = new FileInfo(Path.Combine(clientTestProject.ProjectFileInfo.Value.Directory!.FullName, "Api", "Health", "GetHealthStateTest.cs"));
+            if (healthTest.Directory!.NotExists())
+            {
+                healthTest.Directory!.Create();
+            }
+            var healthTestSyntaxTree = HealthTestTemplate.Replace("$name$", clientName)
+                                                         .Replace("$clientName$", clientName)
+                                                         .Replace("$namespace$", clientTestProject.ProjectFileInfo.FileNameWithoutExtenion);
+
+            await File.WriteAllTextAsync(healthTest.FullName, healthTestSyntaxTree);
+
+            // Healthy response
+            var healthyResponseFile = new FileInfo(Path.Combine(clientTestProject.ProjectFileInfo.Value.Directory!.FullName, "Api", "Health","Responses", "Healthy.json"));
+            if (healthyResponseFile.Directory!.NotExists())
+            {
+                healthyResponseFile.Directory!.Create();
+            }
+
+            await File.WriteAllTextAsync(healthyResponseFile.FullName, HealthResponseFile);
+
+            // Environment variables
+            var environmenVariables = new FileInfo(Path.Combine(clientTestProject.ProjectFileInfo.Value.Directory!.FullName, "Properties", "EnvironmentVariables.json"));
+            if (environmenVariables.Directory!.NotExists())
+            {
+                environmenVariables.Directory!.Create();
+            }
+
+            await File.WriteAllTextAsync(environmenVariables.FullName, EnvironmentVariables);
+
             // 4. Add project references
             var dotNetTool = DotNetToolFactory.Create();
 
@@ -88,6 +215,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
 
             // 4.2 API project reference is needed too because of startup.cs
             var webAppProject = solutionFile.ProductiveProjects.FirstOrDefault(p => p.Document.ToString().Contains("Sdk=\"Microsoft.NET.Sdk.Web\""));
+
 
             if (webAppProject.IsNotNull())
             {

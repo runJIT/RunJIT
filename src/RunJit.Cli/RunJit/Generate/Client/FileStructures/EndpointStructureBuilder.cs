@@ -29,9 +29,22 @@ namespace RunJit.Cli.RunJit.Generate.Client
             foreach (var endpoint in endpoints)
             {
                 // NEW quickfix
-                if (endpoint.ControllerInfo.Version.Normalized == "0")
+                // No version means no facade -> endpoint syntaxtree become the facade
+                // In future we have to refactor the whole flow
+                if (endpoint.ControllerInfo.Version.IsNull())
                 {
-                    await File.WriteAllTextAsync(facadeFileInfo.FullName, endpoint.SyntaxTree).ConfigureAwait(false);
+                    // Dirty hack :/
+                    var syntaxTree = endpoint.SyntaxTree.Replace($" {domainFolder.Name}", $" {domainFolder.Name}Facade")
+                                                        .Replace($"Add{domainFolder.Name}", $"Add{domainFolder.Name}Facade");
+                    await File.WriteAllTextAsync(facadeFileInfo.FullName, syntaxTree).ConfigureAwait(false);
+
+                    var modelFolder = modelFolderBuilder.Build(facadeFileInfo.Directory!);
+
+                    var modelsToWrite = endpoint.ControllerInfo.Endpoints.SelectMany(m => m.Models).ToImmutableList();
+
+                    // 4. Write all models to files
+                    await modelsToFileWriter.WriteAsync(modelFolder, endpoint, modelsToWrite, projectName, clientName).ConfigureAwait(false);
+
                     continue;
                 }
 
@@ -49,8 +62,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
                 var dataTypes = endpoint.ControllerInfo.Endpoints.SelectMany(m => m.Models).ToImmutableList();
 
                 // 4. Write all models to files
-                await modelsToFileWriter.WriteAsync(modelsFolder, endpoint, dataTypes,
-                                                    projectName, clientName).ConfigureAwait(false);
+                await modelsToFileWriter.WriteAsync(modelsFolder, endpoint, dataTypes, projectName, clientName).ConfigureAwait(false);
             }
         }
     }

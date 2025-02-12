@@ -39,7 +39,7 @@ namespace RunJit.Cli.Generate.Client
                                                               return $"\t\t\t{f.ControllerInfo.Version.Normalized}".ToUpperInvariant() + " = " + $"{f.Domain};".FirstCharToLower();
                                                           }
 
-                                                          return $"\t\t\t{f.Domain}".ToUpperInvariant() + " = " + $"{f.Domain};".FirstCharToLower();
+                                                          return $"\t\t\t{f.Domain}".FirstCharToUpper() + " = " + $"{f.Domain};".FirstCharToLower();
                                                       })
                                               .Flatten(Environment.NewLine);
 

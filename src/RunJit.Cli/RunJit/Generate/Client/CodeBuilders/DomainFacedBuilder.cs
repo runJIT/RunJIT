@@ -72,8 +72,6 @@ namespace RunJit.Cli.Generate.Client
                                           string clientName)
         {
 
-
-
             var domain = groupedEndpoints.Key;
             var neutralDomain = domain.Replace("Controller", string.Empty);
             var serviceRegistrations = serviceRegistrationBuilder.BuildFrom(groupedEndpoints);

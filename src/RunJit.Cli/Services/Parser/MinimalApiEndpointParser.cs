@@ -99,14 +99,14 @@ namespace RunJit.Cli.Services
                 RelativeUrl = "health",
                 Name = "GetHealthStatusAsync",
                 Models = ImmutableList.Create(new DeclarationBase("HealthStatusResponse",
-                                                                                      "HealthStatusResponse",
-                                                                                      """
-                                                                                      internal sealed record HealthStatusResponse(string Status,
-                                                                                      string TotalDuration,
-                                                                                      Dictionary<string, object> Entries);
-                                                                                      """,
-                                                                                      string.Empty)),
-                Version = new VersionInfo("0", "0"),
+                                                                  "HealthStatusResponse",
+                                                                  """
+                                                                  public sealed record HealthStatusResponse(string Status, 
+                                                                                                            string TotalDuration,
+                                                                                                            Dictionary<string, object> Entries);
+                                                                  """,
+                                                                  string.Empty)),
+                Version = null,
                 SwaggerOperationId = "getHealthStatus",
                 Parameters = ImmutableList<Parameter>.Empty,
                 RequestType = null,

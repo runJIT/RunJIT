@@ -32,7 +32,15 @@ namespace RunJit.Cli.Generate.Client
                 stringBuilder.Append($"new {facade.FacadeName}(");
 
                 // Generate parameter for the facade -> new UserFacade(new UserV1(httpClientHandler), new UserV2(httpClientHandler)
-                var versionDomains = facade.Endpoints.Select(endpoint => $"new {endpoint.Domain}(httpClientHandler)").Flatten(", ");
+                var versionDomains = facade.Endpoints.Select(endpoint =>
+                                                             {
+                                                                 if (endpoint.ControllerInfo.Version.IsNotNull())
+                                                                 {
+                                                                     return $"new {endpoint.Domain}(httpClientHandler)";
+                                                                 }
+                                                                 return $"httpClientHandler";
+
+                                                             }).Flatten(", ");
                 stringBuilder.Append(versionDomains);
 
                 // If we reach the last parameter we have to close the new statement correctly

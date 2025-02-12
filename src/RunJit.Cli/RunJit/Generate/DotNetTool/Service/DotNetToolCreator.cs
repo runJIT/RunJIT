@@ -353,8 +353,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                                                                                              Dictionary<string, object> Entries);
                                                                                                                              """,
                                                                                                                              string.Empty)),
-                                                          Version = new VersionInfo("0",
-                                                                                    "0"),
+                                                          Version = null,
                                                           SwaggerOperationId = "getHealthStatus",
                                                           Parameters = ImmutableList<Parameter>.Empty,
                                                           RequestType = null,
