@@ -35,7 +35,7 @@ namespace RunJit.Cli.Test.SystemTest
 
             // 6. Assert that solution can be build
             // await DotNetTool.AssertRunAsync("dotnet", $"build {result.FullName}").ConfigureAwait(false);
-
+            
             // 7. Assert that solution can be tested
             // await DotNetTool.AssertRunAsync("dotnet", $"test {result.FullName}").ConfigureAwait(false);
         }
