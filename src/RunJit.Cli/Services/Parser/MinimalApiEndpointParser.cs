@@ -79,7 +79,8 @@ namespace RunJit.Cli.Services
                                                 };
 
         internal IImmutableList<EndpointInfo> ExtractFrom(IImmutableList<CSharpSyntaxTree> syntaxTrees,
-                                                          IImmutableList<Type> reflectionTypes)
+                                                          IImmutableList<Type> reflectionTypes,
+                                                          bool addHealthEndpoint = true)
         {
             var basePath = FindBasePath(syntaxTrees);
 
@@ -87,34 +88,36 @@ namespace RunJit.Cli.Services
             var endpointMappings = GetAllStatements(basePath, syntaxTrees, reflectionTypes);
 
             // 2. Minimal APIs we have to add health endpoints
-            var healthEndpoint = new EndpointInfo
+            if (addHealthEndpoint)
             {
-                BaseUrl = basePath,
-                DomainName = "Health",
-                GroupName = "Health",
-                HttpAction = "Get",
-                ResponseType = new ResponseType("HealthStatusResponse",
-                                                                    "HealthStatusResponse"),
-                ProduceResponseTypes = ImmutableList<ProduceResponseTypes>.Empty,
-                RelativeUrl = "health",
-                Name = "GetHealthStatusAsync",
-                Models = ImmutableList.Create(new DeclarationBase("HealthStatusResponse",
-                                                                  "HealthStatusResponse",
-                                                                  """
-                                                                  public sealed record HealthStatusResponse(string Status, 
-                                                                                                            string TotalDuration,
-                                                                                                            Dictionary<string, object> Entries);
-                                                                  """,
-                                                                  string.Empty)),
-                Version = null,
-                SwaggerOperationId = "getHealthStatus",
-                Parameters = ImmutableList<Parameter>.Empty,
-                RequestType = null,
-                ObsoleteInfo = null
-            };
-
-
-            endpointMappings = endpointMappings.Add(healthEndpoint);
+                var healthEndpoint = new EndpointInfo
+                                     {
+                                         BaseUrl = basePath,
+                                         DomainName = "Health",
+                                         GroupName = "Health",
+                                         HttpAction = "Get",
+                                         ResponseType = new ResponseType("HealthStatusResponse",
+                                                                         "HealthStatusResponse"),
+                                         ProduceResponseTypes = ImmutableList<ProduceResponseTypes>.Empty,
+                                         RelativeUrl = "health",
+                                         Name = "GetHealthStatusAsync",
+                                         Models = ImmutableList.Create(new DeclarationBase("HealthStatusResponse",
+                                                                                           "HealthStatusResponse",
+                                                                                           """
+                                                                                           public sealed record HealthStatusResponse(string Status, 
+                                                                                                                                     string TotalDuration,
+                                                                                                                                     Dictionary<string, object> Entries);
+                                                                                           """,
+                                                                                           string.Empty)),
+                                         Version = null,
+                                         SwaggerOperationId = "getHealthStatus",
+                                         Parameters = ImmutableList<Parameter>.Empty,
+                                         RequestType = null,
+                                         ObsoleteInfo = null
+                                     };
+                endpointMappings = endpointMappings.Add(healthEndpoint);
+            }
+           
 
             return endpointMappings;
 

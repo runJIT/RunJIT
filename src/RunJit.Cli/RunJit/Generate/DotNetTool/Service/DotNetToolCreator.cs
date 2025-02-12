@@ -111,7 +111,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             var controllerInfos = restructureController.Reorganize(controllerInfosOrg);
 
             // 7. Get all minimal endpoints
-            var endpoints = minimalApiEndpointParser.ExtractFrom(allSyntaxTrees, types).OrderBy(controller => controller.Name).ToImmutableList();
+            var endpoints = minimalApiEndpointParser.ExtractFrom(allSyntaxTrees, types, false).OrderBy(controller => controller.Name).ToImmutableList();
 
             // 8. organize endpoints
             var organizedEndpoints = organizeMinimalEndpoints.Reorganize(endpoints);
