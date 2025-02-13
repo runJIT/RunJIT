@@ -52,27 +52,11 @@ namespace RunJit.Cli.New.MinimalApiProject
             // GitHub we add anything
             // Recursive directory / files structure into solution files
             // is insane sick > comes later
-            //var gitHub = solutionFile.Directory!.EnumerateDirectories().FirstOrDefault(item => item.Name == ".github");
-            //if (gitHub.IsNotNull())
-            //{
-            //    // Create root folder, Root -> Bottom
-            //    solutionFileService.AddOrUpdateSolutionFolder(solutionFilesAsLines, solutionFile, "GitHub");
-
-            //    foreach (var directory in gitHub.EnumerateDirectories())
-            //    {
-            //        // Create root folder, Root -> Bottom
-            //        solutionFileService.AddOrUpdateSolutionFolder(solutionFilesAsLines, solutionFile, directory.Name);
-            //    }
-
-            //    var allGitHubFiles = gitHub.EnumerateFiles("*", SearchOption.AllDirectories);
-            //    foreach (var fileInfo in allGitHubFiles)
-            //    {
-            //        // Relative solution folder path
-            //        var relativePath = Path.GetRelativePath(gitHub.FullName, fileInfo.Directory!.FullName);
-            //        var withGitHubFolder = Path.Combine("GitHub", relativePath);
-            //        solutionFileService.AddOrUpdateSolutionFolder(solutionFilesAsLines, solutionFile, withGitHubFolder, fileInfo);
-            //    }
-            //}
+            var gitHub = solutionFile.Directory!.EnumerateDirectories().FirstOrDefault(item => item.Name == ".github");
+            if (gitHub.IsNotNull())
+            {   
+                solutionFileService.AddOrUpdateSolutionFolderRecursively(solutionFile, solutionFilesAsLines, gitHub);
+            }
 
             var filesOnSolutionRoot = solutionFile.Directory!.EnumerateFiles();
 

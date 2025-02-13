@@ -12,70 +12,93 @@ namespace RunJit.Cli.Services
         }
     }
 
-    // Ugly workaround because .net cli does not support adding any file into solution
-    // in combination with solution folders :/ 
-    // Microsoft open issue:
-    // https://github.com/dotnet/sdk/issues/9611
-    // More infos
-    // https://stackoverflow.com/questions/49734208/net-core-how-to-create-solution-folders-from-the-command-line
-    // https://dev.to/ssukhpinder/managing-net-solution-files-with-dotnet-sln-3dc9
-    internal class SolutionFileService
+    // Ugly workaround because .NET CLI doesn't support solution folders for arbitrary files.
+    // This version extends your existing approach to handle recursion and nesting.
+    public class SolutionFileService
     {
-        // GUID that represents a "Solution Folder" project type
-        // Important use the correct GUID = 2150E333-8FDC-42A3-9474-1A3956D46DE8
+        // The well-known GUID for "Solution Folder" in Visual Studio solutions
+        // (matches what you've used in your existing code).
         private const string SOLUTION_FOLDER_GUID = "{2150E333-8FDC-42A3-9474-1A3956D46DE8}";
 
         /// <summary>
-        ///     Adds or updates a solution folder by name. If the folder exists, it adds the specified files.
-        ///     If it does not exist, it creates the folder and inserts the files.
+        ///     Adds or updates a single solution folder by name, inserting the given files if not already present.
+        ///     Returns the updated lines. (Same as your existing version, slightly refactored.)
         /// </summary>
-        /// <param name="solutionFileAsLines">Solution file read as lines to avoid multiple read and write operation to the disk.</param>
-        /// <param name="solutionFile">The solution file info</param>
-        /// <param name="folderName">Name of the folder to add or update (as displayed in Solution Explorer)</param>
-        /// <param name="files">Files to include in the folder (relative to .sln)</param>
-        internal List<string> AddOrUpdateSolutionFolder(List<string> solutionFileAsLines,
-                                                        FileInfo solutionFile,
-                                                        string folderName,
-                                                        params FileInfo[] files)
+        public List<string> AddOrUpdateSolutionFolder(List<string> solutionFileAsLines,
+                                                      FileInfo solutionFile,
+                                                      string folderName,
+                                                      params FileInfo[] files)
         {
-            // Convert files to a list (avoid multiple enumerations)
-            var filesList = files?.ToList() ?? new List<FileInfo>();
-
-            // 1) Try to find an existing solution folder block by folder name
             var folderStartIndex = FindSolutionFolderStartIndex(solutionFileAsLines, folderName);
 
             if (folderStartIndex == -1)
             {
-                // Folder does not exist -> Insert a new block
-                InsertNewSolutionFolderBlock(solutionFileAsLines, folderName, solutionFile, filesList);
+                // Folder does not exist -> create it
+                InsertNewSolutionFolderBlock(solutionFileAsLines, folderName, solutionFile,
+                                             files);
             }
             else
             {
-                // Folder exists -> Add files into the existing ProjectSection(SolutionItems)
-                InsertFilesIntoExistingFolder(solutionFileAsLines, folderStartIndex, solutionFile, filesList);
+                // Folder exists -> add files
+                InsertFilesIntoExistingFolder(solutionFileAsLines, folderStartIndex, solutionFile,
+                                              files);
             }
 
-            // 2) Write updated solutionFileAsLies to the solution file
             return solutionFileAsLines;
         }
 
         /// <summary>
-        ///     Searches for a solution folder project block by its folder name.
-        ///     Returns the line index where the block starts (the 'Project("{66A26720...}")' line),
-        ///     or -1 if not found.
+        ///     Recursively add the folder (and any subfolders/files) to the .sln,
+        ///     mirroring the structure as nested solution folders.
         /// </summary>
-        private static int FindSolutionFolderStartIndex(List<string> solutionFileAsLies,
+        /// <param name="solutionLines"></param>
+        /// <param name="startFolderFrom">
+        ///     The full path to the folder you want to import (e.g. the ".github" folder).
+        /// </param>
+        /// <param name="parentFolderName">
+        ///     The name of the parent solution folder in which this folder should nest.
+        ///     If null or empty, it goes at the solution root.
+        /// </param>
+        /// <param name="solutionFile"></param>
+        public List<string> AddOrUpdateSolutionFolderRecursively(FileInfo solutionFile,
+                                                                 List<string> solutionLines,
+                                                                 DirectoryInfo startFolderFrom,
+                                                                 string? parentFolderName = null)
+        {
+            // 1) Build an in-memory tree of all subfolders & files
+            var rootNode = BuildFolderTree(solutionFile, startFolderFrom, parentFolderName);
+
+            // 2) Insert that tree into the solution
+            //    We'll keep a dictionary childGuid -> parentGuid for final "NestedProjects" updates.
+            var nestedProjects = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            InsertFolderRecursivelyIntoSolution(solutionFile, solutionLines, rootNode,
+                                                                nestedProjects);
+
+            // 3) Write or update GlobalSection(NestedProjects) with child=parent mappings
+            if (nestedProjects.Count > 0)
+            {
+                UpdateNestedProjectsSection(solutionLines, nestedProjects);
+            }
+
+            return solutionLines;
+        }
+
+        /// <summary>
+        ///     Locates a solution folder block by folder name, e.g.:
+        ///     Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FOLDERNAME", "FOLDERNAME", "{GUID}"
+        ///     Returns the line index where that block begins, or -1 if not found.
+        /// </summary>
+        private static int FindSolutionFolderStartIndex(List<string> solutionLines,
                                                         string folderName)
         {
-            // We'll look for a line of the form:
-            // Project("{66A26720-8FB5-11D2-AA7E-00C04F688DDE}") = "FolderName", "FolderName", "{GUID}"
-            // We do a simplistic string match, ignoring potential extra spaces.
-            // A more robust approach could use a Regex.
+            // Regex pattern to find:
+            // Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FOLDER", "FOLDER", "{...GUID...}"
             var pattern = $@"Project\(""{Regex.Escape(SOLUTION_FOLDER_GUID)}""\)\s*=\s*""{Regex.Escape(folderName)}"",\s*""{Regex.Escape(folderName)}"",\s*""{{[A-Z0-9-]+}}""";
 
-            for (var i = 0; i < solutionFileAsLies.Count; i++)
+            for (var i = 0; i < solutionLines.Count; i++)
             {
-                if (Regex.IsMatch(solutionFileAsLies[i], pattern, RegexOptions.IgnoreCase))
+                if (Regex.IsMatch(solutionLines[i], pattern, RegexOptions.IgnoreCase))
                 {
                     return i;
                 }
@@ -85,64 +108,57 @@ namespace RunJit.Cli.Services
         }
 
         /// <summary>
-        ///     Inserts a brand new solution folder block (Project(...) ) before the Global section.
+        ///     Inserts a new folder block before "Global", including a ProjectSection(SolutionItems).
         /// </summary>
-        private static void InsertNewSolutionFolderBlock(List<string> solutionFileAsLies,
+        private static void InsertNewSolutionFolderBlock(List<string> solutionLines,
                                                          string folderName,
-                                                         FileInfo solutionFileInfo,
-                                                         List<FileInfo> files)
+                                                         FileInfo solutionFile,
+                                                         FileInfo[] files)
         {
-            // Find where "Global" section starts, typically near the end
-            var globalIndex = solutionFileAsLies.FindIndex(l => l.TrimStart().StartsWith("Global", StringComparison.OrdinalIgnoreCase));
+            var globalIndex = solutionLines.FindIndex(l => l.TrimStart().StartsWith("Global", StringComparison.OrdinalIgnoreCase));
 
             if (globalIndex < 0)
             {
-                throw new InvalidOperationException("Could not find 'Global' section. The .sln may be malformed.");
+                throw new InvalidOperationException("Could not find 'Global' section in .sln.");
             }
 
-            // Generate a new unique GUID for the folder
-            var folderGuid = Guid.NewGuid().ToString("B").ToUpperInvariant(); // e.g. "{E3F88BC9-5568-4E99-B980-1AF3FBE373C8}"
+            var folderGuid = Guid.NewGuid().ToString("B").ToUpperInvariant();
 
-            // Build solutionFileAsLies for the folder block
-            var block = new List<string>();
-            block.Add($"Project(\"{SOLUTION_FOLDER_GUID}\") = \"{folderName}\", \"{folderName}\", \"{folderGuid}\"");
-            block.Add("    ProjectSection(SolutionItems) = preProject");
+            // e.g. "{12345678-ABCD-1234-ABCD-1234567890AB}"
+
+            var block = new List<string>
+                        {
+                            $"Project(\"{SOLUTION_FOLDER_GUID}\") = \"{folderName}\", \"{folderName}\", \"{folderGuid}\"",
+                            "    ProjectSection(SolutionItems) = preProject"
+                        };
 
             foreach (var file in files)
             {
-                var relativePath = Path.GetRelativePath(solutionFileInfo.Directory!.FullName, file.FullName);
+                var relativePath = Path.GetRelativePath(solutionFile.Directory!.FullName, file.FullName);
                 block.Add($"        {relativePath} = {relativePath}");
             }
 
             block.Add("    EndProjectSection");
             block.Add("EndProject");
 
-            // Insert before "Global"
-            solutionFileAsLies.InsertRange(globalIndex, block);
+            solutionLines.InsertRange(globalIndex, block);
         }
 
         /// <summary>
-        ///     Finds the 'ProjectSection(SolutionItems)' in the existing folder block
-        ///     and inserts file solutionFileAsLies. If the folder block has no 'ProjectSection', we create one.
+        ///     Finds the existing folder's ProjectSection(SolutionItems) and inserts new files,
+        ///     or creates one if missing. Avoids duplicating lines.
         /// </summary>
-        private static void InsertFilesIntoExistingFolder(List<string> solutionFileAsLies,
+        private static void InsertFilesIntoExistingFolder(List<string> solutionLines,
                                                           int folderStartIndex,
-                                                          FileInfo solutionFileInfo,
-                                                          List<FileInfo> files)
+                                                          FileInfo solutionFile,
+                                                          FileInfo[] files)
         {
-            // We have something like:
-            // Project("{66A26720-8FB5-11D2-AA7E-00C04F688DDE}") = "MyFolder", "MyFolder", "{FOLDER_GUID}"
-            //     ProjectSection(SolutionItems) = preProject
-            //         file1 = file1
-            //     EndProjectSection
-            // EndProject
-
-            // We'll search from folderStartIndex down to "EndProject"
+            // find "EndProject" for this folder block
             var projectEndIndex = -1;
 
-            for (var i = folderStartIndex + 1; i < solutionFileAsLies.Count; i++)
+            for (var i = folderStartIndex + 1; i < solutionLines.Count; i++)
             {
-                if (solutionFileAsLies[i].TrimStart().StartsWith("EndProject", StringComparison.OrdinalIgnoreCase))
+                if (solutionLines[i].TrimStart().StartsWith("EndProject", StringComparison.OrdinalIgnoreCase))
                 {
                     projectEndIndex = i;
 
@@ -152,25 +168,23 @@ namespace RunJit.Cli.Services
 
             if (projectEndIndex == -1)
             {
-                throw new InvalidOperationException("Could not find 'EndProject' for existing solution folder block.");
+                throw new InvalidOperationException("Could not find 'EndProject' for existing solution folder.");
             }
 
-            // Find or create the "ProjectSection(SolutionItems) = preProject" block
+            // find or create ProjectSection(SolutionItems)
             var sectionStartIndex = -1;
             var sectionEndIndex = -1;
 
             for (var i = folderStartIndex + 1; i < projectEndIndex; i++)
             {
-                var trimmed = solutionFileAsLies[i].TrimStart();
-
-                if (trimmed.StartsWith("ProjectSection(SolutionItems)", StringComparison.OrdinalIgnoreCase))
+                if (solutionLines[i].TrimStart().StartsWith("ProjectSection(SolutionItems)", StringComparison.OrdinalIgnoreCase))
                 {
                     sectionStartIndex = i;
 
-                    // Now find the matching 'EndProjectSection'
+                    // locate EndProjectSection
                     for (var j = i + 1; j <= projectEndIndex; j++)
                     {
-                        if (solutionFileAsLies[j].TrimStart().StartsWith("EndProjectSection", StringComparison.OrdinalIgnoreCase))
+                        if (solutionLines[j].TrimStart().StartsWith("EndProjectSection", StringComparison.OrdinalIgnoreCase))
                         {
                             sectionEndIndex = j;
 
@@ -184,68 +198,325 @@ namespace RunJit.Cli.Services
 
             if (sectionStartIndex == -1)
             {
-                // The folder block has no ProjectSection. We'll insert one right before EndProject
-                // i.e., between projectEndIndex-1 and projectEndIndex
-                sectionStartIndex = projectEndIndex; // insertion point
-                var newSection = new List<string>();
-                newSection.Add("    ProjectSection(SolutionItems) = preProject");
+                // No ProjectSection => create one just before EndProject
+                sectionStartIndex = projectEndIndex;
+                var newSection = new List<string> { "    ProjectSection(SolutionItems) = preProject" };
 
-                // Add each file
                 foreach (var f in files)
                 {
-                    var relativePath = Path.GetRelativePath(solutionFileInfo.Directory!.FullName, f.FullName); ;
+                    var relativePath = Path.GetRelativePath(solutionFile.Directory!.FullName, f.FullName);
                     newSection.Add($"        {relativePath} = {relativePath}");
                 }
 
                 newSection.Add("    EndProjectSection");
 
-                solutionFileAsLies.InsertRange(sectionStartIndex, newSection);
+                solutionLines.InsertRange(sectionStartIndex, newSection);
             }
             else
             {
-                // We already have ProjectSection. Insert new files before the EndProjectSection
-                // Make sure we don't duplicate solutionFileAsLies.
+                // Insert new files (avoid duplicates)
                 var existingFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-                // Collect existing items from that section
                 for (var i = sectionStartIndex + 1; i < sectionEndIndex; i++)
                 {
-                    // Typically solutionFileAsLies are "   relative\path = relative\path"
-                    var line = solutionFileAsLies[i].Trim();
+                    var line = solutionLines[i].Trim();
 
-                    if (!string.IsNullOrWhiteSpace(line) &&
-                        !line.StartsWith("EndProjectSection", StringComparison.OrdinalIgnoreCase))
+                    if (!string.IsNullOrEmpty(line) && !line.StartsWith("EndProjectSection", StringComparison.OrdinalIgnoreCase))
                     {
                         var parts = line.Split('=');
 
                         if (parts.Length == 2)
                         {
-                            var left = parts[0].Trim();
-
-                            // typically left == right, so we can store either
-                            existingFiles.Add(left);
+                            existingFiles.Add(parts[0].Trim());
                         }
                     }
                 }
 
-                // Insert any new files that are not in existingFiles
                 var newLines = new List<string>();
 
                 foreach (var f in files)
                 {
-                    var relativePath = Path.GetRelativePath(solutionFileInfo.Directory!.FullName, f.FullName);
+                    var relativePath = Path.GetRelativePath(solutionFile.Directory!.FullName, f.FullName);
+
                     if (!existingFiles.Contains(relativePath))
                     {
                         newLines.Add($"        {relativePath} = {relativePath}");
                     }
                 }
 
-                // Insert right before sectionEndIndex
                 if (newLines.Count > 0)
                 {
-                    solutionFileAsLies.InsertRange(sectionEndIndex, newLines);
+                    solutionLines.InsertRange(sectionEndIndex, newLines);
                 }
             }
         }
+
+        /// <summary>
+        ///     Builds a simple folder tree structure in memory.
+        ///     Each node knows its "Name" (for the solution folder), "ParentFolderName",
+        ///     subfolders, and files.
+        ///     Using "Name" for the solution folder node is simple but might cause collisions if
+        ///     multiple subfolders share the same name in different paths.
+        ///     For a robust approach, you might store a full path or unique ID.
+        ///     For this example, we'll just store the subfolder name.
+        /// </summary>
+        private FolderNode BuildFolderTree(FileInfo solutionFile,
+                                           DirectoryInfo folderPath,
+                                           string? parentFolderName)
+        {
+            var info = folderPath;
+
+            if (!info.Exists)
+            {
+                throw new DirectoryNotFoundException($"Folder not found: {folderPath}");
+            }
+
+            var node = new FolderNode
+            {
+                Name = info.Name, // e.g. ".github", "ISSUE_TEMPLATE"
+                ParentName = parentFolderName,
+                FolderFullPath = info.FullName
+            };
+
+            // Gather all direct files
+            // (Exclude hidden/system if desired)
+            var files = info.GetFiles("*", SearchOption.TopDirectoryOnly)
+                            .Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden))
+                            .ToArray();
+
+            node.Files.AddRange(files);
+
+            // Recurse subdirectories
+            foreach (var dir in info.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                                    .Where(d => !d.Attributes.HasFlag(FileAttributes.Hidden)))
+            {
+                var childNode = BuildFolderTree(solutionFile, dir, node.Name);
+                node.Subfolders.Add(childNode);
+            }
+
+            return node;
+        }
+
+        /// <summary>
+        ///     Recursively inserts a FolderNode into the .sln, calling AddOrUpdateSolutionFolder for each level.
+        ///     Also collects (childGuid, parentGuid) pairs to fix nesting in GlobalSection(NestedProjects).
+        /// </summary>
+        private List<string> InsertFolderRecursivelyIntoSolution(FileInfo solutionFile,
+                                                                 List<string> solutionLines,
+                                                                 FolderNode node,
+                                                                 Dictionary<string, string> nestedProjectsMap)
+        {
+            // 1) Create or update a solution folder for "node.Name", placed at root or under "node.ParentName"
+            //    Convert the node's files to FileInfo[] so we can pass them to AddOrUpdateSolutionFolder
+            var files = node.Files.ToArray();
+
+            AddOrUpdateSolutionFolder(solutionLines, solutionFile, node.Name,
+                                      files);
+
+            // 2) Retrieve the GUID of this newly created (or existing) folder
+            var childGuid = FindFolderGuidByName(solutionLines, node.Name);
+
+            if (string.IsNullOrEmpty(childGuid))
+            {
+                throw new InvalidOperationException($"Could not find GUID for solution folder '{node.Name}' after creation.");
+            }
+
+            // 3) If it has a parent, retrieve the parent's GUID and store child=parent in the dictionary
+            if (!string.IsNullOrEmpty(node.ParentName))
+            {
+                // The parent must already exist in the .sln
+                var parentGuid = FindFolderGuidByName(solutionLines, node.ParentName);
+
+                if (!string.IsNullOrEmpty(parentGuid))
+                {
+                    // Record the child-parent relationship for NestedProjects
+                    nestedProjectsMap[childGuid] = parentGuid;
+                }
+
+                // If the parent doesn't exist, that means the parent's creation is not done yet or
+                // there's a naming conflict. 
+                // In a more robust approach, you might handle that differently or 
+                // reorder your folder creation so parents are always created first.
+            }
+
+            // 4) Recurse for subfolders
+            foreach (var subfolder in node.Subfolders)
+            {
+                InsertFolderRecursivelyIntoSolution(solutionFile, solutionLines, subfolder,
+                                                    nestedProjectsMap);
+            }
+
+            return solutionLines;
+        }
+
+        /// <summary>
+        ///     Searches for a solution folder block with the given name,
+        ///     and extracts the {GUID} from this line:
+        ///     Project("{2150E333-...}") = "NAME", "NAME", "{THE-GUID}"
+        ///     Returns the GUID string including braces, e.g. "{ABC...}"
+        ///     or null if not found.
+        /// </summary>
+        private static string? FindFolderGuidByName(List<string> solutionLines,
+                                                    string folderName)
+        {
+            // We look for:
+            // Project("{2150E333-...}") = "folderName", "folderName", "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"
+            var pattern = $@"Project\(""{Regex.Escape(SOLUTION_FOLDER_GUID)}""\)\s*=\s*""{Regex.Escape(folderName)}"",\s*""{Regex.Escape(folderName)}"",\s*""(?<guid>{{[A-Z0-9-]+}})""";
+
+            for (var i = 0; i < solutionLines.Count; i++)
+            {
+                var match = Regex.Match(solutionLines[i], pattern, RegexOptions.IgnoreCase);
+
+                if (match.Success)
+                {
+                    return match.Groups["guid"].Value;
+
+                    // e.g. "{9543FC93-BCD3-4322-BB85-8A0F731383B8}"
+                }
+            }
+
+            return null;
+        }
+
+        private void UpdateNestedProjectsSection(
+     List<string> lines,
+     Dictionary<string, string> nestedProjectsMap)
+        {
+            if (nestedProjectsMap.Count == 0)
+                return;
+
+            // 1) Locate top-level Global ... EndGlobal
+            int globalIndex = lines.FindIndex(l => l.TrimStart().Equals("Global", StringComparison.OrdinalIgnoreCase));
+            if (globalIndex < 0)
+                throw new InvalidOperationException("Malformed .sln: missing top-level 'Global'.");
+
+            int endGlobalIndex = lines.FindIndex(globalIndex + 1, l =>
+                l.TrimStart().Equals("EndGlobal", StringComparison.OrdinalIgnoreCase));
+            if (endGlobalIndex < 0)
+                throw new InvalidOperationException("Malformed .sln: missing top-level 'EndGlobal'.");
+
+            // 2) We now search for an existing top-level "GlobalSection(NestedProjects)" block
+            //    within the lines between globalIndex+1 and endGlobalIndex-1.
+            //    We'll skip entire sections if they are not NestedProjects.
+            int nestedStartIndex = -1;
+            int nestedEndIndex = -1;
+            int i = globalIndex + 1;
+            while (i < endGlobalIndex)
+            {
+                var line = lines[i].TrimStart();
+                if (line.StartsWith("GlobalSection(", StringComparison.OrdinalIgnoreCase))
+                {
+                    // e.g. "GlobalSection(SolutionConfigurationPlatforms) = preSolution"
+                    // or    "GlobalSection(NestedProjects) = preSolution"
+
+                    // Check if it's NestedProjects:
+                    if (line.StartsWith("GlobalSection(NestedProjects)", StringComparison.OrdinalIgnoreCase))
+                    {
+                        nestedStartIndex = i;
+
+                        // find matching EndGlobalSection
+                        for (int j = i + 1; j < endGlobalIndex; j++)
+                        {
+                            if (lines[j].TrimStart().StartsWith("EndGlobalSection", StringComparison.OrdinalIgnoreCase))
+                            {
+                                nestedEndIndex = j;
+                                break;
+                            }
+                        }
+                        // IMPORTANT: break the while-loop if we found the NestedProjects section
+                        break;
+                    }
+                    else
+                    {
+                        // Some other GlobalSection(...) => skip until its matching EndGlobalSection
+                        int sectionClose = -1;
+                        for (int j = i + 1; j < endGlobalIndex; j++)
+                        {
+                            if (lines[j].TrimStart().StartsWith("EndGlobalSection", StringComparison.OrdinalIgnoreCase))
+                            {
+                                sectionClose = j;
+                                break;
+                            }
+                        }
+                        if (sectionClose == -1)
+                            throw new InvalidOperationException("Malformed .sln: 'GlobalSection(...)' without matching 'EndGlobalSection'.");
+
+                        // jump i just past this section
+                        i = sectionClose + 1;
+                        continue;
+                    }
+                }
+                else
+                {
+                    // not a GlobalSection(...) => just move on
+                    i++;
+                }
+            }
+
+            if (nestedStartIndex == -1)
+            {
+                // 3) No NestedProjects section found -> create one at top-level, just before EndGlobal
+                var newSection = new List<string>();
+                newSection.Add("\tGlobalSection(NestedProjects) = preSolution");
+                // child -> parent lines
+                foreach (var kvp in nestedProjectsMap)
+                {
+                    newSection.Add($"\t\t{kvp.Key} = {kvp.Value}");
+                }
+                newSection.Add("\tEndGlobalSection");
+
+                lines.InsertRange(endGlobalIndex, newSection);
+            }
+            else
+            {
+                // 4) We have an existing NestedProjects section from nestedStartIndex..nestedEndIndex
+                // Add new lines before the EndGlobalSection
+                var existing = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                for (int lineIndex = nestedStartIndex + 1; lineIndex < nestedEndIndex; lineIndex++)
+                {
+                    var row = lines[lineIndex].Trim();
+                    // e.g. "{childGuid} = {parentGuid}"
+                    if (!row.StartsWith("EndGlobalSection", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var parts = row.Split('=');
+                        if (parts.Length == 2)
+                        {
+                            existing.Add(parts[0].Trim());
+                        }
+                    }
+                }
+
+                // Insert any missing lines
+                var newLines = new List<string>();
+                foreach (var kvp in nestedProjectsMap)
+                {
+                    if (!existing.Contains(kvp.Key))
+                    {
+                        newLines.Add($"\t\t{kvp.Key} = {kvp.Value}");
+                    }
+                }
+                if (newLines.Count > 0)
+                {
+                    lines.InsertRange(nestedEndIndex, newLines);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    ///     A simple in-memory representation of a folder node: Name, subfolders, files.
+    ///     "ParentName" is used to locate the parent solution folder in the .sln.
+    /// </summary>
+    internal class FolderNode
+    {
+        public string Name { get; set; } = null!;
+
+        public string? ParentName { get; set; } // null if root-level
+
+        public string FolderFullPath { get; set; } = null!;
+
+        public List<FileInfo> Files { get; } = new();
+
+        public List<FolderNode> Subfolders { get; } = new();
     }
 }
