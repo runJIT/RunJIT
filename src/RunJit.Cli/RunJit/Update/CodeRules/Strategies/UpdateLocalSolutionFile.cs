@@ -1,14 +1,10 @@
 ﻿using System.Collections.Immutable;
 using System.IO.Compression;
-using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
-using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Api.Client;
-using RunJit.Cli.Auth0;
 using RunJit.Cli.ErrorHandling;
 using RunJit.Cli.RunJit.Update.Nuget;
 using RunJit.Cli.Services;
@@ -49,11 +45,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                                                   IGitService git,
                                                   IDotNet dotNet,
                                                   IRenameFilesAndFolders renameFilesAndFolders,
-                                                  FindSolutionFile findSolutionFile,
-                                                  IRunJitApiClientFactory runJitApiClientFactory,
-                                                  IHttpClientFactory httpClientFactory,
-                                                  IMediator mediator,
-                                                  RunJitApiClientSettings runJitApiClientSettings) : IUpdateCodeRulesStrategy
+                                                  FindSolutionFile findSolutionFile) : IUpdateCodeRulesStrategy
     {
         public bool CanHandle(UpdateCodeRulesParameters parameters)
         {
@@ -124,29 +116,18 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             var combine = Path.Combine(solutionFile.Directory!.FullName, Guid.NewGuid().ToString().ToLowerInvariant());
             var tempFolder = new DirectoryInfo(combine);
 
-            var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.BaseAddress = new Uri(runJitApiClientSettings.BaseAddress);
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
-            var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
+            //var auth = await mediator.SendAsync(new GetTokenByStorageCache()).ConfigureAwait(false);
+            //var httpClient = httpClientFactory.CreateClient();
+            //httpClient.BaseAddress = new Uri(runJitApiClientSettings.BaseAddress);
+            //// httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(auth.TokenType, auth.Token);
+            //var rRunJitApiClient = runJitApiClientFactory.CreateFrom(httpClient);
 
-            var codeRuleAsFileStream = await rRunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
-            using var zipArchive = new ZipArchive(codeRuleAsFileStream.FileStream, ZipArchiveMode.Read);
+            //var codeRuleAsFileStream = await rRunJitApiClient.CodeRules.V1.ExportCodeRulesAsync().ConfigureAwait(false);
+            using var codeRuleAsFileStream = this.GetType().Assembly.GetEmbeddedFileAsStream("RunJITCodeRules.zip");
+            using var zipArchive = new ZipArchive(codeRuleAsFileStream, ZipArchiveMode.Read);
             zipArchive.ExtractToDirectory(tempFolder.FullName);
 
-            //// 5. Check if solution file is the file or directory
-            ////    if it is null or whitespace we check current directory 
-            //var codeRuleSolution = findSolutionFile.Find(tempFolder.FullName);
-
-            //// 6. Build the solution first
-            //await dotNet.BuildAsync(codeRuleSolution).ConfigureAwait(false);
-
-            //// 7. Get infos which packages are outdated
-            //var outdatedNugetCodeRuleSolution = await dotNet.ListOutdatedPackagesAsync(codeRuleSolution).ConfigureAwait(false);
-
-            //// 8. Update the nuget packages
-            //await updateNugetPackageService.UpdateNugetPackageAsync(outdatedNugetCodeRuleSolution, parameters.IgnorePackages.Split(";").ToImmutableList()).ConfigureAwait(false);
-
+           
             Environment.CurrentDirectory = currentRepoEnvironment;
 
             //foreach (var file in tempFolder.EnumerateFiles("*.cs", SearchOption.AllDirectories))
@@ -158,6 +139,9 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
             //        await File.WriteAllTextAsync(file.FullName, newFileContent);
             //    }
             //}
+
+            var sourceFolder = solutionFile.Directory.EnumerateDirectories("src").FirstOrDefault();
+            var targetFolder = sourceFolder ?? solutionFile.Directory;
 
             var alreadyExistingCodeRuleFolder = solutionFile.Directory!.EnumerateDirectories($"{solutionFile.NameWithoutExtension()}*.CodeRules").FirstOrDefault();
 
@@ -203,7 +187,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
                     await File.WriteAllTextAsync(mstestbaseClass.FullName, result).ConfigureAwait(false);
                 }
 
-                var newTarget = new DirectoryInfo(Path.Combine(solutionFile.Directory!.FullName, directory.Name));
+                var newTarget = new DirectoryInfo(Path.Combine(targetFolder.FullName, directory.Name));
 
                 if (newTarget.Exists)
                 {
@@ -239,7 +223,7 @@ namespace RunJit.Cli.RunJit.Update.CodeRules
 
             foreach (var allCodeRuleCsproj in allCodeRuleCsprojs)
             {
-                await dotNet.AddProjectToSolutionAsync(solutionFile, allCodeRuleCsproj).ConfigureAwait(false);
+                await dotNet.AddProjectToSolutionAsync(solutionFile, allCodeRuleCsproj, "CodeRules").ConfigureAwait(false);
             }
 
             // 6. Build the solution first

@@ -22,16 +22,16 @@ namespace RunJit.Cli.Test.SystemTest
             var solutionFileInfo = await Mediator.SendAsync(new NewMinimalApiProject(projectName, basePath, targetDirectory)).ConfigureAwait(false);
 
             //// 2. Assert that solution can be build and needed for client as well
-            //await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFileInfo.FullName}").ConfigureAwait(false);
+            await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFileInfo.FullName}").ConfigureAwait(false);
 
             //// 3. Assert that solution can be tested
-            ////await DotNetTool.AssertRunAsync("dotnet", $"test {result.FullName}").ConfigureAwait(false);
+            await DotNetTool.AssertRunAsync("dotnet", $"test {solutionFileInfo.FullName}").ConfigureAwait(false);
 
-            //// 4. Create Client
-            //await Mediator.SendAsync(new GenerateClient(solutionFileInfo, false));
+            ////// 4. Create Client
+            await Mediator.SendAsync(new GenerateClient(solutionFileInfo, false));
 
-            //// 5. Create .Net tool
-            //await Mediator.SendAsync(new GenerateDotNetTool(solutionFileInfo, toolName));
+            ////// 5. Create .Net tool
+            await Mediator.SendAsync(new GenerateDotNetTool(solutionFileInfo, toolName));
 
             // 6. Add code rules
             await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFileInfo.FullName)).ConfigureAwait(false);

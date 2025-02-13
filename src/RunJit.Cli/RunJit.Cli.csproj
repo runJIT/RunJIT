@@ -209,6 +209,7 @@
         <None Remove="RunJit\New\MinimalApiProject\CodeGen\commitlint.config.js" />
         <None Remove="RunJit\New\MinimalApiProject\CodeGen\Directory.Build.props" />
         <None Remove="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
+        <None Remove="RunJit\Update\CodeRules\Templates\RunJITCodeRules.zip" />
         <None Remove="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
     <ItemGroup>
@@ -234,6 +235,7 @@
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\Program.cs" />
         <EmbeddedResource Include="RunJit\New\MinimalApiProject\CodeGen\src\Project\Startup\ServerlessMinimalApplication.cs" />
         <EmbeddedResource Include="RunJit\Update\BuildConfig\Templates\Directory.Build.props" />
+        <EmbeddedResource Include="RunJit\Update\CodeRules\Templates\RunJITCodeRules.zip" />
         <EmbeddedResource Include="RunJit\Update\ResharperSettings\Template\.editorconfig" />
     </ItemGroup>
     <ItemGroup>
