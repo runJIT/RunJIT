@@ -14,6 +14,6 @@ namespace RunJit.Cli.New.MinimalApiProject
 
         public required string NormalizedName { get; init; }
 
-        public required string NetVersion { get; init; } = "net8.0";
+        public required string NetVersion { get; init; } = "net9.0";
     }
 }

@@ -67,7 +67,7 @@ namespace RunJit.Cli.Update
 
             if (directoryBuildProps.IsNotNull())
             {
-                // Read the directoryBuildProps file content and replace net7.0 with net8.0. Can you use a regex that the version can be any number
+                // Read the directoryBuildProps file content and replace net8.0 with net9.0. Can you use a regex that the version can be any number
                 var directoryBuildPropsContent = await File.ReadAllTextAsync(directoryBuildProps.FullName).ConfigureAwait(false);
                 var newDirectoryBuildPropsContent = _netVersionReplaceRegex.Replace(directoryBuildPropsContent, $"net{versionParameters.Version}.0");
                 newDirectoryBuildPropsContent = Regex.Replace(newDirectoryBuildPropsContent, @"\.NET \d+\.\d+", $".NET {versionParameters.Version}");

@@ -530,7 +530,7 @@ visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public
 <Project>
     <PropertyGroup>
         <!-- Sets the target framework for the project to .NET 8.0 -->
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
 
         <!-- Sets the C# language version to the latest major version -->
         <LangVersion>latestmajor</LangVersion>
