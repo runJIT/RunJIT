@@ -23,7 +23,7 @@ namespace RunJit.Cli.New.MinimalApiProject
     {
         public Command Build()
         {
-            var command = new Command("minimal-api", "The command to create a new basic minimal api project.");
+            var command = new Command("minimal-api-serverless", "The command to create a new basic minimal api project.");
             optionsBuilder.Build().ToList().ForEach(option => command.AddOption(option));
 
             command.Handler = CommandHandler.Create<bool, bool, string, string, DirectoryInfo, int>((usevisualstudio,

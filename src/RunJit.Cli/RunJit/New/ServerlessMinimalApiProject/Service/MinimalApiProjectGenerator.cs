@@ -40,7 +40,7 @@ namespace RunJit.Cli.New.MinimalApiProject
         {
             // Get all embedded files matching to the strcuture
             var embbededFiles = GetType().Assembly.GetManifestResourceNames();
-            var webApiProjectResources = embbededFiles.Where(f => f.Contains("New.MinimalApiProject.CodeGen.")).ToList();
+            var webApiProjectResources = embbededFiles.Where(f => f.Contains("New.ServerlessMinimalApiProject.CodeGen.")).ToList();
 
             foreach (var webApiProjectResource in webApiProjectResources)
             {
@@ -52,7 +52,7 @@ namespace RunJit.Cli.New.MinimalApiProject
                                                 .Replace("$Namespace$", minimalApiProjectInfos.NormalizedName);
 
                 // Splitting at the double dot ".."
-                var parts = webApiProjectResource.Split(["New.MinimalApiProject.CodeGen."], StringSplitOptions.None);
+                var parts = webApiProjectResource.Split(["New.ServerlessMinimalApiProject.CodeGen."], StringSplitOptions.None);
 
                 if (parts.Length == 2)
                 {
