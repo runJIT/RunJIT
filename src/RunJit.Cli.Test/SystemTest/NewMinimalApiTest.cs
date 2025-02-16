@@ -6,12 +6,14 @@ using RunJit.Cli.Test.Extensions;
 
 namespace RunJit.Cli.Test.SystemTest
 {
-    [TestCategory("runjit new minimal-api")]
+    [TestCategory("runjit new minimal-api-serverless")]
     [TestClass]
     public class NewMinimalApiTest : GlobalSetup
     {
         [DataTestMethod]
         [DataRow("Siemens.Sdc", "api/core", "Sdc")]
+        [DataRow("Siemens.Reporting", "api/reporting", "Reporting")]
+        [DataRow("Sega", "api/sega", "Sega")]
         public async Task Should_Generate_New_Minimal_Web_Api_Solution(string projectName,
                                                                        string basePath,
                                                                        string toolName)
