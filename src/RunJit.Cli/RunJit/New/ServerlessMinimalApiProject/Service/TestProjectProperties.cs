@@ -2,30 +2,26 @@
 using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using RunJit.Cli.Services;
-using Solution.Parser.Project;
 
-namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
+namespace RunJit.Cli.New.MinimalApiProject
 {
-    internal static class AddProjectSettingsCodeGenExtension
+    internal static class AddTestProjectSettingsExtension
     {
-        internal static void AddProjectSettingsCodeGen(this IServiceCollection services)
+        internal static void AddTestProjectSettings(this IServiceCollection services)
         {
-            services.AddSingletonIfNotExists<IDotNetToolTestSpecificCodeGen, ProjectSettingsCodeGen>();
+            services.AddSingletonIfNotExists<IMinimalApiProjectTestSpecificCodeGen, TestProjectSettings>();
         }
     }
 
-    internal sealed class ProjectSettingsCodeGen(ConsoleService consoleService) : IDotNetToolTestSpecificCodeGen
+    // Visual studio creates default test class and test settings -> we dont want that from
+    // beginning
+    internal sealed class TestProjectSettings(ConsoleService consoleService) : IMinimalApiProjectTestSpecificCodeGen
     {
         public Task GenerateAsync(FileInfo projectFileInfo,
+                                  FileInfo solutionFile,
                                   XDocument projectDocument,
-                                  DotNetToolInfos dotNetToolInfos,
-                                  ProjectFile? webApiProject)
+                                  MinimalApiProjectInfos minimalApiProjectInfos)
         {
-            // 1. Create a new PropertyGroup for .NET tool settings
-            //    <PropertyGroup>
-            //        <IsPackable>false</IsPackable>
-            //        <ImplicitUsings>enable</ImplicitUsings>
-            //    </PropertyGroup>
             // 1. Create a new item group for embedded files
             //    <ItemGroup>
             //        <EmbeddedResource Include="**\*.json" Exclude="bin\**\*;obj\**\*" />

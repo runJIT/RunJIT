@@ -33,6 +33,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                  new XElement("OutputType", "Exe"),
                                                  new XElement("PackAsTool", "true"),
                                                  new XElement("IsPackable", "true"),
+                                                 new XElement("IsPublishable", "false"),
                                                  new XElement("ImplicitUsings", "enable"),
                                                  new XElement("ToolCommandName", dotNetToolInfos.NormalizedName.ToLower()));
 

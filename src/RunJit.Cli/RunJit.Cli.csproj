@@ -185,6 +185,7 @@
     </ItemGroup>
     <ItemGroup>
         <None Remove="RunJit\Generate\Client\Templates\client.zip" />
+        <None Remove="RunJit\New\ServerlessMinimalApiProject\CodeGen\Dockerfile" />
         <None Remove="RunJit\New\ServerlessMinimalApiProject\CodeGen\src\Project.Test\ApiTestBase.cs" />
         <None Remove="RunJit\New\ServerlessMinimalApiProject\CodeGen\src\Project\Extensions\EndpointConventionBuilderExtensions.cs" />
         <None Remove="RunJit\New\ServerlessMinimalApiProject\CodeGen\src\Project\IdentityProvider\AuthenticationBuilderExtensions.cs" />
@@ -219,6 +220,7 @@
         <EmbeddedResource Include="RunJit\New\ServerlessMinimalApiProject\CodeGen\.runsettings" />
         <EmbeddedResource Include="RunJit\New\ServerlessMinimalApiProject\CodeGen\commitlint.config.js" />
         <EmbeddedResource Include="RunJit\New\ServerlessMinimalApiProject\CodeGen\Directory.Build.props" />
+        <EmbeddedResource Include="RunJit\New\ServerlessMinimalApiProject\CodeGen\Dockerfile" />
         <EmbeddedResource Include="RunJit\New\ServerlessMinimalApiProject\CodeGen\src\Project.Test\ApiTestBase.cs" />
         <EmbeddedResource Include="RunJit\New\ServerlessMinimalApiProject\CodeGen\src\Project.Test\Api\Health\GetHealthStateTest.cs" />
         <EmbeddedResource Include="RunJit\New\ServerlessMinimalApiProject\CodeGen\src\Project.Test\OpenApi\OpenApiTest.cs" />

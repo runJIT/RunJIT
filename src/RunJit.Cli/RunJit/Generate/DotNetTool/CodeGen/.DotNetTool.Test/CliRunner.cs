@@ -85,8 +85,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                     var httpClientFactoryMock = Substitute.For<IHttpClientFactory>();
                                                     httpClientFactoryMock.CreateClient().Returns(httpClientForWebApi);
                                         
-                                                    var exitCode = await Program.CustomSetup(consoleArguments, (services,
-                                                                                                                _) => services.AddSingleton(httpClientFactoryMock)).ConfigureAwait(false);
+                                                    var exitCode = await Program.CustomSetupAsync(consoleArguments, (services, _) => services.AddSingleton(httpClientFactoryMock)).ConfigureAwait(false);
                                         
                                                     // 6. Get the output from the string writer
                                                     var output = sw.ToString();

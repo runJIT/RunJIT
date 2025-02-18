@@ -1,5 +1,4 @@
 name: Deployment Pipeline
-
 on:
   push:
     branches: [ "main" ]
@@ -28,8 +27,8 @@ jobs:
           echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
       - name: Lint commits
         run: |
-          npx commitlint --from=$(git merge-base origin/main HEAD~10) --to=HEAD
-  setup:
+          npx commitlint --from=$(git merge-base origin/main HEAD~1) --to=HEAD
+  build:
     runs-on: ubuntu-latest
     needs: commitlint
     outputs:
@@ -50,20 +49,6 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
 
-  build:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.100'
-
-      - name: Download Source
-        uses: actions/download-artifact@v3
-        with:
-          name: source
-
       - name: Dotnet Restore
         run: dotnet restore
 
@@ -76,58 +61,74 @@ jobs:
           name: source
           path: ./
 
-  tests:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.100'
 
       - name: Download Source
         uses: actions/download-artifact@v3
         with:
           name: source
 
-#      - name: Run Code-Rules tests
-#        run: dotnet test --configuration Release --filter Coding-Rules --no-restore --no-build --verbosity minimal
-#
-#      - name: Run all other tests
-#        run: dotnet test --configuration Release --no-restore --no-build --verbosity minimal
-          
+      # Run tests filtered by 'Code-Rules'
+      - name: Run Code-Rules tests
+        run: dotnet test --configuration Release --filter "FullyQualifiedName~CodeRules" --no-restore --no-build --verbosity minimal --logger "trx;LogFileName=TestResultsCodeRules.trx"
+
+      - name: Publish CodeRules Tests
+        uses: actions/dorny_test-reporter@v1
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: CodeRules Test
+          path: "**/TestResultsCodeRules.trx"
+          reporter: dotnet-trx
+          fail-on-error: false
+
+      # Run all other tests
+      - name: Run all other tests
+        run: dotnet test --configuration Release --filter "FullyQualifiedName!~CodeRules" --no-restore --no-build --verbosity minimal --logger "trx;LogFileName=TestResultsGeneralTests.trx"
+
+      - name: Publish General Tests
+        uses: actions/dorny_test-reporter@v1
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: GeneralTests
+          path: "**/TestResultsGeneralTests.trx"
+          reporter: dotnet-trx
+          fail-on-error: false
+
   approval:
     runs-on: ubuntu-latest
-    needs: tests
+    needs: build
     environment: prod
     if: github.event_name == 'push'
     steps:
       - name: Show approval comment
         run: echo "Please approve the deployment on the 'Environments' page."
-        
+  
   deploy:
     runs-on: ubuntu-latest
     needs: approval
     if: github.event_name == 'push'
     env:
-      REPOSITORY_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}
+      REPOSITORY_URI: ${{ secrets.PULSE_AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.PULSE_AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-      
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
 
-      - name: setup python 
+      - name: setup python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - uses: actions/aws-actions_configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.PULSE_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PULSE_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.PULSE_AWS_REGION }}
 
       - name: get caller identity 1
         run: |
@@ -135,13 +136,13 @@ jobs:
 
       - name: Login to Amazon ECR
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-      
+          aws ecr get-login-password --region ${{ secrets.PULSE_AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.PULSE_AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.PULSE_AWS_REGION }}.amazonaws.com
+
       - name: Build Docker Image
         run: |
           dotnet publish -c Release -o bin/Release/lambda-publish
-          docker build --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} -t ${{ env.REPOSITORY_URI }}:latest .
-      
+          docker build --build-arg AWS_ACCESS_KEY_ID=${{ secrets.PULSE_AWS_ACCESS_KEY_ID }} --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.PULSE_AWS_SECRET_ACCESS_KEY }} -t ${{ env.REPOSITORY_URI }}:latest .
+
       - name: Push Docker Image to ECR
         run: |
           docker tag ${{ env.REPOSITORY_URI }}:latest ${{ env.REPOSITORY_URI }}:${{ github.sha }}

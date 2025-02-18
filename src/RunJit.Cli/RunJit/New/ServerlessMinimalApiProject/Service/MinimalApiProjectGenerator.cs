@@ -18,6 +18,7 @@ namespace RunJit.Cli.New.MinimalApiProject
             services.AddEmbeddedFileSettings();
             services.AddWriteEmbbededFileIntoTarget();
             services.AddProjectSolutionFolders();
+            services.AddTestProjectSettings();
 
             services.AddSingletonIfNotExists<MinimalApiProjectGenerator>();
         }

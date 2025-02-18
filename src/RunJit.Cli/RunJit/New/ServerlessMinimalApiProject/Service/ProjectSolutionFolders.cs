@@ -81,9 +81,15 @@ namespace RunJit.Cli.New.MinimalApiProject
                 }
 
                 if (fileInfo.Extension == ".editorconfig" ||
-                    fileInfo.Extension == ".runsettings")
+                    fileInfo.Extension == ".runsettings" ||
+                    fileInfo.Extension == "global.json")
                 {
                     solutionFilesAsLines = solutionFileService.AddOrUpdateSolutionFolder(solutionFilesAsLines, solutionFile, "SolutionItems", fileInfo);
+                }
+                
+                if (fileInfo.Name == "Dockerfile")
+                {
+                    solutionFilesAsLines = solutionFileService.AddOrUpdateSolutionFolder(solutionFilesAsLines, solutionFile, "Docker", fileInfo);
                 }
             }
 

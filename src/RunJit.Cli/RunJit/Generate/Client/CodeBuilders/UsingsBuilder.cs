@@ -41,7 +41,7 @@ namespace RunJit.Cli.Generate.Client
         internal string BuildFrom(GeneratedClient generatedClient,
                                   string projectName)
         {
-            var usings = CollectUsings(generatedClient).Flatten(Environment.NewLine);
+            var usings = CollectUsings(generatedClient).Distinct().Flatten(Environment.NewLine);
 
             return usings;
 

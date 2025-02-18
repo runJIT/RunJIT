@@ -14,6 +14,7 @@ namespace RunJit.Cli.Test.SystemTest
         [DataRow("Siemens.Sdc", "api/core", "Sdc")]
         [DataRow("Siemens.Reporting", "api/reporting", "Reporting")]
         [DataRow("Sega", "api/sega", "Sega")]
+        [DataRow("Pulse.FieldingTool", "api/fieldingtool", "FieldingTool")]
         public async Task Should_Generate_New_Minimal_Web_Api_Solution(string projectName,
                                                                        string basePath,
                                                                        string toolName)
@@ -36,13 +37,20 @@ namespace RunJit.Cli.Test.SystemTest
             await Mediator.SendAsync(new GenerateDotNetTool(solutionFileInfo, toolName));
 
             // 6. Add code rules
+            //    Remove fixtures
             await Mediator.SendAsync(new UpdateCodeRulesForSolution(solutionFileInfo.FullName)).ConfigureAwait(false);
 
-            // 6. Assert that solution can be build
-            // await DotNetTool.AssertRunAsync("dotnet", $"build {result.FullName}").ConfigureAwait(false);
+            // 6.Assert that solution can be build
+            // await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFileInfo.FullName}").ConfigureAwait(false);
 
-            // 7. Assert that solution can be tested
+            // 7.Assert that solution can be tested
             // await DotNetTool.AssertRunAsync("dotnet", $"test {result.FullName}").ConfigureAwait(false);
+            
+            // 8. Pack
+            //  wait DotNetTool.AssertRunAsync("dotnet", $@"pack {solutionFileInfo.FullName} -o D:\Nuget").ConfigureAwait(false);
+            
+            // 9. Publish
+            // await DotNetTool.AssertRunAsync("dotnet", $@"pack {solutionFileInfo.FullName} -o D:\Nuget").ConfigureAwait(false);
         }
 
         internal sealed record NewMinimalApiProject(string ProjectName,
