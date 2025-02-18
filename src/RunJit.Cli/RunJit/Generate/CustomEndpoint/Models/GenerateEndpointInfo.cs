@@ -36,9 +36,9 @@ namespace RunJit.Cli.RunJit.Generate.CustomEndpoint
         public required string Content { get; set; }
     }
 
-    internal record UrlParameter(string Name,
+    internal sealed record UrlParameter(string Name,
                                  string Type);
 
-    internal record QueryParameter(string Name,
+    internal sealed record QueryParameter(string Name,
                                    string Type);
 }

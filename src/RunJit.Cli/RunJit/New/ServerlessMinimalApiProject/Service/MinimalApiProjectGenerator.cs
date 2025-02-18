@@ -112,7 +112,7 @@ namespace RunJit.Cli.New.MinimalApiProject
         }
     }
 
-    internal class MinimalApiProjectGenerator(IDotNet dotNet,
+    internal sealed class MinimalApiProjectGenerator(IDotNet dotNet,
                                               IEnumerable<IMinimalApiProjectSpecificCodeGen> codeGenerators)
 
     {

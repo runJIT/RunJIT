@@ -13,7 +13,7 @@ namespace $projectName$
         }
     }
 
-    internal class CurlBuilder
+    internal sealed class CurlBuilder
     {
         internal string BuildFrom(HttpRequestMessage httpRequestMessage,
                                   HttpClient httpClient)

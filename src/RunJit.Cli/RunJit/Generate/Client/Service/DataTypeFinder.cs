@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal record DeclarationToType(DeclarationBase Declaration,
+    internal sealed record DeclarationToType(DeclarationBase Declaration,
                                       Type Type);
 
     public class DataTypeFinder

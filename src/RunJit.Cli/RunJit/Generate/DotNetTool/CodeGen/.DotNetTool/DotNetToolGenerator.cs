@@ -68,7 +68,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
     }
 
-    internal class DotNetToolGenerator(IDotNet dotNet,
+    internal sealed class DotNetToolGenerator(IDotNet dotNet,
                                        IEnumerable<IDotNetToolSpecificCodeGen> codeGenerators,
                                        SolutionCodeCleanup solutionCodeCleanup)
     {

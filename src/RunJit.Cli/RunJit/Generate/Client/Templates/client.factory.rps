@@ -12,12 +12,13 @@ namespace $projectName$
 {
     public static class Add$clientName$FactoryExtension
     {
-        public static void Add$clientName$Factory(this IServiceCollection services, IConfiguration configuration)
+        public static void Add$clientName$Factory(this IServiceCollection services, 
+                                                  IConfiguration configuration)
         {
             services.AddHttpClient();
             services.Add$clientName$Settings(configuration);
             services.AddResponseTypeHandleStrategy();
-            services.AddJsonSerializer(configuration);
+            services.AddJsonSerializer();
 
             services.AddSingletonIfNotExists<I$clientName$Factory, $clientName$Factory>();
         }
@@ -29,30 +30,20 @@ namespace $projectName$
         $clientName$ CreateFrom(HttpRequest httpRequest);
     }
 
-    internal class $clientName$Factory : I$clientName$Factory
-    {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly $clientName$Settings _$clientNameLower$Settings;
-        private readonly HttpCallHandlerFactory _httpCallHandlerFactory;
+    internal sealed class $clientName$Factory(IHttpClientFactory httpClientFactory,
+                                       $clientName$Settings $clientNameLower$Settings,
+                                       HttpCallHandlerFactory httpCallHandlerFactory) : I$clientName$Factory
+    {      
         private readonly string[] _allowedHeadersToCopy = new[] {"User-Agent", "Authorization", "x-", "Referer"};
-
-        public $clientName$Factory(IHttpClientFactory httpClientFactory,
-                                   $clientName$Settings $clientNameLower$Settings,
-                                   HttpCallHandlerFactory httpCallHandlerFactory)
-        {
-            _httpClientFactory = httpClientFactory;
-            _$clientNameLower$Settings = $clientNameLower$Settings;
-            _httpCallHandlerFactory = httpCallHandlerFactory;
-        }
-
+     
         public $clientName$ CreateFrom(string token)
         {
-            var httpClient = _httpClientFactory.CreateClient();
+            var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Add("User-Agent", "$projectName$");
 
-            httpClient.BaseAddress = new Uri(_$clientNameLower$Settings.BaseAddress);
+            httpClient.BaseAddress = new Uri($clientNameLower$Settings.BaseAddress);
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
+            var httpClientHandler = httpCallHandlerFactory.CreateFrom(httpClient);
 
             var client = BuildClient(httpClientHandler);
 
@@ -64,7 +55,7 @@ namespace $projectName$
             // For possibility to fake or moq the client here. Important for current core lambda tests
             if (httpClient.BaseAddress.IsNull() || httpClient.BaseAddress.AbsoluteUri.IsNullOrWhiteSpace())
             {
-                httpClient.BaseAddress = new Uri(_$clientNameLower$Settings.BaseAddress);
+                httpClient.BaseAddress = new Uri($clientNameLower$Settings.BaseAddress);
             }
 
             // pulse specific headers needed
@@ -73,7 +64,7 @@ namespace $projectName$
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "$projectName$");
             }
 
-            var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
+            var httpClientHandler = httpCallHandlerFactory.CreateFrom(httpClient);
 
             var client = BuildClient(httpClientHandler);
 
@@ -82,7 +73,7 @@ namespace $projectName$
 
         public $clientName$ CreateFrom(HttpRequest httpRequest)
         {
-            var httpClient = _httpClientFactory.CreateClient();
+            var httpClient = httpClientFactory.CreateClient();
 
             httpRequest.Headers.ForEach(headerEntry =>
             {
@@ -100,7 +91,7 @@ namespace $projectName$
             if (httpClient.BaseAddress.IsNull() ||
                 httpClient.BaseAddress.AbsoluteUri.IsNullOrWhiteSpace())
             {
-                httpClient.BaseAddress = new Uri(_$clientNameLower$Settings.BaseAddress);
+                httpClient.BaseAddress = new Uri($clientNameLower$Settings.BaseAddress);
             }
 
             if (httpClient.DefaultRequestHeaders.Contains("User-Agent").IsFalse())
@@ -108,7 +99,7 @@ namespace $projectName$
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "$projectName$");
             }
 
-            var httpClientHandler = _httpCallHandlerFactory.CreateFrom(httpClient);
+            var httpClientHandler = httpCallHandlerFactory.CreateFrom(httpClient);
 
             var client = BuildClient(httpClientHandler);
 
@@ -146,7 +137,7 @@ namespace $projectName$
         public bool PrintCurl { get; init; }
     }
 
-    internal record Tenant()
+    internal sealed record Tenant()
     {
         public string Name { get; init; } = "staging";
     }

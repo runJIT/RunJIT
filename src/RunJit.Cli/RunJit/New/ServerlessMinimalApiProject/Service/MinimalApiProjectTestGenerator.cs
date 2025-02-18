@@ -19,7 +19,7 @@ namespace RunJit.Cli.New.MinimalApiProject
         }
     }
 
-    internal class MinimalApiProjectTestGenerator(IDotNet dotNet,
+    internal sealed class MinimalApiProjectTestGenerator(IDotNet dotNet,
                                                   IEnumerable<IMinimalApiProjectTestSpecificCodeGen> codeGenerators)
     {
         internal async Task<FileInfo> GenerateAsync(SolutionFile solutionFile,

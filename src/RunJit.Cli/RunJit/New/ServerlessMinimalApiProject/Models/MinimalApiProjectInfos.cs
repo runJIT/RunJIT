@@ -4,7 +4,7 @@ using RunJit.Cli.Generate.DotNetTool.Models;
 namespace RunJit.Cli.New.MinimalApiProject
 {
     [DebuggerDisplay("Project: {" + nameof(ProjectName) + "} ToolName: {" + nameof(NormalizedName) + "}")]
-    internal record MinimalApiProjectInfos
+    internal sealed record MinimalApiProjectInfos
     {
         public required string ProjectName { get; init; }
 

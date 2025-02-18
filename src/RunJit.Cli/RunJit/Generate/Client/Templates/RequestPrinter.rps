@@ -23,7 +23,7 @@ namespace $projectName$
                         HttpClient httpClient);
     }
 
-    internal class DebugWriteLinePrinter(CurlBuilder curlBuilder,
+    internal sealed class DebugWriteLinePrinter(CurlBuilder curlBuilder,
                                          $clientName$Settings $clientNameLower$Settings) : IRequestPrinter
     {
         public Task PrintAsync(HttpRequestMessage httpRequestMessage,

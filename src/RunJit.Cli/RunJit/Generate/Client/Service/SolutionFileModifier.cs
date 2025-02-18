@@ -14,7 +14,7 @@ namespace RunJit.Cli.RunJit.Generate.Client
         }
     }
 
-    internal class SolutionFileModifier(IDotNet dotNet)
+    internal sealed class SolutionFileModifier(IDotNet dotNet)
     {
         public async Task AddProjectsAsync(FileInfo solutionFile)
         {

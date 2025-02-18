@@ -24,7 +24,7 @@ namespace RunJit.Cli.Generate.DotNetTool
     // {
     //     return _httpCallHandler.CallAsync<IEnumerable<AdminPrivilege>>(HttpMethod.Get, $"admin/project/{projectId}/privilege/list?useCache={useCache}", null);
     // }
-    internal class CommandMethodBuilder
+    internal sealed class CommandMethodBuilder
     {
         private const string CallInfosTemplate = """
                                                  // 2. Convert into target type

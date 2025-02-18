@@ -507,7 +507,7 @@ namespace RunJit.Cli.Services
     ///     A simple in-memory representation of a folder node: Name, subfolders, files.
     ///     "ParentName" is used to locate the parent solution folder in the .sln.
     /// </summary>
-    internal class FolderNode
+    internal sealed class FolderNode
     {
         public string Name { get; set; } = null!;
 

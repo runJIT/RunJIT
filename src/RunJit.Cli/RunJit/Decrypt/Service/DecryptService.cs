@@ -33,5 +33,5 @@ namespace RunJit.Cli.RunJit.Decrypt
         }
     }
 
-    internal record DecryptParameters(string Value);
+    internal sealed record DecryptParameters(string Value);
 }

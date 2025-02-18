@@ -44,7 +44,7 @@ namespace RunJit.Cli.New.MinimalApiProject
         }
     }
 
-    internal class MinimalApiProjectsCodeGen(MinimalApiProjectGenerator minimalApiProjectGenerator,
+    internal sealed class MinimalApiProjectsCodeGen(MinimalApiProjectGenerator minimalApiProjectGenerator,
                                             MinimalApiProjectTestGenerator minimalApiProjectTestGenerator,
                                             IEnumerable<IMinimalApiProjectRootLevelCodeGen> rootLevelCodeGens)
     {

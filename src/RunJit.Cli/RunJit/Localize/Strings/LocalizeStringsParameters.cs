@@ -12,7 +12,7 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         }
     }
 
-    internal record LocalizeStringsParameters(string SolutionFile,
+    internal sealed record LocalizeStringsParameters(string SolutionFile,
                                               string GitRepos,
                                               string WorkingDirectory,
                                               IImmutableList<string> Languages);

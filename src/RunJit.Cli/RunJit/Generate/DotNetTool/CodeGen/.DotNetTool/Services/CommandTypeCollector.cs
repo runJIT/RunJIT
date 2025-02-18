@@ -20,12 +20,7 @@ namespace RunJit.Cli.Generate.DotNetTool
     // Default: 'dotnet newtool --use-visualstudio'
     internal sealed class CommandTypeCollector
     {
-        private readonly Dictionary<string, IEnumerable<TypeToRegister>> _typesToRegister;
-
-        public CommandTypeCollector()
-        {
-            _typesToRegister = new Dictionary<string, IEnumerable<TypeToRegister>>();
-        }
+        private readonly Dictionary<string, IEnumerable<TypeToRegister>> _typesToRegister = new();
 
         public void Add(CommandInfo parameterInfo,
                         TypeToRegister typeToRegister)

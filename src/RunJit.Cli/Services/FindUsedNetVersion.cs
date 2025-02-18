@@ -13,7 +13,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    internal class FindUsedNetVersion
+    internal sealed class FindUsedNetVersion
     {
         private const string DefaultNetVersion = "net9.0";
 

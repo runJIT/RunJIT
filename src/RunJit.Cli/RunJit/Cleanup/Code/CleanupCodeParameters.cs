@@ -11,7 +11,7 @@ namespace RunJit.Cli.RunJit.Cleanup.Code
         }
     }
 
-    internal record CleanupCodeParameters(string SolutionFile,
+    internal sealed record CleanupCodeParameters(string SolutionFile,
                                           string GitRepos,
                                           string WorkingDirectory,
                                           string IgnorePackages);

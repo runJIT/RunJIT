@@ -8,7 +8,7 @@ namespace RunJit.Cli.Test.SystemTest
 {
     [TestCategory("runjit new minimal-api-serverless")]
     [TestClass]
-    public class NewMinimalApiTest : GlobalSetup
+    public class NewServerlessMinimalApiTest : GlobalSetup
     {
         [DataTestMethod]
         [DataRow("Siemens.Sdc", "api/core", "Sdc")]

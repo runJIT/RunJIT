@@ -245,6 +245,7 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="RunJit\New\NugetProject\" />
+        <Folder Include="RunJit\New\ServerlessMinimalApiProject\CodeGen\src\Project\Aws\" />
     </ItemGroup>
     <ItemGroup>
         <EditorConfigFiles Remove="D:\GitHub\RunJit.Cli\src\RunJit.Cli\RunJit\New\MinimalApiProject\CodeGen\.editorconfig" />

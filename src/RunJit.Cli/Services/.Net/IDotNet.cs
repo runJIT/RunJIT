@@ -48,7 +48,7 @@ namespace RunJit.Cli.Services.Net
                       string errorTitle = "");
     }
 
-    internal record TryResult(bool WasSuccessful,
+    internal sealed record TryResult(bool WasSuccessful,
                               string Message);
 
     internal sealed class DotNet(ConsoleService consoleService) : IDotNet

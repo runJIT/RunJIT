@@ -25,8 +25,7 @@ namespace RunJit.Cli.Generate.Client
                                                   {
                                                       internal static class AddJsonSerializerExtension
                                                       {
-                                                          internal static void AddJsonSerializer(this IServiceCollection services,
-                                                                                                 IConfiguration configuration)
+                                                          internal static void AddJsonSerializer(this IServiceCollection services)
                                                           {
                                                               if (services.IsAlreadyRegistered<IJsonSerializer>())
                                                               {
@@ -198,7 +197,7 @@ namespace RunJit.Cli.Generate.Client
                                                                                        object? defaultValue = default);
                                                       }
                                                   
-                                                      internal class JsonSerializer : IJsonSerializer
+                                                      internal sealed class JsonSerializer : IJsonSerializer
                                                       {
                                                           private readonly ILogger<JsonSerializer> _logger;
                                                   

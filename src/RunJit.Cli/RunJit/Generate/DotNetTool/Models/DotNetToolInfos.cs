@@ -4,7 +4,7 @@ using RunJit.Cli.Generate.DotNetTool.Models;
 namespace RunJit.Cli.Generate.DotNetTool
 {
     [DebuggerDisplay("Project: {" + nameof(ProjectName) + "} ToolName: {" + nameof(NormalizedName) + "}")]
-    internal record DotNetToolInfos
+    internal sealed record DotNetToolInfos
     {
         public required string ProjectName { get; init; }
 

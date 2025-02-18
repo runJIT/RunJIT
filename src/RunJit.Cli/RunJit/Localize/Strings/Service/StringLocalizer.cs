@@ -433,9 +433,9 @@ namespace RunJit.Cli.RunJit.Localize.Strings
         }
     }
 
-    internal record TextToTranslate(string Key,
+    internal sealed record TextToTranslate(string Key,
                                     string Text);
 
-    internal record StringsToLocalize(Project Project,
+    internal sealed record StringsToLocalize(Project Project,
                                       Dictionary<string, string> TextToLocalize);
 }

@@ -54,7 +54,7 @@ namespace RunJit.Cli.RunJit.Generate.CustomEndpoint
         }
     }
 
-    //internal record EndpointData
+    //internal sealed record EndpointData
     //{
     //    public string DomainName { get; init; }
     //    public string Version { get; init; }

@@ -41,7 +41,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
     }
 
-    internal class DotNetToolCodeGen(DotNetToolGenerator dotNetToolGenerator,
+    internal sealed class DotNetToolCodeGen(DotNetToolGenerator dotNetToolGenerator,
                                      DotNetToolTestGenerator dotNetToolTestGenerator)
     {
         internal async Task GenerateAsync(SolutionFile solutionFile,

@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Pulse.Contracts.Exceptions;
+using Siemens.AspNet.ErrorHandling.Contracts;
 
 namespace $projectName$
 {
@@ -20,24 +20,13 @@ namespace $projectName$
         }
     }
 
-    internal class HttpCallHandlerFactory
+    internal sealed class HttpCallHandlerFactory(ResponseTypeHandleStrategy responseTypeHandleStrategy,
+                                          HttpRequestMessageBuilder httpRequestMessageBuilder,
+                                          IRequestPrinter requestPrinter)
     {
-        private readonly ResponseTypeHandleStrategy _responseTypeHandleStrategy;
-        private readonly HttpRequestMessageBuilder _httpRequestMessageBuilder;
-        private readonly IRequestPrinter _requestPrinter;
-
-        public HttpCallHandlerFactory(ResponseTypeHandleStrategy responseTypeHandleStrategy,
-                                      HttpRequestMessageBuilder httpRequestMessageBuilder,
-                                      IRequestPrinter requestPrinter)
-        {
-            _responseTypeHandleStrategy = responseTypeHandleStrategy;
-            _httpRequestMessageBuilder = httpRequestMessageBuilder;
-            _requestPrinter = requestPrinter;
-        }
-
         internal HttpCallHandler CreateFrom(HttpClient client)
         {
-            return new HttpCallHandler(client, _responseTypeHandleStrategy, _httpRequestMessageBuilder, _requestPrinter);
+            return new HttpCallHandler(client, responseTypeHandleStrategy, httpRequestMessageBuilder, requestPrinter);
         }
     }
 }

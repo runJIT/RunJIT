@@ -11,5 +11,5 @@ namespace RunJit.Cli.RunJit.Update
         }
     }
 
-    internal record UpdateParameters(string Version);
+    internal sealed record UpdateParameters(string Version);
 }

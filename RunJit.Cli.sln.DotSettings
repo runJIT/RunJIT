@@ -105,7 +105,7 @@
     }&#xD;
 }&#xD;
 &#xD;
-internal class $validator$ : IRequestValidator&lt;$request$&gt;&#xD;
+internal sealed class $validator$ : IRequestValidator&lt;$request$&gt;&#xD;
 {&#xD;
     public Task ValidateAsync($request$ request)&#xD;
     {&#xD;
@@ -197,7 +197,7 @@ public Task Should_Not_Be_Able_To_Get_$entity$_By_Id_Without_Authentication()&#x
     }&#xD;
 }&#xD;
 &#xD;
-internal class $request$Validator : IRequestValidator&lt;$request$&gt;&#xD;
+internal sealed class $request$Validator : IRequestValidator&lt;$request$&gt;&#xD;
 {&#xD;
     public Task ValidateAsync(AddOpportunity request)&#xD;
     {&#xD;
@@ -339,7 +339,7 @@ public class $testName$&#xD;
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B865B888C91316488434F9C3963AD86C/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=85692C03602BD9419D835140425B22D4/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=85692C03602BD9419D835140425B22D4/Shortcut/@EntryValue">appbuilder</s:String>
-    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=85692C03602BD9419D835140425B22D4/Text/@EntryValue">internal class AppBuilder&#xD;
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=85692C03602BD9419D835140425B22D4/Text/@EntryValue">internal sealed class AppBuilder&#xD;
 {&#xD;
     internal App Build()&#xD;
     {&#xD;
@@ -361,7 +361,7 @@ public class $testName$&#xD;
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=85692C03602BD9419D835140425B22D4/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDF8642FAD237B42B3C9848EFEB4E545/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDF8642FAD237B42B3C9848EFEB4E545/Shortcut/@EntryValue">appwithservicecollection</s:String>
-    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDF8642FAD237B42B3C9848EFEB4E545/Text/@EntryValue">internal class App&#xD;
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDF8642FAD237B42B3C9848EFEB4E545/Text/@EntryValue">internal sealed class App&#xD;
 {&#xD;
     private readonly IServiceProvider _serviceProvider;&#xD;
 &#xD;
@@ -2425,7 +2425,7 @@ public class $TestName$ : MsTestBase&#xD;
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=49EFEFF1E87A4342AD31493835937C8B/Shortcut/@EntryValue">notification</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=49EFEFF1E87A4342AD31493835937C8B/Text/@EntryValue">public record $notification$() : INotification;&#xD;
 &#xD;
-internal class $notification$Handler : INotificationHandler&lt;$notification$&gt;&#xD;
+internal sealed class $notification$Handler : INotificationHandler&lt;$notification$&gt;&#xD;
 {&#xD;
     public Task Handle($notification$ notification, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -2451,9 +2451,9 @@ public Task&lt;GetAll$entityuppercase$Response&gt; GetOpportunityAsync($entityup
     return _mediator.SendAsync(new GetAll$entityuppercase$($entitiylowercase$));&#xD;
 }&#xD;
 &#xD;
-internal record GetAll$entityuppercase$($entityuppercase$ $entityuppercase$) : IQuery&lt;GetAll$entityuppercase$Response&gt;;&#xD;
+internal sealed record GetAll$entityuppercase$($entityuppercase$ $entityuppercase$) : IQuery&lt;GetAll$entityuppercase$Response&gt;;&#xD;
 &#xD;
-internal class GetAll$entityuppercase$Handler : IQueryHandler&lt;GetAll$entityuppercase$, GetAll$entityuppercase$Response&gt;&#xD;
+internal sealed class GetAll$entityuppercase$Handler : IQueryHandler&lt;GetAll$entityuppercase$, GetAll$entityuppercase$Response&gt;&#xD;
 {&#xD;
 	public Task&lt;GetAll$entityuppercase$Response&gt; Handle(Get$entityuppercase$ request, CancellationToken cancellationToken)&#xD;
 	{&#xD;
@@ -2485,9 +2485,9 @@ public Task&lt;Add$entityuppercase$Response&gt; AddOpportunityAsync($entityupper
     return _mediator.SendAsync(new Add$entityuppercase$($entitiylowercase$));&#xD;
 }&#xD;
 &#xD;
-internal record Add$entityuppercase$($entityuppercase$ $entityuppercase$) : ICommand&lt;Add$entityuppercase$Response&gt;;&#xD;
+internal sealed record Add$entityuppercase$($entityuppercase$ $entityuppercase$) : ICommand&lt;Add$entityuppercase$Response&gt;;&#xD;
 &#xD;
-internal class Add$entityuppercase$Handler : ICommandHandler&lt;Add$entityuppercase$, Add$entityuppercase$Response&gt;&#xD;
+internal sealed class Add$entityuppercase$Handler : ICommandHandler&lt;Add$entityuppercase$, Add$entityuppercase$Response&gt;&#xD;
 {&#xD;
 	public Task&lt;Add$entityuppercase$Response&gt; Handle(Add$entityuppercase$ request, CancellationToken cancellationToken)&#xD;
 	{&#xD;
@@ -2843,11 +2843,11 @@ public class $ResourceName$Controller : ControllerBase&#xD;
 public record $ResourceName$;&#xD;
 &#xD;
 &#xD;
-internal record Add$ResourceName$($ResourceName$ $ResourceName$) : ICommand&lt;Add$ResourceName$Response&gt;;&#xD;
+internal sealed record Add$ResourceName$($ResourceName$ $ResourceName$) : ICommand&lt;Add$ResourceName$Response&gt;;&#xD;
 &#xD;
 public record Add$ResourceName$Response($ResourceName$ $ResourceName$);&#xD;
 &#xD;
-internal class Add$ResourceName$Handler : ICommandHandler&lt;Add$ResourceName$, Add$ResourceName$Response&gt;&#xD;
+internal sealed class Add$ResourceName$Handler : ICommandHandler&lt;Add$ResourceName$, Add$ResourceName$Response&gt;&#xD;
 {&#xD;
     public Task&lt;Add$ResourceName$Response&gt; Handle(Add$ResourceName$ request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -2857,11 +2857,11 @@ internal class Add$ResourceName$Handler : ICommandHandler&lt;Add$ResourceName$, 
 &#xD;
 &#xD;
 &#xD;
-internal record GetAll$ResourceName$s : IQuery&lt;GetAll$ResourceName$sResponse&gt;;&#xD;
+internal sealed record GetAll$ResourceName$s : IQuery&lt;GetAll$ResourceName$sResponse&gt;;&#xD;
 &#xD;
 public record GetAll$ResourceName$sResponse(IImmutableList&lt;$ResourceName$&gt; $ResourceName$s);&#xD;
 &#xD;
-internal class GetAll$ResourceName$sHandler : IQueryHandler&lt;GetAll$ResourceName$s, GetAll$ResourceName$sResponse&gt;&#xD;
+internal sealed class GetAll$ResourceName$sHandler : IQueryHandler&lt;GetAll$ResourceName$s, GetAll$ResourceName$sResponse&gt;&#xD;
 {&#xD;
     public Task&lt;GetAll$ResourceName$sResponse&gt; Handle(GetAll$ResourceName$s request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -2871,11 +2871,11 @@ internal class GetAll$ResourceName$sHandler : IQueryHandler&lt;GetAll$ResourceNa
 &#xD;
 &#xD;
 &#xD;
-internal record Get$ResourceName$ById(long Id) : IQuery&lt;Get$ResourceName$ByIdResponse&gt;;&#xD;
+internal sealed record Get$ResourceName$ById(long Id) : IQuery&lt;Get$ResourceName$ByIdResponse&gt;;&#xD;
 &#xD;
 public record Get$ResourceName$ByIdResponse($ResourceName$ $ResourceName$);&#xD;
 &#xD;
-internal class Get$ResourceName$ByIdHandler : IQueryHandler&lt;Get$ResourceName$ById, Get$ResourceName$ByIdResponse&gt;&#xD;
+internal sealed class Get$ResourceName$ByIdHandler : IQueryHandler&lt;Get$ResourceName$ById, Get$ResourceName$ByIdResponse&gt;&#xD;
 {&#xD;
     public Task&lt;Get$ResourceName$ByIdResponse&gt; Handle(Get$ResourceName$ById request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -2884,9 +2884,9 @@ internal class Get$ResourceName$ByIdHandler : IQueryHandler&lt;Get$ResourceName$
 }&#xD;
 &#xD;
 &#xD;
-internal record Delete$ResourceName$ById(long Id) : ICommand;&#xD;
+internal sealed record Delete$ResourceName$ById(long Id) : ICommand;&#xD;
 &#xD;
-internal class Delete$ResourceName$ByIdHandler : ICommandHandler&lt;Delete$ResourceName$ById&gt;&#xD;
+internal sealed class Delete$ResourceName$ByIdHandler : ICommandHandler&lt;Delete$ResourceName$ById&gt;&#xD;
 {&#xD;
     public Task Handle(Delete$ResourceName$ById request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -2896,9 +2896,9 @@ internal class Delete$ResourceName$ByIdHandler : ICommandHandler&lt;Delete$Resou
 &#xD;
 &#xD;
 &#xD;
-internal record DeleteAll$ResourceName$s : ICommand;&#xD;
+internal sealed record DeleteAll$ResourceName$s : ICommand;&#xD;
 &#xD;
-internal class DeleteAll$ResourceName$sHandler : ICommandHandler&lt;DeleteAll$ResourceName$s&gt;&#xD;
+internal sealed class DeleteAll$ResourceName$sHandler : ICommandHandler&lt;DeleteAll$ResourceName$s&gt;&#xD;
 {&#xD;
     public Task Handle(DeleteAll$ResourceName$s request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -2993,7 +2993,7 @@ internal sealed class $query$Handler : IQueryHandler&lt;$query$, $response$&gt;&
     }&#xD;
 }&#xD;
 &#xD;
-internal class $request$Validator : IRequestValidator&lt;$request$&gt;&#xD;
+internal sealed class $request$Validator : IRequestValidator&lt;$request$&gt;&#xD;
 {&#xD;
     public Task ValidateAsync($request$ request)&#xD;
     {&#xD;
@@ -3074,11 +3074,11 @@ public class $ResourceName$Controller : ControllerBase&#xD;
 public record $ResourceName$;&#xD;
 &#xD;
 &#xD;
-internal record Add$ResourceName$($ResourceName$ $ResourceName$) : ICommand&lt;Add$ResourceName$Response&gt;;&#xD;
+internal sealed record Add$ResourceName$($ResourceName$ $ResourceName$) : ICommand&lt;Add$ResourceName$Response&gt;;&#xD;
 &#xD;
 public record Add$ResourceName$Response($ResourceName$ $ResourceName$);&#xD;
 &#xD;
-internal class Add$ResourceName$Handler : ICommandHandler&lt;Add$ResourceName$, Add$ResourceName$Response&gt;&#xD;
+internal sealed class Add$ResourceName$Handler : ICommandHandler&lt;Add$ResourceName$, Add$ResourceName$Response&gt;&#xD;
 {&#xD;
     public Task&lt;Add$ResourceName$Response&gt; Handle(Add$ResourceName$ request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -3088,11 +3088,11 @@ internal class Add$ResourceName$Handler : ICommandHandler&lt;Add$ResourceName$, 
 &#xD;
 &#xD;
 &#xD;
-internal record GetAll$ResourceName$s : IQuery&lt;GetAll$ResourceName$sResponse&gt;;&#xD;
+internal sealed record GetAll$ResourceName$s : IQuery&lt;GetAll$ResourceName$sResponse&gt;;&#xD;
 &#xD;
 public record GetAll$ResourceName$sResponse(IImmutableList&lt;$ResourceName$&gt; $ResourceName$s);&#xD;
 &#xD;
-internal class GetAll$ResourceName$sHandler : IQueryHandler&lt;GetAll$ResourceName$s, GetAll$ResourceName$sResponse&gt;&#xD;
+internal sealed class GetAll$ResourceName$sHandler : IQueryHandler&lt;GetAll$ResourceName$s, GetAll$ResourceName$sResponse&gt;&#xD;
 {&#xD;
     public Task&lt;GetAll$ResourceName$sResponse&gt; Handle(GetAll$ResourceName$s request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -3102,11 +3102,11 @@ internal class GetAll$ResourceName$sHandler : IQueryHandler&lt;GetAll$ResourceNa
 &#xD;
 &#xD;
 &#xD;
-internal record Get$ResourceName$ById(long Id) : IQuery&lt;Get$ResourceName$ByIdResponse&gt;;&#xD;
+internal sealed record Get$ResourceName$ById(long Id) : IQuery&lt;Get$ResourceName$ByIdResponse&gt;;&#xD;
 &#xD;
 public record Get$ResourceName$ByIdResponse($ResourceName$ $ResourceName$);&#xD;
 &#xD;
-internal class Get$ResourceName$ByIdHandler : IQueryHandler&lt;Get$ResourceName$ById, Get$ResourceName$ByIdResponse&gt;&#xD;
+internal sealed class Get$ResourceName$ByIdHandler : IQueryHandler&lt;Get$ResourceName$ById, Get$ResourceName$ByIdResponse&gt;&#xD;
 {&#xD;
     public Task&lt;Get$ResourceName$ByIdResponse&gt; Handle(Get$ResourceName$ById request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -3115,9 +3115,9 @@ internal class Get$ResourceName$ByIdHandler : IQueryHandler&lt;Get$ResourceName$
 }&#xD;
 &#xD;
 &#xD;
-internal record Delete$ResourceName$ById(long Id) : ICommand;&#xD;
+internal sealed record Delete$ResourceName$ById(long Id) : ICommand;&#xD;
 &#xD;
-internal class Delete$ResourceName$ByIdHandler : ICommandHandler&lt;Delete$ResourceName$ById&gt;&#xD;
+internal sealed class Delete$ResourceName$ByIdHandler : ICommandHandler&lt;Delete$ResourceName$ById&gt;&#xD;
 {&#xD;
     public Task Handle(Delete$ResourceName$ById request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -3127,9 +3127,9 @@ internal class Delete$ResourceName$ByIdHandler : ICommandHandler&lt;Delete$Resou
 &#xD;
 &#xD;
 &#xD;
-internal record DeleteAll$ResourceName$s : ICommand;&#xD;
+internal sealed record DeleteAll$ResourceName$s : ICommand;&#xD;
 &#xD;
-internal class DeleteAll$ResourceName$sHandler : ICommandHandler&lt;DeleteAll$ResourceName$s&gt;&#xD;
+internal sealed class DeleteAll$ResourceName$sHandler : ICommandHandler&lt;DeleteAll$ResourceName$s&gt;&#xD;
 {&#xD;
     public Task Handle(DeleteAll$ResourceName$s request, CancellationToken cancellationToken)&#xD;
     {&#xD;
@@ -3355,7 +3355,7 @@ public Task CleanupAsync()&#xD;
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=510BBF6BB4CE5541B92C01F47414688E/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/Type/@EntryValue">Everywhere</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=843B6EA6F37B6B44AACECA8B1E7149D0/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=843B6EA6F37B6B44AACECA8B1E7149D0/Shortcut/@EntryValue">startup</s:String>
-    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=843B6EA6F37B6B44AACECA8B1E7149D0/Text/@EntryValue">internal class Startup&#xD;
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=843B6EA6F37B6B44AACECA8B1E7149D0/Text/@EntryValue">internal sealed class Startup&#xD;
 {&#xD;
     internal void ConfigureServices(IServiceCollection services)&#xD;
     {&#xD;
@@ -3565,7 +3565,7 @@ public class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter&#xD;
 [Test]&#xD;
 [Qa]&#xD;
 [Prod]&#xD;
-internal class $name$ : NoSyncProcessTestBase&#xD;
+internal sealed class $name$ : NoSyncProcessTestBase&#xD;
 {&#xD;
     public $name$(Stage stage) : base(stage)&#xD;
     {&#xD;

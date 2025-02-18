@@ -25,7 +25,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
         }
     }
 
-    internal class DotNetToolTestGenerator(IDotNet dotNet,
+    internal sealed class DotNetToolTestGenerator(IDotNet dotNet,
                                            IEnumerable<IDotNetToolTestSpecificCodeGen> codeGenerators)
     {
         internal async Task<FileInfo> GenerateAsync(SolutionFile solutionFile,

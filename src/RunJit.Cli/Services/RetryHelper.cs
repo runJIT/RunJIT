@@ -11,7 +11,7 @@ namespace RunJit.Cli.Services
         }
     }
 
-    internal class RetryHelper
+    internal sealed class RetryHelper
     {
         internal async Task ExecuteWithRetryAsync(Action action,
                                                   int maxRetries = 3,

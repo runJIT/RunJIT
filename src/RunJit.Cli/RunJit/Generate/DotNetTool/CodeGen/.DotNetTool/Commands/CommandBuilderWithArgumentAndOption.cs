@@ -16,7 +16,7 @@ namespace RunJit.Cli.Generate.DotNetTool
         }
     }
 
-    internal sealed class CommandBuilderWithArgumentAndOption
+    internal sealed class CommandBuilderWithArgumentAndOption(CommandHandlerBuilder commandHandlerBuilder)
     {
         private const string Template =
             @"
@@ -53,13 +53,6 @@ namespace $namespace$
     }
 }";
 
-        private readonly CommandHandlerBuilder _commandHandlerBuilder;
-
-        public CommandBuilderWithArgumentAndOption(CommandHandlerBuilder commandHandlerBuilder)
-        {
-            _commandHandlerBuilder = commandHandlerBuilder;
-        }
-
         public string Build(string project,
                             CommandInfo commandInfo,
                             CommandInfo? parentCommandInfo,
@@ -68,7 +61,7 @@ namespace $namespace$
             Throw.IfNullOrWhiteSpace(project);
             Throw.IfNullOrWhiteSpace(nameSpace);
 
-            var commandHandler = _commandHandlerBuilder.Build(commandInfo);
+            var commandHandler = commandHandlerBuilder.Build(commandInfo);
 
             var interfaceImplementation = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? string.Empty : $" : I{parentCommandInfo.NormalizedName}SubCommandBuilder";
             var commandRegistration = parentCommandInfo.IsNull() || commandInfo == parentCommandInfo ? $"{commandInfo.NormalizedName}CommandBuilder" : $"I{parentCommandInfo.NormalizedName}SubCommandBuilder, {commandInfo.NormalizedName}CommandBuilder";

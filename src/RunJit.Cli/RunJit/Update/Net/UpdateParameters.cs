@@ -11,7 +11,7 @@ namespace RunJit.Cli.Update
         }
     }
 
-    internal record UpdateDotNetVersionParameters(string SolutionFile,
+    internal sealed record UpdateDotNetVersionParameters(string SolutionFile,
                                                   string GitRepos,
                                                   string WorkingDirectory,
                                                   int Version);
