@@ -53,7 +53,8 @@ namespace RunJit.Cli.Generate.DotNetTool
             services.AddHttpRequestMessageBuilderCodeGen();
 
             // RequestTypeHandling
-            services.AddRequestTypeHandleStrategyCodeGen();
+            // Not needed at the moment
+            // services.AddRequestTypeHandleStrategyCodeGen();
 
             // ResponseTypeHandling
             services.AddByteArrayResponseTypeHandlerCodeGen();

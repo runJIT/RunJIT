@@ -51,6 +51,7 @@ namespace RunJit.Cli.Generate.DotNetTool
             services.AddHttpRequestMessageBuilderCodeGen();
 
             // RequestTypeHandling
+            // Not needed at the moment
             services.AddRequestTypeHandleStrategyCodeGen();
 
             // ResponseTypeHandling
@@ -193,6 +194,8 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                      {
                                                          internal static void Add$command-name$Handler(this IServiceCollection services, IConfiguration _)
                                                          {
+                                                             services.AddOutputService();
+                                                         
                                                              services.AddSingletonIfNotExists<$command-name$Handler>();
                                                          }
                                                      }

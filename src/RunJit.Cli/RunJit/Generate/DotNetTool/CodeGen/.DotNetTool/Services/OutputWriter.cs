@@ -25,6 +25,8 @@ namespace RunJit.Cli.Generate.DotNetTool
                                             {
                                                 internal static void AddOutputWriter(this IServiceCollection services)
                                                 {
+                                                    services.AddConsoleService();
+                                                
                                                     services.AddSingletonIfNotExists<OutputWriter>();
                                                 }
                                             }

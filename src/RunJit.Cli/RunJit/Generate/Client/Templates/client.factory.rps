@@ -14,11 +14,10 @@ namespace $projectName$
     {
         public static void Add$clientName$Factory(this IServiceCollection services, 
                                                   IConfiguration configuration)
-        {
+        {           
             services.AddHttpClient();
             services.Add$clientName$Settings(configuration);
-            services.AddResponseTypeHandleStrategy();
-            services.AddJsonSerializer();
+            services.AddHttpCallHandlerFactory();
 
             services.AddSingletonIfNotExists<I$clientName$Factory, $clientName$Factory>();
         }

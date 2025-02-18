@@ -30,11 +30,11 @@ namespace RunJit.Cli.Generate.DotNetTool
                                             {
                                                 internal static void AddFileStreamResponseTypeHandler(this IServiceCollection services)
                                                 {
-                                                    services.AddSingletonIfNotExists<ISpecificResponseTypeHandler, FileStreamTypeHandler>();
+                                                    services.AddSingletonIfNotExists<ISpecificResponseTypeHandler, FileStreamResponseType>();
                                                 }
                                             }
                                         
-                                            internal sealed class FileStreamTypeHandler : ISpecificResponseTypeHandler
+                                            internal sealed class FileStreamResponseType : ISpecificResponseTypeHandler
                                             {
                                                 public async Task<TResult> HandleAsync<TResult>(HttpResponseMessage responseMessage,
                                                                                                 HttpMethod httpMethod,
