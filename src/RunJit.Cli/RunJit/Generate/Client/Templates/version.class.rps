@@ -15,22 +15,16 @@ namespace $namespace$
 {
     internal static class Add$name$$version$Extension
     {
-        internal static void Add$name$$version$(this IServiceCollection services)
+        internal static void Add$name$$version$(this IServiceCollection services,
+                                                IConfiguration configuration)
         {
-            services.AddHttpCallHandler();
+            services.AddHttpCallHandler(configuration);
         }
     }
     
     $attributes$
-    public class $name$$version$
+    public class $name$$version$(IHttpCallHandler httpCallHandler)
     {
-        private readonly IHttpCallHandler _httpCallHandler;
-        
-        public $name$$version$(IHttpCallHandler httpCallHandler)
-        {
-            _httpCallHandler = httpCallHandler;
-        }
-        
 $methods$
     }
 }

@@ -28,7 +28,7 @@ namespace RunJit.Cli.Generate.Client
     {
         internal string BuildFrom(IImmutableList<GeneratedFacade> facades)
         {
-            var parameters = facades.Select(f => $"\t\t\tservices.Add{f.FacadeName}();")
+            var parameters = facades.Select(f => $"\t\t\tservices.Add{f.FacadeName}(configuration);")
                                     .Flatten(Environment.NewLine);
 
             return parameters;

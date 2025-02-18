@@ -23,7 +23,7 @@ namespace $namespace$
             // Create this with new, is not a fault, the reason is to keep the test class more cleaner.
             _customWebApplicationFactory = new ApiTestBase<Startup>("Development", (services, config) =>
             {                
-                services.Add$clientName$();
+                services.Add$clientName$(config);
                 services.Add$clientName$Factory(config);
             },
             environmentVariables);
