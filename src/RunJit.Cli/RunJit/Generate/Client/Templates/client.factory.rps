@@ -17,7 +17,7 @@ namespace $projectName$
         {           
             services.AddHttpClient();
             services.Add$clientName$Settings(configuration);
-            services.AddHttpCallHandlerFactory();
+            services.AddHttpCallHandlerFactory(configuration);
 
             services.AddSingletonIfNotExists<I$clientName$Factory, $clientName$Factory>();
         }

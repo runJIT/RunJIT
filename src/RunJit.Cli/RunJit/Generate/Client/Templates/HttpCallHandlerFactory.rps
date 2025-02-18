@@ -1,20 +1,16 @@
-﻿using System;
-using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Siemens.AspNet.ErrorHandling.Contracts;
 
 namespace $projectName$
 {
-    public static class AddHttpCallHandlerFactoryExtension
+    internal static class AddHttpCallHandlerFactoryExtension
     {
-        public static void AddHttpCallHandlerFactory(this IServiceCollection services)
+        internal static void AddHttpCallHandlerFactory(this IServiceCollection services,
+                                                       IConfiguration configuration)
         {
             services.AddResponseTypeHandleStrategy();
             services.AddHttpRequestMessageBuilder();
-            services.AddRequestPrinter();
+            services.AddDebugWriteLinePrinter(configuration);
 
             services.AddSingletonIfNotExists<HttpCallHandlerFactory>();
         }

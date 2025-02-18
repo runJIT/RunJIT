@@ -1,5 +1,5 @@
 # Use the official AWS Lambda .NET 9 runtime base image
-FROM public.ecr.aws/lambda/dotnet:9 AS base
+FROM public.ecr.aws/lambda/dotnet:8.2025.02.18.01 AS base
 WORKDIR /var/task
 
 # Copy your published application
