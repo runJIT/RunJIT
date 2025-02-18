@@ -156,9 +156,10 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                  {
                                                      internal static class Add$command-name$HandlerExtension
                                                      {
-                                                         internal static void Add$command-name$Handler(this IServiceCollection services, IConfiguration _)
+                                                         internal static void Add$command-name$Handler(this IServiceCollection services, IConfiguration configuration)
                                                          {
                                                              services.AddOutputService();
+                                                             services.AddFieldingToolHttpClientFactory(configuration);
                                                  
                                                              services.AddSingletonIfNotExists<$command-name$Handler>();
                                                          }
