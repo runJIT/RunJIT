@@ -83,7 +83,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                                                            .ToArray();
                                         
                                                     // 3. Set up the API test base environment.
-                                                    _apiTestBase = new ApiTestBase<Sdc.LandingPage.Program>("Development", // The environment name
+                                                    _apiTestBase = new ApiTestBase<$webApiProjectName$.Program>("Development", // The environment name
                                                                                                             (_,
                                                                                                              _) =>
                                                                                                             {

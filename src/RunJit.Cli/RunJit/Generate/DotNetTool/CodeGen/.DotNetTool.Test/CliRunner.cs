@@ -63,7 +63,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                 internal async Task<CliRunResult> RunAsync(string[] consoleArguments)
                                                 {
                                                     // 1. Remember the original console output.
-                                                    var originalConsoleOut = Console.Out;
+                                                    var originalConsoleOut = System.Console.Out;
                                         
                                                     // 2. Create a string writer to intercept all console outs
                                                     using var sw = new StringWriter();
@@ -72,10 +72,10 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                     //    Important before we switch the console out
                                                     //    because we won't that output in the response
                                                     var consoleCall = consoleArguments.Flatten(" ");
-                                                    Console.WriteLine(consoleCall);
+                                                    System.Console.WriteLine(consoleCall);
                                         
                                                     // 4. Set the new output to the string writer
-                                                    Console.SetOut(sw);
+                                                    System.Console.SetOut(sw);
                                         
                                                     // 5. Run the CLI command and get the exit code
                                                     //    This is insane now :)
@@ -91,7 +91,7 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                     var output = sw.ToString();
                                         
                                                     // 7. Reset the console output
-                                                    Console.SetOut(originalConsoleOut);
+                                                    System.Console.SetOut(originalConsoleOut);
                                         
                                                     // 8. Trim the line breaks from the output
                                                     var trimLineBreaks = output.TrimStart('\r').TrimStart('\n').TrimEnd('\n').TrimEnd('\r');

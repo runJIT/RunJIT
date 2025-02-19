@@ -34,7 +34,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                             {
                                                 internal void WriteLine()
                                                 {
-                                                    Console.WriteLine();
+                                                    System.Console.WriteLine();
                                                 }
                                         
                                                 internal void WriteInfo(string value)
@@ -44,44 +44,44 @@ namespace RunJit.Cli.Generate.DotNetTool
                                         
                                                 internal void WriteInput(string value)
                                                 {
-                                                    Console.ForegroundColor = ConsoleColor.Green;
+                                                    System.Console.ForegroundColor = ConsoleColor.Green;
                                                     WriteLine(value);
-                                                    Console.ForegroundColor = ConsoleColor.White;
+                                                    System.Console.ForegroundColor = ConsoleColor.White;
                                                 }
                                         
                                                 internal void WriteSuccess(string value)
                                                 {
-                                                    Console.ForegroundColor = ConsoleColor.Green;
+                                                    System.Console.ForegroundColor = ConsoleColor.Green;
                                                     WriteLine(value);
-                                                    Console.ForegroundColor = ConsoleColor.White;
+                                                    System.Console.ForegroundColor = ConsoleColor.White;
                                                 }
                                         
                                                 internal string ReadLine()
                                                 {
-                                                    var result = Console.ReadLine();
-                                                    Console.WriteLine();
+                                                    var result = System.Console.ReadLine();
+                                                    System.Console.WriteLine();
                                         
                                                     return result ?? string.Empty;
                                                 }
                                         
                                                 internal void WriteSample(string value)
                                                 {
-                                                    Console.ForegroundColor = ConsoleColor.Gray;
-                                                    Console.WriteLine(value);
-                                                    Console.WriteLine();
-                                                    Console.ForegroundColor = ConsoleColor.White;
+                                                    System.Console.ForegroundColor = ConsoleColor.Gray;
+                                                    System.Console.WriteLine(value);
+                                                    System.Console.WriteLine();
+                                                    System.Console.ForegroundColor = ConsoleColor.White;
                                                 }
                                         
                                                 internal void WriteError(string value)
                                                 {
-                                                    Console.ForegroundColor = ConsoleColor.Red;
+                                                    System.Console.ForegroundColor = ConsoleColor.Red;
                                                     WriteLine(value);
-                                                    Console.ForegroundColor = ConsoleColor.White;
+                                                    System.Console.ForegroundColor = ConsoleColor.White;
                                                 }
                                         
                                                 private void WriteLine(string value)
                                                 {
-                                                    Console.WriteLine(value);
+                                                    System.Console.WriteLine(value);
                                                 }
                                             }
                                         }
