@@ -4,12 +4,26 @@ using Extensions.Pack;
 
 namespace $ProjectName$.Test
 {
+    /// <summary>
+    ///     Provides a base class for API tests, including setup and teardown logic for the test environment.
+    /// </summary>
     [TestClass]
     public abstract class ApiTestBase
     {
-        private static ApiTestBase<Program> _apiTestBase = null!;
-        private static readonly IDotNetTool DotNetTool = DotNetToolFactory.Create();
+        /// <summary>
+        ///     The name of the Docker container used for DynamoDB during tests.
+        /// </summary>
         private const string DynamoDbContainerName = "dynamodb-local";
+
+        /// <summary>
+        ///     The base class for API testing, providing utilities for setting up and interacting with the API.
+        /// </summary>
+        private static ApiTestBase<Program> _apiTestBase = null!;
+
+        /// <summary>
+        ///     The tool used for executing .NET commands, such as managing Docker containers.
+        /// </summary>
+        private static readonly IDotNetTool DotNetTool = DotNetToolFactory.Create();
 
         [AssemblyInitialize]
         public static async Task AssemblyInitializeAsync(TestContext _)
@@ -46,8 +60,11 @@ namespace $ProjectName$.Test
         [AssemblyCleanup]
         public static async Task AssemblyCleanupAsync()
         {
-            // 1. Dispose the api test environment
-            await _apiTestBase.DisposeAsync().ConfigureAwait(false);
+            // 1. Dispose of the API test environment.
+            if (_apiTestBase.IsNotNull())
+            {
+                await _apiTestBase.DisposeAsync().ConfigureAwait(false);
+            }
             
             // 2. Dispose the http client
             Client.Dispose();

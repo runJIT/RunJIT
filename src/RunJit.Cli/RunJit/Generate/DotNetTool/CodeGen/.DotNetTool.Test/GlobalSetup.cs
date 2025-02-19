@@ -25,10 +25,31 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                         
                                         namespace $namespace$
                                         {
+                                            /// <summary>
+                                            ///     Provides global setup and teardown logic for the test environment.
+                                            /// </summary>
                                             [TestClass]
                                             public class GlobalSetup
                                             {
+                                                /// <summary>
+                                                ///     The name of the Docker container used for DynamoDB during tests.
+                                                /// </summary>
+                                                private const string DynamoDbContainerName = "dynamodb-local";
+                                        
+                                                /// <summary>
+                                                ///     The HTTP client used for communicating with the API during tests.
+                                                /// </summary>
                                                 private static HttpClient? _httpClient;
+                                        
+                                                /// <summary>
+                                                ///     The base class for API testing, providing utilities for setting up and interacting with the API.
+                                                /// </summary>
+                                                private static ApiTestBase<$webApiProjectName$.Program> _apiTestBase = null!;
+                                        
+                                                /// <summary>
+                                                ///     The tool used for executing .NET commands, such as managing Docker containers.
+                                                /// </summary>
+                                                private static readonly IDotNetTool DotNetTool = DotNetToolFactory.Create();
                                         
                                                 /// <summary>
                                                 ///     Provides access to the service provider for dependency injection.
@@ -40,55 +61,47 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                 /// </summary>
                                                 protected static CliRunner Cli { get; private set; } = null!;
                                         
-                                                private static ApiTestBase<$webApiProjectName$.Program> _apiTestBase = null!;
-                                        
                                                 /// <summary>
-                                                ///     Initializes the test environment by setting up the service provider and CLI runner.
-                                                ///     This method is called once before any tests are run.
+                                                ///     Initializes the test environment by setting up the service provider, CLI runner, and other dependencies.
+                                                ///     This method is called once before any tests are executed.
                                                 /// </summary>
                                                 /// <param name="testContext">The context of the test run.</param>
                                                 [AssemblyInitialize]
-                                                public static async InitAsync(TestContext testContext)
+                                                public static async Task InitAsync(TestContext testContext)
                                                 {
-                                                    // 1. When we are in debug mode (DEV local) we start the needed docker container
-                                                    //    This is a POC because we dont know yet how the end solution looks like
-                                                    //    ToDo: Tear down of docker before start, to go sure container is clean and new
-                                                    //          https://confluence.siemens.cloud/gms/display/PC/4.115.2+Test.Containers
-                                                    //          https://jira.siemens.cloud/gms/browse/PCD-7733
-                                                    if (typeof(ApiTestBase).Assembly.IsCompiledInDebug())
+                                                    // 1. Start the required Docker container in debug mode.
+                                                    if (typeof(GlobalSetup).Assembly.IsCompiledInDebug())
                                                     {
                                                         var dockerRunResult = await DotNetTool.RunAsync("docker", $"run -d -p 8001:8000 --name {DynamoDbContainerName} amazon/{DynamoDbContainerName} -jar DynamoDBLocal.jar -sharedDb").ConfigureAwait(false);
-                                                        Assert.AreEqual(0, dockerRunResult.ExitCode, $"Dynamo DB: {DynamoDbContainerName} could not be started. Please check if you have docker installed");
+                                                        Assert.AreEqual(0, dockerRunResult.ExitCode, $"Dynamo DB: {DynamoDbContainerName} could not be started. Please check if you have Docker installed.");
                                                     }
-                                                    
-                                                
-                                                    // 2. Setup and load environment variables
+                                        
+                                                    // 2. Load environment variables from an embedded JSON file.
                                                     var environmentVariables = EmbeddedFile.GetFileContentFrom("Properties.EnvironmentVariables.json")
                                                                                            .FromJsonStringAs<Dictionary<string, string>>()
-                                                                                           .Select(keyValue => (keyValue.Key, keyValue.Value)).ToArray();
+                                                                                           .Select(keyValue => (keyValue.Key, keyValue.Value))
+                                                                                           .ToArray();
                                         
-                                                    
-                                                    // 3. Setup api test base environment
-                                                    _apiTestBase = new ApiTestBase<$webApiProjectName$.Program>("Development", // The environment name
-                                                                                                        (_, _) =>
-                                                                                                        {
-                                                                                                        }, // The register services action
-                                                                                                        environmentVariables); // Configure environment variables  
+                                                    // 3. Set up the API test base environment.
+                                                    _apiTestBase = new ApiTestBase<Sdc.LandingPage.Program>("Development", // The environment name
+                                                                                                            (_,
+                                                                                                             _) =>
+                                                                                                            {
+                                                                                                            }, // The register services action
+                                                                                                            environmentVariables // Configure environment variables
+                                                                                                           );
                                         
-                                                    // 4. We need once the http client to communicate with the started api
+                                                    // 4. Create an HTTP client for communicating with the API.
                                                     _httpClient = _apiTestBase.CreateClient();
-                                        
-                                                    // 5. Create an instance of the DotNetTool.
-                                                    var dotnetTool = DotNetToolFactory.Create();
                                         
                                                     // 6. Create a new service collection for dependency injection.
                                                     var serviceCollection = new ServiceCollection();
                                         
                                                     // 7. Register the test context and DotNetTool as singletons.
                                                     serviceCollection.AddSingleton(testContext);
-                                                    serviceCollection.AddSingleton<IDotNetTool>(dotnetTool);
+                                                    serviceCollection.AddSingleton(DotNetTool);
                                         
-                                                    // 8. Register the application starter extension.
+                                                    // 8. Register the CLI runner extension.
                                                     serviceCollection.AddCliRunner();
                                         
                                                     // 9. Build the service provider from the service collection.
@@ -99,18 +112,23 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                     Cli = new CliRunner(_httpClient);
                                                 }
                                         
+                                                /// <summary>
+                                                ///     Cleans up the test environment after all tests have been executed.
+                                                /// </summary>
                                                 [AssemblyCleanup]
                                                 public static async Task AssemblyCleanupAsync()
                                                 {
-                                                    // 1. Dispose the api test environment
-                                                    await _apiTestBase.DisposeAsync().ConfigureAwait(false);
-                                                    
-                                                    // 2. Dispose the http client
-                                                    _httpClient.Dispose();
-                                                    
-                                                    // 3. When we are in debug mode (DEV local) we start the needed docker container
-                                                    //    and we have to shut down and remove it ! to have a clean container next startup
-                                                    if (typeof(ApiTestBase).Assembly.IsCompiledInDebug())
+                                                    // 1. Dispose of the API test environment.
+                                                    if (_apiTestBase.IsNotNull())
+                                                    {
+                                                        await _apiTestBase.DisposeAsync().ConfigureAwait(false);
+                                                    }
+                                        
+                                                    // 2. Dispose of the HTTP client.
+                                                    _httpClient?.Dispose();
+                                        
+                                                    // 3. Stop and remove the Docker container in debug mode to ensure a clean state.
+                                                    if (typeof(GlobalSetup).Assembly.IsCompiledInDebug())
                                                     {
                                                         await DotNetTool.RunAsync("docker", $"stop {DynamoDbContainerName}").ConfigureAwait(false);
                                                         await DotNetTool.RunAsync("docker", $"rm {DynamoDbContainerName}").ConfigureAwait(false);
@@ -118,7 +136,6 @@ namespace RunJit.Cli.Generate.DotNetTool.DotNetTool.Test
                                                 }
                                             }
                                         }
-                                        
                                         """;
 
         public async Task GenerateAsync(FileInfo projectFileInfo,

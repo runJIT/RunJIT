@@ -8,9 +8,21 @@ namespace $namespace$
 {
     [TestClass]
     public abstract class ApiTestBase
-    {
+    {       
+        /// <summary>
+        ///     The name of the Docker container used for DynamoDB during tests.
+        /// </summary>
+        private const string DynamoDbContainerName = "dynamodb-local";
+
+        /// <summary>
+        ///     The base class for API testing, providing utilities for setting up and interacting with the API.
+        /// </summary>
         private static ApiTestBase<Startup>? _apiTestBase;
-        private static HttpClient? _httpClient;
+
+        /// <summary>
+        ///     The tool used for executing .NET commands, such as managing Docker containers.
+        /// </summary>
+        private static readonly IDotNetTool DotNetTool = DotNetToolFactory.Create();
       
         // In this sample we currently use assembly initialize, to save performance, but you can do it also different.
         [AssemblyInitialize]
@@ -55,8 +67,11 @@ namespace $namespace$
         [AssemblyCleanup]
         public static async Task AssemblyCleanupAsync()
         {
-            // 1. Dispose the api test environment
-            await _apiTestBase.DisposeAsync().ConfigureAwait(false);
+            // 1. Dispose of the API test environment.
+            if (_apiTestBase.IsNotNull())
+            {
+                await _apiTestBase.DisposeAsync().ConfigureAwait(false);
+            }
             
             // 2. Dispose the http client
             Client.Dispose();
