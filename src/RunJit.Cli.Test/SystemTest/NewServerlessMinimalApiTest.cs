@@ -15,6 +15,8 @@ namespace RunJit.Cli.Test.SystemTest
         [DataRow("Siemens.Reporting", "api/reporting", "Reporting")]
         [DataRow("Sega", "api/sega", "Sega")]
         [DataRow("Pulse.FieldingTool", "api/fieldingtool", "FieldingTool")]
+        [DataRow("Sdc.LandingPage", "api/landingpage", "LandingPage")]
+        [DataRow("Sdc.Console", "api/console", "SdcConsole")]
         public async Task Should_Generate_New_Minimal_Web_Api_Solution(string projectName,
                                                                        string basePath,
                                                                        string toolName)
@@ -44,11 +46,11 @@ namespace RunJit.Cli.Test.SystemTest
             // await DotNetTool.AssertRunAsync("dotnet", $"build {solutionFileInfo.FullName}").ConfigureAwait(false);
 
             // 7.Assert that solution can be tested
-            // await DotNetTool.AssertRunAsync("dotnet", $"test {result.FullName}").ConfigureAwait(false);
-            
+            // await DotNetTool.AssertRunAsync("dotnet", $"test {solutionFileInfo.FullName}").ConfigureAwait(false);
+
             // 8. Pack
             //  wait DotNetTool.AssertRunAsync("dotnet", $@"pack {solutionFileInfo.FullName} -o D:\Nuget").ConfigureAwait(false);
-            
+
             // 9. Publish
             // await DotNetTool.AssertRunAsync("dotnet", $@"pack {solutionFileInfo.FullName} -o D:\Nuget").ConfigureAwait(false);
         }

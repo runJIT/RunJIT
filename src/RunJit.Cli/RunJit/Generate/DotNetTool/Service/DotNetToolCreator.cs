@@ -159,7 +159,7 @@ namespace RunJit.Cli.Generate.DotNetTool
                                                          internal static void Add$command-name$Handler(this IServiceCollection services, IConfiguration configuration)
                                                          {
                                                              services.AddOutputService();
-                                                             services.AddFieldingToolHttpClientFactory(configuration);
+                                                             services.Add$dotNetToolName$HttpClientFactory(configuration);
                                                  
                                                              services.AddSingletonIfNotExists<$command-name$Handler>();
                                                          }
