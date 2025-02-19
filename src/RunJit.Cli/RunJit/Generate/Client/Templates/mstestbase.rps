@@ -23,6 +23,11 @@ namespace $namespace$
         ///     The tool used for executing .NET commands, such as managing Docker containers.
         /// </summary>
         private static readonly IDotNetTool DotNetTool = DotNetToolFactory.Create();
+
+        /// <summary>
+        ///     The HTTP client used for communicating with the API during tests.
+        /// </summary>
+        private static HttpClient? _httpClient;
       
         // In this sample we currently use assembly initialize, to save performance, but you can do it also different.
         [AssemblyInitialize]
@@ -74,7 +79,7 @@ namespace $namespace$
             }
             
             // 2. Dispose the http client
-            Client.Dispose();
+            _httpClient?.Dispose();
             
             // 3. When we are in debug mode (DEV local) we start the needed docker container
             //    and we have to shut down and remove it ! to have a clean container next startup
